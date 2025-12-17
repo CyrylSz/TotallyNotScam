@@ -1,0 +1,403 @@
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Totally Not Scam - Dashboard Gracza</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <nav class="sidebar">
+        <div class="brand"><i class="fas fa-flask"></i> Totally Not Scam</div>
+        <div class="brand-sub">For the memes!</div>
+        
+        <div class="nav-section">
+            <a onclick="showView('dashboard')" class="nav-item active" id="navDash"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a href="#" class="nav-item"><i class="fas fa-gamepad"></i> Gry</a>
+            <a href="#" class="nav-item"><i class="fas fa-suitcase"></i> Ekwipunek</a>
+            <a href="#" class="nav-item"><i class="fas fa-store"></i> Rynek</a>
+            <a href="#" class="nav-item"><i class="fas fa-wallet"></i> Portfel</a>
+        </div>
+
+        <div class="nav-section hidden" id="adminNavSection">
+            <div class="nav-title">Zarządzanie</div>
+            <a href="#" class="nav-item"><i class="fas fa-users"></i> Użytkownicy</a>
+            <a href="#" class="nav-item"><i class="fas fa-sliders-h"></i> Panel Kontrolny</a>
+            <a href="#" class="nav-item"><i class="fas fa-file-alt"></i> Logi</a>
+        </div>
+
+        <div class="sidebar-footer">
+            <div class="switch-container">
+                <label class="switch">
+                    <input type="checkbox" id="adminSwitch" onchange="toggleAdminView()">
+                    <span class="slider"></span>
+                </label>
+                <span class="switch-label" id="viewLabel">Widok Użytkownika</span>
+            </div>
+
+            <div class="user-profile">
+                <div class="profile-left">
+                    <div class="user-avatar"><i class="fas fa-user-astronaut"></i></div>
+                    <div class="user-info">
+                        <h4>Admin</h4>
+                        <span>admin@casinolab.pl</span>
+                    </div>
+                </div>
+                <i class="fas fa-bell bell-icon"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="header">
+            <div>
+                <h2>Dashboard</h2>
+            </div>
+            
+            <div class="header-actions">
+                <div class="lootbox-display">
+                    <span id="lootboxCount">2</span> <i class="fas fa-briefcase"></i>
+                </div>
+
+                <div class="rewards-display">
+                    <span id="rewardsCount">0</span> <i class="fas fa-trophy"></i>
+                </div>
+
+                <div class="currency-display">
+                    <span id="currencyCount">2,450,000</span> <i class="fas fa-dollar-sign"></i>
+                </div>
+            </div>
+        </div>
+
+        <div class="view-container dashboard-container active" id="viewDashboard">
+            
+            <div class="quick-play-row">
+                <div class="qp-spacer"></div>
+                
+                <div class="qp-card-centered">
+                    <div class="qp-title">Quick Play</div>
+                    
+                    <div class="qp-buttons-container">
+                        <button class="qp-btn-small">
+                            <i class="fas fa-plus-circle"></i> Stwórz
+                        </button>
+                        
+                        <button class="qp-btn-small primary">
+                            <i class="fas fa-play"></i> Dołącz
+                        </button>
+                        
+                        <button class="qp-btn-small">
+                            <i class="fas fa-plane"></i> Offline
+                        </button>
+                    </div>
+
+                    <div class="qp-online-bottom">
+                        <div class="qp-dot"></div> 1,247 Online
+                    </div>
+                </div>
+
+                <div class="qp-spacer"></div>
+            </div>
+
+            <div class="section-divider">
+                <span>Twój Profil</span>
+            </div>
+            
+            <div class="top-stats-row">
+                <div class="stats-spacer"></div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-top" style="color: var(--accent-green);"><i class="fas fa-wallet"></i></div>
+                    
+                    <div class="net-worth-indicator" title="ostatnie 24h">
+                        +12.5% <i class="fas fa-caret-up"></i>
+                    </div>
+
+                    <div class="stat-main-label" style="font-size: 16px;">5,240,000 $</div>
+                    <div class="stat-sub-label">Net Worth (Saldo + Eq)</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-menu-dots" onclick="openRankModal()"><i class="fas fa-ellipsis-h"></i></div>
+                    <div class="stat-icon-top" style="font-size: 24px;">🐋</div>
+                    <div class="stat-main-label">Alpha Whale</div>
+                    <div class="stat-sub-label">Ranga (2000 LP)</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-top" style="color: var(--accent-blue);"><i class="fas fa-clock"></i></div>
+                    <div class="stat-main-label">6d 4h 20m</div>
+                    <div class="stat-sub-label">Czas w grach (432 gier)</div>
+                </div>
+
+                <div class="stat-card">
+                    <div class="stat-icon-top" style="color: var(--accent-orange);"><i class="fas fa-trophy"></i></div>
+                    <div class="stat-menu-dots" onclick="openModal()"><i class="fas fa-ellipsis-h"></i></div>
+                    <div class="stat-main-label" id="mainTrophyCount">0/25</div>
+                    <div class="stat-sub-label">Zdobyte trofea</div>
+                </div>
+
+                <div class="stats-spacer"></div>
+            </div>
+
+            <div class="bottom-panels-grid">
+                
+                <div class="spacer-50"></div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Twoje przedmioty</div>
+                        <i class="fas fa-filter filter-icon-abs"></i>
+                    </div>
+                    <div class="list-container" id="treasuresList">
+                        </div>
+                    <button class="load-more-btn" id="btnTreasures" onclick="showMoreTreasures()">Pokaż więcej (+5)</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Twoje rozgrywki</div>
+                        <i class="fas fa-filter filter-icon-abs"></i>
+                    </div>
+                    
+                    <div class="wld-compact-container">
+                        <div class="wld-compact-donut" id="wldDonut">
+                            <div class="wld-compact-percent" id="wldPercentText">0%</div>
+                        </div>
+                        <div class="wld-compact-info">
+                            <div class="wld-compact-counts">
+                                <span class="wc-win" id="txtWin">0</span> / 
+                                <span class="wc-lose" id="txtLose">0</span> / 
+                                <span class="wc-draw" id="txtDraw">0</span>
+                            </div>
+                            <div class="wld-compact-sub">Win / Lose / Draw</div>
+                            <div class="wld-compact-ratio">
+                                Ratio: <span id="txtRatio">0.00</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="list-container" id="gamesList">
+                        </div>
+                    <button class="load-more-btn" id="btnGames" onclick="showMoreGames()">Pokaż więcej (+20)</button>
+                </div>
+
+                <div class="card">
+                    <div class="card-header">
+                        <div class="card-title">Twoje trofea</div>
+                        <i class="fas fa-filter filter-icon-abs"></i>
+                    </div>
+                    <div class="list-container" id="trophiesList">
+                        </div>
+                    <button class="load-more-btn" id="btnTrophies" onclick="showMoreTrophies()">Pokaż więcej (+5)</button>
+                </div>
+
+                <div class="spacer-50"></div>
+
+            </div>
+
+            <div class="section-divider hidden-panel admin-divider-line">
+                <span style="color: var(--accent-red); font-weight: 700;">Oczy Admina</span>
+            </div>
+
+            <div class="admin-row hidden-panel admin-only">
+                
+                <div class="card span-3">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-map-marked-alt"></i> Dark Patterns - Mapa Cieplna</div>
+                    </div>
+                    <div class="heatmap-grid">
+                        <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
+                        <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
+                        <div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div>
+                        <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
+                    </div>
+                    <div style="font-size: 10px; color: #fca5a5; text-align: right; margin-top: 5px;">
+                        Obszary intensywnych kliknięć (Buttony FOMO)
+                    </div>
+                </div>
+
+                <div class="card span-1">
+                    <div class="card-header"><div class="card-title"><i class="fas fa-list-alt"></i> Live Feed</div></div>
+                    <div class="admin-log-list">
+                        <div class="admin-log-item">
+                            <div class="admin-dot"></div>
+                            <div class="admin-log-time">10:42</div>
+                            <div class="admin-log-content">Whale User_99 deposited 50k</div>
+                        </div>
+                        <div class="admin-log-item">
+                            <div class="admin-dot"></div>
+                            <div class="admin-log-time">10:41</div>
+                            <div class="admin-log-content">Retention Algorithm #4 Active</div>
+                        </div>
+                        <div class="admin-log-item">
+                            <div class="admin-dot"></div>
+                            <div class="admin-log-time">10:39</div>
+                            <div class="admin-log-content">User_12 failed withdrawal</div>
+                        </div>
+                        <div class="admin-log-item">
+                            <div class="admin-dot" style="background:#f59e0b; box-shadow:none;"></div>
+                            <div class="admin-log-time">10:35</div>
+                            <div class="admin-log-content">Lootbox Drop Rate lowered</div>
+                        </div>
+                        <div class="admin-log-item">
+                            <div class="admin-dot"></div>
+                            <div class="admin-log-time">10:30</div>
+                            <div class="admin-log-content">Bot Network Sync... OK</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card span-2">
+                    <div class="card-header"><div class="card-title"><i class="fas fa-brain"></i> Podatność Psychologiczna</div></div>
+                    <div class="psych-grid">
+                        <div class="psych-stat">
+                            <div class="psych-label">Hazardzista (Impuls)</div>
+                            <div class="psych-bar-bg"><div class="psych-bar-fill" style="width: 85%;"></div></div>
+                            <div class="psych-val">85% <span class="risk-badge">HIGH RISK</span></div>
+                        </div>
+                        <div class="psych-stat">
+                            <div class="psych-label">"Odkuwacz" (Loss Aversion)</div>
+                            <div class="psych-bar-bg"><div class="psych-bar-fill" style="width: 62%;"></div></div>
+                            <div class="psych-val">62% <span class="risk-badge">MED RISK</span></div>
+                        </div>
+                        <div class="psych-stat">
+                            <div class="psych-label">Kolekcjoner (Completionist)</div>
+                            <div class="psych-bar-bg"><div class="psych-bar-fill" style="width: 45%;"></div></div>
+                            <div class="psych-val">45% <span class="risk-badge">LOW RISK</span></div>
+                        </div>
+                        <div class="psych-stat">
+                            <div class="psych-label">Social (FOMO)</div>
+                            <div class="psych-bar-bg"><div class="psych-bar-fill" style="width: 92%;"></div></div>
+                            <div class="psych-val">92% <span class="risk-badge">CRITICAL</span></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card span-2">
+                    <div class="card-header"><div class="card-title"><i class="fas fa-cogs"></i> Skuteczność Algorytmów</div></div>
+                    
+                    <div class="metric-row-admin">
+                        <div class="mra-left">
+                            <h5>"Near Miss" Events</h5>
+                            <div class="mra-val">12,402</div>
+                        </div>
+                        <div class="mra-right">
+                            <div class="mra-trend trend-up"><i class="fas fa-arrow-up"></i> +14%</div>
+                            <div class="mini-spark">
+                                <div class="spark-bar" style="height: 40%"></div><div class="spark-bar" style="height: 60%"></div><div class="spark-bar" style="height: 50%"></div><div class="spark-bar active" style="height: 90%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-row-admin">
+                        <div class="mra-left">
+                            <h5>Dopamine Hits (Dźwięk)</h5>
+                            <div class="mra-val">845,000</div>
+                        </div>
+                        <div class="mra-right">
+                            <div class="mra-trend trend-up"><i class="fas fa-arrow-up"></i> +5%</div>
+                            <div class="mini-spark">
+                                <div class="spark-bar" style="height: 60%"></div><div class="spark-bar" style="height: 70%"></div><div class="spark-bar active" style="height: 85%"></div><div class="spark-bar" style="height: 80%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="metric-row-admin" style="border:none;">
+                        <div class="mra-left">
+                            <h5>Churn Rate (Odejścia)</h5>
+                            <div class="mra-val">1.2%</div>
+                        </div>
+                        <div class="mra-right">
+                            <div class="mra-trend trend-bad"><i class="fas fa-arrow-down"></i> -0.1%</div>
+                            <div class="mini-spark">
+                                <div class="spark-bar" style="height: 90%"></div><div class="spark-bar active" style="height: 40%"></div><div class="spark-bar" style="height: 30%"></div><div class="spark-bar" style="height: 20%"></div>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
+        </div>
+
+    </main>
+
+    <div class="modal-overlay" id="achievementsModal">
+        <div class="steam-modal">
+            <div class="sm-header">
+                <div class="sm-title">Totally Not Scam: Osiągnięcia</div>
+                <div class="sm-close" onclick="closeModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-progress-section">
+                <div class="sm-stats">
+                    <span id="modalEarnedText">0 OF 25 ACHIEVEMENTS EARNED</span>
+                    <span id="modalEarnedPerc">(0%)</span>
+                </div>
+                <div class="sm-progress-bar"><div class="sm-progress-fill" id="modalProgressBar"></div></div>
+            </div>
+            
+            <div class="sm-tabs">
+                <div class="sm-tab active" onclick="switchTab('my')" id="tabMy">MY ACHIEVEMENTS</div>
+                <div class="sm-tab" onclick="switchTab('global')" id="tabGlobal">GLOBAL ACHIEVEMENTS</div>
+            </div>
+
+            <div class="sm-content" id="achContent">
+                </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="rankModal">
+        <div class="steam-modal" style="width: 750px;">
+            <div class="sm-header">
+                <div class="sm-title">Drabina Społeczna</div>
+                <div class="sm-close" onclick="closeRankModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-content" style="padding-top: 15px;">
+                
+                <div class="intro-box">
+                    <strong style="color:var(--accent-blue);">System LP (Luck Points):</strong><br>
+                    Zdobywaj LP wygrywając, aby schodzić głębiej w otchłań hazardu. <br>
+                    <span style="color: #ef4444;">Ważne:</span> Spełnienie wymagań rangi to jedynie bilet na kolejną loterie. Aby zmienić rangę (w górę lub w dół), musisz wygrać (dla awansu) lub przegrać (dla spadku) <strong>2/3</strong> kolejnych gier, podczas to których wymagania chwilowo przestają mnieć wpływ na zmiane rangi.
+                </div>
+
+                <div class="ladder-container" id="ladderContainer">
+                    <div class="ladder-spine" id="ladderSpine"></div>
+                    </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="chatbot-container">
+        <div class="chat-window" id="chatWindow">
+            <div class="chat-header">
+                <i class="fas fa-robot" style="color: var(--accent-purple);"></i>
+                <div>
+                    <h3>AI Asystent</h3>
+                    <span style="font-size: 10px; color: var(--text-muted);">Online - Pomocnik Gracza</span>
+                </div>
+                <div class="status-dot" style="margin-left: auto;"></div>
+            </div>
+            <div class="chat-messages" id="chatMessages">
+                <div class="msg bot">Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?</div>
+            </div>
+            <div class="chat-input-area">
+                <input type="text" id="chatInput" placeholder="Napisz wiadomość...">
+                <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+            </div>
+        </div>
+        
+        <button class="chat-toggle" onclick="toggleChat()">
+            <i class="fas fa-robot" id="toggleIcon"></i>
+        </button>
+    </div>
+
+    <script src="data.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
