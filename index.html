@@ -77,10 +77,169 @@
 
         <div class="view-container dashboard active" id="viewDashboard">
             
-            <div class="quick-play-row">
-                <div class="qp-spacer"></div>
-                
-                <div class="qp-card-centered">
+            <div class="dash-section top-banner-section">
+                <div class="carousel-container">
+                    <div class="carousel-slide active" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://placehold.co/800x200/4c1d95/ffffff?text=CYBER+SLOTS');">
+                        <div class="carousel-content">
+                            <h3>Nowa gra: Cyber Slots!</h3>
+                            <p>Zagraj teraz i zgarnij darmowe spiny.</p>
+                            <button class="gc-btn play">Sprawdź</button>
+                        </div>
+                    </div>
+                    <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://placehold.co/800x200/10b981/ffffff?text=WEEKEND+BONUS');">
+                        <div class="carousel-content">
+                            <h3>Weekend podwójnych punktów!</h3>
+                            <p>Każda wygrana liczy się x2 do LP.</p>
+                        </div>
+                    </div>
+                     <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://placehold.co/800x200/ef4444/ffffff?text=LOOTBOX+SALE');">
+                        <div class="carousel-content">
+                            <h3>Promocja na Lootboxy -50%</h3>
+                            <p>Tylko dzisiaj! Zwiększona szansa na Divine.</p>
+                        </div>
+                    </div>
+                    <div class="carousel-dots">
+                        <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="dash-section ticker-section">
+                <div class="ticker-wrap">
+                    <div class="ticker">
+                        <div class="ticker__item"><i class="fas fa-trophy" style="color:gold;"></i> User_123 wygrał 50,000$ w Ruletce!</div>
+                        <div class="ticker__item"><i class="fas fa-gem" style="color:var(--accent-purple);"></i> BigWhale99 otworzył Smocze Jajo (Relic)!</div>
+                        <div class="ticker__item"><i class="fas fa-dice" style="color:var(--accent-green);"></i> LuckyLuke trafił Blackjacka x5 z rzędu!</div>
+                        <div class="ticker__item"><i class="fas fa-chart-line" style="color:var(--accent-blue);"></i> Giełda: Cena Złotego Zegarka rośnie!</div>
+                        <div class="ticker__item"><i class="fas fa-trophy" style="color:gold;"></i> User_123 wygrał 50,000$ w Ruletce!</div>
+                        <div class="ticker__item"><i class="fas fa-gem" style="color:var(--accent-purple);"></i> BigWhale99 otworzył Smocze Jajo (Relic)!</div>
+                    </div>
+                </div>
+             </div>
+
+            <div class="dash-section dash-grid-3">
+                <div class="card dash-card">
+                    <div class="card-header"><div class="card-title"><i class="fas fa-scroll"></i> Dzienne Misje (Reset 24h)</div></div>
+                    <div class="quest-list">
+                        <div class="quest-item">
+                            <div class="quest-info">
+                                <div class="q-title">Zagraj 10 spinów</div>
+                                <div class="q-progress-bar"><div class="q-fill" style="width: 80%;"></div></div>
+                                <div class="q-desc">Postęp: 8/10</div>
+                            </div>
+                            <button class="gc-btn play q-btn">Odbierz</button>
+                        </div>
+                        <div class="quest-item">
+                            <div class="quest-info">
+                                <div class="q-title">Postaw łącznie 500$</div>
+                                <div class="q-progress-bar"><div class="q-fill" style="width: 100%; background: var(--accent-green);"></div></div>
+                                <div class="q-desc">Postęp: 500/500</div>
+                            </div>
+                             <button class="gc-btn play q-btn active-claim">Odbierz Nagrodę!</button>
+                        </div>
+                         <div class="quest-item">
+                            <div class="quest-info">
+                                <div class="q-title">Otwórz jedną skrzynkę</div>
+                                <div class="q-progress-bar"><div class="q-fill" style="width: 0%;"></div></div>
+                                <div class="q-desc">Postęp: 0/1</div>
+                            </div>
+                             <button class="gc-btn play q-btn disabled">Odbierz</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="card dash-card">
+                    <div class="card-header"><div class="card-title"><i class="fas fa-calendar-check"></i> Streak Dzienny</div></div>
+                    <div class="streak-container">
+                        <div class="streak-days">
+                            <div class="s-day claimed"><i class="fas fa-check"></i><span>D1</span></div>
+                            <div class="s-day claimed"><i class="fas fa-check"></i><span>D2</span></div>
+                            <div class="s-day claimed"><i class="fas fa-check"></i><span>D3</span></div>
+                            <div class="s-day current"><i class="fas fa-box"></i><span>Damasz</span></div>
+                            <div class="s-day"><i class="fas fa-lock"></i><span>D5</span></div>
+                            <div class="s-day"><i class="fas fa-lock"></i><span>D6</span></div>
+                            <div class="s-day golden"><i class="fas fa-gift"></i><span>D7</span></div>
+                        </div>
+                         <div class="streak-info">Zaloguj się jutro, aby kontynuować serię!</div>
+                    </div>
+                </div>
+
+                 <div class="card dash-card battle-pass-card" style="background: linear-gradient(145deg, #1a2340, #2e1065);">
+                    <div class="card-header"><div class="card-title"><i class="fas fa-meteor"></i> Sezon Rekina - Battle Pass</div></div>
+                    <div class="bp-content">
+                        <div class="bp-level-info">
+                             <span style="color:var(--accent-purple); font-weight:700;">Poziom 14</span>
+                             <span style="font-size:11px; color:#aaa;">14,500 / 15,000 XP</span>
+                        </div>
+                        <div class="rob-progress-bar" style="height: 12px; background: rgba(0,0,0,0.4);">
+                            <div class="rob-progress-fill" style="width: 95%; background: linear-gradient(90deg, #8b5cf6, #ec4899);"></div>
+                        </div>
+                        <div class="bp-next-reward">
+                            <i class="fas fa-mask" style="font-size:24px; color:var(--accent-pink); margin-right:10px;"></i>
+                            <div>
+                                <div style="font-size:12px; font-weight:600;">Następna nagroda (Lvl 15):</div>
+                                <div style="font-size:11px; color:var(--accent-purple);">Unikalna Skórka "Neon Shark"</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="dash-section dash-grid-2">
+                 <div class="card dash-card">
+                    <div class="card-header"><div class="card-title"><i class="fas fa-chart-line"></i> Market Watch (Giełda)</div></div>
+                    <div class="market-watch-list">
+                        <div class="mw-item">
+                            <div class="mw-icon" style="color:#a855f7;"><i class="fas fa-dragon"></i></div>
+                            <div class="mw-info"><h5>Smocze Jajo</h5><span class="val-up">+12% <i class="fas fa-caret-up"></i></span></div>
+                             <div class="mini-spark"><div class="spark-bar" style="height:40%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar active" style="height:80%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
+                        </div>
+                         <div class="mw-item">
+                            <div class="mw-icon" style="color:gold;"><i class="fas fa-clock"></i></div>
+                            <div class="mw-info"><h5>Złoty Zegarek</h5><span class="val-down">-5% <i class="fas fa-caret-down"></i></span></div>
+                             <div class="mini-spark"><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar active" style="height:30%; background:var(--accent-red); box-shadow:0 0 4px var(--accent-red);"></div></div>
+                        </div>
+                        <div class="mw-item">
+                            <div class="mw-icon" style="color:var(--accent-blue);"><i class="fas fa-car"></i></div>
+                             <div class="mw-info"><h5>Kluczyki Lambo</h5><span class="val-up">+2% <i class="fas fa-caret-up"></i></span></div>
+                             <div class="mini-spark"><div class="spark-bar" style="height:20%"></div><div class="spark-bar" style="height:30%"></div><div class="spark-bar" style="height:25%"></div><div class="spark-bar active" style="height:40%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
+                        </div>
+                    </div>
+                </div>
+                 <div class="card dash-card">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-suitcase"></i> Twój Ekwipunek (Skrót)</div>
+                        <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('inventory')" title="Pełny ekwipunek"></i>
+                    </div>
+                    <div class="list-container" id="dashInventoryList" style="min-height: 180px; max-height: 180px;">
+                        </div>
+                </div>
+             </div>
+
+            <div class="dash-section dash-grid-2">
+                 <div class="card dash-card rng-card" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid rgba(0, 229, 255, 0.2);">
+                    <div class="card-header"><div class="card-title"><i class="fas fa-bahai" style="color:#00e5ff;"></i> RNG Forecast (Prognoza Szczęścia)</div></div>
+                     <div style="text-align:center; padding: 20px 0;">
+                        <div style="font-size: 48px; font-weight: 800; color: #00e5ff; text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);">88%</div>
+                        <div style="font-size: 12px; color: #ddd; margin-bottom: 15px;">Aktualne szczęście: <span style="color:#00e5ff; font-weight:700;">WYSOKIE</span></div>
+                        
+                        <div style="height: 40px; display: flex; align-items: flex-end; justify-content: center; gap: 5px; margin-bottom: 15px; opacity: 0.7;">
+                             <div style="width:4px; height:20%; background:#00e5ff; border-radius:2px;"></div>
+                             <div style="width:4px; height:40%; background:#00e5ff; border-radius:2px;"></div>
+                             <div style="width:4px; height:60%; background:#00e5ff; border-radius:2px;"></div>
+                             <div style="width:4px; height:80%; background:#00e5ff; border-radius:2px;"></div>
+                             <div style="width:4px; height:100%; background:#00e5ff; border-radius:2px; box-shadow: 0 0 10px #00e5ff;"></div>
+                             <div style="width:4px; height:70%; background:#00e5ff; border-radius:2px;"></div>
+                             <div style="width:4px; height:50%; background:#00e5ff; border-radius:2px;"></div>
+                        </div>
+
+                        <div style="font-size: 11px; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; display:inline-block;">
+                            Sugerowana gra: <b style="color:white;">Blackjack</b> (AI Confidence: 92%)
+                        </div>
+                     </div>
+                </div>
+
+                <div class="qp-card-centered" style="flex: 1; max-width: none; height: 100%;">
                     <div class="qp-title">Quick Play</div>
                     
                     <div class="qp-buttons-container">
@@ -101,9 +260,8 @@
                         <div class="qp-dot"></div> 1,247 Online
                     </div>
                 </div>
-
-                <div class="qp-spacer"></div>
             </div>
+
         </div>
 
         <div class="view-container" id="viewGames">

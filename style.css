@@ -1132,3 +1132,73 @@ input:checked + .slider:before { transform: translateX(16px); }
     70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
+
+/* --- NEW DASHBOARD STYLES (Instructions Implementation) --- */
+
+.dash-section { margin-bottom: 25px; }
+.dash-card { height: 100%; min-height: 250px; }
+
+/* Grids */
+.dash-grid-3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.dash-grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; }
+
+/* SEKCJA 5: Banner Carousel */
+.top-banner-section { height: 180px; border-radius: 12px; overflow: hidden; position: relative; border: 1px solid rgba(255,255,255,0.1); box-shadow: 0 10px 30px -10px rgba(0,0,0,0.5); }
+.carousel-container { height: 100%; position: relative; }
+.carousel-slide { position: absolute; inset: 0; background-size: cover !important; background-position: center !important; opacity: 0; transition: opacity 0.8s ease-in-out; display: flex; align-items: center; padding: 0 40px; }
+.carousel-slide.active { opacity: 1; z-index: 2; }
+.carousel-content { max-width: 50%; z-index: 3; position: relative; }
+.carousel-content h3 { font-size: 24px; font-weight: 700; color: white; margin-bottom: 5px; text-shadow: 0 2px 10px rgba(0,0,0,0.5); }
+.carousel-content p { font-size: 14px; color: #ddd; margin-bottom: 15px; text-shadow: 0 1px 5px rgba(0,0,0,0.5); }
+.carousel-dots { position: absolute; bottom: 15px; left: 50%; transform: translateX(-50%); display: flex; gap: 8px; z-index: 5; }
+.dot { width: 8px; height: 8px; border-radius: 50%; background: rgba(255,255,255,0.3); transition: 0.3s; }
+.dot.active { background: white; transform: scale(1.2); }
+
+/* SEKCJA 2: Ticker */
+.ticker-section { background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); height: 40px; overflow: hidden; display: flex; align-items: center; }
+.ticker-wrap { width: 100%; overflow: hidden; white-space: nowrap; }
+.ticker { display: inline-block; animation: ticker 30s linear infinite; }
+.ticker__item { display: inline-block; padding: 0 20px; font-size: 12px; color: var(--text-muted); }
+.ticker__item i { margin-right: 5px; }
+@keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
+
+/* SEKCJA 1: Retention Cards */
+/* Quests */
+.quest-list { display: flex; flex-direction: column; gap: 12px; }
+.quest-item { display: flex; align-items: center; justify-content: space-between; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.02); }
+.quest-info { flex-grow: 1; margin-right: 15px; }
+.q-title { font-size: 13px; font-weight: 600; margin-bottom: 5px; }
+.q-progress-bar { height: 6px; background: rgba(0,0,0,0.3); border-radius: 3px; overflow: hidden; margin-bottom: 3px; }
+.q-fill { height: 100%; background: var(--accent-purple); }
+.q-desc { font-size: 10px; color: var(--text-muted); }
+.q-btn { width: auto; padding: 6px 12px; font-size: 10px; background: rgba(255,255,255,0.1); color: var(--text-muted); }
+.q-btn.active-claim { background: var(--accent-green); color: white; animation: pulse-green 2s infinite; }
+.q-btn.disabled { opacity: 0.5; cursor: not-allowed; }
+
+/* Streak */
+.streak-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 15px; }
+.streak-days { display: flex; gap: 8px; }
+.s-day { width: 40px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--text-muted); border: 1px solid transparent; }
+.s-day i { font-size: 16px; }
+.s-day span { font-size: 10px; font-weight: 600; }
+.s-day.claimed { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); border-color: rgba(16, 185, 129, 0.3); }
+.s-day.current { background: rgba(139, 92, 246, 0.2); color: var(--accent-purple); border-color: var(--accent-purple); transform: scale(1.1); box-shadow: 0 0 15px rgba(139, 92, 246, 0.3); }
+.s-day.golden { background: linear-gradient(135deg, #f59e0b, #d97706); color: white; border: none; }
+.s-day.golden i { animation: pulse-gold 2s infinite; }
+.streak-info { font-size: 11px; color: var(--text-muted); text-align: center; }
+
+/* Battle Pass */
+.battle-pass-card .card-title i { color: #ec4899; }
+.bp-content { display: flex; flex-direction: column; justify-content: center; height: 100%; gap: 20px; padding: 10px 0; }
+.bp-level-info { display: flex; justify-content: space-between; margin-bottom: 5px; }
+.bp-next-reward { display: flex; align-items: center; background: rgba(0,0,0,0.2); padding: 10px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+
+/* SEKCJA 3: Market Watch */
+.market-watch-list { display: flex; flex-direction: column; gap: 10px; }
+.mw-item { display: flex; align-items: center; gap: 12px; padding: 10px; background: rgba(255,255,255,0.03); border-radius: 8px; }
+.mw-icon { width: 36px; height: 36px; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 16px; }
+.mw-info { flex-grow: 1; }
+.mw-info h5 { font-size: 13px; font-weight: 600; margin-bottom: 2px; }
+
+/* RNG Card hover effect */
+.rng-card:hover { box-shadow: 0 0 30px rgba(0, 229, 255, 0.2); border-color: rgba(0, 229, 255, 0.5); transition: 0.3s; }

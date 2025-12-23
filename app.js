@@ -828,3 +828,70 @@ function renderGlobalLeaderboard() {
         list.appendChild(div);
     });
 }
+
+// --- NEW DASHBOARD LOGIC (Instructions Implementation) ---
+
+// Initialize new dashboard features
+function initDashboardExtras() {
+    renderDashInventory();
+    initBannerCarousel();
+}
+
+// Render mini inventory in the new dashboard section
+function renderDashInventory() {
+    const container = document.getElementById('dashInventoryList');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    // Take first 4 items from the sorted list
+    sortTreasures(allTreasures);
+    const dashItems = allTreasures.slice(0, 4);
+    
+    dashItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        // Reuse existing layout but simplified
+        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+        div.innerHTML = `
+            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-info"><h5>${item.name}</h5></div>
+            <div class="item-right-status"><div class="rarity-tag-badge ${badgeClass}" style="min-width:auto; font-size:8px;">${item.rarity}</div></div>
+        `;
+        container.appendChild(div);
+    });
+    
+    if(dashItems.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:20px;">Ekwipunek pusty</div>';
+    }
+}
+
+// Simple Banner Carousel Logic
+function initBannerCarousel() {
+    const slides = document.querySelectorAll('.carousel-slide');
+    const dots = document.querySelectorAll('.carousel-dots .dot');
+    if(slides.length === 0) return;
+    
+    let currentSlide = 0;
+    
+    function showSlide(index) {
+        slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
+        dots.forEach((dot, i) => dot.classList.toggle('active', i === index));
+        currentSlide = index;
+    }
+    
+    function nextSlide() {
+        let next = (currentSlide + 1) % slides.length;
+        showSlide(next);
+    }
+    
+    // Auto rotate every 5 seconds
+    setInterval(nextSlide, 5000);
+    
+    // Optional click handling for dots (not strictly required by prompt but good practice)
+    dots.forEach((dot, index) => {
+        dot.addEventListener('click', () => showSlide(index));
+    });
+}
+
+// Call extra initialization at startup
+initDashboardExtras();
