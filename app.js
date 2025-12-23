@@ -117,11 +117,43 @@ function animateDonut(startPerc, endPerc, duration) {
 }
 
 // --- NAVIGATION LOGIC ---
+const navMap = {
+    'dashboard': { title: "Dashboard", navId: "navDash", viewId: "viewDashboard" },
+    'profile': { title: "Twój Profil", navId: "navProfile", viewId: "viewProfile" },
+    'games': { title: "Gry", navId: "navGames", viewId: "viewGames" },
+    'inventory': { title: "Ekwipunek", navId: "navInventory", viewId: "viewInventory", init: renderInventoryView },
+    'market': { title: "Rynek", navId: "navMarket", viewId: "viewMarket", init: renderMarketView },
+    'wallet': { title: "Portfel", navId: "navWallet", viewId: "viewWallet", init: renderWalletView },
+    'adminDash': { title: "Dashboard Admina", navId: "navAdminDash", viewId: "viewAdminDash" },
+    'users': { title: "Użytkownicy", navId: "navUsers", viewId: "viewUsers", init: renderUsersView },
+    'logs': { title: "Logi", navId: "navLogs", viewId: "viewLogs", init: renderLogsView }
+};
+
 function showView(viewName) {
-    const dashboard = document.getElementById('viewDashboard');
-    if (viewName === 'dashboard') {
-        dashboard.classList.add('active');
+    const config = navMap[viewName];
+    if(!config) return;
+
+    // 1. Ukryj widoki i usuń active z nav
+    document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
+    document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
+
+    // 2. Aktywuj odpowiednie elementy
+    document.getElementById(config.viewId).classList.add('active');
+    const navEl = document.getElementById(config.navId);
+    if(navEl) navEl.classList.add('active');
+
+    // 3. Zmień dynamiczny nagłówek
+    document.getElementById('pageHeaderTitle').textContent = config.title;
+
+    // 4. Pokaż/ukryj przycisk "Przeglądaj Profile" tylko w widoku profilu
+    const browseProfilesBtn = document.getElementById('browseProfilesBtn');
+    if (browseProfilesBtn) {
+        browseProfilesBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
     }
+
+    // 5. Inicjalizacja specyficzna (jeśli istnieje)
+    if (viewName === 'games') renderGamesHub();
+    if (config.init) config.init();
 }
 
 // --- ITEMS / TREASURES ---
@@ -325,22 +357,22 @@ function showMoreTrophies() {
 function toggleAdminView() {
     const isChecked = document.getElementById('adminSwitch').checked;
     const viewLabel = document.getElementById('viewLabel');
-    const adminPanels = document.querySelector('.admin-row');
     const adminNav = document.getElementById('adminNavSection');
-    const adminDivider = document.querySelector('.admin-divider-line');
 
     if (isChecked) {
         viewLabel.textContent = "Widok Admina";
         viewLabel.style.color = "var(--accent-purple)";
-        adminPanels.classList.remove('hidden-panel');
         adminNav.classList.remove('hidden');
-        adminDivider.classList.remove('hidden-panel');
     } else {
         viewLabel.textContent = "Widok Użytkownika";
         viewLabel.style.color = "var(--text-muted)";
-        adminPanels.classList.add('hidden-panel');
         adminNav.classList.add('hidden');
-        adminDivider.classList.add('hidden-panel');
+        // Jeśli jesteśmy w widoku admina, wróć do dashboardu
+        if(document.getElementById('viewAdminDash').classList.contains('active') ||
+           document.getElementById('viewUsers').classList.contains('active') ||
+           document.getElementById('viewLogs').classList.contains('active')) {
+            showView('dashboard');
+        }
     }
 }
 
@@ -542,6 +574,24 @@ function closeRankModal() {
     document.getElementById('rankModal').classList.remove('active');
 }
 
+// --- ACCOUNT MODAL ---
+function openAccountModal() {
+    document.getElementById('accountModal').classList.add('active');
+}
+
+function closeAccountModal() {
+    document.getElementById('accountModal').classList.remove('active');
+}
+
+// --- PLAYER STATS MODAL ---
+function openPlayerStatsModal() {
+    document.getElementById('playerStatsModal').classList.add('active');
+}
+
+function closePlayerStatsModal() {
+    document.getElementById('playerStatsModal').classList.remove('active');
+}
+
 // --- CHATBOT ---
 const chatWindow = document.getElementById('chatWindow');
 const toggleIcon = document.getElementById('toggleIcon');
@@ -575,5 +625,206 @@ chatInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') sendMessage();
 });
 
+// --- NEW VIEW RENDERS ---
+
+function renderInventoryView() {
+    const container = document.getElementById('inventoryContainer');
+    container.innerHTML = '';
+    // Wyświetl wszystkie skarby, nie tylko 5
+    sortTreasures(allTreasures);
+    allTreasures.forEach(item => {
+        // Reuse existing logic manually for simplicty or create wrapper
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+        div.innerHTML = `
+            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-info"><h5>${item.name}</h5><p class="price-neutral">${item.price}</p></div>
+            <div class="item-right-status"><div class="rarity-tag-badge ${badgeClass}">${item.rarity}</div></div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function renderMarketView() {
+    const container = document.getElementById('marketContainer');
+    container.innerHTML = '';
+    // Mock items for market
+    const marketItems = [
+        { name: "Klucz do Skarbca", price: "500,000 $", icon: "fa-key", color: "gold", rarity: "Divine" },
+        { name: "NFT Małpy", price: "2,000 $", icon: "fa-image", color: "purple", rarity: "Epic" },
+        { name: "Licencja Kasyna", price: "5,000,000 $", icon: "fa-file-contract", color: "white", rarity: "Relic" }
+    ];
+    marketItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerHTML = `
+            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-info"><h5>${item.name}</h5><p class="price-up">${item.price}</p></div>
+            <button class="claim-btn" style="margin-left:auto;">KUP TERAZ</button>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function renderWalletView() {
+    const container = document.getElementById('walletContainer');
+    container.innerHTML = '';
+    const txs = [
+        { type: 'Depozyt', val: '+50,000 $', time: '10 min temu', icon: 'fa-arrow-down', c: 'var(--accent-green)' },
+        { type: 'Blackjack', val: '-2,500 $', time: '2 godz temu', icon: 'fa-dice', c: 'var(--accent-red)' },
+        { type: 'Wypłata', val: '-10,000 $', time: '1 dzień temu', icon: 'fa-arrow-up', c: 'var(--text-muted)' },
+        { type: 'Bonus', val: '+500 $', time: '2 dni temu', icon: 'fa-gift', c: 'var(--accent-purple)' }
+    ];
+    txs.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerHTML = `
+            <div class="item-img" style="background:rgba(255,255,255,0.05); color:${t.c};"><i class="fas ${t.icon}"></i></div>
+            <div class="item-info"><h5>${t.type}</h5><span style="font-size:10px; color:#888;">${t.time}</span></div>
+            <div style="font-weight:700; color:${t.c};">${t.val}</div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function renderUsersView() {
+    const container = document.getElementById('usersContainer');
+    container.innerHTML = '';
+    const users = [
+        { id: 994, name: "Whale_Killer", rank: "Alpha Whale", status: "Online" },
+        { id: 120, name: "Bot_Network_01", rank: "Small Fry", status: "Scripting" },
+        { id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", status: "Offline" },
+        { id: 1, name: "Admin", rank: "King", status: "Hidden" }
+    ];
+    users.forEach(u => {
+        const div = document.createElement('div');
+        div.className = 'lb-row';
+        div.style.gridTemplateColumns = "50px 1fr 150px 100px";
+        let statusColor = u.status === 'Online' ? 'var(--accent-green)' : '#666';
+        div.innerHTML = `
+            <div style="color:#666;">#${u.id}</div>
+            <div class="lb-name">${u.name}</div>
+            <div style="font-size:11px; color:var(--accent-blue);">${u.rank}</div>
+            <div style="font-size:10px; color:${statusColor};">● ${u.status}</div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function renderLogsView() {
+    const container = document.getElementById('logsContainer');
+    container.innerHTML = '';
+    const logs = [
+        "[SYSTEM] Server started at 00:00:01",
+        "[AUTH] Admin logged in from 127.0.0.1",
+        "[GAME] User_99 won 5000 in Roulette",
+        "[RISK] High bet detected: User_99 (Risk: Low)",
+        "[ERROR] Payment Gateway Timeout (Retrying...)",
+        "[SYSTEM] Daily rewards distributed"
+    ];
+    logs.forEach(l => {
+        const div = document.createElement('div');
+        div.style.padding = "4px 0";
+        div.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+        div.textContent = `> ${l}`;
+        container.appendChild(div);
+    });
+}
+
 // Initialize
 initDashboard();
+
+
+// --- GAMES HUB LOGIC ---
+
+function renderGamesHub() {
+    renderAvailableGames();
+    renderGlobalLeaderboard();
+}
+
+function renderAvailableGames() {
+    const container = document.getElementById('availableGamesContainer');
+    container.innerHTML = '';
+    const sortedGames = [...availableGamesDB].sort((a, b) => b.players - a.players);
+
+    sortedGames.forEach(game => {
+        const div = document.createElement('div');
+        div.className = 'game-card';
+        let hotBadge = game.isHot ? `<span class="gc-badge hot">HOT</span>` : '';
+        let bgStyle = `background: linear-gradient(135deg, ${game.imgColor} 0%, #151a2d 100%);`;
+
+        // ZMIANA: Wstawiamy ${game.icon} w sekcji icony (dolny lewy róg nagłówka)
+        div.innerHTML = `
+            <div class="gc-header" style="${bgStyle}">
+                <div class="gc-overlay"></div>
+                <div class="gc-badges">
+                    ${hotBadge}
+                    <span class="gc-badge">${game.type}</span>
+                </div>
+                <div style="position:absolute; bottom:10px; left:12px;">
+                    <i class="fas ${game.icon}" style="font-size:24px; color:rgba(255,255,255,0.8);"></i>
+                </div>
+            </div>
+            <div class="gc-body">
+                <div class="gc-title">${game.name}</div>
+                <div class="gc-pop"><i class="fas fa-user"></i> ${game.players.toLocaleString()} online</div>
+                
+                <div class="gc-actions">
+                    <button class="gc-btn play">GRAJ TERAZ</button>
+                    <button class="gc-btn lobby">Lobby</button>
+                    <button class="gc-btn offline">Offline</button>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
+
+function renderGlobalLeaderboard() {
+    const list = document.getElementById('globalLeaderboardList');
+    list.innerHTML = '';
+
+    const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => {
+        if (b.rankVal !== a.rankVal) return b.rankVal - a.rankVal;
+        return b.netWorth - a.netWorth;
+    });
+
+    sortedPlayers.forEach((p, index) => {
+        const div = document.createElement('div');
+        div.className = 'lb-row';
+        const rankNum = index + 1;
+        
+        let rankClass = '';
+        if (rankNum === 1) rankClass = 'top1';
+        else if (rankNum === 2) rankClass = 'top2';
+        else if (rankNum === 3) rankClass = 'top3';
+
+        // ZMIANA: Znajdź dane o randze w ranksDB (ikonę i kolor)
+        const rankData = ranksDB.find(r => r.id === p.rankVal);
+        const rankIconHtml = rankData 
+            ? `<i class="fas ${rankData.icon}" style="color:${rankData.color}; margin-right:4px;"></i>` 
+            : '';
+
+        let nwDisplay = p.netWorth >= 1000000 
+            ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
+            : (p.netWorth / 1000).toFixed(0) + 'k $';
+
+        div.innerHTML = `
+            <div class="lb-rank ${rankClass}">${rankNum}</div>
+            <div class="lb-user">
+                <div class="lb-name">
+                   ${p.name} 
+                </div>
+                <div style="font-size:10px; color:#8b92a5;">
+                    ${rankIconHtml} ${p.rankName}
+                </div>
+            </div>
+            <div class="lb-stats">
+                <div class="lb-lp">${p.lp} LP</div>
+                <div class="lb-nw">${nwDisplay}</div>
+            </div>
+        `;
+        list.appendChild(div);
+    });
+}

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Totally Not Scam - Dashboard Gracza</title>
+    <title>Totally Not Scam</title>
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
@@ -13,21 +13,22 @@
 
     <nav class="sidebar">
         <div class="brand"><i class="fas fa-flask"></i> Totally Not Scam</div>
-        <div class="brand-sub">For the memes!</div>
+        <div class="brand-sub">(This is a joke project btw)</div>
         
         <div class="nav-section">
             <a onclick="showView('dashboard')" class="nav-item active" id="navDash"><i class="fas fa-chart-line"></i> Dashboard</a>
-            <a href="#" class="nav-item"><i class="fas fa-gamepad"></i> Gry</a>
-            <a href="#" class="nav-item"><i class="fas fa-suitcase"></i> Ekwipunek</a>
-            <a href="#" class="nav-item"><i class="fas fa-store"></i> Rynek</a>
-            <a href="#" class="nav-item"><i class="fas fa-wallet"></i> Portfel</a>
+            <a onclick="showView('games')" class="nav-item" id="navGames"><i class="fas fa-gamepad"></i> Gry</a>
+            <a onclick="showView('inventory')" class="nav-item" id="navInventory"><i class="fas fa-suitcase"></i> Ekwipunek</a>
+            <a onclick="showView('market')" class="nav-item" id="navMarket"><i class="fas fa-store"></i> Rynek</a>
+            <a onclick="showView('wallet')" class="nav-item" id="navWallet"><i class="fas fa-wallet"></i> Portfel</a>
+            <a onclick="showView('profile')" class="nav-item" id="navProfile"><i class="fas fa-user-circle"></i> Profil</a>
         </div>
 
         <div class="nav-section hidden" id="adminNavSection">
             <div class="nav-title">Zarządzanie</div>
-            <a href="#" class="nav-item"><i class="fas fa-users"></i> Użytkownicy</a>
-            <a href="#" class="nav-item"><i class="fas fa-sliders-h"></i> Panel Kontrolny</a>
-            <a href="#" class="nav-item"><i class="fas fa-file-alt"></i> Logi</a>
+            <a onclick="showView('adminDash')" class="nav-item" id="navAdminDash"><i class="fas fa-tachometer-alt"></i> Dashboard Admina</a>
+            <a onclick="showView('users')" class="nav-item" id="navUsers"><i class="fas fa-users"></i> Użytkownicy</a>
+            <a onclick="showView('logs')" class="nav-item" id="navLogs"><i class="fas fa-file-alt"></i> Logi</a>
         </div>
 
         <div class="sidebar-footer">
@@ -43,11 +44,11 @@
                 <div class="profile-left">
                     <div class="user-avatar"><i class="fas fa-user-astronaut"></i></div>
                     <div class="user-info">
-                        <h4>Admin</h4>
-                        <span>admin@casinolab.pl</span>
+                        <div style="font-size: 10px; color: var(--accent-purple); font-weight: 600; margin-bottom: 2px;">ADMIN</div>
+                        <h4>MrGambler</h4>
                     </div>
                 </div>
-                <i class="fas fa-bell bell-icon"></i>
+                <i class="fas fa-cog bell-icon" onclick="openAccountModal()" style="cursor: pointer;"></i>
             </div>
         </div>
     </nav>
@@ -55,7 +56,8 @@
     <main class="main-content">
         <div class="header">
             <div>
-                <h2>Dashboard</h2>
+                <h2 id="pageHeaderTitle">Dashboard</h2>
+                <button id="browseProfilesBtn" class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')" style="display: none; margin-left: 15px;">Przeglądaj Profile</button>
             </div>
             
             <div class="header-actions">
@@ -73,7 +75,7 @@
             </div>
         </div>
 
-        <div class="view-container dashboard-container active" id="viewDashboard">
+        <div class="view-container dashboard active" id="viewDashboard">
             
             <div class="quick-play-row">
                 <div class="qp-spacer"></div>
@@ -102,12 +104,142 @@
 
                 <div class="qp-spacer"></div>
             </div>
+        </div>
 
-            <div class="section-divider">
-                <span>Twój Profil</span>
+        <div class="view-container" id="viewGames">
+            
+            <div class="rank-overview-banner">
+                <div class="rob-left">
+                    <div class="rob-icon"><i class="fas fa-whale"></i></div> <div class="rob-info">
+                        <div class="rob-label">Twoja Ranga</div>
+                        <div class="rob-title">Alpha Whale</div>
+                        <div class="rob-sub">Poz. #428 na świecie</div>
+                    </div>
+                </div>
+                
+                <div class="rob-center">
+                    <div class="rob-progress-labels">
+                        <span>Obecne LP: <b style="color:var(--accent-blue);">1,450</b></span>
+                        <span>Następna ranga: <b>2,000 LP</b></span>
+                    </div>
+                    <div class="rob-progress-bar">
+                        <div class="rob-progress-fill" style="width: 72.5%;"></div> </div>
+                    <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-red);">550 LP</span> do awansu na <b>RNG God</b></div>
+                </div>
+
+                <div class="rob-right">
+                    <div class="stat-mini">
+                        <div class="sm-val">58%</div>
+                        <div class="sm-lbl">Win Rate</div>
+                    </div>
+                    <div class="stat-mini">
+                        <div class="sm-val text-green">+12.5%</div>
+                        <div class="sm-lbl">Net Worth 24h</div>
+                    </div>
+                </div>
             </div>
             
+
+            <div class="games-hub-grid">
+                
+                <div class="games-column">
+                    <div class="section-header-row">
+                        <h3>Dostępne Gry</h3>
+                        <div class="filter-pills">
+                            <span class="pill active">Wszystkie</span>
+                            <span class="pill">Karciane</span>
+                            <span class="pill">Sloty</span>
+                            <span class="pill">Live</span>
+                        </div>
+                    </div>
+                    <div class="games-grid-list" id="availableGamesContainer">
+                        </div>
+                </div>
+
+                <div class="leaderboard-column">
+                    <div class="card" style="height: 100%;">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-trophy" style="color:gold; margin-right:8px;"></i> Top Gamblers</div>
+                        </div>
+                        <div class="leaderboard-header">
+                            <span>#</span>
+                            <span>Gracz</span>
+                            <span style="text-align:right;">LP / Net Worth</span>
+                        </div>
+                        <div class="leaderboard-list" id="globalLeaderboardList">
+                            </div>
+                        <button class="load-more-btn" style="margin-top:15px;">Pokaż moją pozycję</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+        <div class="view-container" id="viewInventory">
+            <div class="card">
+                <div class="card-header"><div class="card-title">Twój Ekwipunek</div></div>
+                <div class="list-container" id="inventoryContainer">
+                    </div>
+            </div>
+        </div>
+
+        <div class="view-container" id="viewMarket">
+             <div class="games-hub-grid">
+                <div class="games-column">
+                    <div class="card">
+                        <div class="card-header"><div class="card-title">Oferty Rynkowe</div></div>
+                        <div class="list-container" id="marketContainer" style="max-height: 600px;">
+                            </div>
+                    </div>
+                </div>
+                <div class="leaderboard-column">
+                    <div class="card">
+                        <div class="card-header"><div class="card-title">Trendy</div></div>
+                        <div style="padding: 15px; color: var(--text-muted); font-size: 12px;">
+                            <p>🔥 Smocze Jajo (+15%)</p>
+                            <p style="margin-top:5px;">📉 Pusty Portfel (-99%)</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="view-container" id="viewWallet">
             <div class="top-stats-row">
+                <div class="stat-card" style="width: 100%; flex: 1;">
+                    <div class="stat-icon-top" style="color: var(--accent-green);"><i class="fas fa-university"></i></div>
+                    <div class="stat-main-label">2,450,000 $</div>
+                    <div class="stat-sub-label">Dostępne środki</div>
+                </div>
+                <div class="stat-card" style="width: 100%; flex: 1;">
+                    <div class="stat-icon-top" style="color: var(--accent-orange);"><i class="fas fa-piggy-bank"></i></div>
+                    <div classstat-main-label">12,500 LP</div>
+                    <div class="stat-sub-label">Punkty Lojalnościowe</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><div class="card-title">Ostatnie Transakcje</div></div>
+                <div class="list-container" id="walletContainer">
+                     </div>
+            </div>
+        </div>
+
+        <div class="view-container" id="viewProfile">
+            <div style="margin-bottom: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;">
+                <div class="user-avatar" style="width: 120px; height: 120px; font-size: 50px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px;"><i class="fas fa-user-astronaut"></i></div>
+                <div style="text-align: center; display: flex; align-items: center; justify-content: center;">
+                    <div style="font-size: 28px; font-weight: 700; margin-bottom: 0; color: var(--text-main);">MrGambler</div>
+                    
+                    <div class="status-indicator-wrapper">
+                        <span class="online-dot"></span>
+                        <span class="status-tooltip">Jest Online</span>
+                    </div>
+
+                </div>
+            </div>
+            
+            <div class="top-stats-row" style="margin-bottom: 0px; gap: 15px;">
                 <div class="stats-spacer"></div>
 
                 <div class="stat-card">
@@ -118,17 +250,18 @@
                     </div>
 
                     <div class="stat-main-label" style="font-size: 16px;">5,240,000 $</div>
-                    <div class="stat-sub-label">Net Worth (Saldo + Eq)</div>
+                    <div class="stat-sub-label">Net Worth (Cash + Eq)</div>
                 </div>
 
                 <div class="stat-card">
                     <div class="stat-menu-dots" onclick="openRankModal()"><i class="fas fa-ellipsis-h"></i></div>
                     <div class="stat-icon-top" style="font-size: 24px;">🐋</div>
                     <div class="stat-main-label">Alpha Whale</div>
-                    <div class="stat-sub-label">Ranga (2000 LP)</div>
+                    <div class="stat-sub-label">Ranga (1469 LP)</div>
                 </div>
 
-                <div class="stat-card">
+                <div class="stat-card" style="position: relative;">
+                    <div class="stat-menu-dots" onclick="openPlayerStatsModal()"><i class="fas fa-ellipsis-h"></i></div>
                     <div class="stat-icon-top" style="color: var(--accent-blue);"><i class="fas fa-clock"></i></div>
                     <div class="stat-main-label">6d 4h 20m</div>
                     <div class="stat-sub-label">Czas w grach (432 gier)</div>
@@ -144,13 +277,13 @@
                 <div class="stats-spacer"></div>
             </div>
 
-            <div class="bottom-panels-grid">
+            <div class="bottom-panels-grid" style="gap: 15px; margin-top: 0;">
                 
                 <div class="spacer-50"></div>
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Twoje przedmioty</div>
+                        <div class="card-title">Przedmioty</div>
                         <i class="fas fa-filter filter-icon-abs"></i>
                     </div>
                     <div class="list-container" id="treasuresList">
@@ -160,7 +293,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Twoje rozgrywki</div>
+                        <div class="card-title">Rozgrywki</div>
                         <i class="fas fa-filter filter-icon-abs"></i>
                     </div>
                     
@@ -188,7 +321,7 @@
 
                 <div class="card">
                     <div class="card-header">
-                        <div class="card-title">Twoje trofea</div>
+                        <div class="card-title">Trofea</div>
                         <i class="fas fa-filter filter-icon-abs"></i>
                     </div>
                     <div class="list-container" id="trophiesList">
@@ -199,130 +332,59 @@
                 <div class="spacer-50"></div>
 
             </div>
+        </div>
 
-            <div class="section-divider hidden-panel admin-divider-line">
-                <span style="color: var(--accent-red); font-weight: 700;">Oczy Admina</span>
-            </div>
-
-            <div class="admin-row hidden-panel admin-only">
-                
+        <div class="view-container" id="viewAdminDash">
+             <div class="admin-row">
                 <div class="card span-3">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-map-marked-alt"></i> Dark Patterns - Mapa Cieplna</div>
-                    </div>
+                    <div class="card-header"><div class="card-title"><i class="fas fa-map-marked-alt"></i> Dark Patterns - Mapa Cieplna</div></div>
                     <div class="heatmap-grid">
                         <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
                         <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
                         <div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div>
                         <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
                     </div>
-                    <div style="font-size: 10px; color: #fca5a5; text-align: right; margin-top: 5px;">
-                        Obszary intensywnych kliknięć (Buttony FOMO)
-                    </div>
                 </div>
-
                 <div class="card span-1">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-list-alt"></i> Live Feed</div></div>
-                    <div class="admin-log-list">
-                        <div class="admin-log-item">
-                            <div class="admin-dot"></div>
-                            <div class="admin-log-time">10:42</div>
-                            <div class="admin-log-content">Whale User_99 deposited 50k</div>
-                        </div>
-                        <div class="admin-log-item">
-                            <div class="admin-dot"></div>
-                            <div class="admin-log-time">10:41</div>
-                            <div class="admin-log-content">Retention Algorithm #4 Active</div>
-                        </div>
-                        <div class="admin-log-item">
-                            <div class="admin-dot"></div>
-                            <div class="admin-log-time">10:39</div>
-                            <div class="admin-log-content">User_12 failed withdrawal</div>
-                        </div>
-                        <div class="admin-log-item">
-                            <div class="admin-dot" style="background:#f59e0b; box-shadow:none;"></div>
-                            <div class="admin-log-time">10:35</div>
-                            <div class="admin-log-content">Lootbox Drop Rate lowered</div>
-                        </div>
-                        <div class="admin-log-item">
-                            <div class="admin-dot"></div>
-                            <div class="admin-log-time">10:30</div>
-                            <div class="admin-log-content">Bot Network Sync... OK</div>
-                        </div>
+                    <div class="card-header"><div class="card-title"><i class="fas fa-brain"></i> Podatność</div></div>
+                    <div class="psych-grid" style="grid-template-columns: 1fr;">
+                        <div class="psych-stat"><div class="psych-label">Hazardzista</div><div class="psych-val">85%</div></div>
+                        <div class="psych-stat"><div class="psych-label">FOMO</div><div class="psych-val">92%</div></div>
                     </div>
                 </div>
-
-                <div class="card span-2">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-brain"></i> Podatność Psychologiczna</div></div>
-                    <div class="psych-grid">
-                        <div class="psych-stat">
-                            <div class="psych-label">Hazardzista (Impuls)</div>
-                            <div class="psych-bar-bg"><div class="psych-bar-fill" style="width: 85%;"></div></div>
-                            <div class="psych-val">85% <span class="risk-badge">HIGH RISK</span></div>
-                        </div>
-                        <div class="psych-stat">
-                            <div class="psych-label">"Odkuwacz" (Loss Aversion)</div>
-                            <div class="psych-bar-bg"><div class="psych-bar-fill" style="width: 62%;"></div></div>
-                            <div class="psych-val">62% <span class="risk-badge">MED RISK</span></div>
-                        </div>
-                        <div class="psych-stat">
-                            <div class="psych-label">Kolekcjoner (Completionist)</div>
-                            <div class="psych-bar-bg"><div class="psych-bar-fill" style="width: 45%;"></div></div>
-                            <div class="psych-val">45% <span class="risk-badge">LOW RISK</span></div>
-                        </div>
-                        <div class="psych-stat">
-                            <div class="psych-label">Social (FOMO)</div>
-                            <div class="psych-bar-bg"><div class="psych-bar-fill" style="width: 92%;"></div></div>
-                            <div class="psych-val">92% <span class="risk-badge">CRITICAL</span></div>
-                        </div>
-                    </div>
-                </div>
-
                 <div class="card span-2">
                     <div class="card-header"><div class="card-title"><i class="fas fa-cogs"></i> Skuteczność Algorytmów</div></div>
-                    
-                    <div class="metric-row-admin">
-                        <div class="mra-left">
-                            <h5>"Near Miss" Events</h5>
-                            <div class="mra-val">12,402</div>
-                        </div>
-                        <div class="mra-right">
-                            <div class="mra-trend trend-up"><i class="fas fa-arrow-up"></i> +14%</div>
-                            <div class="mini-spark">
-                                <div class="spark-bar" style="height: 40%"></div><div class="spark-bar" style="height: 60%"></div><div class="spark-bar" style="height: 50%"></div><div class="spark-bar active" style="height: 90%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="metric-row-admin">
-                        <div class="mra-left">
-                            <h5>Dopamine Hits (Dźwięk)</h5>
-                            <div class="mra-val">845,000</div>
-                        </div>
-                        <div class="mra-right">
-                            <div class="mra-trend trend-up"><i class="fas fa-arrow-up"></i> +5%</div>
-                            <div class="mini-spark">
-                                <div class="spark-bar" style="height: 60%"></div><div class="spark-bar" style="height: 70%"></div><div class="spark-bar active" style="height: 85%"></div><div class="spark-bar" style="height: 80%"></div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div class="metric-row-admin" style="border:none;">
-                        <div class="mra-left">
-                            <h5>Churn Rate (Odejścia)</h5>
-                            <div class="mra-val">1.2%</div>
-                        </div>
-                        <div class="mra-right">
-                            <div class="mra-trend trend-bad"><i class="fas fa-arrow-down"></i> -0.1%</div>
-                            <div class="mini-spark">
-                                <div class="spark-bar" style="height: 90%"></div><div class="spark-bar active" style="height: 40%"></div><div class="spark-bar" style="height: 30%"></div><div class="spark-bar" style="height: 20%"></div>
-                            </div>
-                        </div>
-                    </div>
-
+                    <div class="metric-row-admin"><div class="mra-left"><h5>"Near Miss"</h5><div class="mra-val">12,402</div></div><div class="mra-right"><div class="mra-trend trend-up"><i class="fas fa-arrow-up"></i> +14%</div></div></div>
+                    <div class="metric-row-admin" style="border:none;"><div class="mra-left"><h5>Churn Rate</h5><div class="mra-val">1.2%</div></div><div class="mra-right"><div class="mra-trend trend-bad"><i class="fas fa-arrow-down"></i> -0.1%</div></div></div>
                 </div>
+                 <div class="card span-2">
+                     <div class="card-header"><div class="card-title">Logi systemowe</div></div>
+                     <div class="admin-log-list">
+                        <div class="admin-log-item"><div class="admin-dot"></div><div class="admin-log-time">10:42</div><div class="admin-log-content">Whale User_99 deposited 50k</div></div>
+                        <div class="admin-log-item"><div class="admin-dot"></div><div class="admin-log-time">10:41</div><div class="admin-log-content">Retention Algorithm #4 Active</div></div>
+                        <div class="admin-log-item"><div class="admin-dot"></div><div class="admin-log-time">10:30</div><div class="admin-log-content">Bot Network Sync... OK</div></div>
+                    </div>
+                 </div>
             </div>
+        </div>
 
+        <div class="view-container" id="viewUsers">
+            <div class="card">
+                <div class="card-header"><div class="card-title">Baza Użytkowników</div></div>
+                <div class="leaderboard-header" style="grid-template-columns: 50px 1fr 150px 100px;">
+                    <span>ID</span><span>Użytkownik</span><span>Ranga</span><span>Status</span>
+                </div>
+                <div class="list-container" id="usersContainer">
+                    </div>
+            </div>
+        </div>
+
+        <div class="view-container" id="viewLogs">
+            <div class="card" style="height: 500px; font-family: monospace;">
+                <div class="card-header"><div class="card-title">Pełne Logi Serwera</div></div>
+                <div class="list-container" id="logsContainer" style="color: #ccc; font-size: 11px;">
+                     </div>
+            </div>
         </div>
 
     </main>
@@ -368,6 +430,123 @@
                 <div class="ladder-container" id="ladderContainer">
                     <div class="ladder-spine" id="ladderSpine"></div>
                     </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="accountModal">
+        <div class="steam-modal" style="width: 800px;">
+            <div class="sm-header">
+                <div class="sm-title">Konto</div>
+                <div class="sm-close" onclick="closeAccountModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-content" style="padding-top: 15px;">
+                
+                <div class="sm-section-title">Details</div>
+                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">E-Mail</div>
+                        <div style="font-size: 14px;">admin@casinolab.pl</div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Credit Cards</div>
+                        <div style="font-size: 14px;">•••• •••• •••• 4242</div>
+                        <button class="gc-btn play" style="margin-top: 10px; width: auto; padding: 5px 15px; font-size: 11px;">Zarządzaj kartami</button>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Cryptocurrency Wallet</div>
+                        <div style="font-size: 14px; font-family: monospace;">0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb</div>
+                        <button class="gc-btn play" style="margin-top: 10px; width: auto; padding: 5px 15px; font-size: 11px;">Zarządzaj portfelem</button>
+                    </div>
+                </div>
+
+                <div class="sm-section-title">Security</div>
+                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Password</div>
+                        <button class="gc-btn play" style="width: auto; padding: 5px 15px; font-size: 11px;">Zmień hasło</button>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Two-factor authentication</div>
+                        <div style="font-size: 14px; color: var(--accent-red); margin-bottom: 10px;">Nieaktywne</div>
+                        <button class="gc-btn play" style="width: auto; padding: 5px 15px; font-size: 11px;">Włącz 2FA</button>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Backup codes</div>
+                        <button class="gc-btn play" style="width: auto; padding: 5px 15px; font-size: 11px;">Wygeneruj kody zapasowe</button>
+                    </div>
+                </div>
+
+                <div class="sm-section-title">Account connections</div>
+                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
+                    <div style="font-size: 12px; color: var(--text-muted);">Brak połączonych kont</div>
+                    <button class="gc-btn play" style="margin-top: 10px; width: auto; padding: 5px 15px; font-size: 11px;">Połącz konto</button>
+                </div>
+
+                <div class="sm-section-title">Data Management</div>
+                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
+                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Usunięcie konta jest nieodwracalne. Wszystkie dane zostaną trwale usunięte.</div>
+                    <button class="gc-btn play" style="background: var(--accent-red); width: auto; padding: 5px 15px; font-size: 11px;" onclick="alert('Usuwanie konta niedostępne w demo')">Usuń konto</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+
+    <div class="modal-overlay" id="playerStatsModal">
+        <div class="steam-modal" style="width: 600px;">
+            <div class="sm-header">
+                <div class="sm-title">Statystyki Gracza</div>
+                <div class="sm-close" onclick="closePlayerStatsModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-content" style="padding-top: 15px;">
+                
+                <div class="sm-section-title">Informacje</div>
+                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Dołączył</div>
+                        <div style="font-size: 14px;">10 Dec 2025</div>
+                    </div>
+                </div>
+
+                <div class="sm-section-title">Statystyki Gier</div>
+                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Sumaryczna liczba gier</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--accent-blue);">432 gier</div>
+                    </div>
+                    <div style="margin-bottom: 15px;">
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Największa wygrana</div>
+                        <div style="font-size: 18px; font-weight: 700; color: var(--accent-green);">500,000 $</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Najczęściej grywane gry</div>
+                        <div style="display: flex; flex-direction: column; gap: 8px;">
+                            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 600;">Quantum Slots</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Ulubiona gra</div>
+                                </div>
+                                <div style="font-size: 12px; color: var(--accent-blue);">142 gry</div>
+                            </div>
+                            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 600;">Blackjack</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Druga najczęstsza</div>
+                                </div>
+                                <div style="font-size: 12px; color: var(--accent-blue);">98 gier</div>
+                            </div>
+                            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
+                                <div>
+                                    <div style="font-size: 14px; font-weight: 600;">Roulette</div>
+                                    <div style="font-size: 11px; color: var(--text-muted);">Trzecia najczęstsza</div>
+                                </div>
+                                <div style="font-size: 12px; color: var(--accent-blue);">76 gier</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
 
             </div>
         </div>

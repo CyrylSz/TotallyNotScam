@@ -181,3 +181,30 @@ const ranksDB = [
         margin: "margin-top: -10px;" 
     }
 ];
+
+// --- NEW DATA: GAMES HUB ---
+
+// data.js - Podmień tablicę availableGamesDB
+const availableGamesDB = [
+    { id: 1, name: "Neon Blackjack", type: "Karciane", players: 1240, imgColor: "#10b981", isHot: true, icon: "fa-dice" },
+    { id: 2, name: "Cyber Roulette", type: "Live", players: 890, imgColor: "#ef4444", isHot: true, icon: "fa-circle-notch" },
+    { id: 3, name: "Quantum Slots", type: "Sloty", players: 3400, imgColor: "#8b5cf6", isHot: true, icon: "fa-gem" }, // Użyta w Dashboard
+    { id: 4, name: "Space Poker", type: "Karciane", players: 560, imgColor: "#3b82f6", isHot: false, icon: "fa-playing-card" }, // Pasuje do Poker Holdem
+    { id: 5, name: "Binary Baccarat", type: "Karciane", players: 230, imgColor: "#64748b", isHot: false, icon: "fa-hand-paper" },
+    { id: 6, name: "Crash Protocol", type: "Live", players: 1500, imgColor: "#f59e0b", isHot: true, icon: "fa-chart-line" },
+    { id: 7, name: "Dice Mines", type: "Sloty", players: 120, imgColor: "#64748b", isHot: false, icon: "fa-bomb" },
+    { id: 8, name: "Crypto Plinko", type: "Sloty", players: 850, imgColor: "#ec4899", isHot: false, icon: "fa-coins" },
+];
+
+const globalLeaderboardDB = [
+    { rankVal: 8, rankName: "King of The Gamblers", name: "Not_Elon", lp: 9500, netWorth: 154000000 },
+    { rankVal: 7, rankName: "RNG God", name: "LuckyLuke", lp: 4200, netWorth: 25000000 },
+    { rankVal: 7, rankName: "RNG God", name: "Casino_AI", lp: 3800, netWorth: 18500000 },
+    { rankVal: 6, rankName: "Alpha Whale", name: "DiamondH", lp: 1950, netWorth: 8500000 },
+    { rankVal: 6, rankName: "Alpha Whale", name: "CryptoBro", lp: 1200, netWorth: 5200000 },
+    { rankVal: 5, rankName: "Casino Legend", name: "ZeroCool", lp: 980, netWorth: 2100000 },
+    { rankVal: 5, rankName: "Casino Legend", name: "MatrixNeo", lp: 850, netWorth: 1500000 },
+    { rankVal: 4, rankName: "Table Shark", name: "BluffMaster", lp: 550, netWorth: 800000 },
+    { rankVal: 4, rankName: "Table Shark", name: "CardCounter", lp: 420, netWorth: 450000 },
+    { rankVal: 3, rankName: "Risk Taker", name: "YOLO_Trader", lp: 250, netWorth: 150000 },
+];
