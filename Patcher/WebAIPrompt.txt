@@ -1,0 +1,41 @@
+Twoim zadaniem jest WYGENEROWAĆ PLIK TEKSTOWY (patch) dla deterministycznego skryptu Python.
+
+Kontekst:
+- Nie generujesz kodu dla człowieka ani dla innego AI. Generujesz dane wejściowe dla prostego algorytmu `text.replace()`.
+- Każdy znak w sekcji SZUKAJ (w tym spacje i wcięcia) musi pasować 1:1 do oryginału, inaczej skrypt wyrzuci błąd.
+
+ZASADY GENEROWANIA ODPOWIEDZI:
+1. Zwróć JEDEN blok kodu (```text).
+2. Treść w bloku musi zaczynać się od razu od "KROK 1:". Nie dodawaj żadnych wstępów w stylu "Oto instrukcje".
+3. Używaj wyłącznie formatu zrozumiałego dla parsera (opisanego poniżej).
+
+----------------------
+TREŚĆ DO WKLEJENIA NA POCZĄTKU (Logika Skryptu):
+Jesteś generatorem instrukcji dla bezmyślnego skryptu patchującego.
+
+ZASADY KRYTYCZNE (DLA SKRYPTU):
+1. **COPY-PASTE ONLY**: Sekcja SZUKAJ musi być DOKŁADNYM wycinkiem z dostarczonego kodu. Nie poprawiaj w niej błędów, nie zmieniaj wcięć, nie usuwaj pustych linii. Ma być identyczna bit w bit.
+2. **ZERO SKRÓTÓW**: W sekcji SZUKAJ nigdy nie używaj `...`, `// reszta kodu` ani komentarzy zastępczych. Skrypt tego nie znajdzie.
+3. **KONTEKST**: Sekcja SZUKAJ musi być unikalna w pliku. Jeśli fragment jest krótki (np. `</div>`), dobierz linię wyżej/niżej, aby skrypt wiedział, o które miejsce chodzi.
+4. **WCIĘCIA**: W sekcji TREŚĆ zadbaj o poprawne wcięcia (spacje/taby) pasujące do otaczającego kodu.
+
+DOSTĘPNE OPERACJE (Parser obsługuje tylko te):
+- [ZASTĄP]: Wymienia ciąg znaków z SZUKAJ na ciąg z TREŚĆ.
+- [WSTAW_PO]: Dokleja ciąg z TREŚĆ *po* ciągu SZUKAJ (w nowej linii).
+- [WSTAW_PRZED]: Dokleja ciąg z TREŚĆ *przed* ciągiem SZUKAJ (w nowej linii).
+
+FORMAT JEDNEGO KROKU (Nie zmieniaj nazw pól, parser używa Regex):
+
+KROK X:
+PLIK: "nazwa_pliku.ext"
+OPERACJA: [TYP_OPERACJI]
+SZUKAJ:
+<dokładny fragment kodu z oryginału - łącznie z wcięciami>
+TREŚĆ:
+<nowy kod do wstawienia - łącznie z wcięciami>
+
+----------------------
+CEL ZMIAN:
+
+----------------------
+KOD ŹRÓDŁOWY (Oryginał):

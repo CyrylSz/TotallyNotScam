@@ -1,0 +1,62 @@
+=== paths ===
+C:\Users\Akwar\Documents\Soul-Sucking\s5\BYT\Htmltests\TotallyNotScam\App
+
+=== Include ===
+*
+
+=== exclude ===
+.
+bin
+obj
+
+
+
+
+
+# ------------------------------------------
+# [1] SEKCJA: === paths ===
+# ------------------------------------------
+# Określa, SKĄD program ma pobierać pliki.
+#
+# Zasady:
+#   .                  -> Folder bieżący (tam, gdzie leży plik .jar lub settings.txt).
+#   ..                 -> Folder nadrzędny (jedno piętro wyżej).
+#   ../App             -> Wyjdź wyżej, a potem wejdź do folderu 'App'.
+#   C:\Projekty\Kod    -> Pełna ścieżka absolutna.
+#
+# Możesz podać wiele ścieżek (każdą w nowej linii).
+
+# ------------------------------------------
+# [2] SEKCJA: === Include ===
+# ------------------------------------------
+# Co program ma "widzieć". Domyślnie program widzi tylko to, co tu wpiszesz.
+# Jeśli wpiszesz "*", program zobaczy wszystkie pliki (zanim zastosuje Exclude).
+
+# ------------------------------------------
+# [3] SEKCJA: === exclude ===
+# ------------------------------------------
+# Co program ma wyrzucić. TA SEKCJA MA NAJWYŻSZY PRIORYTET.
+# Nawet jeśli plik pasuje do Include, ale jest tutaj wymieniony – zostanie pominięty.
+# Użyj tej sekcji, aby pozbyć się śmieci (folderów budowania, bibliotek, git-a).
+
+# ------------------------------------------
+# [4] ZASADY FILTROWANIA (Dla sekcji Include i Exclude)
+# ------------------------------------------
+# Poniższe reguły działają tak samo w obu sekcjach:
+#
+#   *        -> (Gwiazdka) Oznacza "wszystko".
+#               W Include: bierz każdy plik.
+#               W Exclude: ignoruj wszystko (niezalecane, bo wynik będzie pusty).
+#
+#   .         -> (Kropka) Oznacza "elementy ukryte/systemowe".
+#               Dopasowuje każdy plik lub folder, którego nazwa zaczyna się od kropki.
+#               Np.: .git, .idea, .vscode, .env, .gitignore.
+#
+#   *.ext    -> (Gwiazdka + kropka + rozszerzenie) Dopasowuje po rozszerzeniu.
+#               Np.: *.java, *.txt, *.css. Wielkość liter nie ma znaczenia.
+#
+#   nazwa  -> Dopasowuje konkretną nazwę pliku LUB folderu.
+#               Jeśli wpiszesz "bin", dopasuje to zarówno plik "bin", jak i folder "bin"
+#               gdziekolwiek w drzewie katalogów.
+#
+#   a/b       -> Ścieżka względna. Dopasowuje plik 'b' znajdujący się w folderze 'a'.
