@@ -166,6 +166,44 @@ input:checked + .slider:before { transform: translateX(16px); }
     font-weight: 600;
 }
 
+.header-bell-container {
+    position: relative;
+    background: rgba(255, 255, 255, 0.05);
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+    color: var(--text-muted);
+    border: 1px solid rgba(255,255,255,0.1);
+}
+.header-bell-container:hover {
+    background: rgba(255, 255, 255, 0.1);
+    color: white;
+}
+.header-bell-badge {
+    position: absolute;
+    top: -2px;
+    right: -2px;
+    background-color: var(--accent-red);
+    color: white;
+    font-size: 10px;
+    font-weight: 700;
+    width: 16px;
+    height: 16px;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 2px solid var(--bg-dark);
+}
+.header-bell-badge.hidden {
+    display: none;
+}
+
 /* --- LAYOUT STRUCTURE --- */
 .view-container { display: none; flex-direction: column; gap: 30px; padding-bottom: 80px; animation: fadeIn 0.3s ease; }
 .view-container.active { display: flex; }

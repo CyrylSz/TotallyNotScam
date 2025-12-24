@@ -2,6 +2,7 @@
 let shownTreasures = 5;
 let shownGames = 20; 
 let shownTrophies = 5;
+let notificationCount = 3;
 
 // Animation State
 let prevWinPerc = 0;
@@ -26,12 +27,15 @@ function updateStats() {
     const earned = achievementsDB.filter(a => a.acquired).length;
     const total = achievementsDB.length;
     const perc = Math.round((earned / total) * 100);
-    
-    const unclaimed = achievementsDB.filter(a => a.acquired && !a.rewardClaimed).length;
-    document.getElementById('rewardsCount').textContent = unclaimed;
-    
-    const chests = allTreasures.filter(t => t.isChest).length;
-    document.getElementById('lootboxCount').textContent = chests;
+
+    // Update notifications logic (Badge)
+    const badge = document.getElementById('headerBellBadge');
+    if (notificationCount > 0) {
+        badge.textContent = notificationCount;
+        badge.classList.remove('hidden');
+    } else {
+        badge.classList.add('hidden');
+    }
 
     document.getElementById('mainTrophyCount').textContent = `${earned}/${total}`;
     document.getElementById('modalEarnedText').textContent = `${earned} OF ${total} ACHIEVEMENTS EARNED`;
@@ -280,6 +284,12 @@ function claimReward(id) {
     const ach = achievementsDB.find(a => a.id === id);
     if (ach) {
         ach.rewardClaimed = true;
+        
+        // Decrement notifications only for trophies
+        if (notificationCount > 0) {
+            notificationCount--;
+        }
+        
         updateStats();
         renderTrophies();
     }
