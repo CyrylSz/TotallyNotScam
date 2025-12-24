@@ -60,6 +60,10 @@
                 <button id="browseProfilesBtn" class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')" style="display: none; margin-left: 15px;">Przeglądaj Profile</button>
             </div>
             
+            <div class="currency-display">
+                <span id="currencyCount">2,450,000</span> <i class="fas fa-dollar-sign"></i>
+            </div>
+
             <div class="header-actions">
                 <div class="lootbox-display">
                     <span id="lootboxCount">2</span> <i class="fas fa-briefcase"></i>
@@ -68,11 +72,8 @@
                 <div class="rewards-display">
                     <span id="rewardsCount">0</span> <i class="fas fa-trophy"></i>
                 </div>
-
-                <div class="currency-display">
-                    <span id="currencyCount">2,450,000</span> <i class="fas fa-dollar-sign"></i>
+                
                 </div>
-            </div>
         </div>
 
         <div class="view-container dashboard active" id="viewDashboard">
@@ -385,7 +386,10 @@
 
         <div class="view-container" id="viewProfile">
             <div style="margin-bottom: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;">
-                <div class="user-avatar" style="width: 120px; height: 120px; font-size: 50px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px;"><i class="fas fa-user-astronaut"></i></div>
+                <div class="user-avatar" style="width: 120px; height: 120px; font-size: 50px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px; position: relative;">
+                    <i class="fas fa-user-astronaut"></i>
+                    <div class="profile-level-badge">LVL 14</div>
+                </div>
                 <div style="text-align: center; display: flex; align-items: center; justify-content: center;">
                     <div style="font-size: 28px; font-weight: 700; margin-bottom: 0; color: var(--text-main);">MrGambler</div>
                     

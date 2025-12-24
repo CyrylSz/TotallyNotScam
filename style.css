@@ -92,7 +92,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* Main Content */
 .main-content { flex-grow: 1; padding: 0 30px; overflow-y: auto; display: flex; flex-direction: column; }
 
-/* HEADER: Sticky */
+/* HEADER: Sticky + Centered Currency Parent */
 .header { 
     display: flex; 
     justify-content: space-between; 
@@ -100,12 +100,19 @@ input:checked + .slider:before { transform: translateX(16px); }
     padding-top: 25px;
     padding-bottom: 25px;
     margin-bottom: 10px;
-    position: sticky;
+    
+    /* To sprawia, że header pływa przy przewijaniu... */
+    position: sticky; 
     top: 0;
     z-index: 100;
+    
+    /* ...a jednocześnie sticky działa jako punkt odniesienia dla absolutnej waluty! */
+    /* Nie potrzebujesz tu position: relative */
+    
     background-color: var(--bg-dark);
     border-bottom: 1px solid rgba(255,255,255,0.05);
 }
+
 .header h2 { font-size: 24px; font-weight: 600; display: inline-block; }
 
 .header-actions {
@@ -114,16 +121,25 @@ input:checked + .slider:before { transform: translateX(16px); }
     gap: 15px; 
 }
 
+/* --- CENTERED CURRENCY --- */
 .currency-display {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    
     background: rgba(16, 185, 129, 0.1);
     border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 8px 16px;
+    padding: 8px 25px;
     border-radius: 8px;
     display: flex;
     align-items: center;
     gap: 8px;
     color: var(--accent-green);
-    font-weight: 600;
+    font-weight: 700;
+    font-size: 16px;
+    white-space: nowrap;
+    z-index: 10;
 }
 
 .lootbox-display {
@@ -1202,3 +1218,27 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 /* RNG Card hover effect */
 .rng-card:hover { box-shadow: 0 0 30px rgba(0, 229, 255, 0.2); border-color: rgba(0, 229, 255, 0.5); transition: 0.3s; }
+
+/* --- PROFILE LEVEL BADGE --- */
+.profile-level-badge {
+    position: absolute;
+    bottom: -10px; /* Wystaje lekko poza dół avatara */
+    left: 50%;
+    transform: translateX(-50%); /* Idealne centrowanie w poziomie */
+    
+    background: linear-gradient(90deg, #ec4899, #8b5cf6); /* Gradient pasujący do motywu */
+    color: white;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    
+    padding: 4px 12px;
+    border-radius: 12px; /* Kształt pigułki */
+    
+    /* To tworzy efekt "wycięcia" i oddziela badge od tła strony */
+    border: 4px solid var(--bg-dark); 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    z-index: 10;
+    white-space: nowrap;
+}
+
