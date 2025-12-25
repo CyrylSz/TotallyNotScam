@@ -1202,6 +1202,212 @@ input:checked + .slider:before { transform: translateX(16px); }
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
+/* --- NEW 3-COLUMN DASHBOARD LAYOUT --- */
+.dash-3-col-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 1200px) {
+    .dash-3-col-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.d3-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Combined Left Panel (Market + Inventory) */
+.combined-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 400px; /* Ensure it's taller than QP */
+}
+
+.cp-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cp-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+    margin: 15px 0;
+}
+
+/* Daily Hub (Right Panel) */
+.daily-hub-card {
+    min-height: 400px;
+}
+
+.dh-streak-section {
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+.bp-mini-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.1), rgba(21, 26, 45, 0));
+    padding: 10px 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent-purple);
+    margin-bottom: 15px;
+}
+
+.bp-mini-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.bp-mini-dots {
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+    transition: 0.2s;
+}
+.bp-mini-dots:hover { color: white; transform: scale(1.1); }
+
+/* NEW BATTLE PASS MODAL (Horizontal Track) */
+.bp-modal-track-container {
+    overflow-x: auto;
+    padding: 40px 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    margin-top: 20px;
+    /* Custom Scrollbar for track */
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-purple) var(--bg-dark);
+}
+
+.bp-track-flex {
+    display: flex;
+    align-items: center;
+    min-width: max-content;
+    padding: 0 50px;
+    position: relative;
+}
+
+/* The Line */
+.bp-track-line-bg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.bp-track-line-fill {
+    position: absolute;
+    left: 0;
+    width: 35%; /* Hardcoded progress for visual */
+    top: 50%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-purple), #00e5ff);
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    transform: translateY(-50%);
+}
+
+.bp-level-node {
+    position: relative;
+    z-index: 2;
+    margin: 0 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+}
+
+.bp-node-circle {
+    width: 40px;
+    height: 40px;
+    background: var(--bg-dark);
+    border: 2px solid #555;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 10px;
+    transition: 0.3s;
+    position: relative;
+}
+
+.bp-level-node.active .bp-node-circle {
+    border-color: #00e5ff;
+    color: white;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    background: #1a2340;
+    transform: scale(1.1);
+}
+
+.bp-level-node.claimed .bp-node-circle {
+    border-color: var(--accent-purple);
+    background: var(--accent-purple);
+    color: white;
+}
+
+.bp-reward-box {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #ccc;
+    position: relative;
+    transition: 0.3s;
+}
+
+.bp-level-node.active .bp-reward-box {
+    border-color: #00e5ff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.bp-level-node:hover .bp-reward-box {
+    transform: translateY(-5px);
+}
+
+.bp-label-free {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    text-transform: uppercase;
+}
+
+.bp-lock-icon {
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    font-size: 12px;
+    color: #555;
+    background: var(--bg-dark);
+    border-radius: 50%;
+    padding: 2px;
+}
 /* --- NEW DASHBOARD STYLES (Instructions Implementation) --- */
 
 .dash-section { margin-bottom: 25px; }

@@ -584,6 +584,14 @@ function closeRankModal() {
     document.getElementById('rankModal').classList.remove('active');
 }
 
+// --- BATTLE PASS MODAL ---
+function openBattlePassModal() {
+    document.getElementById('battlePassModal').classList.add('active');
+}
+
+function closeBattlePassModal() {
+    document.getElementById('battlePassModal').classList.remove('active');
+}
 // --- ACCOUNT MODAL ---
 function openAccountModal() {
     document.getElementById('accountModal').classList.add('active');
