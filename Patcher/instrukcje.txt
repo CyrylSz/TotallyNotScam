@@ -1,102 +1,24 @@
 KROK 1:
 PLIK: "style.css"
-OPERACJA: [ZASTĄP]
+OPERACJA: [WSTAW_PO]
 SZUKAJ:
-/* --- CENTERED CURRENCY --- */
-.currency-display {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 8px 25px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    color: var(--accent-green);
-    font-weight: 700;
-    font-size: 16px;
-    white-space: nowrap;
-    z-index: 10;
-}
+.streak-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 15px; }
 TREŚĆ:
-/* --- CENTERED CURRENCY --- */
-.currency-display {
-    position: absolute;
-    left: 50%;
-    top: 50%;
-    transform: translate(-50%, -50%);
-    
-    /* Zmiana: Ciemne tło dla kontrastu i biały tekst */
-    background: rgba(0, 0, 0, 0.7);
-    border: 1px solid rgba(16, 185, 129, 0.5);
-    box-shadow: 0 0 15px rgba(16, 185, 129, 0.15);
-    backdrop-filter: blur(5px);
-    
-    padding: 8px 30px;
-    border-radius: 30px; /* Bardziej obły kształt */
-    
-    display: flex;
-    align-items: center;
-    gap: 12px;
-    
-    color: #ffffff; /* Biały tekst, aby nie zlewał się z tłem */
-    font-weight: 700;
-    font-size: 17px;
-    white-space: nowrap;
-    z-index: 10;
-}
 
-.currency-display i {
-    color: var(--accent-green); /* Ikona pozostaje zielona */
-}
-
-KROK 2:
-PLIK: "style.css"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-.header-bell-container {
-    position: relative;
-    background: rgba(255, 255, 255, 0.05);
-    width: 40px;
-    height: 40px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    border-radius: 50%;
-    cursor: pointer;
-    transition: 0.2s;
-    color: var(--text-muted);
-    border: 1px solid rgba(255,255,255,0.1);
-}
-.header-bell-container:hover {
-    background: rgba(255, 255, 255, 0.1);
-    color: white;
-}
-TREŚĆ:
-.header-bell-container {
-    position: relative;
-    /* Usunięto koło i tło zgodnie z prośbą */
-    background: transparent;
-    border: none;
-    width: auto;
-    height: auto;
-    padding: 5px;
-    
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    
-    cursor: pointer;
-    transition: 0.2s;
-    color: var(--text-muted);
-    font-size: 18px; /* Lekko powiększona ikona */
-}
-.header-bell-container:hover {
-    background: transparent;
-    color: white;
-    transform: scale(1.1);
-}
+/* Battle Pass New Styles */
+.bp-new-layout { display: flex; flex-direction: column; gap: 15px; }
+.bp-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px; }
+.bp-title-lg { font-size: 16px; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 1px; }
+.bp-season { font-size: 10px; color: var(--accent-purple); font-weight: 600; background: rgba(139, 92, 246, 0.1); padding: 2px 6px; border-radius: 4px; }
+.bp-track { display: flex; align-items: center; gap: 8px; position: relative; padding: 10px 0; }
+.bp-node { width: 40px; height: 40px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+.bp-node i { font-size: 14px; color: var(--text-muted); }
+.bp-node.unlocked { background: rgba(139, 92, 246, 0.2); border-color: var(--accent-purple); box-shadow: 0 0 8px rgba(139, 92, 246, 0.3); }
+.bp-node.unlocked i { color: white; }
+.bp-node.premium { border-color: gold; background: rgba(255, 215, 0, 0.05); }
+.bp-node.premium i { color: gold; }
+.bp-node-lvl { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--text-muted); font-family: monospace; }
+.bp-line { flex-grow: 1; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; position: relative; overflow: hidden; }
+.bp-line-fill { height: 100%; background: linear-gradient(90deg, var(--accent-purple), #ec4899); width: 60%; }
+.bp-info-box { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; display: flex; align-items: center; gap: 10px; border: 1px dashed rgba(255,255,255,0.1); }
+.bp-info-text { font-size: 11px; color: #ccc; flex-grow: 1; line-height: 1.3; }

@@ -320,20 +320,20 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 
 .qp-btn-small {
-    padding: 8px 20px;
+    padding: 6px 12px;
     border: 1px solid rgba(139, 92, 246, 0.3);
     background: rgba(255,255,255,0.05);
-    border-radius: 8px;
+    border-radius: 6px;
     color: #c7d2fe; 
-    font-size: 12px;
+    font-size: 11px;
     font-weight: 600;
     cursor: pointer;
     display: flex;
     flex-direction: column;
     align-items: center;
-    gap: 5px;
+    gap: 3px;
     transition: 0.2s;
-    min-width: 90px;
+    min-width: 70px;
     flex: 1; 
 }
 .qp-btn-small i { font-size: 16px; margin-bottom: 2px; }
@@ -1205,6 +1205,21 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* --- NEW DASHBOARD STYLES (Instructions Implementation) --- */
 
 .dash-section { margin-bottom: 25px; }
+
+/* Ticker & Banner Connection */
+.top-banner-section { 
+    margin-bottom: 0 !important; 
+    border-bottom-left-radius: 0 !important; 
+    border-bottom-right-radius: 0 !important; 
+    border-bottom: none !important;
+}
+.ticker-section { 
+    border-top: none !important; 
+    border-radius: 0 0 12px 12px; 
+    background: linear-gradient(to bottom, rgba(21, 26, 45, 0.9), rgba(0,0,0,0.3));
+    margin-top: 0;
+}
+
 .dash-card { height: 100%; min-height: 250px; }
 
 /* Grids */
@@ -1226,7 +1241,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* SEKCJA 2: Ticker */
 .ticker-section { background: rgba(0,0,0,0.3); border-top: 1px solid rgba(255,255,255,0.05); border-bottom: 1px solid rgba(255,255,255,0.05); height: 40px; overflow: hidden; display: flex; align-items: center; }
 .ticker-wrap { width: 100%; overflow: hidden; white-space: nowrap; }
-.ticker { display: inline-block; animation: ticker 30s linear infinite; }
+.ticker { display: inline-block; animation: ticker 90s linear infinite; }
 .ticker__item { display: inline-block; padding: 0 20px; font-size: 12px; color: var(--text-muted); }
 .ticker__item i { margin-right: 5px; }
 @keyframes ticker { 0% { transform: translateX(0); } 100% { transform: translateX(-50%); } }
@@ -1246,6 +1261,23 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 /* Streak */
 .streak-container { display: flex; flex-direction: column; align-items: center; justify-content: center; height: 100%; gap: 15px; }
+/* Battle Pass New Styles */
+.bp-new-layout { display: flex; flex-direction: column; gap: 15px; }
+.bp-header-row { display: flex; justify-content: space-between; align-items: flex-end; margin-bottom: 5px; }
+.bp-title-lg { font-size: 16px; font-weight: 800; color: white; text-transform: uppercase; letter-spacing: 1px; }
+.bp-season { font-size: 10px; color: var(--accent-purple); font-weight: 600; background: rgba(139, 92, 246, 0.1); padding: 2px 6px; border-radius: 4px; }
+.bp-track { display: flex; align-items: center; gap: 8px; position: relative; padding: 10px 0; }
+.bp-node { width: 40px; height: 40px; border-radius: 8px; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); display: flex; align-items: center; justify-content: center; position: relative; flex-shrink: 0; }
+.bp-node i { font-size: 14px; color: var(--text-muted); }
+.bp-node.unlocked { background: rgba(139, 92, 246, 0.2); border-color: var(--accent-purple); box-shadow: 0 0 8px rgba(139, 92, 246, 0.3); }
+.bp-node.unlocked i { color: white; }
+.bp-node.premium { border-color: gold; background: rgba(255, 215, 0, 0.05); }
+.bp-node.premium i { color: gold; }
+.bp-node-lvl { position: absolute; bottom: -18px; left: 50%; transform: translateX(-50%); font-size: 9px; color: var(--text-muted); font-family: monospace; }
+.bp-line { flex-grow: 1; height: 4px; background: rgba(255,255,255,0.05); border-radius: 2px; position: relative; overflow: hidden; }
+.bp-line-fill { height: 100%; background: linear-gradient(90deg, var(--accent-purple), #ec4899); width: 60%; }
+.bp-info-box { background: rgba(0,0,0,0.2); padding: 10px; border-radius: 6px; display: flex; align-items: center; gap: 10px; border: 1px dashed rgba(255,255,255,0.1); }
+.bp-info-text { font-size: 11px; color: #ccc; flex-grow: 1; line-height: 1.3; }
 .streak-days { display: flex; gap: 8px; }
 .s-day { width: 40px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 8px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 4px; color: var(--text-muted); border: 1px solid transparent; }
 .s-day i { font-size: 16px; }

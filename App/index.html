@@ -74,45 +74,84 @@
 
         <div class="view-container dashboard active" id="viewDashboard">
             
-            <div class="dash-section top-banner-section">
-                <div class="carousel-container">
-                    <div class="carousel-slide active" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://placehold.co/800x200/4c1d95/ffffff?text=CYBER+SLOTS');">
-                        <div class="carousel-content">
-                            <h3>Nowa gra: Cyber Slots!</h3>
-                            <p>Zagraj teraz i zgarnij darmowe spiny.</p>
-                            <button class="gc-btn play">Sprawdź</button>
+            <div style="display: flex; flex-direction: column;">
+                <div class="dash-section top-banner-section">
+                    <div class="carousel-container">
+                        <div class="carousel-slide active" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://placehold.co/800x200/4c1d95/ffffff?text=CYBER+SLOTS');">
+                            <div class="carousel-content">
+                                <h3>Nowa gra: Cyber Slots!</h3>
+                                <p>Zagraj teraz i zgarnij darmowe spiny.</p>
+                                <button class="gc-btn play">Sprawdź</button>
+                            </div>
+                        </div>
+                        <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://placehold.co/800x200/10b981/ffffff?text=WEEKEND+BONUS');">
+                            <div class="carousel-content">
+                                <h3>Weekend podwójnych punktów!</h3>
+                                <p>Każda wygrana liczy się x2 do LP.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://placehold.co/800x200/ef4444/ffffff?text=LOOTBOX+SALE');">
+                            <div class="carousel-content">
+                                <h3>Promocja na Lootboxy -50%</h3>
+                                <p>Tylko dzisiaj! Zwiększona szansa na Divine.</p>
+                            </div>
+                        </div>
+                        <div class="carousel-dots">
+                            <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
                         </div>
                     </div>
-                    <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://placehold.co/800x200/10b981/ffffff?text=WEEKEND+BONUS');">
-                        <div class="carousel-content">
-                            <h3>Weekend podwójnych punktów!</h3>
-                            <p>Każda wygrana liczy się x2 do LP.</p>
+                </div>
+
+                <div class="dash-section ticker-section">
+                    <div class="ticker-wrap">
+                        <div class="ticker">
+                            <div class="ticker__item"><i class="fas fa-trophy" style="color:gold;"></i> User_123 wygrał 50,000$ w Ruletce!</div>
+                            <div class="ticker__item"><i class="fas fa-gem" style="color:var(--accent-purple);"></i> BigWhale99 otworzył Smocze Jajo (Relic)!</div>
+                            <div class="ticker__item"><i class="fas fa-dice" style="color:var(--accent-green);"></i> LuckyLuke trafił Blackjacka x5 z rzędu!</div>
+                            <div class="ticker__item"><i class="fas fa-chart-line" style="color:var(--accent-blue);"></i> Giełda: Cena Złotego Zegarka rośnie (+15%)!</div>
+                            <div class="ticker__item"><i class="fas fa-user-secret" style="color:#ef4444;"></i> System: Zbanowano bota Farm_Bot_01.</div>
+                            <div class="ticker__item"><i class="fas fa-crown" style="color:gold;"></i> MrGambler awansował do Diamond Tier!</div>
+                            <div class="ticker__item"><i class="fas fa-bomb" style="color:orange;"></i> Crash: Mnożnik wywalił na 1.01x (RIP).</div>
+                            <div class="ticker__item"><i class="fas fa-hand-holding-usd" style="color:#10b981;"></i> Wypłata: 12,000$ zrealizowana dla User_88.</div>
+                            <div class="ticker__item"><i class="fas fa-gift" style="color:#d946ef;"></i> Drop: Skrzynka "Cyber Case" dla wszystkich online!</div>
+                            
+                            <div class="ticker__item"><i class="fas fa-trophy" style="color:gold;"></i> User_123 wygrał 50,000$ w Ruletce!</div>
+                            <div class="ticker__item"><i class="fas fa-gem" style="color:var(--accent-purple);"></i> BigWhale99 otworzył Smocze Jajo (Relic)!</div>
+                            <div class="ticker__item"><i class="fas fa-dice" style="color:var(--accent-green);"></i> LuckyLuke trafił Blackjacka x5 z rzędu!</div>
+                            <div class="ticker__item"><i class="fas fa-chart-line" style="color:var(--accent-blue);"></i> Giełda: Cena Złotego Zegarka rośnie (+15%)!</div>
+                            <div class="ticker__item"><i class="fas fa-user-secret" style="color:#ef4444;"></i> System: Zbanowano bota Farm_Bot_01.</div>
+                            <div class="ticker__item"><i class="fas fa-crown" style="color:gold;"></i> MrGambler awansował do Diamond Tier!</div>
+                            <div class="ticker__item"><i class="fas fa-bomb" style="color:orange;"></i> Crash: Mnożnik wywalił na 1.01x (RIP).</div>
+                            <div class="ticker__item"><i class="fas fa-hand-holding-usd" style="color:#10b981;"></i> Wypłata: 12,000$ zrealizowana dla User_88.</div>
+                            <div class="ticker__item"><i class="fas fa-gift" style="color:#d946ef;"></i> Drop: Skrzynka "Cyber Case" dla wszystkich online!</div>
                         </div>
                     </div>
-                     <div class="carousel-slide" style="background: linear-gradient(rgba(0,0,0,0.3), rgba(0,0,0,0.7)), url('https://placehold.co/800x200/ef4444/ffffff?text=LOOTBOX+SALE');">
-                        <div class="carousel-content">
-                            <h3>Promocja na Lootboxy -50%</h3>
-                            <p>Tylko dzisiaj! Zwiększona szansa na Divine.</p>
-                        </div>
+                 </div>
+            </div>
+
+            <div class="dash-section" style="display: flex; justify-content: center;">
+                <div class="qp-card-centered" style="flex: 1; max-width: 600px;">
+                    <div class="qp-title">Quick Play</div>
+                    
+                    <div class="qp-buttons-container">
+                        <button class="qp-btn-small">
+                            <i class="fas fa-plus-circle"></i> Stwórz
+                        </button>
+                        
+                        <button class="qp-btn-small primary">
+                            <i class="fas fa-play"></i> Dołącz
+                        </button>
+                        
+                        <button class="qp-btn-small">
+                            <i class="fas fa-plane"></i> Offline
+                        </button>
                     </div>
-                    <div class="carousel-dots">
-                        <span class="dot active"></span><span class="dot"></span><span class="dot"></span>
+
+                    <div class="qp-online-bottom">
+                        <div class="qp-dot"></div> 1,247 Online
                     </div>
                 </div>
             </div>
-
-            <div class="dash-section ticker-section">
-                <div class="ticker-wrap">
-                    <div class="ticker">
-                        <div class="ticker__item"><i class="fas fa-trophy" style="color:gold;"></i> User_123 wygrał 50,000$ w Ruletce!</div>
-                        <div class="ticker__item"><i class="fas fa-gem" style="color:var(--accent-purple);"></i> BigWhale99 otworzył Smocze Jajo (Relic)!</div>
-                        <div class="ticker__item"><i class="fas fa-dice" style="color:var(--accent-green);"></i> LuckyLuke trafił Blackjacka x5 z rzędu!</div>
-                        <div class="ticker__item"><i class="fas fa-chart-line" style="color:var(--accent-blue);"></i> Giełda: Cena Złotego Zegarka rośnie!</div>
-                        <div class="ticker__item"><i class="fas fa-trophy" style="color:gold;"></i> User_123 wygrał 50,000$ w Ruletce!</div>
-                        <div class="ticker__item"><i class="fas fa-gem" style="color:var(--accent-purple);"></i> BigWhale99 otworzył Smocze Jajo (Relic)!</div>
-                    </div>
-                </div>
-             </div>
 
             <div class="dash-section dash-grid-3">
                 <div class="card dash-card">
@@ -161,22 +200,36 @@
                     </div>
                 </div>
 
-                 <div class="card dash-card battle-pass-card" style="background: linear-gradient(145deg, #1a2340, #2e1065);">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-meteor"></i> Sezon Rekina - Battle Pass</div></div>
-                    <div class="bp-content">
-                        <div class="bp-level-info">
-                             <span style="color:var(--accent-purple); font-weight:700;">Poziom 14</span>
-                             <span style="font-size:11px; color:#aaa;">14,500 / 15,000 XP</span>
-                        </div>
-                        <div class="rob-progress-bar" style="height: 12px; background: rgba(0,0,0,0.4);">
-                            <div class="rob-progress-fill" style="width: 95%; background: linear-gradient(90deg, #8b5cf6, #ec4899);"></div>
-                        </div>
-                        <div class="bp-next-reward">
-                            <i class="fas fa-mask" style="font-size:24px; color:var(--accent-pink); margin-right:10px;"></i>
+                 <div class="card dash-card battle-pass-card" style="background: linear-gradient(145deg, #1a2340, #2e1065); border: 1px solid rgba(139, 92, 246, 0.3);">
+                    <div class="bp-new-layout">
+                        <div class="bp-header-row">
                             <div>
-                                <div style="font-size:12px; font-weight:600;">Następna nagroda (Lvl 15):</div>
-                                <div style="font-size:11px; color:var(--accent-purple);">Unikalna Skórka "Neon Shark"</div>
+                                <div class="bp-season"><i class="fas fa-meteor"></i> SEZON 2</div>
+                                <div class="bp-title-lg">Cyber Shark</div>
                             </div>
+                            <div style="text-align: right;">
+                                <div style="font-size: 10px; color: #aaa;">KONIEC ZA</div>
+                                <div style="font-size: 12px; font-weight: 700; color: white;">12 DNI</div>
+                            </div>
+                        </div>
+
+                        <div class="bp-track">
+                            <div class="bp-node unlocked" title="Odebrano"><i class="fas fa-check"></i><span class="bp-node-lvl">13</span></div>
+                            <div class="bp-line"><div class="bp-line-fill" style="width: 100%;"></div></div>
+                            
+                            <div class="bp-node unlocked" style="border-color:white;" title="Obecny"><i class="fas fa-gift"></i><span class="bp-node-lvl">14</span></div>
+                            <div class="bp-line"><div class="bp-line-fill" style="width: 80%;"></div></div>
+                            
+                            <div class="bp-node premium" title="Premium Only"><i class="fas fa-crown"></i><span class="bp-node-lvl">15</span></div>
+                        </div>
+
+                        <div class="bp-info-box">
+                            <i class="fas fa-lock" style="color: gold; font-size: 16px;"></i>
+                            <div class="bp-info-text">
+                                <span style="color: gold; font-weight: 700;">Battle Pass Premium</span><br>
+                                Odblokuj unikalne nagrody i skiny rekina.
+                            </div>
+                            <button class="gc-btn play" style="width: auto; padding: 4px 10px;">KUP</button>
                         </div>
                     </div>
                 </div>
@@ -213,49 +266,30 @@
                 </div>
              </div>
 
-            <div class="dash-section dash-grid-2">
+            <div class="dash-section" style="display: grid; grid-template-columns: 1fr;">
                  <div class="card dash-card rng-card" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid rgba(0, 229, 255, 0.2);">
                     <div class="card-header"><div class="card-title"><i class="fas fa-bahai" style="color:#00e5ff;"></i> RNG Forecast (Prognoza Szczęścia)</div></div>
-                     <div style="text-align:center; padding: 20px 0;">
-                        <div style="font-size: 48px; font-weight: 800; color: #00e5ff; text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);">88%</div>
-                        <div style="font-size: 12px; color: #ddd; margin-bottom: 15px;">Aktualne szczęście: <span style="color:#00e5ff; font-weight:700;">WYSOKIE</span></div>
-                        
-                        <div style="height: 40px; display: flex; align-items: flex-end; justify-content: center; gap: 5px; margin-bottom: 15px; opacity: 0.7;">
-                             <div style="width:4px; height:20%; background:#00e5ff; border-radius:2px;"></div>
-                             <div style="width:4px; height:40%; background:#00e5ff; border-radius:2px;"></div>
-                             <div style="width:4px; height:60%; background:#00e5ff; border-radius:2px;"></div>
-                             <div style="width:4px; height:80%; background:#00e5ff; border-radius:2px;"></div>
-                             <div style="width:4px; height:100%; background:#00e5ff; border-radius:2px; box-shadow: 0 0 10px #00e5ff;"></div>
-                             <div style="width:4px; height:70%; background:#00e5ff; border-radius:2px;"></div>
-                             <div style="width:4px; height:50%; background:#00e5ff; border-radius:2px;"></div>
+                     <div style="text-align:center; padding: 20px 0; display: flex; align-items: center; justify-content: space-around;">
+                        <div>
+                            <div style="font-size: 48px; font-weight: 800; color: #00e5ff; text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);">88%</div>
+                            <div style="font-size: 12px; color: #ddd;">Aktualne szczęście: <span style="color:#00e5ff; font-weight:700;">WYSOKIE</span></div>
                         </div>
-
-                        <div style="font-size: 11px; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; display:inline-block;">
-                            Sugerowana gra: <b style="color:white;">Blackjack</b> (AI Confidence: 92%)
+                        
+                        <div style="text-align: center;">
+                            <div style="height: 40px; display: flex; align-items: flex-end; justify-content: center; gap: 5px; margin-bottom: 10px; opacity: 0.7;">
+                                 <div style="width:4px; height:20%; background:#00e5ff; border-radius:2px;"></div>
+                                 <div style="width:4px; height:40%; background:#00e5ff; border-radius:2px;"></div>
+                                 <div style="width:4px; height:60%; background:#00e5ff; border-radius:2px;"></div>
+                                 <div style="width:4px; height:80%; background:#00e5ff; border-radius:2px;"></div>
+                                 <div style="width:4px; height:100%; background:#00e5ff; border-radius:2px; box-shadow: 0 0 10px #00e5ff;"></div>
+                                 <div style="width:4px; height:70%; background:#00e5ff; border-radius:2px;"></div>
+                                 <div style="width:4px; height:50%; background:#00e5ff; border-radius:2px;"></div>
+                            </div>
+                            <div style="font-size: 11px; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 6px;">
+                                Sugerowana gra: <b style="color:white;">Blackjack</b>
+                            </div>
                         </div>
                      </div>
-                </div>
-
-                <div class="qp-card-centered" style="flex: 1; max-width: none; height: 100%;">
-                    <div class="qp-title">Quick Play</div>
-                    
-                    <div class="qp-buttons-container">
-                        <button class="qp-btn-small">
-                            <i class="fas fa-plus-circle"></i> Stwórz
-                        </button>
-                        
-                        <button class="qp-btn-small primary">
-                            <i class="fas fa-play"></i> Dołącz
-                        </button>
-                        
-                        <button class="qp-btn-small">
-                            <i class="fas fa-plane"></i> Offline
-                        </button>
-                    </div>
-
-                    <div class="qp-online-bottom">
-                        <div class="qp-dot"></div> 1,247 Online
-                    </div>
                 </div>
             </div>
 
