@@ -208,3 +208,18 @@ const globalLeaderboardDB = [
     { rankVal: 4, rankName: "Table Shark", name: "CardCounter", lp: 420, netWorth: 450000 },
     { rankVal: 3, rankName: "Risk Taker", name: "YOLO_Trader", lp: 250, netWorth: 150000 },
 ];
+// --- FINANCIAL LOGS DATABASE (NEW) ---
+const walletLogsDB = [
+    { id: '#TX9925', type: 'Przelew (Przychodzący)', val: '+25,000 $', date: '26 Dec, 12:30', status: 'Completed', detail: 'Od: User_KillerWhale' },
+    { id: '#TX9924', type: 'Zakup Rynkowy', val: '-120,000 $', date: '26 Dec, 10:15', status: 'Completed', detail: 'Przedmiot: Sygnet Prezesa' },
+    { id: '#TX9923', type: 'Wymiana Punktów', val: '+1,250 $', date: '25 Dec, 22:00', status: 'Completed', detail: 'Wymiana 5000 pkt Loyalty' },
+    { id: '#TX9922', type: 'Wypłata (Crypto)', val: '-5,000 USDT', date: '25 Dec, 20:45', status: 'Processing', detail: 'Sieć: TRC20' },
+    { id: '#TX9921', type: 'Wpłata (BLIK)', val: '+50,000 $', date: '25 Dec, 11:20', status: 'Completed', detail: 'Instant Transfer' },
+    { id: '#TX9920', type: 'Wypłata (Visa)', val: '-10,000 $', date: '24 Dec, 09:15', status: 'Pending', detail: 'Visa **** 4242' },
+    { id: '#TX9919', type: 'Bonus Powitalny', val: '+5,000 $', date: '23 Dec, 18:30', status: 'Completed', detail: 'Wager x35 Active' },
+    { id: '#TX9918', type: 'Korekta Gry', val: '+150 $', date: '22 Dec, 14:00', status: 'Completed', detail: 'Refund: Game ID #4421' },
+    { id: '#TX9915', type: 'Wpłata (Crypto)', val: '+2,000 $', date: '20 Dec, 02:40', status: 'Rejected', detail: 'Timeout' },
+    { id: '#TX9914', type: 'Wygrana (Blackjack)', val: '+12,000 $', date: '19 Dec, 23:10', status: 'Completed', detail: 'Session ID #8822' },
+    { id: '#TX9913', type: 'Przegrana (Ruletka)', val: '-5,000 $', date: '19 Dec, 22:50', status: 'Completed', detail: 'Red 32' },
+    { id: '#TX9912', type: 'Transfer (Wychodzący)', val: '-1,000 $', date: '18 Dec, 15:20', status: 'Completed', detail: 'Do: Biedny_Gracz_01' }
+];

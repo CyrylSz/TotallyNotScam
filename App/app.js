@@ -686,42 +686,64 @@ function renderMarketView() {
 }
 
 function renderWalletView() {
-    // 1. Render History (Panel 5)
-    const container = document.getElementById('newWalletHistory');
-    if(container) {
-        container.innerHTML = '';
-        const txs = [
-            { id: '#TX9921', type: 'Wpłata (BLIK)', val: '+50,000 $', date: '25 Dec, 11:20', status: 'Completed', c: 'var(--accent-green)' },
-            { id: '#TX9920', type: 'Wypłata (Visa)', val: '-10,000 $', date: '24 Dec, 09:15', status: 'Pending', c: 'var(--text-muted)', canCancel: true },
-            { id: '#TX9919', type: 'Bonus Powitalny', val: '+5,000 $', date: '23 Dec, 18:30', status: 'Completed', c: 'var(--accent-purple)' },
-            { id: '#TX9918', type: 'Korekta Gry', val: '+150 $', date: '22 Dec, 14:00', status: 'Completed', c: 'var(--accent-blue)' },
-            { id: '#TX9915', type: 'Wpłata (Crypto)', val: '+2,000 $', date: '20 Dec, 02:40', status: 'Rejected', c: 'var(--accent-red)' }
-        ];
-
-        txs.forEach(t => {
-            const div = document.createElement('div');
-            div.className = 'hist-row';
-            let actionBtn = '';
-            if(t.canCancel) {
-                actionBtn = `<button class="cancel-tx-btn" title="Anuluj Wypłatę"><i class="fas fa-undo"></i></button>`;
-            }
-
-            let statusClass = t.status.toLowerCase();
-            
-            div.innerHTML = `
-                <div class="hist-left">
-                    <div class="hist-type">${t.type}</div>
-                    <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
-                </div>
-                <div class="hist-right">
-                    <div class="hist-val" style="color:${t.c}">${t.val}</div>
-                    <div class="hist-status st-${statusClass}">${t.status}</div>
-                </div>
-                ${actionBtn}
-            `;
-            container.appendChild(div);
-        });
+    // 1. Calculate Networth (Real Money + Items)
+    const realMoney = 2450000; // Hardcoded simulation
+    let itemValue = 0;
+    
+    // Sum all items rawPrice
+    if (typeof allTreasures !== 'undefined') {
+        itemValue = allTreasures.reduce((sum, item) => sum + (item.rawPrice || 0), 0);
     }
+    
+    const totalNetWorth = realMoney + itemValue;
+    
+    // 2. Update DOM
+    const nwTotal = document.getElementById('nwTotalDisplay');
+    const nwReal = document.getElementById('nwRealDisplay');
+    const nwItems = document.getElementById('nwItemsDisplay');
+    
+    if (nwTotal) nwTotal.textContent = totalNetWorth.toLocaleString('en-US', {minimumFractionDigits: 2});
+    if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+    if (nwItems) nwItems.textContent = itemValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+}
+
+function openFinancialLogsModal() {
+    document.getElementById('financialLogsModal').classList.add('active');
+    renderFinancialLogsList();
+}
+
+function closeFinancialLogsModal() {
+    document.getElementById('financialLogsModal').classList.remove('active');
+}
+
+function renderFinancialLogsList() {
+    const container = document.getElementById('financialLogsList');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    walletLogsDB.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'hist-row';
+        
+        let valColor = 'white';
+        if (t.val.startsWith('+')) valColor = 'var(--accent-green)';
+        if (t.val.startsWith('-')) valColor = 'var(--accent-red)';
+        
+        let statusClass = t.status.toLowerCase();
+        
+        div.innerHTML = `
+            <div class="hist-left">
+                <div class="hist-type">${t.type}</div>
+                <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
+                <div style="font-size:9px; color:#555;">${t.detail}</div>
+            </div>
+            <div class="hist-right">
+                <div class="hist-val" style="color:${valColor}">${t.val}</div>
+                <div class="hist-status st-${statusClass}">${t.status}</div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
 }
 
 // WALLET HELPER FUNCTIONS
