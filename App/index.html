@@ -391,9 +391,9 @@
                     <div class="nw-loyalty-bar">
                         <div class="nw-loyalty-info">
                             <span><i class="fas fa-gem"></i> Loyalty Points: <b style="color:var(--accent-purple);">12,500</b></span>
-                            <span class="nw-loyalty-sub">Level 4 (Gold)</span>
+                            <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; margin-left: 8px;" onclick="alert('Punkty Lojalnościowe (LP) zdobywasz za każdy obrót w grach. Wymieniaj je na gotówkę lub unikalne skrzynki.')" title="Kliknij, aby dowiedzieć się więcej"></i>
                         </div>
-                        <button class="nw-loyalty-btn">Sklep</button>
+                        <button class="nw-loyalty-btn" onclick="alert('Nagroda odebrana! Dodano środki do konta.')">Odbierz Nagrodę</button>
                     </div>
                 </div>
 
@@ -433,13 +433,16 @@
                                 <label>Kwota wpłaty</label>
                                 <div class="input-group">
                                     <span class="curr-prefix">$</span>
-                                    <input type="number" value="100" placeholder="0.00">
+                                    <input type="number" id="depositAmount" value="100" placeholder="0.00">
                                 </div>
                                 <div class="quick-amounts">
-                                    <button>50</button><button class="active">100</button><button>250</button><button>MAX</button>
+                                    <button onclick="document.getElementById('depositAmount').value=50">50</button>
+                                    <button onclick="document.getElementById('depositAmount').value=100" class="active">100</button>
+                                    <button onclick="document.getElementById('depositAmount').value=250">250</button>
+                                    <button onclick="document.getElementById('depositAmount').value=5000">MAX</button>
                                 </div>
                                 <div class="dep-footer centered-footer">
-                                    <button class="action-btn-large full-width">WPŁAĆ TERAZ</button>
+                                    <button class="action-btn-large full-width" onclick="handleWalletAction('deposit')">WPŁAĆ TERAZ</button>
                                 </div>
                             </div>
                         </div>
@@ -456,9 +459,9 @@
                                 <label>Kwota do wypłaty</label>
                                 <div class="input-group">
                                     <span class="curr-prefix">$</span>
-                                    <input type="number" placeholder="Dostępne: 2,450,000">
+                                    <input type="number" id="withdrawAmount" placeholder="Dostępne: 2,450,000">
                                 </div>
-                                <button class="action-btn-large outline full-width">ZLEĆ WYPŁATĘ</button>
+                                <button class="action-btn-large outline full-width" onclick="handleWalletAction('withdraw')">ZLEĆ WYPŁATĘ</button>
                             </div>
                         </div>
 
@@ -471,15 +474,25 @@
                                 <label>ID Odbiorcy</label>
                                 <div class="input-group">
                                     <span class="curr-prefix"><i class="fas fa-user"></i></span>
-                                    <input type="text" placeholder="np. User_99 lub ID">
+                                    <input type="text" id="transferRecipient" placeholder="np. User_99 lub ID">
                                 </div>
 
                                 <label>Kwota przelewu</label>
                                 <div class="input-group">
                                     <span class="curr-prefix">$</span>
-                                    <input type="number" placeholder="0.00">
+                                    <input type="number" id="transferAmount" placeholder="0.00">
                                 </div>
-                                <button class="action-btn-large full-width" style="background: var(--accent-blue);">WYŚLIJ ŚRODKI</button>
+
+                                <label style="margin-top: 10px; display:block;">Wyślij Przedmiot (Opcjonalne)</label>
+                                <div class="input-group">
+                                    <span class="curr-prefix"><i class="fas fa-box"></i></span>
+                                    <select id="transferItemSelect" style="flex-grow: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-left: none; padding: 12px; color: white; font-size: 14px; border-radius: 0 8px 8px 0; outline: none;">
+                                        <option value="">-- Nie wysyłaj przedmiotu --</option>
+                                        <!-- Populated via JS -->
+                                    </select>
+                                </div>
+
+                                <button class="action-btn-large full-width" style="background: var(--accent-blue);" onclick="handleWalletAction('transfer')">WYŚLIJ ŚRODKI</button>
                             </div>
                         </div>
 
@@ -917,9 +930,20 @@
             </div>
             
             <div style="padding: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <div style="font-size: 10px; color: var(--text-muted);">BILANS MIESIĘCZNY</div>
-                    <div style="font-size: 16px; font-weight: 700; color: var(--accent-red);">-200.00 $</div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div>
+                        <div style="font-size: 10px; color: var(--text-muted);">BILANS MIESIĘCZNY</div>
+                        <div style="font-size: 16px; font-weight: 700; color: var(--accent-red);">-200.00 $</div>
+                    </div>
+                    
+                    <!-- Toggle Switch for Games -->
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox" id="hideGamesSwitch" checked onchange="renderFinancialLogsList()">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="switch-label">Ukryj gry</span>
+                    </div>
                 </div>
                 <button class="gc-btn lobby"><i class="fas fa-download"></i> Eksportuj CSV</button>
             </div>

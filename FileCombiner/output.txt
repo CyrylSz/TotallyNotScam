@@ -688,42 +688,64 @@ function renderMarketView() {
 }
 
 function renderWalletView() {
-    // 1. Render History (Panel 5)
-    const container = document.getElementById('newWalletHistory');
-    if(container) {
-        container.innerHTML = '';
-        const txs = [
-            { id: '#TX9921', type: 'Wpłata (BLIK)', val: '+50,000 $', date: '25 Dec, 11:20', status: 'Completed', c: 'var(--accent-green)' },
-            { id: '#TX9920', type: 'Wypłata (Visa)', val: '-10,000 $', date: '24 Dec, 09:15', status: 'Pending', c: 'var(--text-muted)', canCancel: true },
-            { id: '#TX9919', type: 'Bonus Powitalny', val: '+5,000 $', date: '23 Dec, 18:30', status: 'Completed', c: 'var(--accent-purple)' },
-            { id: '#TX9918', type: 'Korekta Gry', val: '+150 $', date: '22 Dec, 14:00', status: 'Completed', c: 'var(--accent-blue)' },
-            { id: '#TX9915', type: 'Wpłata (Crypto)', val: '+2,000 $', date: '20 Dec, 02:40', status: 'Rejected', c: 'var(--accent-red)' }
-        ];
-
-        txs.forEach(t => {
-            const div = document.createElement('div');
-            div.className = 'hist-row';
-            let actionBtn = '';
-            if(t.canCancel) {
-                actionBtn = `<button class="cancel-tx-btn" title="Anuluj Wypłatę"><i class="fas fa-undo"></i></button>`;
-            }
-
-            let statusClass = t.status.toLowerCase();
-            
-            div.innerHTML = `
-                <div class="hist-left">
-                    <div class="hist-type">${t.type}</div>
-                    <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
-                </div>
-                <div class="hist-right">
-                    <div class="hist-val" style="color:${t.c}">${t.val}</div>
-                    <div class="hist-status st-${statusClass}">${t.status}</div>
-                </div>
-                ${actionBtn}
-            `;
-            container.appendChild(div);
-        });
+    // 1. Calculate Networth (Real Money + Items)
+    const realMoney = 2450000; // Hardcoded simulation
+    let itemValue = 0;
+    
+    // Sum all items rawPrice
+    if (typeof allTreasures !== 'undefined') {
+        itemValue = allTreasures.reduce((sum, item) => sum + (item.rawPrice || 0), 0);
     }
+    
+    const totalNetWorth = realMoney + itemValue;
+    
+    // 2. Update DOM
+    const nwTotal = document.getElementById('nwTotalDisplay');
+    const nwReal = document.getElementById('nwRealDisplay');
+    const nwItems = document.getElementById('nwItemsDisplay');
+    
+    if (nwTotal) nwTotal.textContent = totalNetWorth.toLocaleString('en-US', {minimumFractionDigits: 2});
+    if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+    if (nwItems) nwItems.textContent = itemValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+}
+
+function openFinancialLogsModal() {
+    document.getElementById('financialLogsModal').classList.add('active');
+    renderFinancialLogsList();
+}
+
+function closeFinancialLogsModal() {
+    document.getElementById('financialLogsModal').classList.remove('active');
+}
+
+function renderFinancialLogsList() {
+    const container = document.getElementById('financialLogsList');
+    if (!container) return;
+    container.innerHTML = '';
+    
+    walletLogsDB.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'hist-row';
+        
+        let valColor = 'white';
+        if (t.val.startsWith('+')) valColor = 'var(--accent-green)';
+        if (t.val.startsWith('-')) valColor = 'var(--accent-red)';
+        
+        let statusClass = t.status.toLowerCase();
+        
+        div.innerHTML = `
+            <div class="hist-left">
+                <div class="hist-type">${t.type}</div>
+                <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
+                <div style="font-size:9px; color:#555;">${t.detail}</div>
+            </div>
+            <div class="hist-right">
+                <div class="hist-val" style="color:${valColor}">${t.val}</div>
+                <div class="hist-status st-${statusClass}">${t.status}</div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
 }
 
 // WALLET HELPER FUNCTIONS
@@ -1179,6 +1201,21 @@ const globalLeaderboardDB = [
     { rankVal: 4, rankName: "Table Shark", name: "CardCounter", lp: 420, netWorth: 450000 },
     { rankVal: 3, rankName: "Risk Taker", name: "YOLO_Trader", lp: 250, netWorth: 150000 },
 ];
+// --- FINANCIAL LOGS DATABASE (NEW) ---
+const walletLogsDB = [
+    { id: '#TX9925', type: 'Przelew (Przychodzący)', val: '+25,000 $', date: '26 Dec, 12:30', status: 'Completed', detail: 'Od: User_KillerWhale' },
+    { id: '#TX9924', type: 'Zakup Rynkowy', val: '-120,000 $', date: '26 Dec, 10:15', status: 'Completed', detail: 'Przedmiot: Sygnet Prezesa' },
+    { id: '#TX9923', type: 'Wymiana Punktów', val: '+1,250 $', date: '25 Dec, 22:00', status: 'Completed', detail: 'Wymiana 5000 pkt Loyalty' },
+    { id: '#TX9922', type: 'Wypłata (Crypto)', val: '-5,000 USDT', date: '25 Dec, 20:45', status: 'Processing', detail: 'Sieć: TRC20' },
+    { id: '#TX9921', type: 'Wpłata (BLIK)', val: '+50,000 $', date: '25 Dec, 11:20', status: 'Completed', detail: 'Instant Transfer' },
+    { id: '#TX9920', type: 'Wypłata (Visa)', val: '-10,000 $', date: '24 Dec, 09:15', status: 'Pending', detail: 'Visa **** 4242' },
+    { id: '#TX9919', type: 'Bonus Powitalny', val: '+5,000 $', date: '23 Dec, 18:30', status: 'Completed', detail: 'Wager x35 Active' },
+    { id: '#TX9918', type: 'Korekta Gry', val: '+150 $', date: '22 Dec, 14:00', status: 'Completed', detail: 'Refund: Game ID #4421' },
+    { id: '#TX9915', type: 'Wpłata (Crypto)', val: '+2,000 $', date: '20 Dec, 02:40', status: 'Rejected', detail: 'Timeout' },
+    { id: '#TX9914', type: 'Wygrana (Blackjack)', val: '+12,000 $', date: '19 Dec, 23:10', status: 'Completed', detail: 'Session ID #8822' },
+    { id: '#TX9913', type: 'Przegrana (Ruletka)', val: '-5,000 $', date: '19 Dec, 22:50', status: 'Completed', detail: 'Red 32' },
+    { id: '#TX9912', type: 'Transfer (Wychodzący)', val: '-1,000 $', date: '18 Dec, 15:20', status: 'Completed', detail: 'Do: Biedny_Gracz_01' }
+];
 ```
 
 index.html
@@ -1547,104 +1584,95 @@ index.html
         </div>
 
         <div class="view-container" id="viewWallet">
-            <div class="wallet-grid-layout">
+            
+            <div class="wallet-layout-centered">
                 
-                <!-- 1. PODGLĄD SALDA (Balances) -->
-                <div class="w-panel w-balance-section">
-                    <div class="wb-card main-balance">
-                        <div class="wb-header">
-                            <span><i class="fas fa-wallet"></i> REAL MONEY</span>
-                            <div class="currency-switch">
-                                <span class="active">USD</span><span>EUR</span><span>BTC</span>
-                            </div>
-                        </div>
-                        <div class="wb-value">2,450,000.00 <small>$</small></div>
-                        <div class="wb-sub">Dostępne do wypłaty</div>
+                <!-- 1. NET WORTH PANEL -->
+                <div class="nw-main-card">
+                    <div class="nw-header">
+                        <div class="nw-title">TOTAL NET WORTH</div>
+                        <button class="nw-history-btn" onclick="openFinancialLogsModal()" title="Logi Finansowe"><i class="fas fa-history"></i></button>
+                    </div>
+                    
+                    <div class="nw-big-val">
+                        <span id="nwTotalDisplay">0.00</span> <small>$</small>
                     </div>
 
-                    <div class="wb-card bonus-balance">
-                        <div class="wb-header"><span><i class="fas fa-gift"></i> BONUS MONEY</span></div>
-                        <div class="wb-value">5,000.00 <small>$</small></div>
-                        
-                        <div class="wagering-container">
-                            <div class="wager-info">
-                                <span>Obrót (Wager)</span>
-                                <span>65%</span>
-                            </div>
-                            <div class="wager-bar"><div class="wager-fill" style="width: 65%;"></div></div>
-                            <div class="wager-left">Pozostało do obrotu: 1,750.00 $</div>
+                    <div class="nw-split-row">
+                        <div class="nw-split-item">
+                            <div class="nw-split-lbl"><i class="fas fa-wallet"></i> Real Money</div>
+                            <div class="nw-split-val" id="nwRealDisplay">0.00 $</div>
+                        </div>
+                        <div class="nw-split-divider"></div>
+                        <div class="nw-split-item">
+                            <div class="nw-split-lbl"><i class="fas fa-suitcase"></i> Items Value</div>
+                            <div class="nw-split-val" id="nwItemsDisplay">0.00 $</div>
                         </div>
                     </div>
 
-                    <div class="wb-card points-balance">
-                        <div class="wb-header"><span><i class="fas fa-gem"></i> LOYALTY</span></div>
-                        <div class="wb-value" style="color: var(--accent-purple);">12,500 <small>PTS</small></div>
-                        <button class="exchange-btn">Wymień na Gotówkę</button>
+                    <div class="nw-loyalty-bar">
+                        <div class="nw-loyalty-info">
+                            <span><i class="fas fa-gem"></i> Loyalty Points: <b style="color:var(--accent-purple);">12,500</b></span>
+                            <span class="nw-loyalty-sub">Level 4 (Gold)</span>
+                        </div>
+                        <button class="nw-loyalty-btn">Sklep</button>
                     </div>
                 </div>
 
-                <!-- CENTRUM OPERACYJNE (Deposit / Withdraw / Crypto) -->
-                <div class="w-panel w-action-center">
-                    <div class="w-tabs">
+                <!-- 2. ACTION CENTER -->
+                <div class="action-center-container">
+                    <div class="w-tabs centered-tabs">
                         <button class="w-tab active" onclick="switchWalletTab('deposit')"><i class="fas fa-arrow-down"></i> Wpłata</button>
                         <button class="w-tab" onclick="switchWalletTab('withdraw')"><i class="fas fa-arrow-up"></i> Wypłata</button>
-                        <button class="w-tab special" onclick="switchWalletTab('crypto')"><i class="fab fa-bitcoin"></i> Crypto</button>
+                        <button class="w-tab" onclick="switchWalletTab('transfer')"><i class="fas fa-exchange-alt"></i> Transfer</button>
                     </div>
 
                     <div class="w-tab-content-container">
                         
-                        <!-- 2. WPŁATA (Deposit) -->
+                        <!-- TAB: DEPOSIT -->
                         <div class="w-content active" id="tab-deposit">
-                            <div class="pay-methods-grid">
+                            <div class="pay-methods-grid compact">
                                 <div class="pm-item active"><i class="fab fa-cc-visa"></i> Visa</div>
-                                <div class="pm-item"><i class="fab fa-cc-mastercard"></i> MC</div>
                                 <div class="pm-item"><i class="fas fa-mobile-alt"></i> BLIK</div>
+                                <div class="pm-item" onclick="document.getElementById('depCryptoSection').classList.toggle('hidden')"><i class="fab fa-bitcoin"></i> Crypto</div>
                                 <div class="pm-item"><i class="fas fa-wallet"></i> Skrill</div>
-                                <div class="pm-item"><i class="fas fa-money-bill-wave"></i> Jeton</div>
                             </div>
                             
-                            <div class="deposit-form">
+                            <!-- Hidden Crypto Section inside Deposit -->
+                            <div id="depCryptoSection" class="hidden crypto-inline-panel">
+                                <div class="crypto-box small-box">
+                                    <div class="crypto-details">
+                                        <label style="font-size:10px; color:var(--accent-purple);">USDT (TRC20) Deposit Address</label>
+                                        <div class="copy-input">
+                                            <input type="text" readonly value="T9yB7...Kj8L2x">
+                                            <button><i class="fas fa-copy"></i></button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <div class="deposit-form centered-form">
                                 <label>Kwota wpłaty</label>
                                 <div class="input-group">
                                     <span class="curr-prefix">$</span>
                                     <input type="number" value="100" placeholder="0.00">
                                 </div>
                                 <div class="quick-amounts">
-                                    <button>50</button><button class="active">100</button><button>250</button><button>500</button><button>MAX</button>
+                                    <button>50</button><button class="active">100</button><button>250</button><button>MAX</button>
                                 </div>
-                                
-                                <div class="promo-section">
-                                    <div class="input-group small">
-                                        <input type="text" placeholder="Kod Promocyjny">
-                                        <button class="apply-btn">Użyj</button>
-                                    </div>
-                                    <div class="bonus-toggle">
-                                        <input type="checkbox" id="bonusSwitch" checked>
-                                        <label for="bonusSwitch">Odbierz Bonus Powitalny (+100%)</label>
-                                    </div>
-                                </div>
-
-                                <div class="dep-footer">
-                                    <div class="dep-limits"><i class="fas fa-info-circle"></i> Min: 20$ | Max: 5000$</div>
-                                    <button class="action-btn-large">WPŁAĆ TERAZ</button>
+                                <div class="dep-footer centered-footer">
+                                    <button class="action-btn-large full-width">WPŁAĆ TERAZ</button>
                                 </div>
                             </div>
                         </div>
 
-                        <!-- 3. WYPŁATA (Withdraw) -->
+                        <!-- TAB: WITHDRAW -->
                         <div class="w-content" id="tab-withdraw">
-                            <div class="withdraw-warning">
-                                <i class="fas fa-exclamation-triangle"></i>
-                                <div>
-                                    <strong>Uwaga:</strong> Wypłata spowoduje anulowanie aktywnego bonusu (5000$).
-                                </div>
-                            </div>
-
-                            <div class="withdraw-form">
-                                <label>Metoda wypłaty (Zamknięta pętla)</label>
-                                <div class="selected-method">
-                                    <i class="fab fa-cc-visa"></i> Visa **** 4242
-                                    <span class="verified-tag"><i class="fas fa-check-circle"></i> Zweryfikowano</span>
+                            <div class="withdraw-form centered-form">
+                                <label>Metoda wypłaty</label>
+                                <div class="pay-methods-grid compact">
+                                    <div class="pm-item active"><i class="fab fa-cc-visa"></i> Visa</div>
+                                    <div class="pm-item"><i class="fab fa-bitcoin"></i> Wallet</div>
                                 </div>
 
                                 <label>Kwota do wypłaty</label>
@@ -1652,79 +1680,43 @@ index.html
                                     <span class="curr-prefix">$</span>
                                     <input type="number" placeholder="Dostępne: 2,450,000">
                                 </div>
-
-                                <div class="fee-info">
-                                    <div class="fi-row"><span>Prowizja kasyna:</span> <span class="text-green">0.00 $</span></div>
-                                    <div class="fi-row"><span>Czas realizacji:</span> <span>Natychmiast</span></div>
-                                </div>
-
-                                <button class="action-btn-large outline">ZLEĆ WYPŁATĘ</button>
+                                <button class="action-btn-large outline full-width">ZLEĆ WYPŁATĘ</button>
                             </div>
                         </div>
 
-                        <!-- 4. KRYPTOWALUTY (Crypto) -->
-                        <div class="w-content" id="tab-crypto">
-                            <div class="crypto-selector">
-                                <label>Wybierz sieć</label>
-                                <select class="crypto-dropdown">
-                                    <option>USDT (TRC20)</option>
-                                    <option>USDT (ERC20)</option>
-                                    <option>BTC (Bitcoin)</option>
-                                    <option>ETH (Ethereum)</option>
-                                </select>
-                            </div>
+                         <!-- TAB: TRANSFER (NEW) -->
+                         <div class="w-content" id="tab-transfer">
+                            <div class="transfer-form centered-form">
+                                <div class="transfer-notice">
+                                    <i class="fas fa-info-circle"></i> Przelewy są natychmiastowe i nieodwracalne.
+                                </div>
+                                <label>ID Odbiorcy</label>
+                                <div class="input-group">
+                                    <span class="curr-prefix"><i class="fas fa-user"></i></span>
+                                    <input type="text" placeholder="np. User_99 lub ID">
+                                </div>
 
-                            <div class="crypto-box">
-                                <div class="qr-placeholder">
-                                    <i class="fas fa-qrcode"></i>
+                                <label>Kwota przelewu</label>
+                                <div class="input-group">
+                                    <span class="curr-prefix">$</span>
+                                    <input type="number" placeholder="0.00">
                                 </div>
-                                <div class="crypto-details">
-                                    <label>Adres Portfela (Deposit Address)</label>
-                                    <div class="copy-input">
-                                        <input type="text" readonly value="T9yB7...Kj8L2x" id="cryptoAddr">
-                                        <button onclick="copyCrypto()"><i class="fas fa-copy"></i></button>
-                                    </div>
-                                    <div class="rate-info">
-                                        <span>Kurs: 1 USDT = 1.00 USD</span>
-                                        <span class="min-dep-warning">Min. depozyt: 10 USDT</span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="crypto-note">
-                                <i class="fas fa-fire"></i> Wpłaty USDT są księgowane automatycznie po 1 potwierdzeniu sieci.
+                                <button class="action-btn-large full-width" style="background: var(--accent-blue);">WYŚLIJ ŚRODKI</button>
                             </div>
                         </div>
 
                     </div>
                 </div>
 
-                <!-- 5. HISTORIA TRANSAKCJI -->
-                <div class="w-panel w-history-section">
-                    <div class="panel-header">
-                        <i class="fas fa-history"></i> Logi Finansowe
-                    </div>
-                    <div class="history-list-container" id="newWalletHistory">
-                        <!-- Generowane przez JS -->
-                    </div>
-                </div>
-
-                <!-- 6. ODPOWIEDZIALNA GRA (Responsible Gambling) -->
-                <div class="w-panel w-limits-section">
-                    <div class="rg-stat">
-                        <div class="rg-label">Bilans (Miesiąc)</div>
-                        <div class="rg-val negative">-200.00 $</div>
-                    </div>
-                    <div class="rg-stat">
+                <!-- 3. SIMPLIFIED FOOTER -->
+                <div class="wallet-footer-simple">
+                    <div class="rg-stat centered">
                         <div class="rg-label">Czas Sesji</div>
                         <div class="rg-val timer">04:20:15</div>
                     </div>
-                    <div class="rg-stat">
-                        <div class="rg-label">Limit Wpłat</div>
-                        <div class="rg-val">5000$ / mc</div>
-                        <div class="rg-bar"><div class="rg-fill" style="width: 20%;"></div></div>
-                    </div>
-                    <div class="rg-settings">
-                        <button><i class="fas fa-shield-alt"></i> Limity</button>
+                    <div class="rg-stat centered">
+                         <div class="rg-label">Odpowiedzialna Gra</div>
+                        <button class="rg-link-btn">Zarządzaj Limitami</button>
                     </div>
                 </div>
 
@@ -2135,6 +2127,29 @@ index.html
                     </div>
                 </div>
 
+            </div>
+        </div>
+    </div>
+    <!-- Financial Logs Modal -->
+    <div class="modal-overlay" id="financialLogsModal">
+        <div class="steam-modal" style="width: 800px;">
+            <div class="sm-header">
+                <div class="sm-title"><i class="fas fa-database"></i> Logi Finansowe</div>
+                <div class="sm-close" onclick="closeFinancialLogsModal()"><i class="fas fa-times"></i></div>
+            </div>
+            
+            <div style="padding: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+                <div>
+                    <div style="font-size: 10px; color: var(--text-muted);">BILANS MIESIĘCZNY</div>
+                    <div style="font-size: 16px; font-weight: 700; color: var(--accent-red);">-200.00 $</div>
+                </div>
+                <button class="gc-btn lobby"><i class="fas fa-download"></i> Eksportuj CSV</button>
+            </div>
+
+            <div class="sm-content" style="padding-top: 0;">
+                <div class="history-list-container full-height-logs" id="financialLogsList">
+                    <!-- Logs injected via JS -->
+                </div>
             </div>
         </div>
     </div>
@@ -3959,6 +3974,169 @@ input:checked + .slider:before { transform: translateX(16px); }
 .rg-fill { height: 100%; background: var(--accent-orange); }
 .rg-settings button { background: transparent; border: 1px solid #444; color: #888; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-size: 11px; transition: 0.2s; }
 .rg-settings button:hover { border-color: #666; color: white; }
+/* --- NEW CENTERED WALLET STYLES --- */
+
+.wallet-layout-centered {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    max-width: 900px;
+    margin: 0 auto;
+    width: 100%;
+}
+
+/* Networth Card */
+.nw-main-card {
+    width: 100%;
+    background: linear-gradient(180deg, #1e2538 0%, #151a2d 100%);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+.nw-header {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 10px;
+}
+
+.nw-title {
+    font-size: 12px;
+    color: var(--accent-blue);
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+}
+
+.nw-history-btn {
+    position: absolute;
+    right: 0;
+    top: -5px;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.nw-history-btn:hover { color: white; background: rgba(255,255,255,0.1); transform: rotate(30deg); }
+
+.nw-big-val {
+    font-size: 48px;
+    font-weight: 800;
+    color: white;
+    text-shadow: 0 0 20px rgba(59, 130, 246, 0.3);
+    margin-bottom: 25px;
+}
+.nw-big-val small { font-size: 20px; color: var(--text-muted); font-weight: 400; }
+
+.nw-split-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+    margin-bottom: 30px;
+    width: 100%;
+}
+
+.nw-split-item { text-align: center; }
+.nw-split-lbl { font-size: 11px; color: var(--text-muted); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 1px; }
+.nw-split-val { font-size: 18px; font-weight: 600; color: #ddd; }
+.nw-split-divider { width: 1px; height: 30px; background: rgba(255,255,255,0.1); }
+
+.nw-loyalty-bar {
+    width: 100%;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding: 15px 20px;
+    border-radius: 8px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-top: auto;
+}
+.nw-loyalty-info { font-size: 13px; color: #ccc; display: flex; align-items: center; gap: 10px; }
+.nw-loyalty-sub { font-size: 10px; padding: 2px 6px; background: rgba(255,215,0,0.1); color: gold; border-radius: 4px; border: 1px solid rgba(255,215,0,0.2); }
+.nw-loyalty-btn { background: transparent; border: 1px solid var(--accent-purple); color: var(--accent-purple); font-size: 10px; padding: 4px 12px; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-weight: 700; }
+.nw-loyalty-btn:hover { background: var(--accent-purple); color: white; }
+
+/* Action Center Centered */
+.action-center-container {
+    width: 100%;
+    max-width: 650px; /* Limit width as requested */
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+.centered-tabs { justify-content: center; }
+.centered-form { padding: 10px 40px; }
+.centered-footer { justify-content: center; }
+
+.full-width { width: 100%; }
+
+.pay-methods-grid.compact {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+}
+.pay-methods-grid.compact .pm-item {
+    width: 80px;
+    height: 60px;
+}
+
+.crypto-inline-panel {
+    margin-bottom: 20px;
+    background: rgba(0,0,0,0.3);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.small-box { padding: 10px; border: none; background: transparent; }
+
+/* Transfer Styles */
+.transfer-notice {
+    background: rgba(59, 130, 246, 0.1);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    color: #93c5fd;
+    font-size: 11px;
+    padding: 10px;
+    border-radius: 6px;
+    margin-bottom: 20px;
+    text-align: center;
+}
+
+/* Simplified Footer */
+.wallet-footer-simple {
+    display: flex;
+    gap: 40px;
+    width: 100%;
+    justify-content: center;
+    border-top: 1px solid rgba(255,255,255,0.05);
+    padding-top: 20px;
+}
+.rg-stat.centered { text-align: center; }
+.rg-link-btn { background: none; border: none; color: var(--text-muted); text-decoration: underline; font-size: 11px; cursor: pointer; }
+.rg-link-btn:hover { color: white; }
+
+/* Modal tweaks */
+.full-height-logs { max-height: 500px; }
+.hidden { display: none !important; }
 
 
 ```

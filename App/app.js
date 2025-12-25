@@ -705,6 +705,60 @@ function renderWalletView() {
     if (nwTotal) nwTotal.textContent = totalNetWorth.toLocaleString('en-US', {minimumFractionDigits: 2});
     if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
     if (nwItems) nwItems.textContent = itemValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+
+    // 3. Populate Transfer Item Select
+    const transferSelect = document.getElementById('transferItemSelect');
+    if (transferSelect && typeof allTreasures !== 'undefined') {
+        // Keep the first option
+        const firstOption = transferSelect.firstElementChild;
+        transferSelect.innerHTML = '';
+        transferSelect.appendChild(firstOption);
+
+        allTreasures.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.textContent = `${item.name} (${item.rarity})`;
+            transferSelect.appendChild(opt);
+        });
+    }
+}
+
+function handleWalletAction(type) {
+    if (type === 'deposit') {
+        const amount = document.getElementById('depositAmount').value;
+        if(amount > 0) alert(`Rozpoczęto proces wpłaty: ${amount} $. Przekierowywanie do bramki płatności...`);
+        else alert("Wprowadź poprawną kwotę wpłaty.");
+    } else if (type === 'withdraw') {
+        const amount = document.getElementById('withdrawAmount').value;
+        if(amount > 0) alert(`Zlecono wypłatę: ${amount} $. Środki dotrą w ciągu 24h.`);
+        else alert("Wprowadź poprawną kwotę wypłaty.");
+    } else if (type === 'transfer') {
+        const recipient = document.getElementById('transferRecipient').value;
+        const amount = document.getElementById('transferAmount').value;
+        const item = document.getElementById('transferItemSelect').value;
+        
+        if (!recipient) {
+            alert("Podaj ID odbiorcy.");
+            return;
+        }
+
+        let msg = `Wysłano do ${recipient}:`;
+        let sent = false;
+        
+        if (amount > 0) {
+            msg += `\n- Gotówka: ${amount} $`;
+            sent = true;
+        }
+        if (item) {
+            // Find item name logic purely for alert
+            const itemName = allTreasures.find(i => i.id == item)?.name || "Przedmiot";
+            msg += `\n- Przedmiot: ${itemName}`;
+            sent = true;
+        }
+
+        if (sent) alert(msg);
+        else alert("Musisz wybrać kwotę lub przedmiot do wysłania.");
+    }
 }
 
 function openFinancialLogsModal() {
@@ -721,7 +775,22 @@ function renderFinancialLogsList() {
     if (!container) return;
     container.innerHTML = '';
     
+    // Check toggle state
+    const hideGames = document.getElementById('hideGamesSwitch')?.checked ?? true;
+
     walletLogsDB.forEach(t => {
+        // Filter Logic: If filtering is ON, skip game related logs
+        if (hideGames) {
+            const lowerType = t.type.toLowerCase();
+            const lowerDetail = t.detail.toLowerCase();
+            // Simple heuristics for game logs
+            if (lowerType.includes('wygrana') || lowerType.includes('przegrana') || 
+                lowerType.includes('korekta') || lowerType.includes('bonus') ||
+                lowerDetail.includes('game') || lowerDetail.includes('session')) {
+                return; // Skip this iteration
+            }
+        }
+
         const div = document.createElement('div');
         div.className = 'hist-row';
         
@@ -731,6 +800,12 @@ function renderFinancialLogsList() {
         
         let statusClass = t.status.toLowerCase();
         
+        // Logic for Cancel Button (Only if status is Processing or Pending and value is negative/withdrawal)
+        let actionHtml = '';
+        if ((t.status === 'Processing' || t.status === 'Pending') && t.val.startsWith('-')) {
+            actionHtml = `<button class="cancel-tx-btn" title="Anuluj wypłatę" onclick="alert('Wypłata ${t.id} została anulowana. Środki zwrócone.')"><i class="fas fa-times"></i></button>`;
+        }
+
         div.innerHTML = `
             <div class="hist-left">
                 <div class="hist-type">${t.type}</div>
@@ -739,11 +814,18 @@ function renderFinancialLogsList() {
             </div>
             <div class="hist-right">
                 <div class="hist-val" style="color:${valColor}">${t.val}</div>
-                <div class="hist-status st-${statusClass}">${t.status}</div>
+                <div style="display:flex; align-items:center; justify-content:flex-end; gap:5px;">
+                    <div class="hist-status st-${statusClass}">${t.status}</div>
+                    ${actionHtml}
+                </div>
             </div>
         `;
         container.appendChild(div);
     });
+    
+    if (container.children.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:20px; color:#666;">Brak logów do wyświetlenia dla wybranych filtrów.</div>';
+    }
 }
 
 // WALLET HELPER FUNCTIONS

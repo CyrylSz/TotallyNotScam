@@ -1800,6 +1800,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* Networth Card */
 .nw-main-card {
     width: 100%;
+    max-width: 650px; /* Zwężenie panelu zgodnie z instrukcją */
     background: linear-gradient(180deg, #1e2538 0%, #151a2d 100%);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 16px;
