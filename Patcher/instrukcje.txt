@@ -1,0 +1,584 @@
+KROK 1:
+PLIK: "index.html"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+        <div class="view-container" id="viewWallet">
+            <div class="top-stats-row">
+                <div class="stat-card" style="width: 100%; flex: 1;">
+                    <div class="stat-icon-top" style="color: var(--accent-green);"><i class="fas fa-university"></i></div>
+                    <div class="stat-main-label">2,450,000 $</div>
+                    <div class="stat-sub-label">Dostępne środki</div>
+                </div>
+                <div class="stat-card" style="width: 100%; flex: 1;">
+                    <div class="stat-icon-top" style="color: var(--accent-orange);"><i class="fas fa-piggy-bank"></i></div>
+                    <div classstat-main-label>12,500 LP</div>
+                    <div class="stat-sub-label">Punkty Lojalnościowe</div>
+                </div>
+            </div>
+            
+            <div class="card">
+                <div class="card-header"><div class="card-title">Ostatnie Transakcje</div></div>
+                <div class="list-container" id="walletContainer">
+                     </div>
+            </div>
+        </div>
+TREŚĆ:
+        <div class="view-container" id="viewWallet">
+            <div class="wallet-grid-layout">
+                
+                <!-- 1. PODGLĄD SALDA (Balances) -->
+                <div class="w-panel w-balance-section">
+                    <div class="wb-card main-balance">
+                        <div class="wb-header">
+                            <span><i class="fas fa-wallet"></i> REAL MONEY</span>
+                            <div class="currency-switch">
+                                <span class="active">USD</span><span>EUR</span><span>BTC</span>
+                            </div>
+                        </div>
+                        <div class="wb-value">2,450,000.00 <small>$</small></div>
+                        <div class="wb-sub">Dostępne do wypłaty</div>
+                    </div>
+
+                    <div class="wb-card bonus-balance">
+                        <div class="wb-header"><span><i class="fas fa-gift"></i> BONUS MONEY</span></div>
+                        <div class="wb-value">5,000.00 <small>$</small></div>
+                        
+                        <div class="wagering-container">
+                            <div class="wager-info">
+                                <span>Obrót (Wager)</span>
+                                <span>65%</span>
+                            </div>
+                            <div class="wager-bar"><div class="wager-fill" style="width: 65%;"></div></div>
+                            <div class="wager-left">Pozostało do obrotu: 1,750.00 $</div>
+                        </div>
+                    </div>
+
+                    <div class="wb-card points-balance">
+                        <div class="wb-header"><span><i class="fas fa-gem"></i> LOYALTY</span></div>
+                        <div class="wb-value" style="color: var(--accent-purple);">12,500 <small>PTS</small></div>
+                        <button class="exchange-btn">Wymień na Gotówkę</button>
+                    </div>
+                </div>
+
+                <!-- CENTRUM OPERACYJNE (Deposit / Withdraw / Crypto) -->
+                <div class="w-panel w-action-center">
+                    <div class="w-tabs">
+                        <button class="w-tab active" onclick="switchWalletTab('deposit')"><i class="fas fa-arrow-down"></i> Wpłata</button>
+                        <button class="w-tab" onclick="switchWalletTab('withdraw')"><i class="fas fa-arrow-up"></i> Wypłata</button>
+                        <button class="w-tab special" onclick="switchWalletTab('crypto')"><i class="fab fa-bitcoin"></i> Crypto</button>
+                    </div>
+
+                    <div class="w-tab-content-container">
+                        
+                        <!-- 2. WPŁATA (Deposit) -->
+                        <div class="w-content active" id="tab-deposit">
+                            <div class="pay-methods-grid">
+                                <div class="pm-item active"><i class="fab fa-cc-visa"></i> Visa</div>
+                                <div class="pm-item"><i class="fab fa-cc-mastercard"></i> MC</div>
+                                <div class="pm-item"><i class="fas fa-mobile-alt"></i> BLIK</div>
+                                <div class="pm-item"><i class="fas fa-wallet"></i> Skrill</div>
+                                <div class="pm-item"><i class="fas fa-money-bill-wave"></i> Jeton</div>
+                            </div>
+                            
+                            <div class="deposit-form">
+                                <label>Kwota wpłaty</label>
+                                <div class="input-group">
+                                    <span class="curr-prefix">$</span>
+                                    <input type="number" value="100" placeholder="0.00">
+                                </div>
+                                <div class="quick-amounts">
+                                    <button>50</button><button class="active">100</button><button>250</button><button>500</button><button>MAX</button>
+                                </div>
+                                
+                                <div class="promo-section">
+                                    <div class="input-group small">
+                                        <input type="text" placeholder="Kod Promocyjny">
+                                        <button class="apply-btn">Użyj</button>
+                                    </div>
+                                    <div class="bonus-toggle">
+                                        <input type="checkbox" id="bonusSwitch" checked>
+                                        <label for="bonusSwitch">Odbierz Bonus Powitalny (+100%)</label>
+                                    </div>
+                                </div>
+
+                                <div class="dep-footer">
+                                    <div class="dep-limits"><i class="fas fa-info-circle"></i> Min: 20$ | Max: 5000$</div>
+                                    <button class="action-btn-large">WPŁAĆ TERAZ</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- 3. WYPŁATA (Withdraw) -->
+                        <div class="w-content" id="tab-withdraw">
+                            <div class="withdraw-warning">
+                                <i class="fas fa-exclamation-triangle"></i>
+                                <div>
+                                    <strong>Uwaga:</strong> Wypłata spowoduje anulowanie aktywnego bonusu (5000$).
+                                </div>
+                            </div>
+
+                            <div class="withdraw-form">
+                                <label>Metoda wypłaty (Zamknięta pętla)</label>
+                                <div class="selected-method">
+                                    <i class="fab fa-cc-visa"></i> Visa **** 4242
+                                    <span class="verified-tag"><i class="fas fa-check-circle"></i> Zweryfikowano</span>
+                                </div>
+
+                                <label>Kwota do wypłaty</label>
+                                <div class="input-group">
+                                    <span class="curr-prefix">$</span>
+                                    <input type="number" placeholder="Dostępne: 2,450,000">
+                                </div>
+
+                                <div class="fee-info">
+                                    <div class="fi-row"><span>Prowizja kasyna:</span> <span class="text-green">0.00 $</span></div>
+                                    <div class="fi-row"><span>Czas realizacji:</span> <span>Natychmiast</span></div>
+                                </div>
+
+                                <button class="action-btn-large outline">ZLEĆ WYPŁATĘ</button>
+                            </div>
+                        </div>
+
+                        <!-- 4. KRYPTOWALUTY (Crypto) -->
+                        <div class="w-content" id="tab-crypto">
+                            <div class="crypto-selector">
+                                <label>Wybierz sieć</label>
+                                <select class="crypto-dropdown">
+                                    <option>USDT (TRC20)</option>
+                                    <option>USDT (ERC20)</option>
+                                    <option>BTC (Bitcoin)</option>
+                                    <option>ETH (Ethereum)</option>
+                                </select>
+                            </div>
+
+                            <div class="crypto-box">
+                                <div class="qr-placeholder">
+                                    <i class="fas fa-qrcode"></i>
+                                </div>
+                                <div class="crypto-details">
+                                    <label>Adres Portfela (Deposit Address)</label>
+                                    <div class="copy-input">
+                                        <input type="text" readonly value="T9yB7...Kj8L2x" id="cryptoAddr">
+                                        <button onclick="copyCrypto()"><i class="fas fa-copy"></i></button>
+                                    </div>
+                                    <div class="rate-info">
+                                        <span>Kurs: 1 USDT = 1.00 USD</span>
+                                        <span class="min-dep-warning">Min. depozyt: 10 USDT</span>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="crypto-note">
+                                <i class="fas fa-fire"></i> Wpłaty USDT są księgowane automatycznie po 1 potwierdzeniu sieci.
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 5. HISTORIA TRANSAKCJI -->
+                <div class="w-panel w-history-section">
+                    <div class="panel-header">
+                        <i class="fas fa-history"></i> Logi Finansowe
+                    </div>
+                    <div class="history-list-container" id="newWalletHistory">
+                        <!-- Generowane przez JS -->
+                    </div>
+                </div>
+
+                <!-- 6. ODPOWIEDZIALNA GRA (Responsible Gambling) -->
+                <div class="w-panel w-limits-section">
+                    <div class="rg-stat">
+                        <div class="rg-label">Bilans (Miesiąc)</div>
+                        <div class="rg-val negative">-200.00 $</div>
+                    </div>
+                    <div class="rg-stat">
+                        <div class="rg-label">Czas Sesji</div>
+                        <div class="rg-val timer">04:20:15</div>
+                    </div>
+                    <div class="rg-stat">
+                        <div class="rg-label">Limit Wpłat</div>
+                        <div class="rg-val">5000$ / mc</div>
+                        <div class="rg-bar"><div class="rg-fill" style="width: 20%;"></div></div>
+                    </div>
+                    <div class="rg-settings">
+                        <button><i class="fas fa-shield-alt"></i> Limity</button>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+KROK 2:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+function renderWalletView() {
+    const container = document.getElementById('walletContainer');
+    container.innerHTML = '';
+    const txs = [
+        { type: 'Depozyt', val: '+50,000 $', time: '10 min temu', icon: 'fa-arrow-down', c: 'var(--accent-green)' },
+        { type: 'Blackjack', val: '-2,500 $', time: '2 godz temu', icon: 'fa-dice', c: 'var(--accent-red)' },
+        { type: 'Wypłata', val: '-10,000 $', time: '1 dzień temu', icon: 'fa-arrow-up', c: 'var(--text-muted)' },
+        { type: 'Bonus', val: '+500 $', time: '2 dni temu', icon: 'fa-gift', c: 'var(--accent-purple)' }
+    ];
+    txs.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        div.innerHTML = `
+            <div class="item-img" style="background:rgba(255,255,255,0.05); color:${t.c};"><i class="fas ${t.icon}"></i></div>
+            <div class="item-info"><h5>${t.type}</h5><span style="font-size:10px; color:#888;">${t.time}</span></div>
+            <div style="font-weight:700; color:${t.c};">${t.val}</div>
+        `;
+        container.appendChild(div);
+    });
+}
+TREŚĆ:
+function renderWalletView() {
+    // 1. Render History (Panel 5)
+    const container = document.getElementById('newWalletHistory');
+    if(container) {
+        container.innerHTML = '';
+        const txs = [
+            { id: '#TX9921', type: 'Wpłata (BLIK)', val: '+50,000 $', date: '25 Dec, 11:20', status: 'Completed', c: 'var(--accent-green)' },
+            { id: '#TX9920', type: 'Wypłata (Visa)', val: '-10,000 $', date: '24 Dec, 09:15', status: 'Pending', c: 'var(--text-muted)', canCancel: true },
+            { id: '#TX9919', type: 'Bonus Powitalny', val: '+5,000 $', date: '23 Dec, 18:30', status: 'Completed', c: 'var(--accent-purple)' },
+            { id: '#TX9918', type: 'Korekta Gry', val: '+150 $', date: '22 Dec, 14:00', status: 'Completed', c: 'var(--accent-blue)' },
+            { id: '#TX9915', type: 'Wpłata (Crypto)', val: '+2,000 $', date: '20 Dec, 02:40', status: 'Rejected', c: 'var(--accent-red)' }
+        ];
+
+        txs.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'hist-row';
+            let actionBtn = '';
+            if(t.canCancel) {
+                actionBtn = `<button class="cancel-tx-btn" title="Anuluj Wypłatę"><i class="fas fa-undo"></i></button>`;
+            }
+
+            let statusClass = t.status.toLowerCase();
+            
+            div.innerHTML = `
+                <div class="hist-left">
+                    <div class="hist-type">${t.type}</div>
+                    <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
+                </div>
+                <div class="hist-right">
+                    <div class="hist-val" style="color:${t.c}">${t.val}</div>
+                    <div class="hist-status st-${statusClass}">${t.status}</div>
+                </div>
+                ${actionBtn}
+            `;
+            container.appendChild(div);
+        });
+    }
+}
+
+// WALLET HELPER FUNCTIONS
+function switchWalletTab(tabName) {
+    // Buttons
+    document.querySelectorAll('.w-tab').forEach(b => b.classList.remove('active'));
+    // Content
+    document.querySelectorAll('.w-content').forEach(c => c.classList.remove('active'));
+
+    // Activate
+    const btn = document.querySelector(`.w-tab[onclick="switchWalletTab('${tabName}')"]`);
+    if(btn) btn.classList.add('active');
+    
+    const content = document.getElementById(`tab-${tabName}`);
+    if(content) content.classList.add('active');
+}
+
+function copyCrypto() {
+    const input = document.getElementById('cryptoAddr');
+    input.select();
+    // In real app: document.execCommand('copy');
+    const btn = input.nextElementSibling;
+    const originalIcon = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-check"></i>';
+    btn.style.color = 'var(--accent-green)';
+    
+    setTimeout(() => {
+        btn.innerHTML = originalIcon;
+        btn.style.color = '';
+    }, 2000);
+}
+
+KROK 3:
+PLIK: "style.css"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+.profile-level-badge {
+    position: absolute;
+    bottom: -10px; /* Wystaje lekko poza dół avatara */
+    left: 50%;
+    transform: translateX(-50%); /* Idealne centrowanie w poziomie */
+    
+    background: linear-gradient(90deg, #ec4899, #8b5cf6); /* Gradient pasujący do motywu */
+    color: white;
+    font-size: 12px;
+    font-weight: 800;
+    letter-spacing: 1px;
+    
+    padding: 4px 12px;
+    border-radius: 12px; /* Kształt pigułki */
+    
+    /* To tworzy efekt "wycięcia" i oddziela badge od tła strony */
+    border: 4px solid var(--bg-dark); 
+    box-shadow: 0 4px 10px rgba(0,0,0,0.5);
+    z-index: 10;
+    white-space: nowrap;
+}
+TREŚĆ:
+/* --- NEW WALLET STYLES (INTELIGENTNY LAYOUT) --- */
+
+.wallet-grid-layout {
+    display: grid;
+    grid-template-columns: 2fr 1fr; /* 2 kolumny: Main Action | History */
+    grid-template-rows: auto auto auto;
+    gap: 20px;
+}
+
+/* Panel 1: Balance Section (Full Width Top) */
+.w-balance-section {
+    grid-column: 1 / -1; /* Rozciągnij na całość */
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+}
+
+.wb-card {
+    background: linear-gradient(145deg, #1e2538, #151a2d);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    overflow: hidden;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+.wb-card.main-balance { background: linear-gradient(135deg, rgba(16, 185, 129, 0.1), #151a2d); border-color: rgba(16, 185, 129, 0.2); }
+.wb-card.bonus-balance { background: linear-gradient(135deg, rgba(139, 92, 246, 0.1), #151a2d); border-color: rgba(139, 92, 246, 0.2); }
+.wb-card.points-balance { background: linear-gradient(135deg, #151a2d, #1a1f33); }
+
+.wb-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 11px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 10px;
+}
+
+.wb-value {
+    font-size: 24px;
+    font-weight: 800;
+    color: white;
+    margin-bottom: 5px;
+    font-family: 'Inter', sans-serif;
+}
+.wb-value small { font-size: 14px; color: var(--text-muted); font-weight: 500; margin-left: 2px; }
+
+.currency-switch {
+    background: rgba(0,0,0,0.3);
+    border-radius: 15px;
+    padding: 2px;
+    display: flex;
+}
+.currency-switch span {
+    padding: 2px 8px;
+    font-size: 9px;
+    border-radius: 12px;
+    cursor: pointer;
+    color: #666;
+}
+.currency-switch span.active { background: var(--accent-green); color: white; font-weight: 700; }
+
+.wagering-container { margin-top: auto; }
+.wager-info { display: flex; justify-content: space-between; font-size: 10px; color: #ccc; margin-bottom: 3px; }
+.wager-bar { height: 4px; background: rgba(0,0,0,0.4); border-radius: 2px; overflow: hidden; margin-bottom: 5px; }
+.wager-fill { height: 100%; background: var(--accent-purple); box-shadow: 0 0 10px var(--accent-purple); }
+.wager-left { font-size: 9px; color: var(--text-muted); text-align: right; }
+
+.exchange-btn {
+    margin-top: auto;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 6px;
+    border-radius: 6px;
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.exchange-btn:hover { background: var(--accent-purple); border-color: var(--accent-purple); }
+
+
+/* Panel 2,3,4: Action Center (Middle Left) */
+.w-action-center {
+    grid-column: 1 / 2;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    min-height: 400px;
+    overflow: hidden;
+}
+
+.w-tabs {
+    display: flex;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    background: rgba(0,0,0,0.2);
+}
+.w-tab {
+    flex: 1;
+    padding: 15px;
+    background: transparent;
+    border: none;
+    color: var(--text-muted);
+    font-size: 13px;
+    font-weight: 600;
+    cursor: pointer;
+    border-bottom: 2px solid transparent;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+}
+.w-tab:hover { color: white; background: rgba(255,255,255,0.02); }
+.w-tab.active { color: white; border-bottom-color: var(--accent-blue); background: linear-gradient(to top, rgba(59, 130, 246, 0.1), transparent); }
+.w-tab.special.active { border-bottom-color: var(--accent-orange); background: linear-gradient(to top, rgba(245, 158, 11, 0.1), transparent); color: var(--accent-orange); }
+
+.w-tab-content-container { padding: 25px; flex-grow: 1; position: relative; }
+.w-content { display: none; animation: fadeIn 0.3s ease; height: 100%; flex-direction: column; }
+.w-content.active { display: flex; }
+
+/* Deposit Styles */
+.pay-methods-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-bottom: 25px; }
+.pm-item {
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    padding: 10px 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 5px;
+    cursor: pointer;
+    font-size: 10px;
+    color: #ccc;
+    transition: 0.2s;
+}
+.pm-item i { font-size: 20px; margin-bottom: 2px; }
+.pm-item:hover { border-color: white; }
+.pm-item.active { border-color: var(--accent-green); background: rgba(16, 185, 129, 0.1); color: white; box-shadow: 0 0 10px rgba(16, 185, 129, 0.2); }
+
+.input-group { position: relative; margin-bottom: 15px; display: flex; }
+.curr-prefix { background: rgba(255,255,255,0.1); padding: 10px 15px; border-radius: 8px 0 0 8px; color: #ccc; display: flex; align-items: center; }
+.input-group input { flex-grow: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-left: none; padding: 12px; color: white; font-size: 16px; border-radius: 0 8px 8px 0; outline: none; }
+.input-group.small input { border-radius: 8px 0 0 8px; border-left: 1px solid rgba(255,255,255,0.1); font-size: 13px; padding: 8px; }
+
+.quick-amounts { display: flex; gap: 8px; margin-bottom: 20px; }
+.quick-amounts button { flex: 1; background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #ccc; padding: 8px; border-radius: 6px; cursor: pointer; transition: 0.2s; font-size: 11px; }
+.quick-amounts button:hover { background: rgba(255,255,255,0.1); }
+.quick-amounts button.active { background: var(--accent-green); color: white; border-color: var(--accent-green); font-weight: 700; }
+
+.promo-section { display: flex; justify-content: space-between; align-items: center; background: rgba(255,255,255,0.02); padding: 15px; border-radius: 8px; border: 1px dashed rgba(255,255,255,0.1); margin-bottom: 20px; }
+.apply-btn { background: var(--accent-purple); border: none; color: white; padding: 0 15px; border-radius: 0 8px 8px 0; cursor: pointer; font-size: 11px; font-weight: 700; }
+.bonus-toggle { display: flex; align-items: center; gap: 8px; font-size: 11px; color: var(--text-muted); }
+
+.dep-footer { margin-top: auto; display: flex; justify-content: space-between; align-items: center; }
+.dep-limits { font-size: 10px; color: var(--text-muted); }
+
+.action-btn-large {
+    background: var(--accent-green);
+    color: white;
+    border: none;
+    padding: 12px 30px;
+    border-radius: 6px;
+    font-weight: 700;
+    font-size: 14px;
+    cursor: pointer;
+    box-shadow: 0 4px 15px rgba(16, 185, 129, 0.4);
+    transition: 0.2s;
+}
+.action-btn-large:hover { transform: translateY(-2px); box-shadow: 0 6px 20px rgba(16, 185, 129, 0.6); }
+.action-btn-large.outline { background: transparent; border: 1px solid var(--accent-red); color: var(--accent-red); box-shadow: none; }
+.action-btn-large.outline:hover { background: rgba(239, 68, 68, 0.1); }
+
+/* Withdraw specific */
+.withdraw-warning { background: rgba(239, 68, 68, 0.1); border-left: 3px solid var(--accent-red); padding: 15px; display: flex; gap: 10px; color: #ffcccc; font-size: 12px; border-radius: 4px; margin-bottom: 20px; align-items: center; }
+.selected-method { padding: 15px; background: rgba(255,255,255,0.05); border-radius: 8px; margin-bottom: 20px; display: flex; justify-content: space-between; align-items: center; font-weight: 600; font-size: 14px; }
+.verified-tag { font-size: 10px; color: var(--accent-green); display: flex; align-items: center; gap: 4px; }
+.fee-info { margin-bottom: 20px; font-size: 12px; color: var(--text-muted); }
+.fi-row { display: flex; justify-content: space-between; margin-bottom: 5px; border-bottom: 1px dotted rgba(255,255,255,0.1); padding-bottom: 2px; }
+
+/* Crypto Specific */
+.crypto-selector { margin-bottom: 20px; }
+.crypto-dropdown { width: 100%; background: #0b0e14; color: white; padding: 10px; border: 1px solid rgba(255,255,255,0.1); border-radius: 8px; outline: none; }
+.crypto-box { display: flex; gap: 20px; background: #000; padding: 20px; border-radius: 12px; border: 1px solid #333; align-items: center; }
+.qr-placeholder { width: 100px; height: 100px; background: white; display: flex; align-items: center; justify-content: center; font-size: 50px; color: black; border-radius: 4px; }
+.crypto-details { flex-grow: 1; }
+.copy-input { display: flex; margin-top: 5px; margin-bottom: 10px; }
+.copy-input input { flex-grow: 1; background: #111; border: 1px solid #333; color: var(--accent-orange); font-family: monospace; padding: 8px; border-radius: 4px 0 0 4px; font-size: 12px; }
+.copy-input button { background: #222; border: 1px solid #333; border-left: none; color: white; padding: 0 12px; border-radius: 0 4px 4px 0; cursor: pointer; transition: 0.2s; }
+.copy-input button:hover { background: #333; }
+.rate-info { font-size: 11px; color: #888; display: flex; justify-content: space-between; }
+.min-dep-warning { color: var(--accent-orange); }
+.crypto-note { margin-top: 20px; font-size: 11px; color: #666; text-align: center; }
+
+/* Panel 5: History (Middle Right) */
+.w-history-section {
+    grid-column: 2 / 3;
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    height: 400px; /* Match height of action center */
+}
+.panel-header { padding: 15px; border-bottom: 1px solid rgba(255,255,255,0.05); font-size: 13px; font-weight: 600; color: white; display: flex; align-items: center; gap: 8px; }
+.history-list-container { padding: 10px; overflow-y: auto; flex-grow: 1; }
+
+.hist-row { display: flex; justify-content: space-between; align-items: center; padding: 10px; border-bottom: 1px solid rgba(255,255,255,0.03); transition: 0.2s; }
+.hist-row:hover { background: rgba(255,255,255,0.02); }
+.hist-left { display: flex; flex-direction: column; }
+.hist-type { font-size: 12px; font-weight: 600; color: #ddd; }
+.hist-meta { font-size: 10px; color: #666; margin-top: 2px; }
+.hist-id { font-family: monospace; color: #444; }
+.hist-right { text-align: right; }
+.hist-val { font-size: 12px; font-weight: 700; }
+.hist-status { font-size: 9px; text-transform: uppercase; font-weight: 600; margin-top: 2px; }
+.st-completed { color: var(--accent-green); }
+.st-pending { color: var(--accent-orange); }
+.st-rejected { color: var(--accent-red); }
+.cancel-tx-btn { background: none; border: 1px solid rgba(239, 68, 68, 0.3); color: var(--accent-red); width: 24px; height: 24px; border-radius: 4px; margin-left: 8px; cursor: pointer; font-size: 10px; display: flex; align-items: center; justify-content: center; }
+.cancel-tx-btn:hover { background: var(--accent-red); color: white; }
+
+/* Panel 6: Responsible Gambling (Bottom Bar) */
+.w-limits-section {
+    grid-column: 1 / -1;
+    background: #0b0e14;
+    border-top: 2px solid rgba(59, 130, 246, 0.2);
+    padding: 15px 30px;
+    border-radius: 0 0 12px 12px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 40px;
+}
+.rg-stat { display: flex; flex-direction: column; gap: 4px; flex: 1; }
+.rg-label { font-size: 10px; color: #666; text-transform: uppercase; letter-spacing: 1px; }
+.rg-val { font-size: 14px; font-weight: 700; color: #ccc; font-family: 'Inter', sans-serif; }
+.rg-val.negative { color: var(--accent-red); }
+.rg-val.timer { font-family: monospace; color: var(--accent-blue); }
+.rg-bar { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; }
+.rg-fill { height: 100%; background: var(--accent-orange); }
+.rg-settings button { background: transparent; border: 1px solid #444; color: #888; padding: 6px 15px; border-radius: 20px; cursor: pointer; font-size: 11px; transition: 0.2s; }
+.rg-settings button:hover { border-color: #666; color: white; }

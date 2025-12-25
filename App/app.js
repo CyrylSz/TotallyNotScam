@@ -686,24 +686,73 @@ function renderMarketView() {
 }
 
 function renderWalletView() {
-    const container = document.getElementById('walletContainer');
-    container.innerHTML = '';
-    const txs = [
-        { type: 'Depozyt', val: '+50,000 $', time: '10 min temu', icon: 'fa-arrow-down', c: 'var(--accent-green)' },
-        { type: 'Blackjack', val: '-2,500 $', time: '2 godz temu', icon: 'fa-dice', c: 'var(--accent-red)' },
-        { type: 'Wypłata', val: '-10,000 $', time: '1 dzień temu', icon: 'fa-arrow-up', c: 'var(--text-muted)' },
-        { type: 'Bonus', val: '+500 $', time: '2 dni temu', icon: 'fa-gift', c: 'var(--accent-purple)' }
-    ];
-    txs.forEach(t => {
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        div.innerHTML = `
-            <div class="item-img" style="background:rgba(255,255,255,0.05); color:${t.c};"><i class="fas ${t.icon}"></i></div>
-            <div class="item-info"><h5>${t.type}</h5><span style="font-size:10px; color:#888;">${t.time}</span></div>
-            <div style="font-weight:700; color:${t.c};">${t.val}</div>
-        `;
-        container.appendChild(div);
-    });
+    // 1. Render History (Panel 5)
+    const container = document.getElementById('newWalletHistory');
+    if(container) {
+        container.innerHTML = '';
+        const txs = [
+            { id: '#TX9921', type: 'Wpłata (BLIK)', val: '+50,000 $', date: '25 Dec, 11:20', status: 'Completed', c: 'var(--accent-green)' },
+            { id: '#TX9920', type: 'Wypłata (Visa)', val: '-10,000 $', date: '24 Dec, 09:15', status: 'Pending', c: 'var(--text-muted)', canCancel: true },
+            { id: '#TX9919', type: 'Bonus Powitalny', val: '+5,000 $', date: '23 Dec, 18:30', status: 'Completed', c: 'var(--accent-purple)' },
+            { id: '#TX9918', type: 'Korekta Gry', val: '+150 $', date: '22 Dec, 14:00', status: 'Completed', c: 'var(--accent-blue)' },
+            { id: '#TX9915', type: 'Wpłata (Crypto)', val: '+2,000 $', date: '20 Dec, 02:40', status: 'Rejected', c: 'var(--accent-red)' }
+        ];
+
+        txs.forEach(t => {
+            const div = document.createElement('div');
+            div.className = 'hist-row';
+            let actionBtn = '';
+            if(t.canCancel) {
+                actionBtn = `<button class="cancel-tx-btn" title="Anuluj Wypłatę"><i class="fas fa-undo"></i></button>`;
+            }
+
+            let statusClass = t.status.toLowerCase();
+            
+            div.innerHTML = `
+                <div class="hist-left">
+                    <div class="hist-type">${t.type}</div>
+                    <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
+                </div>
+                <div class="hist-right">
+                    <div class="hist-val" style="color:${t.c}">${t.val}</div>
+                    <div class="hist-status st-${statusClass}">${t.status}</div>
+                </div>
+                ${actionBtn}
+            `;
+            container.appendChild(div);
+        });
+    }
+}
+
+// WALLET HELPER FUNCTIONS
+function switchWalletTab(tabName) {
+    // Buttons
+    document.querySelectorAll('.w-tab').forEach(b => b.classList.remove('active'));
+    // Content
+    document.querySelectorAll('.w-content').forEach(c => c.classList.remove('active'));
+
+    // Activate
+    const btn = document.querySelector(`.w-tab[onclick="switchWalletTab('${tabName}')"]`);
+    if(btn) btn.classList.add('active');
+    
+    const content = document.getElementById(`tab-${tabName}`);
+    if(content) content.classList.add('active');
+}
+
+function copyCrypto() {
+    const input = document.getElementById('cryptoAddr');
+    input.select();
+    // In real app: document.execCommand('copy');
+    const btn = input.nextElementSibling;
+    const originalIcon = btn.innerHTML;
+    
+    btn.innerHTML = '<i class="fas fa-check"></i>';
+    btn.style.color = 'var(--accent-green)';
+    
+    setTimeout(() => {
+        btn.innerHTML = originalIcon;
+        btn.style.color = '';
+    }, 2000);
 }
 
 function renderUsersView() {

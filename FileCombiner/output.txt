@@ -586,6 +586,14 @@ function closeRankModal() {
     document.getElementById('rankModal').classList.remove('active');
 }
 
+// --- BATTLE PASS MODAL ---
+function openBattlePassModal() {
+    document.getElementById('battlePassModal').classList.add('active');
+}
+
+function closeBattlePassModal() {
+    document.getElementById('battlePassModal').classList.remove('active');
+}
 // --- ACCOUNT MODAL ---
 function openAccountModal() {
     document.getElementById('accountModal').classList.add('active');
@@ -1242,183 +1250,151 @@ index.html
                             <div class="ticker__item"><i class="fas fa-bomb" style="color:orange;"></i> Crash: Mnożnik wywalił na 1.01x (RIP).</div>
                             <div class="ticker__item"><i class="fas fa-hand-holding-usd" style="color:#10b981;"></i> Wypłata: 12,000$ zrealizowana dla User_88.</div>
                             <div class="ticker__item"><i class="fas fa-gift" style="color:#d946ef;"></i> Drop: Skrzynka "Cyber Case" dla wszystkich online!</div>
-                            
-                            <div class="ticker__item"><i class="fas fa-trophy" style="color:gold;"></i> User_123 wygrał 50,000$ w Ruletce!</div>
-                            <div class="ticker__item"><i class="fas fa-gem" style="color:var(--accent-purple);"></i> BigWhale99 otworzył Smocze Jajo (Relic)!</div>
-                            <div class="ticker__item"><i class="fas fa-dice" style="color:var(--accent-green);"></i> LuckyLuke trafił Blackjacka x5 z rzędu!</div>
-                            <div class="ticker__item"><i class="fas fa-chart-line" style="color:var(--accent-blue);"></i> Giełda: Cena Złotego Zegarka rośnie (+15%)!</div>
-                            <div class="ticker__item"><i class="fas fa-user-secret" style="color:#ef4444;"></i> System: Zbanowano bota Farm_Bot_01.</div>
-                            <div class="ticker__item"><i class="fas fa-crown" style="color:gold;"></i> MrGambler awansował do Diamond Tier!</div>
-                            <div class="ticker__item"><i class="fas fa-bomb" style="color:orange;"></i> Crash: Mnożnik wywalił na 1.01x (RIP).</div>
-                            <div class="ticker__item"><i class="fas fa-hand-holding-usd" style="color:#10b981;"></i> Wypłata: 12,000$ zrealizowana dla User_88.</div>
-                            <div class="ticker__item"><i class="fas fa-gift" style="color:#d946ef;"></i> Drop: Skrzynka "Cyber Case" dla wszystkich online!</div>
                         </div>
                     </div>
                  </div>
             </div>
 
-            <div class="dash-section" style="display: flex; justify-content: center;">
-                <div class="qp-card-centered" style="flex: 1; max-width: 600px;">
-                    <div class="qp-title">Quick Play</div>
-                    
-                    <div class="qp-buttons-container">
-                        <button class="qp-btn-small">
-                            <i class="fas fa-plus-circle"></i> Stwórz
-                        </button>
-                        
-                        <button class="qp-btn-small primary">
-                            <i class="fas fa-play"></i> Dołącz
-                        </button>
-                        
-                        <button class="qp-btn-small">
-                            <i class="fas fa-plane"></i> Offline
-                        </button>
-                    </div>
-
-                    <div class="qp-online-bottom">
-                        <div class="qp-dot"></div> 1,247 Online
-                    </div>
-                </div>
-            </div>
-
-            <div class="dash-section dash-grid-3">
-                <div class="card dash-card">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-scroll"></i> Dzienne Misje (Reset 24h)</div></div>
-                    <div class="quest-list">
-                        <div class="quest-item">
-                            <div class="quest-info">
-                                <div class="q-title">Zagraj 10 spinów</div>
-                                <div class="q-progress-bar"><div class="q-fill" style="width: 80%;"></div></div>
-                                <div class="q-desc">Postęp: 8/10</div>
+            <div class="dash-new-layout dash-3-col-layout">
+                
+                <div class="d3-col">
+                    <div class="card dash-card combined-panel">
+                        <div class="cp-section">
+                            <div class="card-header"><div class="card-title"><i class="fas fa-chart-line"></i> Market Watch</div></div>
+                             <div class="market-watch-list">
+                                <div class="mw-item">
+                                    <div class="mw-icon" style="color:#a855f7;"><i class="fas fa-dragon"></i></div>
+                                    <div class="mw-info"><h5>Smocze Jajo</h5><span class="val-up">+12% <i class="fas fa-caret-up"></i></span></div>
+                                     <div class="mini-spark"><div class="spark-bar" style="height:40%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar active" style="height:80%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
+                                </div>
+                                 <div class="mw-item">
+                                    <div class="mw-icon" style="color:gold;"><i class="fas fa-clock"></i></div>
+                                    <div class="mw-info"><h5>Złoty Zegarek</h5><span class="val-down">-5% <i class="fas fa-caret-down"></i></span></div>
+                                     <div class="mini-spark"><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar active" style="height:30%; background:var(--accent-red); box-shadow:0 0 4px var(--accent-red);"></div></div>
+                                </div>
+                                <div class="mw-item">
+                                    <div class="mw-icon" style="color:var(--accent-blue);"><i class="fas fa-car"></i></div>
+                                     <div class="mw-info"><h5>Kluczyki Lambo</h5><span class="val-up">+2% <i class="fas fa-caret-up"></i></span></div>
+                                     <div class="mini-spark"><div class="spark-bar" style="height:20%"></div><div class="spark-bar" style="height:30%"></div><div class="spark-bar" style="height:25%"></div><div class="spark-bar active" style="height:40%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
+                                </div>
                             </div>
-                            <button class="gc-btn play q-btn">Odbierz</button>
                         </div>
-                        <div class="quest-item">
-                            <div class="quest-info">
-                                <div class="q-title">Postaw łącznie 500$</div>
-                                <div class="q-progress-bar"><div class="q-fill" style="width: 100%; background: var(--accent-green);"></div></div>
-                                <div class="q-desc">Postęp: 500/500</div>
+
+                        <div class="cp-divider"></div>
+
+                        <div class="cp-section">
+                             <div class="card-header">
+                                <div class="card-title"><i class="fas fa-suitcase"></i> Twój Ekwipunek</div>
+                                <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('inventory')" title="Pełny ekwipunek"></i>
                             </div>
-                             <button class="gc-btn play q-btn active-claim">Odbierz Nagrodę!</button>
-                        </div>
-                         <div class="quest-item">
-                            <div class="quest-info">
-                                <div class="q-title">Otwórz jedną skrzynkę</div>
-                                <div class="q-progress-bar"><div class="q-fill" style="width: 0%;"></div></div>
-                                <div class="q-desc">Postęp: 0/1</div>
-                            </div>
-                             <button class="gc-btn play q-btn disabled">Odbierz</button>
+                            <div class="list-container" id="dashInventoryList" style="flex-grow: 1;"></div>
                         </div>
                     </div>
                 </div>
 
-                <div class="card dash-card">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-calendar-check"></i> Streak Dzienny</div></div>
-                    <div class="streak-container">
-                        <div class="streak-days">
-                            <div class="s-day claimed"><i class="fas fa-check"></i><span>D1</span></div>
-                            <div class="s-day claimed"><i class="fas fa-check"></i><span>D2</span></div>
-                            <div class="s-day claimed"><i class="fas fa-check"></i><span>D3</span></div>
-                            <div class="s-day current"><i class="fas fa-box"></i><span>Damasz</span></div>
-                            <div class="s-day"><i class="fas fa-lock"></i><span>D5</span></div>
-                            <div class="s-day"><i class="fas fa-lock"></i><span>D6</span></div>
-                            <div class="s-day golden"><i class="fas fa-gift"></i><span>D7</span></div>
+                <div class="d3-col">
+                     <div class="qp-card-centered" style="width: 100%; max-width: 100%;">
+                        <div class="qp-title">Quick Play</div>
+                        <div class="qp-buttons-container">
+                            <button class="qp-btn-small">
+                                <i class="fas fa-plus-circle"></i> Stwórz
+                            </button>
+                            <button class="qp-btn-small primary">
+                                <i class="fas fa-play"></i> Dołącz
+                            </button>
+                            <button class="qp-btn-small">
+                                <i class="fas fa-plane"></i> Offline
+                            </button>
                         </div>
-                         <div class="streak-info">Zaloguj się jutro, aby kontynuować serię!</div>
+                        <div class="qp-online-bottom">
+                            <div class="qp-dot"></div> 1,247 Online
+                        </div>
                     </div>
-                </div>
 
-                 <div class="card dash-card battle-pass-card" style="background: linear-gradient(145deg, #1a2340, #2e1065); border: 1px solid rgba(139, 92, 246, 0.3);">
-                    <div class="bp-new-layout">
-                        <div class="bp-header-row">
+                    <div class="card dash-card rng-card" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid rgba(0, 229, 255, 0.2); min-height: auto;">
+                        <div class="card-header"><div class="card-title"><i class="fas fa-bahai" style="color:#00e5ff;"></i> RNG Forecast</div></div>
+                         <div style="text-align:center; padding: 20px 0; display: flex; align-items: center; justify-content: space-around;">
                             <div>
-                                <div class="bp-season"><i class="fas fa-meteor"></i> SEZON 2</div>
-                                <div class="bp-title-lg">Cyber Shark</div>
+                                <div style="font-size: 36px; font-weight: 800; color: #00e5ff; text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);">88%</div>
+                                <div style="font-size: 10px; color: #ddd;">Szczęście: <span style="color:#00e5ff; font-weight:700;">WYSOKIE</span></div>
                             </div>
-                            <div style="text-align: right;">
-                                <div style="font-size: 10px; color: #aaa;">KONIEC ZA</div>
-                                <div style="font-size: 12px; font-weight: 700; color: white;">12 DNI</div>
-                            </div>
-                        </div>
-
-                        <div class="bp-track">
-                            <div class="bp-node unlocked" title="Odebrano"><i class="fas fa-check"></i><span class="bp-node-lvl">13</span></div>
-                            <div class="bp-line"><div class="bp-line-fill" style="width: 100%;"></div></div>
                             
-                            <div class="bp-node unlocked" style="border-color:white;" title="Obecny"><i class="fas fa-gift"></i><span class="bp-node-lvl">14</span></div>
-                            <div class="bp-line"><div class="bp-line-fill" style="width: 80%;"></div></div>
-                            
-                            <div class="bp-node premium" title="Premium Only"><i class="fas fa-crown"></i><span class="bp-node-lvl">15</span></div>
-                        </div>
-
-                        <div class="bp-info-box">
-                            <i class="fas fa-lock" style="color: gold; font-size: 16px;"></i>
-                            <div class="bp-info-text">
-                                <span style="color: gold; font-weight: 700;">Battle Pass Premium</span><br>
-                                Odblokuj unikalne nagrody i skiny rekina.
+                            <div style="text-align: center;">
+                                <div style="height: 30px; display: flex; align-items: flex-end; justify-content: center; gap: 3px; margin-bottom: 5px; opacity: 0.7;">
+                                     <div style="width:3px; height:20%; background:#00e5ff; border-radius:2px;"></div>
+                                     <div style="width:3px; height:40%; background:#00e5ff; border-radius:2px;"></div>
+                                     <div style="width:3px; height:60%; background:#00e5ff; border-radius:2px;"></div>
+                                     <div style="width:3px; height:80%; background:#00e5ff; border-radius:2px;"></div>
+                                     <div style="width:3px; height:100%; background:#00e5ff; border-radius:2px; box-shadow: 0 0 10px #00e5ff;"></div>
+                                     <div style="width:3px; height:70%; background:#00e5ff; border-radius:2px;"></div>
+                                     <div style="width:3px; height:50%; background:#00e5ff; border-radius:2px;"></div>
+                                </div>
+                                <div style="font-size: 10px; color: var(--text-muted);">
+                                    Try: <b style="color:white;">Blackjack</b>
+                                </div>
                             </div>
-                            <button class="gc-btn play" style="width: auto; padding: 4px 10px;">KUP</button>
-                        </div>
+                         </div>
                     </div>
                 </div>
-            </div>
-            
-            <div class="dash-section dash-grid-2">
-                 <div class="card dash-card">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-chart-line"></i> Market Watch (Giełda)</div></div>
-                    <div class="market-watch-list">
-                        <div class="mw-item">
-                            <div class="mw-icon" style="color:#a855f7;"><i class="fas fa-dragon"></i></div>
-                            <div class="mw-info"><h5>Smocze Jajo</h5><span class="val-up">+12% <i class="fas fa-caret-up"></i></span></div>
-                             <div class="mini-spark"><div class="spark-bar" style="height:40%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar active" style="height:80%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
-                        </div>
-                         <div class="mw-item">
-                            <div class="mw-icon" style="color:gold;"><i class="fas fa-clock"></i></div>
-                            <div class="mw-info"><h5>Złoty Zegarek</h5><span class="val-down">-5% <i class="fas fa-caret-down"></i></span></div>
-                             <div class="mini-spark"><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar active" style="height:30%; background:var(--accent-red); box-shadow:0 0 4px var(--accent-red);"></div></div>
-                        </div>
-                        <div class="mw-item">
-                            <div class="mw-icon" style="color:var(--accent-blue);"><i class="fas fa-car"></i></div>
-                             <div class="mw-info"><h5>Kluczyki Lambo</h5><span class="val-up">+2% <i class="fas fa-caret-up"></i></span></div>
-                             <div class="mini-spark"><div class="spark-bar" style="height:20%"></div><div class="spark-bar" style="height:30%"></div><div class="spark-bar" style="height:25%"></div><div class="spark-bar active" style="height:40%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
-                        </div>
-                    </div>
-                </div>
-                 <div class="card dash-card">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-suitcase"></i> Twój Ekwipunek (Skrót)</div>
-                        <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('inventory')" title="Pełny ekwipunek"></i>
-                    </div>
-                    <div class="list-container" id="dashInventoryList" style="min-height: 180px; max-height: 180px;">
-                        </div>
-                </div>
-             </div>
 
-            <div class="dash-section" style="display: grid; grid-template-columns: 1fr;">
-                 <div class="card dash-card rng-card" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid rgba(0, 229, 255, 0.2);">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-bahai" style="color:#00e5ff;"></i> RNG Forecast (Prognoza Szczęścia)</div></div>
-                     <div style="text-align:center; padding: 20px 0; display: flex; align-items: center; justify-content: space-around;">
-                        <div>
-                            <div style="font-size: 48px; font-weight: 800; color: #00e5ff; text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);">88%</div>
-                            <div style="font-size: 12px; color: #ddd;">Aktualne szczęście: <span style="color:#00e5ff; font-weight:700;">WYSOKIE</span></div>
-                        </div>
+                <div class="d3-col">
+                    <div class="card dash-card daily-hub-card">
+                         <div class="card-header"><div class="card-title"><i class="fas fa-calendar-alt"></i> Centrum Codzienne</div></div>
                         
-                        <div style="text-align: center;">
-                            <div style="height: 40px; display: flex; align-items: flex-end; justify-content: center; gap: 5px; margin-bottom: 10px; opacity: 0.7;">
-                                 <div style="width:4px; height:20%; background:#00e5ff; border-radius:2px;"></div>
-                                 <div style="width:4px; height:40%; background:#00e5ff; border-radius:2px;"></div>
-                                 <div style="width:4px; height:60%; background:#00e5ff; border-radius:2px;"></div>
-                                 <div style="width:4px; height:80%; background:#00e5ff; border-radius:2px;"></div>
-                                 <div style="width:4px; height:100%; background:#00e5ff; border-radius:2px; box-shadow: 0 0 10px #00e5ff;"></div>
-                                 <div style="width:4px; height:70%; background:#00e5ff; border-radius:2px;"></div>
-                                 <div style="width:4px; height:50%; background:#00e5ff; border-radius:2px;"></div>
+                         <div class="dh-streak-section">
+                             <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; text-transform:uppercase;">Daily Streak</div>
+                            <div class="streak-days" style="justify-content: space-between;">
+                                <div class="s-day claimed" style="width:30px; height:40px;"><i class="fas fa-check"></i><span style="font-size:8px;">D1</span></div>
+                                <div class="s-day claimed" style="width:30px; height:40px;"><i class="fas fa-check"></i><span style="font-size:8px;">D2</span></div>
+                                <div class="s-day claimed" style="width:30px; height:40px;"><i class="fas fa-check"></i><span style="font-size:8px;">D3</span></div>
+                                <div class="s-day current" style="width:30px; height:40px;"><i class="fas fa-box"></i><span style="font-size:8px;">D4</span></div>
+                                <div class="s-day" style="width:30px; height:40px;"><i class="fas fa-lock"></i><span style="font-size:8px;">D5</span></div>
+                                <div class="s-day" style="width:30px; height:40px;"><i class="fas fa-lock"></i><span style="font-size:8px;">D6</span></div>
+                                <div class="s-day golden" style="width:30px; height:40px;"><i class="fas fa-gift"></i><span style="font-size:8px;">D7</span></div>
                             </div>
-                            <div style="font-size: 11px; color: var(--text-muted); background: rgba(0,0,0,0.3); padding: 5px 10px; border-radius: 6px;">
-                                Sugerowana gra: <b style="color:white;">Blackjack</b>
+                         </div>
+
+                         <div class="bp-mini-status">
+                            <div class="bp-mini-info">
+                                <div style="font-size: 10px; color: var(--accent-purple); font-weight:700;">BATTLE PASS</div>
+                                <div style="font-size: 14px; font-weight: 700;">Level 17 <span style="font-size:10px; color:var(--text-muted); font-weight:400;">/ 100</span></div>
+                            </div>
+                            <div class="bp-mini-dots" onclick="openBattlePassModal()">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                         </div>
+
+                         <div class="quest-list">
+                            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px; text-transform:uppercase;">Misje (Reset 24h)</div>
+                            <div class="quest-item">
+                                <div class="quest-info">
+                                    <div class="q-title">Zagraj 10 spinów</div>
+                                    <div class="q-progress-bar"><div class="q-fill" style="width: 80%;"></div></div>
+                                    <div class="q-desc">Postęp: 8/10</div>
+                                </div>
+                                <button class="gc-btn play q-btn">Odbierz</button>
+                            </div>
+                            <div class="quest-item">
+                                <div class="quest-info">
+                                    <div class="q-title">Postaw łącznie 500$</div>
+                                    <div class="q-progress-bar"><div class="q-fill" style="width: 100%; background: var(--accent-green);"></div></div>
+                                    <div class="q-desc">Postęp: 500/500</div>
+                                </div>
+                                 <button class="gc-btn play q-btn active-claim">Odbierz</button>
+                            </div>
+                             <div class="quest-item">
+                                <div class="quest-info">
+                                    <div class="q-title">Otwórz skrzynkę</div>
+                                    <div class="q-progress-bar"><div class="q-fill" style="width: 0%;"></div></div>
+                                    <div class="q-desc">Postęp: 0/1</div>
+                                </div>
+                                 <button class="gc-btn play q-btn disabled">Odbierz</button>
                             </div>
                         </div>
-                     </div>
+
+                    </div>
                 </div>
+
             </div>
 
         </div>
@@ -1755,6 +1731,84 @@ index.html
         </div>
     </div>
 
+    <div class="modal-overlay" id="battlePassModal">
+        <div class="steam-modal" style="width: 900px; max-width: 95vw;">
+            <div class="sm-header" style="background: linear-gradient(90deg, #2e1065, #151a2d);">
+                <div class="sm-title"><i class="fas fa-meteor" style="color:var(--accent-purple); margin-right:8px;"></i> BATTLE PASS: SEZON 2</div>
+                <div class="sm-close" onclick="closeBattlePassModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-content" style="padding: 0;">
+                <div style="padding: 30px; background: linear-gradient(135deg, rgba(76, 29, 149, 0.4), rgba(0,0,0,0)); display: flex; align-items: center; justify-content: space-between;">
+                    <div>
+                        <div style="font-size: 12px; color: #d8b4fe; font-weight: 600; text-transform: uppercase; letter-spacing: 2px;">Cyber Shark Season</div>
+                        <div style="font-size: 32px; font-weight: 800; color: white; margin: 5px 0;">LEVEL 17</div>
+                        <div style="font-size: 14px; color: #ccc;">Zdobądź <span style="color: #fff; font-weight: 700;">120 XP</span> by odblokować kolejny poziom.</div>
+                    </div>
+                    <button class="qp-btn-small primary" style="font-size: 14px; padding: 10px 25px;">
+                        <i class="fas fa-crown"></i> ODBLOKUJ PREMIUM
+                    </button>
+                </div>
+
+                <div class="bp-modal-track-container">
+                    <div class="bp-track-flex">
+                        <div class="bp-track-line-bg"></div>
+                        <div class="bp-track-line-fill"></div>
+
+                        <div class="bp-level-node claimed">
+                            <div class="bp-node-circle">15</div>
+                            <div class="bp-reward-box"><i class="fas fa-gem" style="color: #00e5ff; font-size: 18px;"></i></div>
+                            <div class="bp-label-free">100 Gems</div>
+                        </div>
+
+                        <div class="bp-level-node claimed">
+                            <div class="bp-node-circle">16</div>
+                            <div class="bp-reward-box"><i class="fas fa-coins" style="color: #ffd700; font-size: 18px;"></i></div>
+                            <div class="bp-label-free">500 Gold</div>
+                        </div>
+
+                        <div class="bp-level-node active">
+                            <div class="bp-node-circle">17</div>
+                            <div class="bp-reward-box"><i class="fas fa-gift" style="color: var(--accent-purple);"></i></div>
+                            <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
+                            <div class="bp-label-free">Mystery Box</div>
+                        </div>
+
+                        <div class="bp-level-node">
+                            <div class="bp-node-circle">18</div>
+                            <div class="bp-reward-box"><i class="fas fa-ticket-alt" style="color: #ff9f43; font-size: 18px;"></i></div>
+                            <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
+                            <div class="bp-label-free">Raffle</div>
+                        </div>
+
+                        <div class="bp-level-node">
+                            <div class="bp-node-circle">19</div>
+                            <div class="bp-reward-box"><i class="fas fa-user-astronaut" style="color: #ff6b6b; font-size: 18px;"></i></div>
+                             <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
+                             <div class="bp-label-free">Avatar</div>
+                        </div>
+
+                        <div class="bp-level-node">
+                             <div class="bp-node-circle" style="border-color: gold; color: gold;">20</div>
+                             <div class="bp-reward-box" style="border-color: gold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);"><i class="fas fa-crown" style="color: gold;"></i></div>
+                             <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
+                             <div class="bp-label-free" style="color: gold;">LEGENDARY</div>
+                        </div>
+
+                         <div class="bp-level-node">
+                            <div class="bp-node-circle">21</div>
+                            <div class="bp-reward-box"><i class="fas fa-box" style="color: #ccc; font-size: 18px;"></i></div>
+                             <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
+                             <div class="bp-label-free">Common</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="padding: 20px; text-align: center; color: var(--text-muted); font-size: 12px;">
+                    Przewijaj w prawo, aby zobaczyć przyszłe nagrody.
+                </div>
+            </div>
+        </div>
+    </div>
     <div class="modal-overlay" id="accountModal">
         <div class="steam-modal" style="width: 800px;">
             <div class="sm-header">
@@ -3109,6 +3163,212 @@ input:checked + .slider:before { transform: translateX(16px); }
     100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
 }
 
+/* --- NEW 3-COLUMN DASHBOARD LAYOUT --- */
+.dash-3-col-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+
+@media (max-width: 1200px) {
+    .dash-3-col-layout {
+        grid-template-columns: 1fr;
+    }
+}
+
+.d3-col {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+}
+
+/* Combined Left Panel (Market + Inventory) */
+.combined-panel {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    min-height: 400px; /* Ensure it's taller than QP */
+}
+
+.cp-section {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+}
+
+.cp-divider {
+    height: 1px;
+    background: linear-gradient(to right, transparent, rgba(255,255,255,0.1), transparent);
+    margin: 15px 0;
+}
+
+/* Daily Hub (Right Panel) */
+.daily-hub-card {
+    min-height: 400px;
+}
+
+.dh-streak-section {
+    background: rgba(0,0,0,0.2);
+    border-radius: 8px;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid rgba(255,255,255,0.03);
+}
+
+.bp-mini-status {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.1), rgba(21, 26, 45, 0));
+    padding: 10px 12px;
+    border-radius: 8px;
+    border-left: 3px solid var(--accent-purple);
+    margin-bottom: 15px;
+}
+
+.bp-mini-info {
+    display: flex;
+    flex-direction: column;
+}
+
+.bp-mini-dots {
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+    transition: 0.2s;
+}
+.bp-mini-dots:hover { color: white; transform: scale(1.1); }
+
+/* NEW BATTLE PASS MODAL (Horizontal Track) */
+.bp-modal-track-container {
+    overflow-x: auto;
+    padding: 40px 20px;
+    background: rgba(0,0,0,0.2);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    margin-top: 20px;
+    /* Custom Scrollbar for track */
+    scrollbar-width: thin;
+    scrollbar-color: var(--accent-purple) var(--bg-dark);
+}
+
+.bp-track-flex {
+    display: flex;
+    align-items: center;
+    min-width: max-content;
+    padding: 0 50px;
+    position: relative;
+}
+
+/* The Line */
+.bp-track-line-bg {
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 50%;
+    height: 4px;
+    background: rgba(255,255,255,0.1);
+    z-index: 1;
+    transform: translateY(-50%);
+}
+
+.bp-track-line-fill {
+    position: absolute;
+    left: 0;
+    width: 35%; /* Hardcoded progress for visual */
+    top: 50%;
+    height: 4px;
+    background: linear-gradient(90deg, var(--accent-purple), #00e5ff);
+    z-index: 1;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+    transform: translateY(-50%);
+}
+
+.bp-level-node {
+    position: relative;
+    z-index: 2;
+    margin: 0 35px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 80px;
+}
+
+.bp-node-circle {
+    width: 40px;
+    height: 40px;
+    background: var(--bg-dark);
+    border: 2px solid #555;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 14px;
+    color: #777;
+    margin-bottom: 10px;
+    transition: 0.3s;
+    position: relative;
+}
+
+.bp-level-node.active .bp-node-circle {
+    border-color: #00e5ff;
+    color: white;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    background: #1a2340;
+    transform: scale(1.1);
+}
+
+.bp-level-node.claimed .bp-node-circle {
+    border-color: var(--accent-purple);
+    background: var(--accent-purple);
+    color: white;
+}
+
+.bp-reward-box {
+    width: 70px;
+    height: 70px;
+    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 24px;
+    color: #ccc;
+    position: relative;
+    transition: 0.3s;
+}
+
+.bp-level-node.active .bp-reward-box {
+    border-color: #00e5ff;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.bp-level-node:hover .bp-reward-box {
+    transform: translateY(-5px);
+}
+
+.bp-label-free {
+    font-size: 9px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    color: var(--text-muted);
+    margin-top: 8px;
+    text-transform: uppercase;
+}
+
+.bp-lock-icon {
+    position: absolute;
+    top: -10px;
+    right: -5px;
+    font-size: 12px;
+    color: #555;
+    background: var(--bg-dark);
+    border-radius: 50%;
+    padding: 2px;
+}
 /* --- NEW DASHBOARD STYLES (Instructions Implementation) --- */
 
 .dash-section { margin-bottom: 25px; }
