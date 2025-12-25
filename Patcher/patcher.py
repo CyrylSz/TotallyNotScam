@@ -55,7 +55,6 @@ def apply_changes():
         # Usuwamy ewentualne spacje z nazwy pliku
         file_name = file_name_raw.strip()
         
-        # --- KLUCZOWA ZMIANA ---
         # Budujemy ścieżkę w oparciu o app_dir, a nie script_dir
         full_file_path = os.path.join(app_dir, file_name)
         # Normalizacja ścieżki (naprawia np. mieszane slashe / i \)
