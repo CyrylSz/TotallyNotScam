@@ -2055,17 +2055,33 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 /* Nowy styl dla Value */
 .inv-value-display {
-    font-family: monospace;
-    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding-right: 15px;
+    margin-right: 15px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    height: 40px;
+}
+
+.iv-label {
+    font-size: 9px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 3px;
+}
+
+.iv-val {
+    font-size: 18px;
     font-weight: 700;
     color: var(--accent-green);
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 4px 10px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    gap: 6px;
+    text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
 }
 
 .inv-filter-btn {
