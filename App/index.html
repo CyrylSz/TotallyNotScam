@@ -339,7 +339,13 @@
                     <div class="inv-header">
                         <div class="inv-title">
                             <i class="fas fa-box-open"></i> MAGAZYN
-                            <div class="ms-toggle-row" style="display:inline-flex; width: 200px; margin-left:20px; vertical-align:middle;">
+                            <div class="inv-value-display" style="border-right: none; border-left: 1px solid rgba(255,255,255,0.1); align-items: flex-start; margin-left: 15px; padding-left: 15px; padding-right: 0;">
+                                <div class="iv-label">TOTAL VALUE</div>
+                                <div class="iv-val">2,790,000 $</div>
+                            </div>
+                        </div>
+                        <div class="inv-stats">
+                            <div class="ms-toggle-row" style="display:inline-flex; width: 180px;">
                                 <button id="btnInvItem" class="ms-type-btn active" onclick="toggleInvFilter('item')" style="margin:0;">
                                     <i class="fas fa-cube"></i> Item
                                 </button>
@@ -347,12 +353,7 @@
                                     <i class="fas fa-briefcase"></i> Case
                                 </button>
                             </div>
-                        </div>
-                        <div class="inv-stats">
-                            <div class="inv-value-display">
-                                <div class="iv-label">TOTAL VALUE</div>
-                                <div class="iv-val">2,790,000 $</div>
-                            </div>
+                            <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 12px;"></div>
                             <button class="inv-filter-btn" title="Sortuj / Filtruj">
                                 <i class="fas fa-filter"></i>
                             </button>
