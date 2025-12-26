@@ -294,7 +294,7 @@ function createMarketCard(item) {
 
     el.innerHTML = `
         <div class="mc-header" style="color:${item.color};">
-            <i class="fas ${item.icon}"></i>
+            <div style="font-size: 40px; font-style: normal;">${item.icon}</div>
             <div class="mc-seller-avatar" title="Sprzedawca: ${item.seller}"></div>
             ${lockHtml}
         </div>
@@ -318,7 +318,8 @@ function openMarketItemModal(item) {
     if(!modal) return;
     
     // Populate Data
-    document.getElementById('mmIcon').className = `fas ${item.icon}`;
+    document.getElementById('mmIcon').innerHTML = item.icon;
+    document.getElementById('mmIcon').className = ''; // Remove FontAwesome classes
     document.getElementById('mmCard').style.color = item.color;
     document.getElementById('mmSellerName').textContent = item.seller;
     
@@ -577,8 +578,11 @@ function renderTreasures() {
     if(!list) return;
     list.innerHTML = '';
     
-    // Używamy myInventory zamiast allTreasures
-    const currentItems = myInventory.slice(0, shownTreasures);
+    // Sortujemy ekwipunek od najdroższego dla profilu (Show Off)
+    const sortedProfileInv = [...myInventory].sort((a, b) => b.rawPrice - a.rawPrice);
+
+    // Używamy posortowanej kopii zamiast surowego myInventory
+    const currentItems = sortedProfileInv.slice(0, shownTreasures);
     
     currentItems.forEach(item => {
         const div = document.createElement('div');
@@ -611,7 +615,7 @@ function renderTreasures() {
         `;
 
         div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-img" style="font-style: normal;">${item.icon}</div>
             <div class="item-info">
                 <h5>${item.name}</h5>
                 <div class="item-price-row">
@@ -1109,7 +1113,7 @@ function renderInventoryView() {
         else if (isOnSale) badgeHtml = `<div class="on-sale-badge">NA RYNKU</div>`;
 
         slot.innerHTML = `
-            <i class="fas ${item.icon} inv-item-icon" style="color: ${item.color};"></i>
+            <div class="inv-item-icon" style="font-style: normal; color: initial;">${item.icon}</div>
             <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
             ${badgeHtml}
         `;
@@ -1227,7 +1231,7 @@ function renderItemInSlot(slotElement, item) {
     let rarityColor = getRarityColor(item.rarity);
     
     // Zmniejszono rozmiar ikony do 45px dla slotów 110px
-    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 45px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
+    slotElement.innerHTML = `<div style="font-size: 50px; font-style: normal; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${item.icon}</div>`;
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
@@ -1284,7 +1288,7 @@ function renderDashInventory() {
         const badgeClass = `badge-${item.rarity.toLowerCase()}`;
         
         div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-img" style="font-style: normal;">${item.icon}</div>
             <div class="item-info">
                 <h5>${item.name}</h5>
                 <div class="item-price-row">
@@ -1799,7 +1803,7 @@ function renderDashInventory() {
         // Reuse existing layout but simplified
         const badgeClass = `badge-${item.rarity.toLowerCase()}`;
         div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-img" style="font-style: normal;">${item.icon}</div>
             <div class="item-info"><h5>${item.name}</h5></div>
             <div class="item-right-status"><div class="rarity-tag-badge ${badgeClass}" style="min-width:auto; font-size:8px;">${item.rarity}</div></div>
         `;
