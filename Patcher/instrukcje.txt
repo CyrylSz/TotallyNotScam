@@ -1,35 +1,26 @@
 KROK 1:
-PLIK: "app.js"
+PLIK: "style.css"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-function hexToRgb(hex) {
-    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-        return r + r + g + g + b + b;
-    });
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
+.mc-lock-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.6);
+    padding: 4px;
+    border-radius: 4px;
+    color: var(--accent-red);
+    font-size: 10px;
 }
-
-function renderMarketView() {
-    const container = document.getElementById('marketContainer');
-    container.innerHTML = '';
-    // Mock items for market
-    // Renderowanie nowego rynku
-    renderMarketView();
-}
-
-let currentDepositMethod = 'visa';
 TREŚĆ:
-function hexToRgb(hex) {
-    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
-    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
-        return r + r + g + g + b + b;
-    });
-    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
-    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
+.mc-lock-overlay {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    padding: 0;
+    color: var(--accent-red);
+    font-size: 18px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,1));
+    z-index: 10;
 }
-
-let currentDepositMethod = 'visa';

@@ -1,115 +1,132 @@
 import os
 import re
 
+# 1. Konfiguracja ścieżek
 script_dir = os.path.dirname(os.path.abspath(__file__))
 TARGET_FOLDER_NAME = "App"
 app_dir = os.path.join(os.path.dirname(script_dir), TARGET_FOLDER_NAME)
 INSTRUCTIONS_FILE = os.path.join(script_dir, "instrukcje.txt")
 
-def normalize_whitespace(text):
-    """Zamienia każdy ciąg białych znaków na pojedynczą spację dla celów porównania."""
-    return ' '.join(text.split())
-
-def make_fuzzy_regex(text):
-    """Tworzy regex, który dopasowuje tekst ignorując różnice w białych znakach."""
-    # Escape'ujemy specjalne znaki regexa
-    escaped = re.escape(text)
-    # Zamieniamy escape'owane spacje na \s+ (dowolny ciąg białych znaków)
-    # Uwaga: re.escape w Pythonie 3.7+ może nie escape'ować spacji, ale bezpieczniej jest podzielić string
-    parts = text.split()
-    # Łączymy części wymagając co najmniej jednego białego znaku między słowami, 
-    # a opcjonalnych białych znaków na początku i końcu
-    pattern = r'\s*'.join(map(re.escape, parts))
+def make_smart_fuzzy_regex(text):
+    """
+    Tworzy zaawansowany regex.
+    Dzieli tekst na słowa ORAZ znaki interpunkcyjne.
+    Pozwala na dowolną ilość białych znaków pomiędzy nimi.
+    """
+    # Znajdź wszystko co jest słowem (\w+) LUB nie jest białym znakiem ([^\w\s])
+    # To rozdzieli np. 'class="foo"' na ['class', '=', '"', 'foo', '"']
+    tokens = re.findall(r'\w+|[^\w\s]', text)
+    
+    # Escape'uj każdy token, żeby znaki specjalne (np. ?, *, +) były traktowane literalnie
+    escaped_tokens = [re.escape(t) for t in tokens]
+    
+    # Połącz tokeny, pozwalając na 0 lub więcej białych znaków (\s*) pomiędzy nimi
+    pattern = r'\s*'.join(escaped_tokens)
     return pattern
 
 def apply_changes():
     print(f"📂 Folder patchera: {script_dir}")
-    print(f"📂 Folder aplikacji (cel): {app_dir}")
+    print(f"📂 Folder aplikacji: {app_dir}\n")
     
     if not os.path.exists(app_dir):
-        print(f"❌ BŁĄD: Nie znaleziono folderu '{TARGET_FOLDER_NAME}'.")
+        print(f"❌ BŁĄD KRYTYCZNY: Nie znaleziono folderu '{TARGET_FOLDER_NAME}' obok patchera.")
         return
 
     try:
         with open(INSTRUCTIONS_FILE, 'r', encoding='utf-8') as f:
             content = f.read()
     except FileNotFoundError:
-        print(f"❌ Brak pliku: {INSTRUCTIONS_FILE}")
+        print(f"❌ Brak pliku z instrukcjami: {INSTRUCTIONS_FILE}")
         return
 
-    # Usuń bloki markdown ```text ... ```
+    # Usuń bloki markdown ```text ... ``` jeśli AI je dodało
     content = re.sub(r'^```[a-zA-Z]*\n', '', content, flags=re.MULTILINE)
     content = re.sub(r'\n```$', '', content, flags=re.MULTILINE)
 
+    # Ulepszony Regex do parsowania instrukcji (bardziej tolerancyjny na entery)
     pattern = re.compile(
         r'PLIK:\s*"(.*?)"\s*'
         r'OPERACJA:\s*\[(.*?)\]\s*'
-        r'SZUKAJ:[ \t]*\n(.*?)\n'      
-        r'TREŚĆ:[ \t]*\n(.*?)(?=\n\s*KROK|\Z)', 
+        r'SZUKAJ:\s*?\n(.*?)\n'      # Capture content after SZUKAJ:\n
+        r'TREŚĆ:\s*?\n(.*?)(?=\n\s*KROK|\Z)', # Capture until next KROK or EOF
         re.DOTALL
     )
 
     matches = pattern.findall(content)
-    print(f"🔍 Znaleziono {len(matches)} kroków.\n")
+    
+    if not matches:
+        print("⚠️ Nie znaleziono żadnych kroków w pliku instrukcje.txt. Sprawdź formatowanie.")
+        return
 
-    for file_name_raw, operation, search_block, content_block in matches:
+    print(f"🔍 Znaleziono {len(matches)} kroków do wykonania.\n")
+
+    for i, (file_name_raw, operation, search_block, content_block) in enumerate(matches, 1):
         file_name = file_name_raw.strip()
         full_file_path = os.path.join(app_dir, file_name)
         full_file_path = os.path.normpath(full_file_path)
         
-        print(f"⚙️  Przetwarzanie: {file_name} -> {operation}")
+        print(f"⚙️  Krok {i}: {file_name} -> {operation}")
         
         if not os.path.exists(full_file_path):
-            print(f"   ❌ Plik nie istnieje: {full_file_path}")
+            print(f"   ❌ Błąd: Plik nie istnieje: {full_file_path}")
             continue
 
         with open(full_file_path, 'r', encoding='utf-8') as f:
             original_code = f.read()
 
-        # Normalizacja inputów (usuwamy zbędne nowe linie na końcach bloków instrukcji)
-        search_str = search_block.rstrip()
+        # Usuwamy białe znaki tylko z końców bloków, zachowując wcięcia w środku
+        search_str = search_block.rstrip() 
         replace_str = content_block.rstrip()
 
-        # 1. Próba dokładnego dopasowania (najszybsza i najbezpieczniejsza)
-        if search_str in original_code:
-            print("   🔹 Tryb: Dokładne dopasowanie (Exact match)")
-            if operation == "ZASTĄP":
-                new_code = original_code.replace(search_str, replace_str)
-            elif operation == "WSTAW_PO":
-                new_code = original_code.replace(search_str, search_str + "\n" + replace_str)
-            elif operation == "WSTAW_PRZED":
-                new_code = original_code.replace(search_str, replace_str + "\n" + search_str)
+        # --- LOGIKA APLIKOWANIA ZMIAN ---
         
-        # 2. Próba dopasowania "Fuzzy" (Regex) - ignoruje spacje/taby/entery
+        # 1. Próba dokładna (Exact Match)
+        if search_str in original_code:
+            print("   🔹 Znaleziono (Dokładne dopasowanie)")
+            match_start = original_code.find(search_str)
+            match_end = match_start + len(search_str)
+            found = True
         else:
-            print("   🔸 Tryb: Inteligentne dopasowanie (Fuzzy match)...")
-            fuzzy_pattern = make_fuzzy_regex(search_str)
+            # 2. Próba inteligentna (Smart Fuzzy Match)
+            print("   🔸 Próba dopasowania inteligentnego (ignorowanie spacji)...")
+            fuzzy_pattern = make_smart_fuzzy_regex(search_str)
             
-            # Szukamy pierwszego dopasowania
             match = re.search(fuzzy_pattern, original_code, re.DOTALL)
-            
             if match:
-                print("   ✅ Znaleziono fragment mimo różnic w formatowaniu!")
-                start, end = match.span()
-                matched_text = original_code[start:end]
-                
-                if operation == "ZASTĄP":
-                    new_code = original_code[:start] + replace_str + original_code[end:]
-                elif operation == "WSTAW_PO":
-                    new_code = original_code[:end] + "\n" + replace_str + original_code[end:]
-                elif operation == "WSTAW_PRZED":
-                    new_code = original_code[:start] + replace_str + "\n" + original_code[start:]
+                print("   ✅ Znaleziono fragment (Smart Match)!")
+                match_start, match_end = match.span()
+                found = True
             else:
-                print(f"   ⚠️  Nie znaleziono fragmentu 'SZUKAJ' nawet w trybie inteligentnym.")
-                print(f"      Szukano (uproszczone): {normalize_whitespace(search_str)[:60]}...")
-                continue
+                found = False
 
-        if new_code != original_code:
-            with open(full_file_path, 'w', encoding='utf-8') as f:
-                f.write(new_code)
-            print(f"   ✅ Zapisano zmiany.")
+        if not found:
+            print(f"   ⚠️ NIE ZNALEZIONO fragmentu w pliku!")
+            print(f"      Sprawdź czy w sekcji SZUKAJ nie brakuje komentarzy lub linii, które są w pliku.")
+            # Debug: Pokaż pierwsze 100 znaków tego, czego szukaliśmy
+            debug_str = ' '.join(search_str.split())[:100]
+            print(f"      Szukano: '{debug_str}...'")
+            continue
+
+        # Wykonanie operacji na znalezionych indeksach
+        new_code_content = original_code
+        
+        if operation == "ZASTĄP":
+            new_code_content = original_code[:match_start] + replace_str + original_code[match_end:]
+        elif operation == "WSTAW_PO":
+            new_code_content = original_code[:match_end] + "\n" + replace_str + original_code[match_end:]
+        elif operation == "WSTAW_PRZED":
+            new_code_content = original_code[:match_start] + replace_str + "\n" + original_code[match_start:]
         else:
-            print(f"   ⚠️  Brak zmian w pliku.")
+            print(f"   ❌ Nieznana operacja: {operation}")
+            continue
+
+        # Zapisz tylko jeśli były zmiany
+        if new_code_content != original_code:
+            with open(full_file_path, 'w', encoding='utf-8') as f:
+                f.write(new_code_content)
+            print(f"   ✅ Sukces! Zapisano zmiany.")
+        else:
+            print(f"   ⚠️ Brak zmian (kod jest już identyczny).")
 
 if __name__ == "__main__":
     apply_changes()

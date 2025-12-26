@@ -192,10 +192,6 @@ function updateMarketLockIcons() {
     
     // Divine (Req: RNG God - ID 2)
     checkLock(2, 'lockDivine');
-    // Relic (Req: Alpha Whale - ID 3)
-    checkLock(3, 'lockRelic');
-    // Epic (Req: Table Shark - ID 5)
-    checkLock(5, 'lockEpic');
 }
 
 function filterMarket() {
@@ -287,8 +283,6 @@ function createMarketCard(item) {
     // Lock logic for Card
     let isLocked = false;
     if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
-    if(item.rarity === 'Relic' && currentRankId > 3) isLocked = true;
-    if(item.rarity === 'Epic' && currentRankId > 5) isLocked = true;
     
     const lockHtml = isLocked ? `<div class="mc-lock-overlay"><i class="fas fa-lock"></i></div>` : '';
 
@@ -348,7 +342,6 @@ function openMarketItemModal(item) {
     let reqRankName = '';
     let isLocked = false;
     if(item.rarity === 'Divine' && currentRankId > 2) { isLocked = true; reqRankName = "RNG God"; }
-    else if(item.rarity === 'Relic' && currentRankId > 3) { isLocked = true; reqRankName = "Alpha Whale"; }
     
     if(isLocked) {
         warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: ${reqRankName} (do założenia)`;
