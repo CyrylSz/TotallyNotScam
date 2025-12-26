@@ -267,6 +267,8 @@ function filterMarket() {
 function createMarketCard(item) {
     const el = document.createElement('div');
     el.className = 'm-card';
+    // Style match Inventory: Border in rarity color (50% opacity)
+    el.style.borderColor = `rgba(${hexToRgb(item.color)}, 0.5)`;
     el.onclick = () => openMarketItemModal(item);
     
     // Background Sparkline Bars
@@ -295,7 +297,7 @@ function createMarketCard(item) {
         </div>
         <div class="mc-body">
             <div class="mc-sparkline">${barsHtml}</div>
-            <div class="mc-title">${item.name}</div>
+            <div class="mc-title" style="color:${item.color}">${item.name}</div>
             <div class="mc-sub" style="color:${item.color}">${item.rarity}</div>
             
             <div class="mc-price-row">

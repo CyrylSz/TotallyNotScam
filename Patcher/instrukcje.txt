@@ -2,13 +2,28 @@ KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    // 1. OFERTY MR GAMBLERA (Muszą pasować do tego co ma w data.js -> inventory)
-    // MrGambler ma: Divine Case (5), Patek (16). Wystawiamy je.
-    addListing(5, "MrGambler", 1250000, true); // Divine Case - Drogo
-    addListing(16, "MrGambler", 2400000, true); // Patek - Okazja
+function createMarketCard(item) {
+    const el = document.createElement('div');
+    el.className = 'm-card';
+    el.onclick = () => openMarketItemModal(item);
 TREŚĆ:
-    // 1. OFERTY MR GAMBLERA (Muszą pasować do tego co ma w data.js -> inventory)
-    // MrGambler ma: Divine Case (5), Patek (16). Wystawiamy je.
-    addListing(5, "MrGambler", 1250000, true); // Divine Case - Drogo
-    addListing(16, "MrGambler", 2400000, true); // Patek - Okazja
-    addListing(15, "MrGambler", 45000, true); // Rolex Submariner (Epic)
+function createMarketCard(item) {
+    const el = document.createElement('div');
+    el.className = 'm-card';
+    // Style match Inventory: Border in rarity color (50% opacity)
+    el.style.borderColor = `rgba(${hexToRgb(item.color)}, 0.5)`;
+    el.onclick = () => openMarketItemModal(item);
+
+KROK 2:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+        <div class="mc-body">
+            <div class="mc-sparkline">${barsHtml}</div>
+            <div class="mc-title">${item.name}</div>
+            <div class="mc-sub" style="color:${item.color}">${item.rarity}</div>
+TREŚĆ:
+        <div class="mc-body">
+            <div class="mc-sparkline">${barsHtml}</div>
+            <div class="mc-title" style="color:${item.color}">${item.name}</div>
+            <div class="mc-sub" style="color:${item.color}">${item.rarity}</div>
