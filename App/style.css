@@ -2346,8 +2346,8 @@ input:checked + .slider:before { transform: translateX(16px); }
     flex: 1;
     overflow-y: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
     padding-right: 5px;
     align-content: start;
 }
@@ -2367,7 +2367,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .m-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 5; border-color: var(--accent-purple); }
 
 .mc-header {
-    height: 150px;
+    height: 110px;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -2425,7 +2425,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 
 .mc-body {
-    padding: 10px;
+    padding: 8px;
     background: rgba(0,0,0,0.2);
     border-top: 1px solid rgba(255,255,255,0.05);
     flex: 1;
@@ -2455,7 +2455,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .mc-sub { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; z-index: 1; }
 
 .mc-price-row { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; z-index: 1; }
-.mc-price { font-size: 14px; font-weight: 700; color: var(--accent-green); }
+.mc-price { font-size: 13px; font-weight: 700; color: var(--accent-green); }
 .mc-change { font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 2px; }
 
 /* MODAL STYLES */

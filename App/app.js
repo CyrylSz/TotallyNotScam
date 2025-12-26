@@ -297,7 +297,7 @@ function createMarketCard(item) {
 
     el.innerHTML = `
         <div class="mc-header" style="color:${item.color};">
-            <div style="font-size: 85px; font-style: normal; line-height: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding-top: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">${item.icon}</div>
+            <div style="font-size: 60px; font-style: normal; line-height: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding-top: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">${item.icon}</div>
             <div class="mc-seller-row" title="Sprzedawca: ${item.seller}">
                 <div class="mc-seller-avatar" style="background-image: url('${item.sellerImg}');"></div>
                 <div class="mc-seller-name">${item.seller}</div>
@@ -306,7 +306,7 @@ function createMarketCard(item) {
         </div>
         <div class="mc-body">
             <div class="mc-sparkline">${barsHtml}</div>
-            <div class="mc-title" style="color:${item.color}; font-size: 14px; margin-bottom: 12px;">${item.name}</div>
+            <div class="mc-title" style="color:${item.color}; font-size: 12px; margin-bottom: 8px;">${item.name}</div>
             
             <div class="mc-price-row">
                 <div class="mc-price">${item.price.toLocaleString()} $</div>
