@@ -1,115 +1,75 @@
 KROK 1:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-    el.innerHTML = `
-        <div class="mc-header" style="color:${item.color};">
-            <div style="font-size: 85px; font-style: normal; line-height: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding-top: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">${item.icon}</div>
-            <div class="mc-seller-row" title="Sprzedawca: ${item.seller}">
-                <div class="mc-seller-avatar" style="background-image: url('${item.sellerImg}');"></div>
-                <div class="mc-seller-name">${item.seller}</div>
-TREŚĆ:
-    el.innerHTML = `
-        <div class="mc-header" style="color:${item.color};">
-            <div style="font-size: 60px; font-style: normal; line-height: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding-top: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">${item.icon}</div>
-            <div class="mc-seller-row" title="Sprzedawca: ${item.seller}">
-                <div class="mc-seller-avatar" style="background-image: url('${item.sellerImg}');"></div>
-                <div class="mc-seller-name">${item.seller}</div>
-
-KROK 2:
 PLIK: "style.css"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-.market-grid {
-    flex: 1;
-    overflow-y: auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
-    padding-right: 5px;
-    align-content: start;
+.ms-toggle-row { 
+    display: flex; 
+    background: #0a0c10; 
+    padding: 4px; 
+    border-radius: 8px; 
+    border: 1px solid rgba(255,255,255,0.05);
+    box-shadow: inset 0 2px 5px rgba(0,0,0,0.5);
 }
-TREŚĆ:
-.market-grid {
-    flex: 1;
-    overflow-y: auto;
-    display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
-    gap: 12px;
-    padding-right: 5px;
-    align-content: start;
-}
-
-KROK 3:
-PLIK: "style.css"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-.mc-header {
-    height: 150px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
-    overflow: hidden;
-}
-TREŚĆ:
-.mc-header {
-    height: 110px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    position: relative;
-    background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
-    overflow: hidden;
-}
-
-KROK 4:
-PLIK: "style.css"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-.mc-body {
-    padding: 10px;
-    background: rgba(0,0,0,0.2);
-    border-top: 1px solid rgba(255,255,255,0.05);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
+.ms-type-btn { 
+    flex: 1; 
+    background: transparent; 
+    border: none; 
+    color: var(--text-muted); 
+    padding: 8px 10px; 
+    font-size: 11px; 
+    cursor: pointer; 
+    border-radius: 6px; 
+    transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 8px; 
+    font-weight: 500;
     position: relative;
 }
-TREŚĆ:
-.mc-body {
-    padding: 8px;
-    background: rgba(0,0,0,0.2);
-    border-top: 1px solid rgba(255,255,255,0.05);
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    position: relative;
+.ms-type-btn:hover { 
+    color: white; 
+    background: rgba(255,255,255,0.03); 
 }
-
-KROK 5:
-PLIK: "style.css"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-.mc-price-row { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; z-index: 1; }
-.mc-price { font-size: 14px; font-weight: 700; color: var(--accent-green); }
+.ms-type-btn.active { 
+    background: linear-gradient(135deg, var(--accent-purple), #7c3aed); 
+    color: white; 
+    font-weight: 700; 
+    box-shadow: 0 4px 12px rgba(139, 92, 246, 0.4);
+    transform: scale(1.02);
+}
 TREŚĆ:
-.mc-price-row { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; z-index: 1; }
-.mc-price { font-size: 13px; font-weight: 700; color: var(--accent-green); }
-
-KROK 6:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-        <div class="mc-body">
-            <div class="mc-sparkline">${barsHtml}</div>
-            <div class="mc-title" style="color:${item.color}; font-size: 14px; margin-bottom: 12px;">${item.name}</div>
-            
-            <div class="mc-price-row">
-TREŚĆ:
-        <div class="mc-body">
-            <div class="mc-sparkline">${barsHtml}</div>
-            <div class="mc-title" style="color:${item.color}; font-size: 12px; margin-bottom: 8px;">${item.name}</div>
-            
-            <div class="mc-price-row">
+.ms-toggle-row { 
+    display: flex; 
+    background: rgba(0,0,0,0.25); 
+    padding: 4px; 
+    border-radius: 8px; 
+    border: 1px solid rgba(255,255,255,0.05);
+    gap: 6px;
+}
+.ms-type-btn { 
+    flex: 1; 
+    background: transparent; 
+    border: 1px solid transparent; 
+    color: var(--text-muted); 
+    padding: 6px 10px; 
+    font-size: 11px; 
+    cursor: pointer; 
+    border-radius: 6px; 
+    transition: all 0.2s ease; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 6px; 
+    font-weight: 500;
+}
+.ms-type-btn:hover { 
+    color: white; 
+    background: rgba(255,255,255,0.03); 
+}
+.ms-type-btn.active { 
+    background: rgba(139, 92, 246, 0.1); 
+    border-color: rgba(139, 92, 246, 0.25);
+    color: var(--accent-purple); 
+    font-weight: 600; 
+}

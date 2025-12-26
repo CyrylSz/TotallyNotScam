@@ -2299,9 +2299,40 @@ input:checked + .slider:before { transform: translateX(16px); }
 .ms-search-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 30px; cursor: pointer; border-radius: 0 4px 4px 0; }
 .ms-search-btn:hover { background: var(--accent-purple); }
 
-.ms-toggle-row { display: flex; background: rgba(0,0,0,0.2); padding: 3px; border-radius: 6px; }
-.ms-type-btn { flex: 1; background: transparent; border: none; color: #666; padding: 6px; font-size: 11px; cursor: pointer; border-radius: 4px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-.ms-type-btn.active { background: var(--accent-purple); color: white; font-weight: 600; }
+.ms-toggle-row { 
+    display: flex; 
+    background: rgba(0,0,0,0.25); 
+    padding: 4px; 
+    border-radius: 8px; 
+    border: 1px solid rgba(255,255,255,0.05);
+    gap: 6px;
+}
+.ms-type-btn { 
+    flex: 1; 
+    background: transparent; 
+    border: 1px solid transparent; 
+    color: var(--text-muted); 
+    padding: 6px 10px; 
+    font-size: 11px; 
+    cursor: pointer; 
+    border-radius: 6px; 
+    transition: all 0.2s ease; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 6px; 
+    font-weight: 500;
+}
+.ms-type-btn:hover { 
+    color: white; 
+    background: rgba(255,255,255,0.03); 
+}
+.ms-type-btn.active { 
+    background: rgba(139, 92, 246, 0.1); 
+    border-color: rgba(139, 92, 246, 0.25);
+    color: var(--accent-purple); 
+    font-weight: 600; 
+}
 
 .ms-slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
 .ms-slot-icon { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; height: 35px; display: flex; align-items: center; justify-content: center; color: #666; cursor: pointer; transition: 0.2s; font-size: 14px; }
