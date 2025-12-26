@@ -2,27 +2,34 @@ KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-function renderTreasures() {
-    const list = document.getElementById('treasuresList');
-    const btn = document.getElementById('btnTreasures');
-    if(!list) return;
-    list.innerHTML = '';
-    
-    // Używamy myInventory zamiast allTreasures
-    const currentItems = myInventory.slice(0, shownTreasures);
-    
-    currentItems.forEach(item => {
-TREŚĆ:
-function renderTreasures() {
-    const list = document.getElementById('treasuresList');
-    const btn = document.getElementById('btnTreasures');
-    if(!list) return;
-    list.innerHTML = '';
-    
-    // Sortujemy ekwipunek od najdroższego dla profilu (Show Off)
-    const sortedProfileInv = [...myInventory].sort((a, b) => b.rawPrice - a.rawPrice);
+function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
+}
 
-    // Używamy posortowanej kopii zamiast surowego myInventory
-    const currentItems = sortedProfileInv.slice(0, shownTreasures);
-    
-    currentItems.forEach(item => {
+function renderMarketView() {
+    const container = document.getElementById('marketContainer');
+    container.innerHTML = '';
+    // Mock items for market
+    // Renderowanie nowego rynku
+    renderMarketView();
+}
+
+let currentDepositMethod = 'visa';
+TREŚĆ:
+function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
+}
+
+let currentDepositMethod = 'visa';

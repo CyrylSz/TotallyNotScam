@@ -1319,14 +1319,6 @@ function hexToRgb(hex) {
     return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
 }
 
-function renderMarketView() {
-    const container = document.getElementById('marketContainer');
-    container.innerHTML = '';
-    // Mock items for market
-    // Renderowanie nowego rynku
-    renderMarketView();
-}
-
 let currentDepositMethod = 'visa';
 let currentWithdrawMethod = 'visa';
 
