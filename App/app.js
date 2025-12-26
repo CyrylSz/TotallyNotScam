@@ -1226,7 +1226,8 @@ function renderItemInSlot(slotElement, item) {
     // Podmień HTML slotu na ikonę przedmiotu
     let rarityColor = getRarityColor(item.rarity);
     
-    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 32px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
+    // Zwiększono rozmiar ikony do 48px dla slotów 100px
+    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 48px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;

@@ -2,97 +2,227 @@ KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    tab: 'global', // 'global' or 'my'
-    search: '',
-    type: 'item', // 'item' or 'case'
-    slots: [], // array of selected slots e.g. ['watch', 'head']
+function renderItemInSlot(slotElement, item) {
+    // Podmień HTML slotu na ikonę przedmiotu
+    let rarityColor = getRarityColor(item.rarity);
+    
+    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 32px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
+    slotElement.style.borderColor = item.color;
 TREŚĆ:
-    tab: 'global', // 'global' or 'my'
-    search: '',
-    types: { item: true, case: true }, // Multiselect
-    slots: [], // array of selected slots e.g. ['watch', 'head']
+function renderItemInSlot(slotElement, item) {
+    // Podmień HTML slotu na ikonę przedmiotu
+    let rarityColor = getRarityColor(item.rarity);
+    
+    // Zwiększono rozmiar ikony do 48px dla slotów 100px
+    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 48px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
+    slotElement.style.borderColor = item.color;
 
 KROK 2:
-PLIK: "app.js"
+PLIK: "style.css"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-function setMarketType(type, btnElement) {
-    marketState.type = type;
-    
-    // Visual Toggle
-    document.querySelectorAll('.ms-type-btn').forEach(b => b.classList.remove('active'));
-    btnElement.classList.add('active');
-    
-    // Show/Hide Slot filters (only for items)
-    const slotSection = document.getElementById('slotFilterSection');
-    if(type === 'item') slotSection.classList.remove('hidden');
-    else slotSection.classList.add('hidden');
-    
-    filterMarket();
+/* Left Grid - FIXED SLOT SIZE */
+.inventory-grid-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: grid;
+    /* Sztywny rozmiar kolumn dopasowany do slotu */
+    grid-template-columns: repeat(auto-fill, 70px);
+    grid-auto-rows: 70px;
+    gap: 10px;
+    align-content: start;
+    justify-content: center; /* Wycentrowanie siatki */
 }
+
+/* UNIVERSAL SLOT STYLE */
+.inv-grid-slot, .pd-slot {
+    width: 70px; /* WYMUSZONY ROZMIAR */
+    height: 70px; /* WYMUSZONY ROZMIAR */
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.inv-grid-slot:hover, .pd-slot:hover {
+    border-color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    z-index: 10;
+}
+
+.inv-item-icon { font-size: 28px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8)); transition: 0.2s; }
+.inv-grid-slot:hover .inv-item-icon, .pd-slot:hover i { transform: scale(1.15); }
 TREŚĆ:
-function toggleMarketType(type, btnElement) {
-    marketState.types[type] = !marketState.types[type];
-    
-    // Visual Toggle
-    btnElement.classList.toggle('active', marketState.types[type]);
-    
-    // Show/Hide Slot filters (only if Item is active)
-    const slotSection = document.getElementById('slotFilterSection');
-    if(marketState.types['item']) slotSection.classList.remove('hidden');
-    else slotSection.classList.add('hidden');
-    
-    filterMarket();
+/* Left Grid - SCALED SLOT SIZE (100px) */
+.inventory-grid-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: grid;
+    /* Skalowanie do 100px + gap 15px */
+    grid-template-columns: repeat(auto-fill, 100px);
+    grid-auto-rows: 100px;
+    gap: 15px;
+    align-content: start;
+    justify-content: center;
 }
+
+/* UNIVERSAL SLOT STYLE (100px) */
+.inv-grid-slot, .pd-slot {
+    width: 100px !important; /* WYMUSZONY ROZMIAR */
+    height: 100px !important; /* WYMUSZONY ROZMIAR */
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px !important; /* Większe zaokrąglenie */
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+}
+
+.inv-grid-slot:hover, .pd-slot:hover {
+    border-color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
+    z-index: 10;
+}
+
+/* Zwiększona ikona dla większego slotu */
+.inv-item-icon { font-size: 42px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)); transition: 0.2s; }
+.inv-grid-slot:hover .inv-item-icon, .pd-slot:hover i { transform: scale(1.1); }
 
 KROK 3:
-PLIK: "app.js"
+PLIK: "style.css"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-        // Type
-        if(marketState.type === 'case' && !item.isChest) return false;
-        if(marketState.type === 'item' && item.isChest) return false;
-        
-        // Search
-TREŚĆ:
-        // Type
-        if(item.isChest && !marketState.types.case) return false;
-        if(!item.isChest && !marketState.types.item) return false;
-        
-        // Search
+/* Grid Calculation for 3x4:
+   Slot Size: 70px
+   Gap: 15px
+   Column Steps: 0, 85px, 170px
+   Row Steps: 0, 85px, 170px, 255px
+   Total Width: 240px
+   Total Height: 325px
+*/
 
-KROK 4:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-                            <div class="inv-type-toggles">
-                                <button id="btnInvItem" class="inv-type-btn active" onclick="toggleInvFilter('item')">Item</button>
-                                <button id="btnInvCase" class="inv-type-btn active" onclick="toggleInvFilter('case')">Case</button>
-                            </div>
-TREŚĆ:
-                            <div class="ms-toggle-row" style="display:inline-flex; margin-left:15px; padding:2px; vertical-align:middle;">
-                                <button id="btnInvItem" class="ms-type-btn active" onclick="toggleInvFilter('item')" style="margin:0; min-width: 60px;">
-                                    <i class="fas fa-cube"></i> Item
-                                </button>
-                                <button id="btnInvCase" class="ms-type-btn active" onclick="toggleInvFilter('case')" style="margin:0; min-width: 60px;">
-                                    <i class="fas fa-briefcase"></i> Case
-                                </button>
-                            </div>
+.pd-formation {
+    position: relative;
+    width: 240px;
+    height: 325px; /* Compact 3x4 */
+}
 
-KROK 5:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-                        <div class="ms-label">Typ Aktywa</div>
-                        <div class="ms-toggle-row">
-                            <button class="ms-type-btn active" onclick="setMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
-                            <button class="ms-type-btn" onclick="setMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
-                        </div>
-                    </div>
+.pd-silhouette {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 280px;
+    color: rgba(0,0,0,0.3);
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* UNIVERSAL SLOT SIZE FORCE */
+.pd-slot {
+    position: absolute;
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 6px !important; /* Square shape */
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.6);
+}
+.pd-slot .placeholder { font-size: 28px; opacity: 0.3; }
+
+/* --- GRID POSITIONS 3x4 --- */
+
+/* ROW 1 (Y=0) */
+.slot-glasses   { top: 0; left: 0; }
+.slot-neck      { top: 0; left: 85px; z-index: 5; }
+.slot-earpiece  { top: 0; left: 170px; }
+
+/* ROW 2 (Y=85) */
+.slot-watch     { top: 85px; left: 0; }
+.slot-suit      { top: 85px; left: 85px; z-index: 4; }
+.slot-cufflink  { top: 85px; left: 170px; }
+
+/* ROW 3 (Y=170) */
+.slot-ring      { top: 170px; left: 0; }
+.slot-belt      { top: 170px; left: 85px; z-index: 3; }
+.slot-pants     { top: 170px; left: 170px; }
+
+/* ROW 4 (Y=255) */
+.slot-vehicle   { top: 255px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
+.slot-shoes     { top: 255px; left: 85px; z-index: 2; }
+.slot-hand      { top: 255px; left: 170px; border-color: rgba(16, 185, 129, 0.4); }
 TREŚĆ:
-                        <div class="ms-label">Typ Aktywa</div>
-                        <div class="ms-toggle-row">
-                            <button class="ms-type-btn active" onclick="toggleMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
-                            <button class="ms-type-btn active" onclick="toggleMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
-                        </div>
-                    </div>
+/* Grid Calculation for 3x4 (SCALED UP):
+   Slot Size: 100px
+   Gap: 15px
+   Step: 115px
+   Column Steps: 0, 115px, 230px
+   Row Steps: 0, 115px, 230px, 345px
+   Total Width: 330px
+   Total Height: 445px
+*/
+
+.pd-formation {
+    position: relative;
+    width: 330px;
+    height: 445px; /* Scaled 3x4 */
+}
+
+.pd-silhouette {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 380px; /* Zwiększona sylwetka */
+    color: rgba(0,0,0,0.3);
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* UNIVERSAL SLOT SIZE FORCE (Redundant but kept for overrides) */
+.pd-slot {
+    position: absolute;
+    width: 100px !important;
+    height: 100px !important;
+    border-radius: 12px !important;
+    box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.6);
+}
+.pd-slot .placeholder { font-size: 40px; opacity: 0.3; } /* Większy placeholder */
+
+/* --- GRID POSITIONS 3x4 (Recalculated for 100px + 15px gap) --- */
+
+/* ROW 1 (Y=0) */
+.slot-glasses   { top: 0; left: 0; }
+.slot-neck      { top: 0; left: 115px; z-index: 5; }
+.slot-earpiece  { top: 0; left: 230px; }
+
+/* ROW 2 (Y=115) */
+.slot-watch     { top: 115px; left: 0; }
+.slot-suit      { top: 115px; left: 115px; z-index: 4; }
+.slot-cufflink  { top: 115px; left: 230px; }
+
+/* ROW 3 (Y=230) */
+.slot-ring      { top: 230px; left: 0; }
+.slot-belt      { top: 230px; left: 115px; z-index: 3; }
+.slot-pants     { top: 230px; left: 230px; }
+
+/* ROW 4 (Y=345) */
+.slot-vehicle   { top: 345px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
+.slot-shoes     { top: 345px; left: 115px; z-index: 2; }
+.slot-hand      { top: 345px; left: 230px; border-color: rgba(16, 185, 129, 0.4); }
