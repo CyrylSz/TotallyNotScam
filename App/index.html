@@ -397,21 +397,105 @@
         </div>
 
         <div class="view-container" id="viewMarket">
-             <div class="games-hub-grid">
-                <div class="games-column">
-                    <div class="card">
-                        <div class="card-header"><div class="card-title">Oferty Rynkowe</div></div>
-                        <div class="list-container" id="marketContainer" style="max-height: 600px;">
-                            </div>
+            <div class="market-layout-main">
+                <!-- LEWY SIDEBAR: FILTRY -->
+                <aside class="market-sidebar">
+                    <div class="ms-header">
+                        <i class="fas fa-filter"></i> FILTRY
                     </div>
-                </div>
-                <div class="leaderboard-column">
-                    <div class="card">
-                        <div class="card-header"><div class="card-title">Trendy</div></div>
-                        <div style="padding: 15px; color: var(--text-muted); font-size: 12px;">
-                            <p>🔥 Smocze Jajo (+15%)</p>
-                            <p style="margin-top:5px;">📉 Pusty Portfel (-99%)</p>
+                    
+                    <div class="ms-section">
+                        <div class="ms-label">Wyszukaj</div>
+                        <div class="input-group small" style="margin-bottom: 0;">
+                            <input type="text" id="marketSearchInput" placeholder="Nazwa przedmiotu..." onkeyup="filterMarket()">
+                            <button class="ms-search-btn"><i class="fas fa-search"></i></button>
                         </div>
+                    </div>
+
+                    <div class="ms-section">
+                        <div class="ms-label">Typ Aktywa</div>
+                        <div class="ms-toggle-row">
+                            <button class="ms-type-btn active" onclick="setMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
+                            <button class="ms-type-btn" onclick="setMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
+                        </div>
+                    </div>
+
+                    <div class="ms-section" id="slotFilterSection">
+                        <div class="ms-label">Slot Ekwipunku</div>
+                        <div class="ms-slots-grid" style="grid-template-columns: repeat(5, 1fr);">
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('head', this)" title="Głowa"><i class="fas fa-glasses"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('neck', this)" title="Szyja"><i class="fas fa-link"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('suit', this)" title="Garnitur"><i class="fas fa-user-tie"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('watch', this)" title="Zegarek"><i class="fas fa-clock"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('gadget', this)" title="Gadżet"><i class="fas fa-mobile-alt"></i></div>
+                            
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('belt', this)" title="Pasek"><i class="fas fa-grip-lines"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('pants', this)" title="Spodnie"><i class="fas fa-columns"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('shoes', this)" title="Buty"><i class="fas fa-shoe-prints"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('ring', this)" title="Biżuteria"><i class="fas fa-ring"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('vehicle', this)" title="Pojazd"><i class="fas fa-car"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="ms-section">
+                        <div class="ms-label">Cena ($)</div>
+                        <div class="ms-price-inputs">
+                            <input type="number" id="priceMin" placeholder="Od" onchange="filterMarket()">
+                            <span style="color:#666">-</span>
+                            <input type="number" id="priceMax" placeholder="Do" onchange="filterMarket()">
+                        </div>
+                    </div>
+
+                    <div class="ms-section">
+                        <div class="ms-label">Rzadkość (Wymagana Ranga)</div>
+                        <div class="ms-rarity-list">
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Peasant" onchange="filterMarket()" checked> 
+                                <span class="dot-r peasant"></span> Peasant
+                            </label>
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Rare" onchange="filterMarket()" checked> 
+                                <span class="dot-r rare"></span> Rare
+                            </label>
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Epic" onchange="filterMarket()" checked> 
+                                <span class="dot-r epic"></span> Epic <i class="fas fa-lock lock-icon" id="lockEpic"></i>
+                            </label>
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Relic" onchange="filterMarket()" checked> 
+                                <span class="dot-r relic"></span> Relic <i class="fas fa-lock lock-icon" id="lockRelic"></i>
+                            </label>
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Divine" onchange="filterMarket()" checked> 
+                                <span class="dot-r divine"></span> Divine <i class="fas fa-lock lock-icon" id="lockDivine"></i>
+                            </label>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- PRAWY KONTENT: GRID -->
+                <div class="market-content">
+                    <!-- Topbar Nawigacyjny -->
+                    <div class="market-topbar">
+                        <div class="mt-tabs">
+                            <button class="mt-tab active" onclick="switchMarketTab('global')" id="tabGlobalMarket">Globalny Rynek</button>
+                            <button class="mt-tab" onclick="switchMarketTab('my')" id="tabMyListings">Moje Oferty</button>
+                        </div>
+                        <div class="mt-sort">
+                            <span style="font-size:11px; color:#888; margin-right:5px;">Sortuj:</span>
+                            <select id="marketSortSelect" onchange="filterMarket()">
+                                <option value="best_deal">🔥 Najlepsza Okazja</option>
+                                <option value="trending">📈 Trending (24h)</option>
+                                <option value="price_asc">💰 Cena: Rosnąco</option>
+                                <option value="price_desc">💎 Cena: Malejąco</option>
+                                <option value="newest">🕒 Najnowsze</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Siatka Ofert -->
+                    <div class="market-grid" id="marketGrid">
+                        <!-- Generowane przez JS -->
                     </div>
                 </div>
             </div>
@@ -1000,6 +1084,78 @@
             <div class="sm-content" style="padding-top: 0;">
                 <div class="history-list-container full-height-logs" id="financialLogsList">
                     <!-- Logs injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Market Item Detail Modal -->
+    <div class="modal-overlay" id="marketModal">
+        <div class="steam-modal market-modal-size">
+            <div class="sm-header" id="marketModalHeader" style="border-bottom:none;">
+                <div class="sm-title" id="marketModalTitle">SZCZEGÓŁY OFERTY</div>
+                <div class="sm-close" onclick="closeMarketModal()"><i class="fas fa-times"></i></div>
+            </div>
+            
+            <div class="mm-layout">
+                <!-- Lewa kolumna: Wizualizacja -->
+                <div class="mm-visual-col">
+                    <div class="mm-item-card-large" id="mmCard">
+                        <i class="fas fa-cube" id="mmIcon"></i>
+                    </div>
+                    <div class="mm-seller-info">
+                        <div class="user-avatar small" id="mmSellerAvatar"></div>
+                        <div>
+                            <div class="mm-label">Sprzedawca</div>
+                            <div class="mm-val" id="mmSellerName">User_123</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prawa kolumna: Dane -->
+                <div class="mm-data-col">
+                    <h2 id="mmItemName">Nazwa Przedmiotu</h2>
+                    <div class="mm-tags" id="mmTags">
+                        <span class="badge-epic">EPIC</span>
+                        <span class="badge-slot">WATCH</span>
+                    </div>
+
+                    <div class="mm-stats-grid">
+                        <div class="mm-stat">
+                            <div class="mm-lbl">Ostatnia cena</div>
+                            <div class="mm-v" id="mmLastPrice">2,400 $</div>
+                        </div>
+                        <div class="mm-stat">
+                            <div class="mm-lbl">Zmienna 24h</div>
+                            <div class="mm-v val-up" id="mmChange">+12%</div>
+                        </div>
+                        <div class="mm-stat">
+                            <div class="mm-lbl">Floor Price</div>
+                            <div class="mm-v" id="mmFloor">2,100 $</div>
+                        </div>
+                        <div class="mm-stat">
+                            <div class="mm-lbl">Wolumen</div>
+                            <div class="mm-v">324</div>
+                        </div>
+                    </div>
+
+                    <div class="mm-chart-placeholder">
+                        <div class="chart-line-mock"></div>
+                        <div class="chart-label">Historia Cen (7 Dni)</div>
+                    </div>
+
+                    <div class="mm-desc-box">
+                        <div class="mm-lbl">Efekt / Zawartość</div>
+                        <p id="mmDesc">Zatrzymuje czas długów. +15 do Prestiżu.</p>
+                        <div id="mmReqWarning" class="mm-warning hidden"><i class="fas fa-lock"></i> Wymagana ranga: Alpha Whale</div>
+                    </div>
+
+                    <div class="mm-actions">
+                        <div class="mm-price-large" id="mmCurrentPrice">2,500 $</div>
+                        <div class="mm-btn-row">
+                            <button class="action-btn-large" id="btnBuyNow" onclick="buyItem()">KUP TERAZ</button>
+                            <button class="action-btn-large outline" id="btnOffer">ZŁÓŻ OFERTĘ</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>

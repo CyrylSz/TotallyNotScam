@@ -18,14 +18,385 @@ let myInventory = []; // Tablica obiektów (instancji)
 let myLoadout = {};   // Mapa: slotId -> itemUid
 
 // --- RENDER FUNCTIONS ---
+// --- MARKET SYSTEM START ---
+let marketState = {
+    tab: 'global', // 'global' or 'my'
+    search: '',
+    type: 'item', // 'item' or 'case'
+    slots: [], // array of selected slots e.g. ['watch', 'head']
+    priceMin: null,
+    priceMax: null,
+    rarities: ['Peasant', 'Rare', 'Epic', 'Relic', 'Divine'],
+    sort: 'best_deal',
+    listings: [] // Will be populated with mock data
+};
+
+function initMarketData() {
+    marketState.listings = [];
+    
+    // Helper do tworzenia ofert
+    const addListing = (itemTemplateId, sellerName, priceOverride, isMine = false, inventoryUid = null) => {
+        const template = allTreasures.find(t => t.id === itemTemplateId);
+        if(!template) return;
+
+        // Jeśli to mój przedmiot, muszę znaleźć jego UID w moim ekwipunku
+        let finalUid = `mkt_${Date.now()}_${Math.random()}`;
+        
+        if (isMine) {
+            // Znajdź przedmiot w myInventory, który pasuje do ID i nie jest jeszcze wystawiony (teoretycznie)
+            // W tym demo zakładamy, że initInventorySystem() już stworzył instancje.
+            // Szukamy instancji tego przedmiotu u MrGamblera
+            const myItem = myInventory.find(i => i.id === itemTemplateId && !i.isOnSale);
+            if (myItem) {
+                finalUid = myItem.uid;
+                myItem.isOnSale = true; // Oznaczamy w ekwipunku!
+            } else {
+                return; // Nie mam tego przedmiotu, błąd danych
+            }
+        }
+
+        // Generowanie historii cen
+        const history = [];
+        let cur = priceOverride;
+        for(let j=0; j<10; j++) {
+            cur = cur * (1 + ((Math.random() * 0.1) - 0.05));
+            history.push(cur);
+        }
+        
+        marketState.listings.push({
+            uid: finalUid,
+            templateId: template.id,
+            seller: sellerName,
+            price: priceOverride,
+            change: ((Math.random() * 20) - 10).toFixed(1),
+            history: history,
+            isMine: isMine,
+            date: Date.now() - Math.floor(Math.random() * 86400000 * 3),
+            
+            // Props for easier filtering
+            name: template.name,
+            rarity: template.rarity,
+            type: template.type,
+            icon: template.icon,
+            color: template.color,
+            isChest: template.type === 'chest'
+        });
+    };
+
+    // 1. OFERTY MR GAMBLERA (Muszą pasować do tego co ma w data.js -> inventory)
+    // MrGambler ma: Divine Case (5), Patek (16). Wystawiamy je.
+    addListing(5, "MrGambler", 1250000, true); // Divine Case - Drogo
+    addListing(16, "MrGambler", 2400000, true); // Patek - Okazja
+
+    // 2. OFERTY INNYCH GRACZY (Hardcoded, Specific)
+    
+    // Whale_Killer (Sprzedaje Top Tier)
+    addListing(27, "Whale_Killer", 1900000); // Karta do Bugatti
+    addListing(13, "Whale_Killer", 480000);  // Smoking Bonda
+    addListing(4, "Whale_Killer", 95000);    // Relic Case
+
+    // LuckyLuke (Mid Tier)
+    addListing(7, "LuckyLuke", 1400);        // RayBan
+    addListing(12, "LuckyLuke", 4200);       // Hugo Boss
+    addListing(3, "LuckyLuke", 22000);       // Epic Case
+
+    // CryptoBro (Tech & High Risk)
+    addListing(30, "CryptoBro", 110000);     // Szyfrowany Telefon (Drogo)
+    addListing(8, "CryptoBro", 14000);       // Gogle VR
+    addListing(26, "CryptoBro", 48000);      // Kluczyki BMW
+
+    // Bot_Network (Spam tanich itemów)
+    addListing(1, "Bot_Network_01", 450);    // Peasant Case
+    addListing(1, "Bot_Network_01", 440);
+    addListing(25, "Bot_Network_01", 2);     // Bilet
+    addListing(19, "Bot_Network_01", 120);   // Dżinsy
+
+    // Random Fillers (Dla zapełnienia rynku)
+    const fillers = [
+        {id: 2, seller: "Anon_99", price: 4800},
+        {id: 15, seller: "WatchMaster", price: 42000},
+        {id: 22, seller: "Luigi", price: 2800},
+        {id: 33, seller: "Barman", price: 90}
+    ];
+    fillers.forEach(f => addListing(f.id, f.seller, f.price));
+}
+
+function renderMarketView() {
+    // Upewnij się, że mamy dane
+    if(marketState.listings.length === 0) initMarketData();
+    
+    // Reset filtrów wizualnych w sidebarze (jeśli to pierwsze wejście)
+    updateMarketLockIcons();
+    
+    // Render Grid
+    filterMarket();
+}
+
+function switchMarketTab(tab) {
+    marketState.tab = tab;
+    
+    // Update UI Styles
+    document.getElementById('tabGlobalMarket').classList.toggle('active', tab === 'global');
+    document.getElementById('tabMyListings').classList.toggle('active', tab === 'my');
+    
+    // Re-render
+    filterMarket();
+}
+
+function setMarketType(type, btnElement) {
+    marketState.type = type;
+    
+    // Visual Toggle
+    document.querySelectorAll('.ms-type-btn').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
+    
+    // Show/Hide Slot filters (only for items)
+    const slotSection = document.getElementById('slotFilterSection');
+    if(type === 'item') slotSection.classList.remove('hidden');
+    else slotSection.classList.add('hidden');
+    
+    filterMarket();
+}
+
+function toggleSlotFilter(slot, btnElement) {
+    const idx = marketState.slots.indexOf(slot);
+    if(idx === -1) {
+        marketState.slots.push(slot);
+        btnElement.classList.add('active');
+    } else {
+        marketState.slots.splice(idx, 1);
+        btnElement.classList.remove('active');
+    }
+    filterMarket();
+}
+
+function updateMarketLockIcons() {
+    // Mapowanie rang do rzadkości (Hardcoded logic from prompt)
+    // Divine needs Rng God (id: 2+), Relic needs Alpha Whale (id: 3+), Epic needs Table Shark (id: 5+)
+    // Player Rank: currentRankId (defined in app.js as 3 - Alpha Whale)
+    
+    // Logic: If RankID > RequirementID (Remember: Lower ID is better rank in original code, ID 1 is King)
+    // Actually looking at ranksDB: 8 is Bankrupt, 1 is King. So Higher ID = Worse Rank?
+    // Let's check: Bankrupt ID 8 (bottom), King ID 1 (top).
+    // So BETTER rank means LOWER ID.
+    
+    const pRank = currentRankId; // 3 (Alpha Whale)
+    
+    // Lock logic: Lock if playerRankID > requiredRankID
+    const checkLock = (reqId, elId) => {
+        const el = document.getElementById(elId);
+        if(!el) return;
+        if(pRank > reqId) el.classList.add('locked'); // E.g. Player is 5, Req is 3 -> Locked
+        else el.classList.remove('locked');
+    };
+    
+    // Divine (Req: RNG God - ID 2)
+    checkLock(2, 'lockDivine');
+    // Relic (Req: Alpha Whale - ID 3)
+    checkLock(3, 'lockRelic');
+    // Epic (Req: Table Shark - ID 5)
+    checkLock(5, 'lockEpic');
+}
+
+function filterMarket() {
+    const grid = document.getElementById('marketGrid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    
+    // Get Input Values
+    marketState.search = document.getElementById('marketSearchInput').value.toLowerCase();
+    marketState.priceMin = document.getElementById('priceMin').value;
+    marketState.priceMax = document.getElementById('priceMax').value;
+    marketState.sort = document.getElementById('marketSortSelect').value;
+    
+    // Rarities Checkboxes
+    const checkedRarities = Array.from(document.querySelectorAll('.ms-check-row input:checked')).map(cb => cb.value);
+
+    // Filtering Logic
+    let results = marketState.listings.filter(item => {
+        // Tab
+        if(marketState.tab === 'my' && !item.isMine) return false;
+        if(marketState.tab === 'global' && item.isMine) return false; // Usually global shows all, but separate tabs implies separation. Let's show others in global. Actually prompt says: "Global: All items of all players". Usually implies excluding mine or highlighting mine. Let's keep separation for clean UI.
+        
+        // Type
+        if(marketState.type === 'case' && !item.isChest) return false;
+        if(marketState.type === 'item' && item.isChest) return false;
+        
+        // Search
+        if(marketState.search && !item.name.toLowerCase().includes(marketState.search)) return false;
+        
+        // Price
+        if(marketState.priceMin && item.price < marketState.priceMin) return false;
+        if(marketState.priceMax && item.price > marketState.priceMax) return false;
+        
+        // Slots (only if items)
+        if(marketState.type === 'item' && marketState.slots.length > 0) {
+            if(!marketState.slots.includes(item.type)) return false;
+        }
+        
+        // Rarity
+        if(!checkedRarities.includes(item.rarity)) return false;
+        
+        return true;
+    });
+    
+    // Sorting Logic
+    results.sort((a, b) => {
+        switch(marketState.sort) {
+            case 'price_asc': return a.price - b.price;
+            case 'price_desc': return b.price - a.price;
+            case 'newest': return b.date - a.date;
+            case 'trending': return parseFloat(b.change) - parseFloat(a.change);
+            case 'best_deal': 
+                // Mock best deal: high rarity + low price relative to base
+                const ratioA = (allTreasures.find(t=>t.id===a.templateId).rawPrice) / a.price;
+                const ratioB = (allTreasures.find(t=>t.id===b.templateId).rawPrice) / b.price;
+                return ratioB - ratioA;
+            default: return 0;
+        }
+    });
+    
+    // Render Results
+    results.forEach(item => {
+        const card = createMarketCard(item);
+        grid.appendChild(card);
+    });
+    
+    if(results.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#666;">Brak ofert spełniających kryteria.</div>';
+    }
+}
+
+function createMarketCard(item) {
+    const el = document.createElement('div');
+    el.className = 'm-card';
+    el.onclick = () => openMarketItemModal(item);
+    
+    // Background Sparkline Bars
+    let barsHtml = '';
+    item.history.forEach((val, idx) => {
+        const prev = idx > 0 ? item.history[idx-1] : val;
+        const colorClass = val >= prev ? '' : 'down';
+        const height = Math.min(100, Math.max(10, (val / item.price) * 30));
+        barsHtml += `<div class="mc-bar ${colorClass}" style="height:${height}%;"></div>`;
+    });
+    
+    const changeClass = parseFloat(item.change) >= 0 ? 'val-up' : 'val-down';
+    const changeIcon = parseFloat(item.change) >= 0 ? '+' : '';
+    
+    // Lock logic for Card
+    let isLocked = false;
+    if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
+    if(item.rarity === 'Relic' && currentRankId > 3) isLocked = true;
+    if(item.rarity === 'Epic' && currentRankId > 5) isLocked = true;
+    
+    const lockHtml = isLocked ? `<div class="mc-lock-overlay"><i class="fas fa-lock"></i></div>` : '';
+
+    el.innerHTML = `
+        <div class="mc-header" style="color:${item.color};">
+            <i class="fas ${item.icon}"></i>
+            <div class="mc-seller-avatar" title="Sprzedawca: ${item.seller}"></div>
+            ${lockHtml}
+        </div>
+        <div class="mc-body">
+            <div class="mc-sparkline">${barsHtml}</div>
+            <div class="mc-title">${item.name}</div>
+            <div class="mc-sub" style="color:${item.color}">${item.rarity}</div>
+            
+            <div class="mc-price-row">
+                <div class="mc-price">${item.price.toLocaleString()} $</div>
+                <div class="mc-change ${changeClass}">${changeIcon}${item.change}%</div>
+            </div>
+        </div>
+    `;
+    return el;
+}
+
+// MARKET MODAL
+function openMarketItemModal(item) {
+    const modal = document.getElementById('marketModal');
+    if(!modal) return;
+    
+    // Populate Data
+    document.getElementById('mmIcon').className = `fas ${item.icon}`;
+    document.getElementById('mmCard').style.color = item.color;
+    document.getElementById('mmSellerName').textContent = item.seller;
+    
+    document.getElementById('mmItemName').textContent = item.name;
+    document.getElementById('mmCurrentPrice').textContent = item.price.toLocaleString() + ' $';
+    document.getElementById('mmLastPrice').textContent = (item.price * (1 - (parseFloat(item.change)/100))).toFixed(0).toLocaleString() + ' $';
+    
+    const chgEl = document.getElementById('mmChange');
+    chgEl.textContent = (parseFloat(item.change) > 0 ? '+' : '') + item.change + '%';
+    chgEl.className = 'mm-v ' + (parseFloat(item.change) >= 0 ? 'val-up' : 'val-down');
+    
+    // Tags
+    const tags = document.getElementById('mmTags');
+    const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+    tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
+    if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
+    else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
+    
+    // Desc & Warning
+    const template = allTreasures.find(t => t.id === item.templateId);
+    let desc = template ? (template.desc + ' ' + template.bonus) : '';
+    document.getElementById('mmDesc').textContent = desc;
+    
+    // Rank Lock Warning in Modal
+    const warning = document.getElementById('mmReqWarning');
+    let reqRankName = '';
+    let isLocked = false;
+    if(item.rarity === 'Divine' && currentRankId > 2) { isLocked = true; reqRankName = "RNG God"; }
+    else if(item.rarity === 'Relic' && currentRankId > 3) { isLocked = true; reqRankName = "Alpha Whale"; }
+    
+    if(isLocked) {
+        warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: ${reqRankName} (do założenia)`;
+        warning.classList.remove('hidden');
+    } else {
+        warning.classList.add('hidden');
+    }
+    
+    // My Listing Actions vs Buy Actions
+    const btnBuy = document.getElementById('btnBuyNow');
+    const btnOffer = document.getElementById('btnOffer');
+    
+    if(item.isMine) {
+        btnBuy.textContent = "USUŃ OFERTĘ";
+        btnBuy.onclick = () => { alert("Oferta usunięta."); closeMarketModal(); };
+        btnBuy.style.background = "var(--accent-red)";
+        
+        btnOffer.textContent = "INSTANT SELL (Floor)";
+        btnOffer.onclick = () => { alert(`Sprzedano natychmiastowo za ${Math.floor(item.price*0.7)} $ (Floor Price).`); closeMarketModal(); };
+    } else {
+        btnBuy.textContent = "KUP TERAZ";
+        btnBuy.onclick = () => { alert("Zakupiono przedmiot!"); closeMarketModal(); };
+        btnBuy.style.background = "var(--accent-green)";
+        
+        btnOffer.textContent = "ZŁÓŻ OFERTĘ";
+        btnOffer.onclick = () => { alert("Oferta wysłana do sprzedawcy."); };
+    }
+
+    modal.classList.add('active');
+}
+
+function closeMarketModal() {
+    document.getElementById('marketModal').classList.remove('active');
+}
+// --- MARKET SYSTEM END ---
 function initDashboard() {
-    initInventorySystem(); // Inicjalizacja systemu itemów i DnD
-    renderDashInventory(); // Dashboard Inventory
-    renderTreasures();     // Profile Inventory (zmienione na items MrGamblera)
+    initInventorySystem(); // 1. Najpierw ładujemy ekwipunek gracza
+    initMarketData();      // 2. Potem ładujemy rynek (żeby powiązać itemy)
+    
+    // 3. Renderujemy widoki
+    renderDashInventory(); 
+    renderTreasures();    
     renderGames(); 
     renderTrophies();
     updateStats();
     renderLadder();
+    
+    // 4. Odświeżamy widok inventory (bo initMarketData mogło dodać flagi 'onSale')
+    renderInventoryView();
 }
 
 // Inicjalizacja danych inventory z bazy + dodanie mockowych danych rynkowych
@@ -696,13 +1067,15 @@ function renderInventoryView() {
         
         // Sprawdź czy przedmiot jest założony
         const isEquipped = Object.values(myLoadout).includes(item.uid);
+        // Sprawdź czy jest na Rynku (dodana flaga w initMarketData)
+        const isOnSale = item.isOnSale === true;
 
-        if (isEquipped) {
-            slot.classList.add('is-equipped');
-        }
+        if (isEquipped) slot.classList.add('is-equipped');
+        if (isOnSale) slot.classList.add('on-sale');
 
-        // Draggable Attributes
-        slot.setAttribute('draggable', !isEquipped);
+        // Draggable Attributes (Zablokuj jeśli EQ lub SALE)
+        const isLocked = isEquipped || isOnSale;
+        slot.setAttribute('draggable', !isLocked);
         slot.dataset.uid = item.uid;
         slot.addEventListener('dragstart', handleDragStart);
 
@@ -710,14 +1083,20 @@ function renderInventoryView() {
 
         slot.style.borderColor = `rgba(${hexToRgb(rarityColor)}, 0.5)`;
         slot.style.backgroundColor = `rgba(${hexToRgb(rarityColor)}, 0.05)`;
+        
+        if (isOnSale) {
+            slot.style.borderColor = 'var(--accent-orange)';
+        }
 
-        // Badge 'EQ' dla założonych
-        const eqBadge = isEquipped ? `<div class="equipped-badge">EQ</div>` : '';
+        // Badges
+        let badgeHtml = '';
+        if (isEquipped) badgeHtml = `<div class="equipped-badge">EQ</div>`;
+        else if (isOnSale) badgeHtml = `<div class="on-sale-badge">NA RYNKU</div>`;
 
         slot.innerHTML = `
             <i class="fas ${item.icon} inv-item-icon" style="color: ${item.color};"></i>
             <div class="inv-slot-rarity-dot" style="background-color: ${rarityColor}; box-shadow: 0 0 5px ${rarityColor};"></div>
-            ${eqBadge}
+            ${badgeHtml}
         `;
         
         // Rozbudowany tooltip
@@ -923,21 +1302,8 @@ function renderMarketView() {
     const container = document.getElementById('marketContainer');
     container.innerHTML = '';
     // Mock items for market
-    const marketItems = [
-        { name: "Klucz do Skarbca", price: "500,000 $", icon: "fa-key", color: "gold", rarity: "Divine" },
-        { name: "NFT Małpy", price: "2,000 $", icon: "fa-image", color: "purple", rarity: "Epic" },
-        { name: "Licencja Kasyna", price: "5,000,000 $", icon: "fa-file-contract", color: "white", rarity: "Relic" }
-    ];
-    marketItems.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
-            <div class="item-info"><h5>${item.name}</h5><p class="price-up">${item.price}</p></div>
-            <button class="claim-btn" style="margin-left:auto;">KUP TERAZ</button>
-        `;
-        container.appendChild(div);
-    });
+    // Renderowanie nowego rynku
+    renderMarketView();
 }
 
 let currentDepositMethod = 'visa';

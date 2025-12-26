@@ -69,23 +69,39 @@ const playersDB = [
     {
         username: "MrGambler",
         rank: "Alpha Whale",
+        avatar: "fa-user-astronaut",
         inventory: [
-            // Loadout MrGamblera (High End)
-            7, // RayBan
-            10, // Złoty Łańcuch
-            12, // Garnitur Boss
-            15, // Rolex
-            18, // Pasek Gucci
-            20, // Spodnie
-            22, // Mokasyny
-            23, // Sygnet
-            26, // BMW Keys
-            31, // Black Card
-            
-            // Inventory
-            1, 1, 1, 2, 2, 5, // Cases
-            28, 9, 33, 21 // Śmieci
+            // LOADOUT (IDs)
+            7, 10, 12, 15, 18, 20, 22, 23, 26, 31,
+            // STASH (Items to be listed on market)
+            5, // Divine Case (Będziemy to sprzedawać)
+            16, // Patek Philippe (Też na sprzedaż)
+            28, 9, 33, 21, 1, 1, 2 // Junk
         ]
+    },
+    {
+        username: "Whale_Killer",
+        rank: "RNG God",
+        avatar: "fa-dragon",
+        inventory: [27, 31, 13, 16, 5, 5, 4] // High End Stuff
+    },
+    {
+        username: "LuckyLuke",
+        rank: "Table Shark",
+        avatar: "fa-hat-cowboy",
+        inventory: [7, 11, 21, 2, 3, 3] // Mid Tier
+    },
+    {
+        username: "CryptoBro",
+        rank: "Risk Taker",
+        avatar: "fa-bitcoin",
+        inventory: [30, 8, 26, 2, 2] // Tech stuff
+    },
+    {
+        username: "Bot_Network_01",
+        rank: "Small Fry",
+        avatar: "fa-robot",
+        inventory: [1, 1, 1, 1, 1, 1, 1, 1, 25, 25] // Spam items
     }
 ];
 
