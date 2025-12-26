@@ -649,21 +649,72 @@ chatInput.addEventListener('keypress', function (e) {
 
 function renderInventoryView() {
     const container = document.getElementById('inventoryContainer');
+    if(!container) return; 
     container.innerHTML = '';
-    // Wyświetl wszystkie skarby, nie tylko 5
-    sortTreasures(allTreasures);
-    allTreasures.forEach(item => {
-        // Reuse existing logic manually for simplicty or create wrapper
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
-        div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
-            <div class="item-info"><h5>${item.name}</h5><p class="price-neutral">${item.price}</p></div>
-            <div class="item-right-status"><div class="rarity-tag-badge ${badgeClass}">${item.rarity}</div></div>
-        `;
-        container.appendChild(div);
+    
+    // 1. Pobierz profil gracza (MrGambler)
+    const player = playersDB.find(p => p.username === "MrGambler");
+    if (!player) return;
+
+    // 2. Mapowanie ID ekwipunku na obiekty (z duplikacją jeśli istnieje)
+    let inventoryItems = [];
+    player.inventory.forEach(itemId => {
+        const itemObj = allTreasures.find(t => t.id === itemId);
+        if(itemObj) inventoryItems.push(itemObj);
     });
+
+    // 3. Sortowanie (Rzadkość potem cena)
+    inventoryItems.sort((a, b) => b.rawPrice - a.rawPrice);
+    
+    // 4. Render Grid Slots
+    inventoryItems.forEach(item => {
+        const slot = document.createElement('div');
+        slot.className = 'inv-grid-slot';
+        
+        let rarityColor = '#ccc';
+        if(item.rarity === 'Rare') rarityColor = '#3b82f6';
+        if(item.rarity === 'Epic') rarityColor = '#8b5cf6';
+        if(item.rarity === 'Relic') rarityColor = '#ef4444';
+        if(item.rarity === 'Divine') rarityColor = '#ffd700';
+
+        slot.style.borderColor = `rgba(${hexToRgb(rarityColor)}, 0.5)`;
+        slot.style.backgroundColor = `rgba(${hexToRgb(rarityColor)}, 0.05)`;
+
+        slot.innerHTML = `
+            <i class="fas ${item.icon} inv-item-icon" style="color: ${item.color};"></i>
+            <div class="inv-slot-rarity-dot" style="background-color: ${rarityColor}; box-shadow: 0 0 5px ${rarityColor};"></div>
+            <!-- Usunięto licznik, każdy item to instancja -->
+        `;
+        
+        // Expanded Tooltip Info
+        slot.title = `${item.name}\n[${item.type.toUpperCase()}] • ${item.rarity}\n\n"${item.desc}"\n\nBONUS: ${item.bonus}\nWartość: ${item.price}`;
+        container.appendChild(slot);
+    });
+
+    // 5. Wypełnij puste sloty (Minimalnie 50 slotów lub więcej, by wyglądało jak grid)
+    const minSlots = 63; // 7x9 grid approx
+    const currentCount = inventoryItems.length;
+    
+    for(let i = currentCount; i < minSlots; i++) {
+        const emptySlot = document.createElement('div');
+        emptySlot.className = 'inv-grid-slot';
+        emptySlot.style.opacity = '0.1';
+        emptySlot.style.cursor = 'default';
+        emptySlot.style.borderColor = 'transparent';
+        emptySlot.style.background = 'rgba(0,0,0,0.2)';
+        container.appendChild(emptySlot);
+    }
+}
+
+// Helper do konwersji koloru
+function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
 }
 
 function renderMarketView() {
@@ -688,6 +739,7 @@ function renderMarketView() {
 }
 
 let currentDepositMethod = 'visa';
+let currentWithdrawMethod = 'visa';
 
 function renderWalletView() {
     // 1. ZMODYFIKOWANA LOGIKA NETWORTH
@@ -706,8 +758,9 @@ function renderWalletView() {
     if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
     if (nwItems) nwItems.textContent = itemsValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
 
-    // 3. Init Deposit Methods
+    // 3. Init Deposit & Withdraw Methods
     selectDepositMethod(currentDepositMethod);
+    selectWithdrawMethod(currentWithdrawMethod);
 
     // 4. Populate Transfer Item Select
     const transferSelect = document.getElementById('transferItemSelect');
@@ -799,6 +852,48 @@ function selectDepositMethod(method) {
         `;
     }
     dynamicContent.appendChild(formDiv);
+}
+
+function selectWithdrawMethod(method) {
+    currentWithdrawMethod = method;
+    const container = document.getElementById('withdrawMethodsGrid');
+    const dynamicContent = document.getElementById('withdrawDynamicContainer');
+    if(!container || !dynamicContent) return;
+
+    // Render Buttons
+    const methods = [
+        { id: 'visa', icon: 'fab fa-cc-visa', name: 'Visa' },
+        { id: 'crypto', icon: 'fab fa-bitcoin', name: 'Crypto' }
+    ];
+
+    container.innerHTML = '';
+    methods.forEach(m => {
+        const div = document.createElement('div');
+        div.className = `pm-item ${m.id === method ? 'active' : ''}`;
+        div.onclick = () => selectWithdrawMethod(m.id);
+        div.innerHTML = `<i class="${m.icon}"></i> ${m.name}`;
+        container.appendChild(div);
+    });
+
+    // Render Dynamic Content
+    dynamicContent.innerHTML = '';
+    
+    if (method === 'visa') {
+        dynamicContent.innerHTML = `
+             <div style="font-size:11px; color:#aaa; text-align:center; padding:10px; background:rgba(255,255,255,0.02); border-radius:6px;">
+                Środki wrócą na kartę: <b style="color:white;">Visa •••• 4242</b><br>
+                Czas realizacji: 1-3 dni robocze.
+            </div>
+        `;
+    } else if (method === 'crypto') {
+        dynamicContent.innerHTML = `
+            <div class="input-group small" style="margin-bottom:5px;">
+                <span class="curr-prefix" style="font-size:10px;">ADDR</span>
+                <input type="text" placeholder="Wklej adres USDT (TRC20)..." style="font-size:11px;">
+             </div>
+             <div style="font-size:10px; color:var(--accent-orange); text-align:center;">Upewnij się, że sieć to TRC20.</div>
+        `;
+    }
 }
 
 // Toggle dla transferu (Money / Item)
@@ -1167,23 +1262,94 @@ initDashboardExtras();
 data.js
 ```
 // --- DATA SETS ---
+
+// BUSINESS / GAMBLING THEMED ITEMS
+// Types: head, neck, suit, watch, belt, pants, shoes, ring, vehicle, gadget
+
 let allTreasures = [
-    // Chests
-    { id: 102, name: "Epic Case", price: "100,000 $", rawPrice: 100000, color: "#8b5cf6", icon: "fa-briefcase", change: "+12%", type: "up", rarity: "Epic", isChest: true },
-    { id: 103, name: "Rare Case", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "fa-briefcase", change: "-5%", type: "down", rarity: "Rare", isChest: true },
+    // --- SKRZYNKI (Wszystkie to walizki) ---
+    { id: 1, name: "Peasant Case", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "fa-briefcase", rarity: "Peasant", desc: "Stara, skórzana teczka.", bonus: "Może zawierać kanapki." },
+    { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-briefcase", rarity: "Rare", desc: "Walizka z szyfrem.", bonus: "Gwarantowany gadżet." },
+    { id: 3, name: "Epic Case", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "fa-briefcase", rarity: "Epic", desc: "Wzmocniona tytanem.", bonus: "Pachnie drogimi perfumami." },
+    { id: 4, name: "Relic Case", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "fa-briefcase", rarity: "Relic", desc: "Używana przez mafię.", bonus: "Ryzykowna zawartość." },
+    { id: 5, name: "Divine Case", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "fa-briefcase", rarity: "Divine", desc: "Wykonana ze złota i diamentów.", bonus: "Tylko dla 1%." },
+
+    // --- ITEMY BIZNESOWE ---
     
-    // Standard Items
-    { id: 1, name: "Złota Korona", price: "250,000 $", rawPrice: 250000, color: "#f59e0b", icon: "fa-crown", change: "+5%", type: "up", rarity: "Divine", isChest: false },
-    { id: 2, name: "Smocze Jajo", price: "180,000 $", rawPrice: 180000, color: "#a855f7", icon: "fa-dragon", change: "-2.1%", type: "down", rarity: "Relic", isChest: false },
-    { id: 3, name: "Sygnet Prezesa", price: "120,000 $", rawPrice: 120000, color: "#a855f7", icon: "fa-ring", change: "+0.5%", type: "up", rarity: "Epic", isChest: false },
-    { id: 4, name: "Kluczyki Lambo", price: "90,000 $", rawPrice: 90000, color: "#3b82f6", icon: "fa-car", change: "-12%", type: "down", rarity: "Epic", isChest: false },
-    { id: 5, name: "Karta VIP", price: "40,000 $", rawPrice: 40000, color: "#3b82f6", icon: "fa-id-card", change: "+1.2%", type: "up", rarity: "Rare", isChest: false },
-    { id: 6, name: "Złoty Zegarek", price: "35,000 $", rawPrice: 35000, color: "#3b82f6", icon: "fa-clock", change: "+0.1%", type: "up", rarity: "Rare", isChest: false },
-    { id: 7, name: "Szmaragd", price: "25,000 $", rawPrice: 25000, color: "#10b981", icon: "fa-gem", change: "0%", type: "neutral", rarity: "Rare", isChest: false },
-    { id: 8, name: "Stary Żeton", price: "5,000 $", rawPrice: 5000, color: "#9ca3af", icon: "fa-coins", change: "0%", type: "neutral", rarity: "Peasant", isChest: false },
+    // HEAD (Okulary / Kapelusze)
+    { id: 6, name: "Czapka z daszkiem", type: "head", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "fa-hat-cowboy-side", rarity: "Peasant", desc: "Z logo stacji benzynowej.", bonus: "-5 do Stylu" },
+    { id: 7, name: "RayBan Aviator", type: "head", price: "1,500 $", rawPrice: 1500, color: "#3b82f6", icon: "fa-glasses", rarity: "Rare", desc: "Ukrywają poker face.", bonus: "+10 do Blefowania" },
+    { id: 8, name: "Gogle VR Pro", type: "head", price: "15,000 $", rawPrice: 15000, color: "#ef4444", icon: "fa-vr-cardboard", rarity: "Relic", desc: "Widzisz algorytm kasyna.", bonus: "Przewidywanie Wygranej" },
+
+    // NECK (Krawaty / Łańcuchy)
+    { id: 9, name: "Krawat z Poliestru", type: "neck", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "fa-user-tie", rarity: "Peasant", desc: "Drapie w szyję.", bonus: "Brak" },
+    { id: 10, name: "Złoty Łańcuch", type: "neck", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "fa-link", rarity: "Epic", desc: "Waży 2kg.", bonus: "+20 do Respectu" },
     
-    { id: 9, name: "Mapa Kasyna", price: "2,000 $", rawPrice: 2000, color: "#9ca3af", icon: "fa-map", change: "+2%", type: "up", rarity: "Peasant", isChest: false },
-    { id: 10, name: "Pusty Portfel", price: "1 $", rawPrice: 1, color: "#ef4444", icon: "fa-wallet", change: "-99%", type: "down", rarity: "Peasant", isChest: false }
+    // SUIT (Garnitur)
+    { id: 11, name: "Koszula Hawajska", type: "suit", price: "80 $", rawPrice: 80, color: "#9ca3af", icon: "fa-tshirt", rarity: "Peasant", desc: "Idealna na wakacje, nie do kasyna.", bonus: "Luz +100" },
+    { id: 12, name: "Garnitur Hugo Boss", type: "suit", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-user-secret", rarity: "Rare", desc: "Klasyczna elegancja.", bonus: "+5 do Negocjacji" },
+    { id: 13, name: "Smoking Bonda", type: "suit", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "fa-user-tie", rarity: "Divine", desc: "Wstrząśnięty, nie zmieszany.", bonus: "Kuloodporność finansowa" },
+
+    // WATCH (Zegarek - Ważny!)
+    { id: 14, name: "Zegarek z Komunii", type: "watch", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "fa-clock", rarity: "Peasant", desc: "Pamiątka rodzinna.", bonus: "Pokazuje czas" },
+    { id: 15, name: "Rolex Submariner", type: "watch", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "fa-clock", rarity: "Epic", desc: "Znasz jego wartość.", bonus: "+15 do Prestiżu" },
+    { id: 16, name: "Patek Philippe", type: "watch", price: "2,500,000 $", rawPrice: 2500000, color: "#ffd700", icon: "fa-clock", rarity: "Divine", desc: "Nie ty go masz, ty go przechowujesz dla pokoleń.", bonus: "Zatrzymuje czas (długów)" },
+
+    // BELT (Pasek)
+    { id: 17, name: "Sznurek", type: "belt", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "fa-grip-lines", rarity: "Peasant", desc: "Trzyma spodnie.", bonus: "Brak" },
+    { id: 18, name: "Pasek Gucci", type: "belt", price: "800 $", rawPrice: 800, color: "#3b82f6", icon: "fa-infinity", rarity: "Rare", desc: "Wielka klamra.", bonus: "+2 do Lansu" },
+
+    // PANTS (Spodnie)
+    { id: 19, name: "Dżinsy z Dziurami", type: "pants", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "fa-columns", rarity: "Peasant", desc: "Modne, ale czy w kasynie?", bonus: "Wentylacja" },
+    { id: 20, name: "Spodnie od Garnituru", type: "pants", price: "2,000 $", rawPrice: 2000, color: "#3b82f6", icon: "fa-columns", rarity: "Rare", desc: "Dopasowane.", bonus: "Wygoda +5" },
+
+    // SHOES (Buty)
+    { id: 21, name: "Klapki Basenowe", type: "shoes", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "fa-shoe-prints", rarity: "Peasant", desc: "Szur szur.", bonus: "-50 do Poważania" },
+    { id: 22, name: "Mokasyny", type: "shoes", price: "3,000 $", rawPrice: 3000, color: "#8b5cf6", icon: "fa-socks", rarity: "Epic", desc: "Włoska skóra.", bonus: "Cichy chód" },
+
+    // RINGS (Biżuteria)
+    { id: 23, name: "Sygnet Rodowy", type: "ring", price: "15,000 $", rawPrice: 15000, color: "#8b5cf6", icon: "fa-ring", rarity: "Epic", desc: "Z herbem nieistniejącego rodu.", bonus: "+10 do Blefu" },
+    { id: 24, name: "Obrączka", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "fa-circle", rarity: "Peasant", desc: "Z grawerem.", bonus: "Wierność" },
+
+    // VEHICLE (Kluczyki)
+    { id: 25, name: "Bilet Autobusowy", type: "vehicle", price: "2 $", rawPrice: 2, color: "#9ca3af", icon: "fa-bus", rarity: "Peasant", desc: "Ważny 20 minut.", bonus: "Transport publiczny" },
+    { id: 26, name: "Kluczyki BMW", type: "vehicle", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "fa-car", rarity: "Rare", desc: "M3 w leasingu.", bonus: "Szybki dojazd" },
+    { id: 27, name: "Karta do Bugatti", type: "vehicle", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "fa-car-side", rarity: "Divine", desc: "Top G.", bonus: "Prędkość światła" },
+
+    // GADGET (Elektronika / Ręka)
+    { id: 28, name: "Nokia 3310", type: "gadget", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "fa-mobile-alt", rarity: "Peasant", desc: "Niezniszczalna.", bonus: "Samoobrona" },
+    { id: 29, name: "iPhone 16 Pro Max", type: "gadget", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-mobile", rarity: "Rare", desc: "Więcej aparatów niż sensu.", bonus: "+5 do Selfie" },
+    { id: 30, name: "Szyfrowany Telefon", type: "gadget", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "fa-satellite-dish", rarity: "Relic", desc: "Nikt nie podsłucha.", bonus: "Anonimowość" },
+    { id: 31, name: "Czarne American Express", type: "gadget", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "fa-credit-card", rarity: "Divine", desc: "Bez limitu.", bonus: "Nieskończony debet" },
+    
+    // EXTRAS
+    { id: 32, name: "Cygaro Kubańskie", type: "gadget", price: "500 $", rawPrice: 500, color: "#3b82f6", icon: "fa-smoking", rarity: "Rare", desc: "Kopci jak smok.", bonus: "Relaks" },
+    { id: 33, name: "Szklanka Whisky", type: "gadget", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "fa-glass-whiskey", rarity: "Peasant", desc: "Z lodem.", bonus: "Odwaga +5" }
+];
+
+// --- PLAYERS DATABASE ---
+const playersDB = [
+    {
+        username: "MrGambler",
+        rank: "Alpha Whale",
+        inventory: [
+            // Loadout MrGamblera (High End)
+            7, // RayBan
+            10, // Złoty Łańcuch
+            12, // Garnitur Boss
+            15, // Rolex
+            18, // Pasek Gucci
+            20, // Spodnie
+            22, // Mokasyny
+            23, // Sygnet
+            26, // BMW Keys
+            31, // Black Card
+            
+            // Inventory
+            1, 1, 1, 2, 2, 5, // Cases
+            28, 9, 33, 21 // Śmieci
+        ]
+    }
 ];
 
 // Generator Templates for Static List
@@ -1730,10 +1896,66 @@ index.html
         </div>
 
         <div class="view-container" id="viewInventory">
-            <div class="card">
-                <div class="card-header"><div class="card-title">Twój Ekwipunek</div></div>
-                <div class="list-container" id="inventoryContainer">
+            <div class="inventory-split-layout">
+                <!-- LEWA STRONA: Magazyn -->
+                <div class="inv-panel left-panel">
+                    <div class="inv-header">
+                        <div class="inv-title"><i class="fas fa-box-open"></i> MAGAZYN</div>
+                        <div class="inv-stats">
+                            <div class="inv-value-display">
+                                Items Value: <span style="color:white;">2,790,000.00 $</span>
+                            </div>
+                            <div class="inv-filter-btn" title="Sortuj / Filtruj">
+                                <i class="fas fa-filter"></i>
+                            </div>
+                        </div>
                     </div>
+                    <div class="inventory-grid-scroll" id="inventoryContainer">
+                        <!-- Items injected via JS -->
+                    </div>
+                </div>
+
+                <!-- PRAWA STRONA: Loadout -->
+                <div class="inv-panel right-panel">
+                    <div class="inv-header">
+                        <div class="inv-title"><i class="fas fa-user-astronaut"></i> LOADOUT</div>
+                        <div class="inv-stats">
+                            <div class="inv-value-display" style="border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.1);">
+                                <span style="color:var(--accent-blue);">MrGambler</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-doll-container">
+                        <!-- BUSINESS LOADOUT GRID (12 Slots 3x4) -->
+                        <div class="pd-formation">
+                            <div class="pd-silhouette"><i class="fas fa-user-tie"></i></div>
+                            
+                            <!-- Row 1: Head | Glasses | Neck -->
+                            <!-- Note: Icons are placeholders, will be filled by JS if items present -->
+                            
+                            <!-- Row 1 -->
+                            <div class="pd-slot slot-glasses" data-type="head" title="Okulary / Nakrycie Głowy"><i class="fas fa-glasses placeholder"></i></div>
+                            <div class="pd-slot slot-neck" data-type="neck" title="Łańcuch / Krawat"><i class="fas fa-link placeholder"></i></div>
+                            <div class="pd-slot slot-earpiece" data-type="gadget" title="Słuchawka / Gadżet"><i class="fas fa-headset placeholder"></i></div>
+
+                            <!-- Row 2 -->
+                            <div class="pd-slot slot-watch" data-type="watch" title="Zegarek"><i class="fas fa-clock placeholder"></i></div>
+                            <div class="pd-slot slot-suit" data-type="suit" title="Garnitur"><i class="fas fa-user-tie placeholder"></i></div>
+                            <div class="pd-slot slot-cufflink" data-type="ring" title="Sygnet / Spinki"><i class="fas fa-ring placeholder"></i></div>
+
+                            <!-- Row 3 -->
+                            <div class="pd-slot slot-ring" data-type="ring" title="Pierścień"><i class="fas fa-ring placeholder"></i></div>
+                            <div class="pd-slot slot-belt" data-type="belt" title="Pasek"><i class="fas fa-grip-lines placeholder"></i></div>
+                            <div class="pd-slot slot-pants" data-type="pants" title="Spodnie"><i class="fas fa-columns placeholder"></i></div>
+
+                            <!-- Row 4 -->
+                            <div class="pd-slot slot-vehicle" data-type="vehicle" title="Pojazd (Kluczyki)"><i class="fas fa-car placeholder"></i></div>
+                            <div class="pd-slot slot-shoes" data-type="shoes" title="Buty"><i class="fas fa-shoe-prints placeholder"></i></div>
+                            <div class="pd-slot slot-hand" data-type="gadget" title="Ręka (Telefon/Portfel)"><i class="fas fa-mobile-alt placeholder"></i></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 
@@ -1806,7 +2028,7 @@ index.html
                         
                         <!-- TAB: DEPOSIT (Dynamic) -->
                         <div class="w-content active" id="tab-deposit">
-                            <label style="margin-bottom:10px; display:block; color:var(--text-muted); font-size:11px;">WYBIERZ METODĘ PŁATNOŚCI:</label>
+                            <!-- Removed obvious label -->
                             
                             <div class="pay-methods-grid compact" id="depositMethodsGrid">
                                 <!-- Generated by JS -->
@@ -1836,11 +2058,11 @@ index.html
                         <!-- TAB: WITHDRAW -->
                         <div class="w-content" id="tab-withdraw">
                             <div class="withdraw-form centered-form">
-                                <label>Metoda wypłaty</label>
-                                <div class="pay-methods-grid compact">
-                                    <div class="pm-item active"><i class="fab fa-cc-visa"></i> Visa</div>
-                                    <div class="pm-item"><i class="fab fa-bitcoin"></i> Wallet</div>
+                                <!-- Removed obvious label -->
+                                <div class="pay-methods-grid compact" id="withdrawMethodsGrid">
+                                    <!-- Generated by JS -->
                                 </div>
+                                <div id="withdrawDynamicContainer" style="margin-bottom: 20px;"></div>
 
                                 <label>Kwota do wypłaty</label>
                                 <div class="input-group">
@@ -1897,7 +2119,7 @@ index.html
                     </div>
                     <div class="rg-stat centered">
                          <div class="rg-label">Limit Dzienny</div>
-                        <div class="rg-val negative">92%</div>
+                        <div class="rg-val"><a href="#" onclick="alert('Przekierowanie do ustawień limitów...')" style="font-size:10px; color:var(--text-muted); text-decoration:underline; opacity:0.7;">Ustal własne limity</a></div>
                     </div>
                 </div>
 
@@ -4398,6 +4620,201 @@ input:checked + .slider:before { transform: translateX(16px); }
 .rg-stat.centered { text-align: center; }
 .rg-link-btn { background: none; border: none; color: var(--text-muted); text-decoration: underline; font-size: 11px; cursor: pointer; }
 .rg-link-btn:hover { color: white; }
+/* --- INVENTORY 2.0 (MODIFIED) --- */
+.inventory-split-layout {
+    display: grid;
+    /* ZMIANA: Równe kolumny */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    height: calc(100vh - 140px);
+    overflow: hidden;
+}
+
+.inv-panel {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.inv-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.2);
+}
+
+.inv-title { font-size: 14px; font-weight: 700; color: white; letter-spacing: 1px; display: flex; gap: 8px; align-items: center; }
+.inv-stats { display: flex; align-items: center; gap: 15px; }
+
+/* Nowy styl dla Value */
+.inv-value-display {
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-green);
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.inv-filter-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: 0.2s;
+}
+.inv-filter-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+
+/* Left Grid - FIXED SLOT SIZE */
+.inventory-grid-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: grid;
+    /* Sztywny rozmiar kolumn dopasowany do slotu */
+    grid-template-columns: repeat(auto-fill, 70px);
+    grid-auto-rows: 70px;
+    gap: 10px;
+    align-content: start;
+    justify-content: center; /* Wycentrowanie siatki */
+}
+
+/* UNIVERSAL SLOT STYLE */
+.inv-grid-slot, .pd-slot {
+    width: 70px; /* WYMUSZONY ROZMIAR */
+    height: 70px; /* WYMUSZONY ROZMIAR */
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.inv-grid-slot:hover, .pd-slot:hover {
+    border-color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    z-index: 10;
+}
+
+.inv-item-icon { font-size: 28px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8)); transition: 0.2s; }
+.inv-grid-slot:hover .inv-item-icon, .pd-slot:hover i { transform: scale(1.15); }
+
+.inv-slot-rarity-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+    border: 1px solid rgba(0,0,0,0.5);
+}
+
+.inv-slot-count {
+    position: absolute;
+    bottom: 3px;
+    right: 6px;
+    font-size: 10px;
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 0 1px 3px black;
+    background: rgba(0,0,0,0.6);
+    padding: 0 3px;
+    border-radius: 3px;
+}
+
+/* Right Paper Doll - CENTERED BUSINESS LAYOUT (70px Slots) */
+.paper-doll-container {
+    flex: 1;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Grid Calculation for 3x4:
+   Slot Size: 70px
+   Gap: 15px
+   Column Steps: 0, 85px, 170px
+   Row Steps: 0, 85px, 170px, 255px
+   Total Width: 240px
+   Total Height: 325px
+*/
+
+.pd-formation {
+    position: relative;
+    width: 240px;
+    height: 325px; /* Compact 3x4 */
+}
+
+.pd-silhouette {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 280px;
+    color: rgba(0,0,0,0.3);
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* UNIVERSAL SLOT SIZE FORCE */
+.pd-slot {
+    position: absolute;
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 6px !important; /* Square shape */
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.6);
+}
+.pd-slot .placeholder { font-size: 28px; opacity: 0.3; }
+
+/* --- GRID POSITIONS 3x4 --- */
+
+/* ROW 1 (Y=0) */
+.slot-glasses   { top: 0; left: 0; }
+.slot-neck      { top: 0; left: 85px; z-index: 5; }
+.slot-earpiece  { top: 0; left: 170px; }
+
+/* ROW 2 (Y=85) */
+.slot-watch     { top: 85px; left: 0; }
+.slot-suit      { top: 85px; left: 85px; z-index: 4; }
+.slot-cufflink  { top: 85px; left: 170px; }
+
+/* ROW 3 (Y=170) */
+.slot-ring      { top: 170px; left: 0; }
+.slot-belt      { top: 170px; left: 85px; z-index: 3; }
+.slot-pants     { top: 170px; left: 170px; }
+
+/* ROW 4 (Y=255) */
+.slot-vehicle   { top: 255px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
+.slot-shoes     { top: 255px; left: 85px; z-index: 2; }
+.slot-hand      { top: 255px; left: 170px; border-color: rgba(16, 185, 129, 0.4); }
 
 /* Modal tweaks */
 .full-height-logs { max-height: 500px; }

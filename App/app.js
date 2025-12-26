@@ -647,21 +647,72 @@ chatInput.addEventListener('keypress', function (e) {
 
 function renderInventoryView() {
     const container = document.getElementById('inventoryContainer');
+    if(!container) return; 
     container.innerHTML = '';
-    // Wyświetl wszystkie skarby, nie tylko 5
-    sortTreasures(allTreasures);
-    allTreasures.forEach(item => {
-        // Reuse existing logic manually for simplicty or create wrapper
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
-        div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
-            <div class="item-info"><h5>${item.name}</h5><p class="price-neutral">${item.price}</p></div>
-            <div class="item-right-status"><div class="rarity-tag-badge ${badgeClass}">${item.rarity}</div></div>
-        `;
-        container.appendChild(div);
+    
+    // 1. Pobierz profil gracza (MrGambler)
+    const player = playersDB.find(p => p.username === "MrGambler");
+    if (!player) return;
+
+    // 2. Mapowanie ID ekwipunku na obiekty (z duplikacją jeśli istnieje)
+    let inventoryItems = [];
+    player.inventory.forEach(itemId => {
+        const itemObj = allTreasures.find(t => t.id === itemId);
+        if(itemObj) inventoryItems.push(itemObj);
     });
+
+    // 3. Sortowanie (Rzadkość potem cena)
+    inventoryItems.sort((a, b) => b.rawPrice - a.rawPrice);
+    
+    // 4. Render Grid Slots
+    inventoryItems.forEach(item => {
+        const slot = document.createElement('div');
+        slot.className = 'inv-grid-slot';
+        
+        let rarityColor = '#ccc';
+        if(item.rarity === 'Rare') rarityColor = '#3b82f6';
+        if(item.rarity === 'Epic') rarityColor = '#8b5cf6';
+        if(item.rarity === 'Relic') rarityColor = '#ef4444';
+        if(item.rarity === 'Divine') rarityColor = '#ffd700';
+
+        slot.style.borderColor = `rgba(${hexToRgb(rarityColor)}, 0.5)`;
+        slot.style.backgroundColor = `rgba(${hexToRgb(rarityColor)}, 0.05)`;
+
+        slot.innerHTML = `
+            <i class="fas ${item.icon} inv-item-icon" style="color: ${item.color};"></i>
+            <div class="inv-slot-rarity-dot" style="background-color: ${rarityColor}; box-shadow: 0 0 5px ${rarityColor};"></div>
+            <!-- Usunięto licznik, każdy item to instancja -->
+        `;
+        
+        // Expanded Tooltip Info
+        slot.title = `${item.name}\n[${item.type.toUpperCase()}] • ${item.rarity}\n\n"${item.desc}"\n\nBONUS: ${item.bonus}\nWartość: ${item.price}`;
+        container.appendChild(slot);
+    });
+
+    // 5. Wypełnij puste sloty (Minimalnie 50 slotów lub więcej, by wyglądało jak grid)
+    const minSlots = 63; // 7x9 grid approx
+    const currentCount = inventoryItems.length;
+    
+    for(let i = currentCount; i < minSlots; i++) {
+        const emptySlot = document.createElement('div');
+        emptySlot.className = 'inv-grid-slot';
+        emptySlot.style.opacity = '0.1';
+        emptySlot.style.cursor = 'default';
+        emptySlot.style.borderColor = 'transparent';
+        emptySlot.style.background = 'rgba(0,0,0,0.2)';
+        container.appendChild(emptySlot);
+    }
+}
+
+// Helper do konwersji koloru
+function hexToRgb(hex) {
+    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
+    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+        return r + r + g + g + b + b;
+    });
+    var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
+    return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
 }
 
 function renderMarketView() {

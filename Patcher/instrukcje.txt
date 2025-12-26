@@ -1,17 +1,461 @@
 KROK 1:
+PLIK: "data.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+// --- DATA SETS ---
+
+// Definicja typów dla jasności (używane w logice)
+// Types: helmet, shoulders, chest, gloves, belt, legs, boots, amulet, earring, ring, weapon, offhand, relic, chest (skrzynka)
+
+let allTreasures = [
+    // --- SKRZYNKI (ID 1-5) ---
+    { id: 1, name: "Peasant Box", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "fa-box", rarity: "Peasant", desc: "Karton po pizzy z niespodzianką.", bonus: "Szansa na nic." },
+    { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-briefcase", rarity: "Rare", desc: "Walizka po biznesmenie.", bonus: "Gwarantowany niebieski item." },
+    { id: 3, name: "Epic Chest", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "fa-gem", rarity: "Epic", desc: "Świeci w ciemności.", bonus: "+10 do Lansu." },
+    { id: 4, name: "Relic Vault", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "fa-dungeon", rarity: "Relic", desc: "Wymaga ofiary z krwi.", bonus: "Wysoka szansa na Relikt." },
+    { id: 5, name: "Divine Cache", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "fa-star", rarity: "Divine", desc: "Dotknięta przez RNG Boga.", bonus: "Jackpot albo bankructwo." },
+
+    // --- ITEMY (ID 6-55) ---
+    
+    // HEAD (Hełm)
+    { id: 6, name: "Czapka Wpierdolka", type: "helmet", price: "200 $", rawPrice: 200, color: "#9ca3af", icon: "fa-hat-cowboy-side", rarity: "Peasant", desc: "Klasyk osiedlowy.", bonus: "+5 do Szybkości ucieczki" },
+    { id: 7, name: "VR Headset", type: "helmet", price: "12,000 $", rawPrice: 12000, color: "#3b82f6", icon: "fa-vr-cardboard", rarity: "Rare", desc: "Widzisz w nim tylko wygrane.", bonus: "+2% Szansy na wygraną" },
+    { id: 8, name: "Korona Króla", type: "helmet", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "fa-crown", rarity: "Divine", desc: "Ciężka od odpowiedzialności.", bonus: "+50% LP Gain" },
+    
+    // SHOULDERS (Naramienniki)
+    { id: 9, name: "Poduszki Finansowe", type: "shoulders", price: "5,000 $", rawPrice: 5000, color: "#9ca3af", icon: "fa-user-shield", rarity: "Peasant", desc: "Chronią przed inflacją.", bonus: "Redukcja strat o 1%" },
+    { id: 10, name: "Neonowe Epolety", type: "shoulders", price: "45,000 $", rawPrice: 45000, color: "#8b5cf6", icon: "fa-bolt", rarity: "Epic", desc: "Bzyczą irytująco.", bonus: "+10% Cashback" },
+
+    // CHEST (Zbroja)
+    { id: 11, name: "Koszulka 'Szukam Żony'", type: "chest", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "fa-tshirt", rarity: "Peasant", desc: "Lekko poplamiona.", bonus: "-10 do Charyzmy" },
+    { id: 12, name: "Garnitur od Armaniego", type: "chest", price: "20,000 $", rawPrice: 20000, color: "#3b82f6", icon: "fa-user-tie", rarity: "Rare", desc: "Włoski styl.", bonus: "+15 do Negocjacji" },
+    { id: 13, name: "Złota Zbroja Pychy", type: "chest", price: "250,000 $", rawPrice: 250000, color: "#ef4444", icon: "fa-shield-alt", rarity: "Relic", desc: "Oślepia krupiera.", bonus: "Ochrona przed banem" },
+
+    // GLOVES (Rękawice)
+    { id: 14, name: "Rękawice Złodzieja", type: "gloves", price: "1,500 $", rawPrice: 1500, color: "#9ca3af", icon: "fa-mitten", rarity: "Peasant", desc: "Lepkie palce.", bonus: "Szybsze klikanie" },
+    { id: 15, name: "Power Glove", type: "gloves", price: "80,000 $", rawPrice: 80000, color: "#ef4444", icon: "fa-hand-rock", rarity: "Relic", desc: "I love the Power Glove. It's so bad.", bonus: "+20 do Hackowania slotów" },
+
+    // BELT (Pas)
+    { id: 16, name: "Sznurek od Snopowiązałki", type: "belt", price: "10 $", rawPrice: 10, color: "#9ca3af", icon: "fa-grip-lines", rarity: "Peasant", desc: "Trzyma spodnie. Ledwo.", bonus: "Brak" },
+    { id: 17, name: "Pas Gucci (Podróbka)", type: "belt", price: "300 $", rawPrice: 300, color: "#9ca3af", icon: "fa-bacon", rarity: "Peasant", desc: "Guczi.", bonus: "+1 do Lansu" },
+    { id: 18, name: "Pas Szczęścia", type: "belt", price: "150,000 $", rawPrice: 150000, color: "#ffd700", icon: "fa-infinity", rarity: "Divine", desc: "Nigdy się nie kończy.", bonus: "+5% do All-in" },
+
+    // LEGS (Spodnie)
+    { id: 19, name: "Dresy Prawilności", type: "legs", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "fa-running", rarity: "Peasant", desc: "Trzy paski to podstawa.", bonus: "+10 do Słowiańskiego Przykucu" },
+    { id: 20, name: "Spodnie Szczęściarza", type: "legs", price: "55,000 $", rawPrice: 55000, color: "#8b5cf6", icon: "fa-cloud", rarity: "Epic", desc: "Mają wszyte asy.", bonus: "+2 do Kart" },
+
+    // BOOTS (Buty)
+    { id: 21, name: "Klapki Kubota", type: "boots", price: "25 $", rawPrice: 25, color: "#9ca3af", icon: "fa-shoe-prints", rarity: "Peasant", desc: "Legendarny komfort.", bonus: "+100 do Wygody" },
+    { id: 22, name: "Air Jordany", type: "boots", price: "2,500 $", rawPrice: 2500, color: "#3b82f6", icon: "fa-socks", rarity: "Rare", desc: "Można w nich latać.", bonus: "+5 do Skoku" },
+    { id: 23, name: "Buty Hermesa", type: "boots", price: "180,000 $", rawPrice: 180000, color: "#ef4444", icon: "fa-feather", rarity: "Relic", desc: "Ze skrzydłami.", bonus: "Szybkie wypłaty" },
+
+    // AMULET (Naszyjnik)
+    { id: 24, name: "Nieśmiertelnik", type: "amulet", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "fa-tag", rarity: "Peasant", desc: "Pamiątka z woja.", bonus: "Brak" },
+    { id: 25, name: "Złoty Łańcuch", type: "amulet", price: "15,000 $", rawPrice: 15000, color: "#3b82f6", icon: "fa-link", rarity: "Rare", desc: "Gruby jak kciuk.", bonus: "+10 do Respectu" },
+    { id: 26, name: "Oko Proroka", type: "amulet", price: "300,000 $", rawPrice: 300000, color: "#ffd700", icon: "fa-eye", rarity: "Divine", desc: "Widzi przyszłe spiny.", bonus: "Przewidywanie RNG" },
+
+    // EARRING (Kolczyk) - Multi Slot
+    { id: 27, name: "Kolczyk Magnetyczny", type: "earring", price: "200 $", rawPrice: 200, color: "#9ca3af", icon: "fa-magnet", rarity: "Peasant", desc: "Dla dzieci.", bonus: "Przyciąga drobniaki" },
+    { id: 28, name: "Diamentowy Stud", type: "earring", price: "8,000 $", rawPrice: 8000, color: "#3b82f6", icon: "fa-gem", rarity: "Rare", desc: "Czysty diament.", bonus: "+2% do Wartości konta" },
+    { id: 29, name: "Szepczący Kolczyk", type: "earring", price: "90,000 $", rawPrice: 90000, color: "#ef4444", icon: "fa-deaf", rarity: "Relic", desc: "Szepcze wyniki meczów.", bonus: "Insider Info" },
+
+    // RING (Pierścień) - Multi Slot
+    { id: 30, name: "Sygnet Rodowy", type: "ring", price: "120,000 $", rawPrice: 120000, color: "#8b5cf6", icon: "fa-ring", rarity: "Epic", desc: "Należy do Ojca Chrzestnego.", bonus: "+20 do Mafii" },
+    { id: 31, name: "Obrączka (Zastaw)", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "fa-circle-notch", rarity: "Peasant", desc: "Pamiątka po rozwodzie.", bonus: "-50% do Szczęścia w miłości" },
+    { id: 32, name: "Pierścień Władzy", type: "ring", price: "1 $", rawPrice: 1, color: "#ffd700", icon: "fa-eye-slash", rarity: "Divine", desc: "My Precious.", bonus: "Niewidzialność dla Urzędu Skarbowego" },
+
+    // WEAPON (Broń)
+    { id: 33, name: "As Pik", type: "weapon", price: "10,000 $", rawPrice: 10000, color: "#3b82f6", icon: "fa-playing-card", rarity: "Rare", desc: "Zabójcza karta.", bonus: "Blackjack +5%" },
+    { id: 34, name: "Złoty Deagle", type: "weapon", price: "65,000 $", rawPrice: 65000, color: "#8b5cf6", icon: "fa-fighter-jet", rarity: "Epic", desc: "One shot, one kill.", bonus: "Zastraszenie krupiera" },
+    { id: 35, name: "Banhammer", type: "weapon", price: "999,999 $", rawPrice: 999999, color: "#ef4444", icon: "fa-gavel", rarity: "Relic", desc: "Narzędzie Admina.", bonus: "Banowanie botów" },
+
+    // OFFHAND (Druga Ręka)
+    { id: 36, name: "Karta Kredytowa", type: "offhand", price: "0 $", rawPrice: 0, color: "#9ca3af", icon: "fa-credit-card", rarity: "Peasant", desc: "Limit przekroczony.", bonus: "Dług rośnie szybciej" },
+    { id: 37, name: "Kula Fortuny", type: "offhand", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "fa-crystal-ball", rarity: "Epic", desc: "Zamglona.", bonus: "+5% Szczęścia" },
+    { id: 38, name: "Walizka Pieniędzy", type: "offhand", price: "250,000 $", rawPrice: 250000, color: "#ef4444", icon: "fa-suitcase", rarity: "Relic", desc: "Wypełniona dolarami.", bonus: "Wyglądasz bogato" },
+
+    // RELIC (Relikty)
+    { id: 39, name: "Królicza Łapka", type: "relic", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-paw", rarity: "Rare", desc: "Syntetyczna.", bonus: "+1% Luck" },
+    { id: 40, name: "Karta 'Reverse'", type: "relic", price: "50,000 $", rawPrice: 50000, color: "#8b5cf6", icon: "fa-sync", rarity: "Epic", desc: "No u.", bonus: "Odbija przegraną" },
+    { id: 41, name: "Obciążona Kostka", type: "relic", price: "120,000 $", rawPrice: 120000, color: "#ef4444", icon: "fa-dice-d6", rarity: "Relic", desc: "Zawsze wypada 6.", bonus: "Kości +20%" },
+    { id: 42, name: "Bitcoin HDD", type: "relic", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "fa-hdd", rarity: "Divine", desc: "Hasło zgubione.", bonus: "Net Worth +2M" },
+    
+    // Fillers (Różne)
+    { id: 43, name: "Stary Żeton", type: "relic", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "fa-coins", rarity: "Peasant", desc: "Z kasyna, które już nie istnieje.", bonus: "Sentyment" },
+    { id: 44, name: "Kluczyki Lambo", type: "relic", price: "90,000 $", rawPrice: 90000, color: "#8b5cf6", icon: "fa-car", rarity: "Epic", desc: "Tylko kluczyki.", bonus: "Szpan" },
+    { id: 45, name: "Złoty Ząb", type: "earring", price: "1,000 $", rawPrice: 1000, color: "#3b82f6", icon: "fa-tooth", rarity: "Rare", desc: "Znaleziony.", bonus: "+1 Gryzienie" },
+    { id: 46, name: "Karta VIP", type: "relic", price: "10,000 $", rawPrice: 10000, color: "#3b82f6", icon: "fa-id-card", rarity: "Rare", desc: "Wstęp wszędzie.", bonus: "Darmowe drinki" },
+    { id: 47, name: "Smocze Jajo", type: "relic", price: "180,000 $", rawPrice: 180000, color: "#ef4444", icon: "fa-dragon", rarity: "Relic", desc: "Ciepłe.", bonus: "Hodowla smoków" },
+    { id: 48, name: "Pusty Portfel", type: "offhand", price: "0 $", rawPrice: 0, color: "#ef4444", icon: "fa-wallet", rarity: "Peasant", desc: "Smutny widok.", bonus: "Depresja" },
+    { id: 49, name: "Szmaragd", type: "relic", price: "25,000 $", rawPrice: 25000, color: "#10b981", icon: "fa-gem", rarity: "Rare", desc: "Zielony.", bonus: "Ładnie wygląda" },
+    { id: 50, name: "Mapa Kasyna", type: "relic", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "fa-map", rarity: "Peasant", desc: "Prowadzi do wyjścia.", bonus: "Eskapizm" }
+];
+
+// --- PLAYERS DATABASE ---
+const playersDB = [
+    {
+        username: "MrGambler",
+        rank: "Alpha Whale",
+        inventory: [
+            // Ekwipunek pasujący do slotów i trochę śmieci
+            8, // Divine Helm
+            13, // Relic Chest
+            35, // Relic Weapon
+            32, // Divine Ring
+            30, // Epic Ring
+            21, // Kuboty (Peasant Boots)
+            16, // Sznurek (Belt)
+            39, 40, // Relics
+            1, 2, 3, 4, 5, // Skrzynki
+            27, 27, // Kolczyki
+            36, // Offhand
+            48, 48, 48, // Puste portfele
+            11, 14, 24, 6 // Śmieci
+        ]
+    }
+];
+TREŚĆ:
+// --- DATA SETS ---
+
+// BUSINESS / GAMBLING THEMED ITEMS
+// Types: head, neck, suit, watch, belt, pants, shoes, ring, vehicle, gadget
+
+let allTreasures = [
+    // --- SKRZYNKI (Wszystkie to walizki) ---
+    { id: 1, name: "Peasant Case", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "fa-briefcase", rarity: "Peasant", desc: "Stara, skórzana teczka.", bonus: "Może zawierać kanapki." },
+    { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-briefcase", rarity: "Rare", desc: "Walizka z szyfrem.", bonus: "Gwarantowany gadżet." },
+    { id: 3, name: "Epic Case", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "fa-briefcase", rarity: "Epic", desc: "Wzmocniona tytanem.", bonus: "Pachnie drogimi perfumami." },
+    { id: 4, name: "Relic Case", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "fa-briefcase", rarity: "Relic", desc: "Używana przez mafię.", bonus: "Ryzykowna zawartość." },
+    { id: 5, name: "Divine Case", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "fa-briefcase", rarity: "Divine", desc: "Wykonana ze złota i diamentów.", bonus: "Tylko dla 1%." },
+
+    // --- ITEMY BIZNESOWE ---
+    
+    // HEAD (Okulary / Kapelusze)
+    { id: 6, name: "Czapka z daszkiem", type: "head", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "fa-hat-cowboy-side", rarity: "Peasant", desc: "Z logo stacji benzynowej.", bonus: "-5 do Stylu" },
+    { id: 7, name: "RayBan Aviator", type: "head", price: "1,500 $", rawPrice: 1500, color: "#3b82f6", icon: "fa-glasses", rarity: "Rare", desc: "Ukrywają poker face.", bonus: "+10 do Blefowania" },
+    { id: 8, name: "Gogle VR Pro", type: "head", price: "15,000 $", rawPrice: 15000, color: "#ef4444", icon: "fa-vr-cardboard", rarity: "Relic", desc: "Widzisz algorytm kasyna.", bonus: "Przewidywanie Wygranej" },
+
+    // NECK (Krawaty / Łańcuchy)
+    { id: 9, name: "Krawat z Poliestru", type: "neck", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "fa-user-tie", rarity: "Peasant", desc: "Drapie w szyję.", bonus: "Brak" },
+    { id: 10, name: "Złoty Łańcuch", type: "neck", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "fa-link", rarity: "Epic", desc: "Waży 2kg.", bonus: "+20 do Respectu" },
+    
+    // SUIT (Garnitur)
+    { id: 11, name: "Koszula Hawajska", type: "suit", price: "80 $", rawPrice: 80, color: "#9ca3af", icon: "fa-tshirt", rarity: "Peasant", desc: "Idealna na wakacje, nie do kasyna.", bonus: "Luz +100" },
+    { id: 12, name: "Garnitur Hugo Boss", type: "suit", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-user-secret", rarity: "Rare", desc: "Klasyczna elegancja.", bonus: "+5 do Negocjacji" },
+    { id: 13, name: "Smoking Bonda", type: "suit", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "fa-user-tie", rarity: "Divine", desc: "Wstrząśnięty, nie zmieszany.", bonus: "Kuloodporność finansowa" },
+
+    // WATCH (Zegarek - Ważny!)
+    { id: 14, name: "Zegarek z Komunii", type: "watch", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "fa-clock", rarity: "Peasant", desc: "Pamiątka rodzinna.", bonus: "Pokazuje czas" },
+    { id: 15, name: "Rolex Submariner", type: "watch", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "fa-clock", rarity: "Epic", desc: "Znasz jego wartość.", bonus: "+15 do Prestiżu" },
+    { id: 16, name: "Patek Philippe", type: "watch", price: "2,500,000 $", rawPrice: 2500000, color: "#ffd700", icon: "fa-clock", rarity: "Divine", desc: "Nie ty go masz, ty go przechowujesz dla pokoleń.", bonus: "Zatrzymuje czas (długów)" },
+
+    // BELT (Pasek)
+    { id: 17, name: "Sznurek", type: "belt", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "fa-grip-lines", rarity: "Peasant", desc: "Trzyma spodnie.", bonus: "Brak" },
+    { id: 18, name: "Pasek Gucci", type: "belt", price: "800 $", rawPrice: 800, color: "#3b82f6", icon: "fa-infinity", rarity: "Rare", desc: "Wielka klamra.", bonus: "+2 do Lansu" },
+
+    // PANTS (Spodnie)
+    { id: 19, name: "Dżinsy z Dziurami", type: "pants", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "fa-columns", rarity: "Peasant", desc: "Modne, ale czy w kasynie?", bonus: "Wentylacja" },
+    { id: 20, name: "Spodnie od Garnituru", type: "pants", price: "2,000 $", rawPrice: 2000, color: "#3b82f6", icon: "fa-columns", rarity: "Rare", desc: "Dopasowane.", bonus: "Wygoda +5" },
+
+    // SHOES (Buty)
+    { id: 21, name: "Klapki Basenowe", type: "shoes", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "fa-shoe-prints", rarity: "Peasant", desc: "Szur szur.", bonus: "-50 do Poważania" },
+    { id: 22, name: "Mokasyny", type: "shoes", price: "3,000 $", rawPrice: 3000, color: "#8b5cf6", icon: "fa-socks", rarity: "Epic", desc: "Włoska skóra.", bonus: "Cichy chód" },
+
+    // RINGS (Biżuteria)
+    { id: 23, name: "Sygnet Rodowy", type: "ring", price: "15,000 $", rawPrice: 15000, color: "#8b5cf6", icon: "fa-ring", rarity: "Epic", desc: "Z herbem nieistniejącego rodu.", bonus: "+10 do Blefu" },
+    { id: 24, name: "Obrączka", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "fa-circle", rarity: "Peasant", desc: "Z grawerem.", bonus: "Wierność" },
+
+    // VEHICLE (Kluczyki)
+    { id: 25, name: "Bilet Autobusowy", type: "vehicle", price: "2 $", rawPrice: 2, color: "#9ca3af", icon: "fa-bus", rarity: "Peasant", desc: "Ważny 20 minut.", bonus: "Transport publiczny" },
+    { id: 26, name: "Kluczyki BMW", type: "vehicle", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "fa-car", rarity: "Rare", desc: "M3 w leasingu.", bonus: "Szybki dojazd" },
+    { id: 27, name: "Karta do Bugatti", type: "vehicle", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "fa-car-side", rarity: "Divine", desc: "Top G.", bonus: "Prędkość światła" },
+
+    // GADGET (Elektronika / Ręka)
+    { id: 28, name: "Nokia 3310", type: "gadget", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "fa-mobile-alt", rarity: "Peasant", desc: "Niezniszczalna.", bonus: "Samoobrona" },
+    { id: 29, name: "iPhone 16 Pro Max", type: "gadget", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-mobile", rarity: "Rare", desc: "Więcej aparatów niż sensu.", bonus: "+5 do Selfie" },
+    { id: 30, name: "Szyfrowany Telefon", type: "gadget", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "fa-satellite-dish", rarity: "Relic", desc: "Nikt nie podsłucha.", bonus: "Anonimowość" },
+    { id: 31, name: "Czarne American Express", type: "gadget", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "fa-credit-card", rarity: "Divine", desc: "Bez limitu.", bonus: "Nieskończony debet" },
+    
+    // EXTRAS
+    { id: 32, name: "Cygaro Kubańskie", type: "gadget", price: "500 $", rawPrice: 500, color: "#3b82f6", icon: "fa-smoking", rarity: "Rare", desc: "Kopci jak smok.", bonus: "Relaks" },
+    { id: 33, name: "Szklanka Whisky", type: "gadget", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "fa-glass-whiskey", rarity: "Peasant", desc: "Z lodem.", bonus: "Odwaga +5" }
+];
+
+// --- PLAYERS DATABASE ---
+const playersDB = [
+    {
+        username: "MrGambler",
+        rank: "Alpha Whale",
+        inventory: [
+            // Loadout MrGamblera (High End)
+            7, // RayBan
+            10, // Złoty Łańcuch
+            12, // Garnitur Boss
+            15, // Rolex
+            18, // Pasek Gucci
+            20, // Spodnie
+            22, // Mokasyny
+            23, // Sygnet
+            26, // BMW Keys
+            31, // Black Card
+            
+            // Inventory
+            1, 1, 1, 2, 2, 5, // Cases
+            28, 9, 33, 21 // Śmieci
+        ]
+    }
+];
+
+KROK 2:
 PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-                            <div class="deposit-form centered-form" style="padding:0;">
-                                <label>Kwota wpłaty</label>
-                                <div class="input-group" style="max-width: 180px; margin: 0 auto 15px auto;">
-                                    <span class="curr-prefix">$</span>
-                                    <input type="number" id="depositAmount" value="100" placeholder="0.00">
-                                </div>
+                    <div class="paper-doll-container">
+                        <!-- Relics Panel (Poza siatką postaci, w lewym górnym rogu) -->
+                        <div class="pd-relic-rack">
+                            <div class="relic-label">RELICS</div>
+                            <div class="pd-slot slot-relic" data-type="relic" title="Relikt 1"><i class="fas fa-dragon placeholder"></i></div>
+                            <div class="pd-slot slot-relic" data-type="relic" title="Relikt 2"><i class="fas fa-scroll placeholder"></i></div>
+                        </div>
+
+                        <!-- 14 Body Slots Grid Container -->
+                        <div class="pd-formation">
+                            <div class="pd-silhouette"><i class="fas fa-user"></i></div>
+                            
+                            <!-- Row 1: Earring L | Head | Earring R -->
+                            <div class="pd-slot slot-earring-l" data-type="earring" title="Kolczyk Lewy"><i class="fas fa-magnet placeholder"></i></div>
+                            <div class="pd-slot slot-head" data-type="helmet" title="Hełm"><i class="fas fa-helmet-safety placeholder"></i></div>
+                            <div class="pd-slot slot-earring-r" data-type="earring" title="Kolczyk Prawy"><i class="fas fa-magnet placeholder"></i></div>
+
+                            <!-- Row 2: Shoulders | Chest | Amulet -->
+                            <div class="pd-slot slot-shoulders" data-type="shoulders" title="Naramiennik"><i class="fas fa-user-shield placeholder"></i></div>
+                            <div class="pd-slot slot-chest" data-type="chest" title="Zbroja"><i class="fas fa-shirt placeholder"></i></div>
+                            <div class="pd-slot slot-amulet" data-type="amulet" title="Naszyjnik"><i class="fas fa-gem placeholder"></i></div>
+
+                            <!-- Row 3: Gloves | Belt | [Empty] -->
+                            <div class="pd-slot slot-gloves" data-type="gloves" title="Rękawice"><i class="fas fa-mitten placeholder"></i></div>
+                            <div class="pd-slot slot-belt" data-type="belt" title="Pas"><i class="fas fa-grip-lines placeholder"></i></div>
+                            
+                            <!-- Row 4: Ring L | Legs | Ring R -->
+                            <div class="pd-slot slot-ring-l" data-type="ring" title="Pierścień Lewy"><i class="fas fa-ring placeholder"></i></div>
+                            <div class="pd-slot slot-legs" data-type="legs" title="Spodnie"><i class="fas fa-socks placeholder"></i></div>
+                            <div class="pd-slot slot-ring-r" data-type="ring" title="Pierścień Prawy"><i class="fas fa-ring placeholder"></i></div>
+
+                            <!-- Row 5: Weapon | Boots | Offhand -->
+                            <div class="pd-slot slot-mainhand" data-type="weapon" title="Broń"><i class="fas fa-khanda placeholder"></i></div>
+                            <div class="pd-slot slot-feet" data-type="boots" title="Buty"><i class="fas fa-shoe-prints placeholder"></i></div>
+                            <div class="pd-slot slot-offhand" data-type="offhand" title="Druga Ręka"><i class="fas fa-shield-alt placeholder"></i></div>
+                        </div>
+                    </div>
 TREŚĆ:
-                            <div class="deposit-form centered-form" style="padding:0;">
-                                <label>Kwota wpłaty</label>
-                                <div class="input-group">
-                                    <span class="curr-prefix">$</span>
-                                    <input type="number" id="depositAmount" value="100" placeholder="0.00">
-                                </div>
+                    <div class="paper-doll-container">
+                        <!-- BUSINESS LOADOUT GRID (12 Slots 3x4) -->
+                        <div class="pd-formation">
+                            <div class="pd-silhouette"><i class="fas fa-user-tie"></i></div>
+                            
+                            <!-- Row 1: Head | Glasses | Neck -->
+                            <!-- Note: Icons are placeholders, will be filled by JS if items present -->
+                            
+                            <!-- Row 1 -->
+                            <div class="pd-slot slot-glasses" data-type="head" title="Okulary / Nakrycie Głowy"><i class="fas fa-glasses placeholder"></i></div>
+                            <div class="pd-slot slot-neck" data-type="neck" title="Łańcuch / Krawat"><i class="fas fa-link placeholder"></i></div>
+                            <div class="pd-slot slot-earpiece" data-type="gadget" title="Słuchawka / Gadżet"><i class="fas fa-headset placeholder"></i></div>
+
+                            <!-- Row 2 -->
+                            <div class="pd-slot slot-watch" data-type="watch" title="Zegarek"><i class="fas fa-clock placeholder"></i></div>
+                            <div class="pd-slot slot-suit" data-type="suit" title="Garnitur"><i class="fas fa-user-tie placeholder"></i></div>
+                            <div class="pd-slot slot-cufflink" data-type="ring" title="Sygnet / Spinki"><i class="fas fa-ring placeholder"></i></div>
+
+                            <!-- Row 3 -->
+                            <div class="pd-slot slot-ring" data-type="ring" title="Pierścień"><i class="fas fa-ring placeholder"></i></div>
+                            <div class="pd-slot slot-belt" data-type="belt" title="Pasek"><i class="fas fa-grip-lines placeholder"></i></div>
+                            <div class="pd-slot slot-pants" data-type="pants" title="Spodnie"><i class="fas fa-columns placeholder"></i></div>
+
+                            <!-- Row 4 -->
+                            <div class="pd-slot slot-vehicle" data-type="vehicle" title="Pojazd (Kluczyki)"><i class="fas fa-car placeholder"></i></div>
+                            <div class="pd-slot slot-shoes" data-type="shoes" title="Buty"><i class="fas fa-shoe-prints placeholder"></i></div>
+                            <div class="pd-slot slot-hand" data-type="gadget" title="Ręka (Telefon/Portfel)"><i class="fas fa-mobile-alt placeholder"></i></div>
+                        </div>
+                    </div>
+
+KROK 3:
+PLIK: "style.css"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+/* Right Paper Doll - CENTERED LAYOUT (70px Slots) */
+.paper-doll-container {
+    flex: 1;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Grid Calculation:
+   Slot Size: 70px
+   Gap: ~15px
+   Column Steps: 0, 85px, 170px
+   Row Steps: 0, 85px, 170px, 255px, 340px
+   Total Width: 240px
+   Total Height: 410px
+*/
+
+.pd-formation {
+    position: relative;
+    width: 240px;
+    height: 410px;
+}
+
+.pd-silhouette {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 350px;
+    color: rgba(0,0,0,0.3);
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* UNIVERSAL SLOT SIZE FORCE */
+.pd-slot {
+    position: absolute;
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 6px !important; /* KWADRATY Z LEKKIM ZAOKRĄGLENIEM */
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.6);
+}
+.pd-slot .placeholder { font-size: 28px; opacity: 0.3; }
+
+/* --- GRID POSITIONS --- */
+
+/* ROW 1 (Y=0) */
+.slot-earring-l { top: 0; left: 0; }
+.slot-head      { top: 0; left: 85px; z-index: 5; }
+.slot-earring-r { top: 0; left: 170px; }
+
+/* ROW 2 (Y=85) */
+.slot-shoulders { top: 85px; left: 0; }
+.slot-chest     { top: 85px; left: 85px; z-index: 4; }
+.slot-amulet    { top: 85px; left: 170px; }
+
+/* ROW 3 (Y=170) */
+.slot-gloves    { top: 170px; left: 0; }
+.slot-belt      { top: 170px; left: 85px; z-index: 3; }
+/* Right side Row 3 is empty in formation */
+
+/* ROW 4 (Y=255) */
+.slot-ring-l    { top: 255px; left: 0; }
+.slot-legs      { top: 255px; left: 85px; z-index: 2; }
+.slot-ring-r    { top: 255px; left: 170px; }
+
+/* ROW 5 (Y=340) */
+.slot-mainhand  { top: 340px; left: 0; border-color: rgba(239, 68, 68, 0.3); }
+.slot-feet      { top: 340px; left: 85px; z-index: 1; }
+.slot-offhand   { top: 340px; left: 170px; border-color: rgba(59, 130, 246, 0.3); }
+
+
+/* Relics Panel - ABSOLUTE POSITIONED (Left Top) */
+.pd-relic-rack {
+    position: absolute;
+    top: 20px;
+    left: 20px; /* Anchored to container corner */
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    background: rgba(0,0,0,0.5);
+    padding: 10px;
+    border-radius: 8px;
+    border: 1px solid rgba(245, 158, 11, 0.2);
+    z-index: 10;
+}
+.relic-label {
+    font-size: 9px;
+    color: var(--accent-orange);
+    text-align: center;
+    letter-spacing: 2px;
+    font-weight: 800;
+    margin-bottom: 5px;
+}
+.slot-relic {
+    position: relative !important; /* Override absolute */
+    top: auto; left: auto;
+    border-color: rgba(245, 158, 11, 0.5);
+    box-shadow: 0 0 15px rgba(245, 158, 11, 0.15);
+}
+.slot-relic i { color: rgba(245, 158, 11, 0.6); }
+TREŚĆ:
+/* Right Paper Doll - CENTERED BUSINESS LAYOUT (70px Slots) */
+.paper-doll-container {
+    flex: 1;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Grid Calculation for 3x4:
+   Slot Size: 70px
+   Gap: 15px
+   Column Steps: 0, 85px, 170px
+   Row Steps: 0, 85px, 170px, 255px
+   Total Width: 240px
+   Total Height: 325px
+*/
+
+.pd-formation {
+    position: relative;
+    width: 240px;
+    height: 325px; /* Compact 3x4 */
+}
+
+.pd-silhouette {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 280px;
+    color: rgba(0,0,0,0.3);
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* UNIVERSAL SLOT SIZE FORCE */
+.pd-slot {
+    position: absolute;
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 6px !important; /* Square shape */
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.6);
+}
+.pd-slot .placeholder { font-size: 28px; opacity: 0.3; }
+
+/* --- GRID POSITIONS 3x4 --- */
+
+/* ROW 1 (Y=0) */
+.slot-glasses   { top: 0; left: 0; }
+.slot-neck      { top: 0; left: 85px; z-index: 5; }
+.slot-earpiece  { top: 0; left: 170px; }
+
+/* ROW 2 (Y=85) */
+.slot-watch     { top: 85px; left: 0; }
+.slot-suit      { top: 85px; left: 85px; z-index: 4; }
+.slot-cufflink  { top: 85px; left: 170px; }
+
+/* ROW 3 (Y=170) */
+.slot-ring      { top: 170px; left: 0; }
+.slot-belt      { top: 170px; left: 85px; z-index: 3; }
+.slot-pants     { top: 170px; left: 170px; }
+
+/* ROW 4 (Y=255) */
+.slot-vehicle   { top: 255px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
+.slot-shoes     { top: 255px; left: 85px; z-index: 2; }
+.slot-hand      { top: 255px; left: 170px; border-color: rgba(16, 185, 129, 0.4); }

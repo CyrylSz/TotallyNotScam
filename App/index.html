@@ -333,10 +333,66 @@
         </div>
 
         <div class="view-container" id="viewInventory">
-            <div class="card">
-                <div class="card-header"><div class="card-title">Twój Ekwipunek</div></div>
-                <div class="list-container" id="inventoryContainer">
+            <div class="inventory-split-layout">
+                <!-- LEWA STRONA: Magazyn -->
+                <div class="inv-panel left-panel">
+                    <div class="inv-header">
+                        <div class="inv-title"><i class="fas fa-box-open"></i> MAGAZYN</div>
+                        <div class="inv-stats">
+                            <div class="inv-value-display">
+                                Items Value: <span style="color:white;">2,790,000.00 $</span>
+                            </div>
+                            <div class="inv-filter-btn" title="Sortuj / Filtruj">
+                                <i class="fas fa-filter"></i>
+                            </div>
+                        </div>
                     </div>
+                    <div class="inventory-grid-scroll" id="inventoryContainer">
+                        <!-- Items injected via JS -->
+                    </div>
+                </div>
+
+                <!-- PRAWA STRONA: Loadout -->
+                <div class="inv-panel right-panel">
+                    <div class="inv-header">
+                        <div class="inv-title"><i class="fas fa-user-astronaut"></i> LOADOUT</div>
+                        <div class="inv-stats">
+                            <div class="inv-value-display" style="border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.1);">
+                                <span style="color:var(--accent-blue);">MrGambler</span>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="paper-doll-container">
+                        <!-- BUSINESS LOADOUT GRID (12 Slots 3x4) -->
+                        <div class="pd-formation">
+                            <div class="pd-silhouette"><i class="fas fa-user-tie"></i></div>
+                            
+                            <!-- Row 1: Head | Glasses | Neck -->
+                            <!-- Note: Icons are placeholders, will be filled by JS if items present -->
+                            
+                            <!-- Row 1 -->
+                            <div class="pd-slot slot-glasses" data-type="head" title="Okulary / Nakrycie Głowy"><i class="fas fa-glasses placeholder"></i></div>
+                            <div class="pd-slot slot-neck" data-type="neck" title="Łańcuch / Krawat"><i class="fas fa-link placeholder"></i></div>
+                            <div class="pd-slot slot-earpiece" data-type="gadget" title="Słuchawka / Gadżet"><i class="fas fa-headset placeholder"></i></div>
+
+                            <!-- Row 2 -->
+                            <div class="pd-slot slot-watch" data-type="watch" title="Zegarek"><i class="fas fa-clock placeholder"></i></div>
+                            <div class="pd-slot slot-suit" data-type="suit" title="Garnitur"><i class="fas fa-user-tie placeholder"></i></div>
+                            <div class="pd-slot slot-cufflink" data-type="ring" title="Sygnet / Spinki"><i class="fas fa-ring placeholder"></i></div>
+
+                            <!-- Row 3 -->
+                            <div class="pd-slot slot-ring" data-type="ring" title="Pierścień"><i class="fas fa-ring placeholder"></i></div>
+                            <div class="pd-slot slot-belt" data-type="belt" title="Pasek"><i class="fas fa-grip-lines placeholder"></i></div>
+                            <div class="pd-slot slot-pants" data-type="pants" title="Spodnie"><i class="fas fa-columns placeholder"></i></div>
+
+                            <!-- Row 4 -->
+                            <div class="pd-slot slot-vehicle" data-type="vehicle" title="Pojazd (Kluczyki)"><i class="fas fa-car placeholder"></i></div>
+                            <div class="pd-slot slot-shoes" data-type="shoes" title="Buty"><i class="fas fa-shoe-prints placeholder"></i></div>
+                            <div class="pd-slot slot-hand" data-type="gadget" title="Ręka (Telefon/Portfel)"><i class="fas fa-mobile-alt placeholder"></i></div>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
 

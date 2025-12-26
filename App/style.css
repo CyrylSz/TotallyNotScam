@@ -2017,6 +2017,201 @@ input:checked + .slider:before { transform: translateX(16px); }
 .rg-stat.centered { text-align: center; }
 .rg-link-btn { background: none; border: none; color: var(--text-muted); text-decoration: underline; font-size: 11px; cursor: pointer; }
 .rg-link-btn:hover { color: white; }
+/* --- INVENTORY 2.0 (MODIFIED) --- */
+.inventory-split-layout {
+    display: grid;
+    /* ZMIANA: Równe kolumny */
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    height: calc(100vh - 140px);
+    overflow: hidden;
+}
+
+.inv-panel {
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+}
+
+.inv-header {
+    padding: 15px 20px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    background: rgba(0,0,0,0.2);
+}
+
+.inv-title { font-size: 14px; font-weight: 700; color: white; letter-spacing: 1px; display: flex; gap: 8px; align-items: center; }
+.inv-stats { display: flex; align-items: center; gap: 15px; }
+
+/* Nowy styl dla Value */
+.inv-value-display {
+    font-family: monospace;
+    font-size: 16px;
+    font-weight: 700;
+    color: var(--accent-green);
+    background: rgba(16, 185, 129, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    padding: 4px 10px;
+    border-radius: 6px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.inv-filter-btn {
+    width: 28px;
+    height: 28px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(255,255,255,0.05);
+    border-radius: 4px;
+    color: var(--text-muted);
+    cursor: pointer;
+    transition: 0.2s;
+}
+.inv-filter-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+
+/* Left Grid - FIXED SLOT SIZE */
+.inventory-grid-scroll {
+    flex: 1;
+    overflow-y: auto;
+    padding: 20px;
+    display: grid;
+    /* Sztywny rozmiar kolumn dopasowany do slotu */
+    grid-template-columns: repeat(auto-fill, 70px);
+    grid-auto-rows: 70px;
+    gap: 10px;
+    align-content: start;
+    justify-content: center; /* Wycentrowanie siatki */
+}
+
+/* UNIVERSAL SLOT STYLE */
+.inv-grid-slot, .pd-slot {
+    width: 70px; /* WYMUSZONY ROZMIAR */
+    height: 70px; /* WYMUSZONY ROZMIAR */
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 6px;
+    position: relative;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+}
+
+.inv-grid-slot:hover, .pd-slot:hover {
+    border-color: var(--accent-purple);
+    background: rgba(139, 92, 246, 0.15);
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    z-index: 10;
+}
+
+.inv-item-icon { font-size: 28px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8)); transition: 0.2s; }
+.inv-grid-slot:hover .inv-item-icon, .pd-slot:hover i { transform: scale(1.15); }
+
+.inv-slot-rarity-dot {
+    position: absolute;
+    top: 6px;
+    right: 6px;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    box-shadow: 0 0 6px currentColor;
+    border: 1px solid rgba(0,0,0,0.5);
+}
+
+.inv-slot-count {
+    position: absolute;
+    bottom: 3px;
+    right: 6px;
+    font-size: 10px;
+    color: #fff;
+    font-weight: 700;
+    text-shadow: 0 1px 3px black;
+    background: rgba(0,0,0,0.6);
+    padding: 0 3px;
+    border-radius: 3px;
+}
+
+/* Right Paper Doll - CENTERED BUSINESS LAYOUT (70px Slots) */
+.paper-doll-container {
+    flex: 1;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
+    overflow: hidden;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+/* Grid Calculation for 3x4:
+   Slot Size: 70px
+   Gap: 15px
+   Column Steps: 0, 85px, 170px
+   Row Steps: 0, 85px, 170px, 255px
+   Total Width: 240px
+   Total Height: 325px
+*/
+
+.pd-formation {
+    position: relative;
+    width: 240px;
+    height: 325px; /* Compact 3x4 */
+}
+
+.pd-silhouette {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    font-size: 280px;
+    color: rgba(0,0,0,0.3);
+    filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+    z-index: 0;
+    pointer-events: none;
+}
+
+/* UNIVERSAL SLOT SIZE FORCE */
+.pd-slot {
+    position: absolute;
+    width: 70px !important;
+    height: 70px !important;
+    border-radius: 6px !important; /* Square shape */
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    background: rgba(0,0,0,0.6);
+}
+.pd-slot .placeholder { font-size: 28px; opacity: 0.3; }
+
+/* --- GRID POSITIONS 3x4 --- */
+
+/* ROW 1 (Y=0) */
+.slot-glasses   { top: 0; left: 0; }
+.slot-neck      { top: 0; left: 85px; z-index: 5; }
+.slot-earpiece  { top: 0; left: 170px; }
+
+/* ROW 2 (Y=85) */
+.slot-watch     { top: 85px; left: 0; }
+.slot-suit      { top: 85px; left: 85px; z-index: 4; }
+.slot-cufflink  { top: 85px; left: 170px; }
+
+/* ROW 3 (Y=170) */
+.slot-ring      { top: 170px; left: 0; }
+.slot-belt      { top: 170px; left: 85px; z-index: 3; }
+.slot-pants     { top: 170px; left: 170px; }
+
+/* ROW 4 (Y=255) */
+.slot-vehicle   { top: 255px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
+.slot-shoes     { top: 255px; left: 85px; z-index: 2; }
+.slot-hand      { top: 255px; left: 170px; border-color: rgba(16, 185, 129, 0.4); }
 
 /* Modal tweaks */
 .full-height-logs { max-height: 500px; }
