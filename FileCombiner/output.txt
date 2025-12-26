@@ -26,7 +26,7 @@ let marketState = {
     tab: 'global', // 'global' or 'my'
     search: '',
     types: { item: true, case: true }, // Multiselect
-    slots: [], // array of selected slots e.g. ['watch', 'head']
+    slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], // All active by default
     priceMin: null,
     priceMax: null,
     rarities: ['Peasant', 'Rare', 'Epic', 'Relic', 'Divine'],
@@ -90,6 +90,7 @@ function initMarketData() {
     // MrGambler ma: Divine Case (5), Patek (16). Wystawiamy je.
     addListing(5, "MrGambler", 1250000, true); // Divine Case - Drogo
     addListing(16, "MrGambler", 2400000, true); // Patek - Okazja
+    addListing(15, "MrGambler", 45000, true); // Rolex Submariner (Epic)
 
     // 2. OFERTY INNYCH GRACZY (Hardcoded, Specific)
     
@@ -194,10 +195,6 @@ function updateMarketLockIcons() {
     
     // Divine (Req: RNG God - ID 2)
     checkLock(2, 'lockDivine');
-    // Relic (Req: Alpha Whale - ID 3)
-    checkLock(3, 'lockRelic');
-    // Epic (Req: Table Shark - ID 5)
-    checkLock(5, 'lockEpic');
 }
 
 function filterMarket() {
@@ -232,7 +229,7 @@ function filterMarket() {
         if(marketState.priceMax && item.price > marketState.priceMax) return false;
         
         // Slots (only if items)
-        if(marketState.type === 'item' && marketState.slots.length > 0) {
+        if(!item.isChest) {
             if(!marketState.slots.includes(item.type)) return false;
         }
         
@@ -272,6 +269,8 @@ function filterMarket() {
 function createMarketCard(item) {
     const el = document.createElement('div');
     el.className = 'm-card';
+    // Style match Inventory: Border in rarity color (50% opacity)
+    el.style.borderColor = `rgba(${hexToRgb(item.color)}, 0.5)`;
     el.onclick = () => openMarketItemModal(item);
     
     // Background Sparkline Bars
@@ -289,20 +288,18 @@ function createMarketCard(item) {
     // Lock logic for Card
     let isLocked = false;
     if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
-    if(item.rarity === 'Relic' && currentRankId > 3) isLocked = true;
-    if(item.rarity === 'Epic' && currentRankId > 5) isLocked = true;
     
     const lockHtml = isLocked ? `<div class="mc-lock-overlay"><i class="fas fa-lock"></i></div>` : '';
 
     el.innerHTML = `
         <div class="mc-header" style="color:${item.color};">
-            <i class="fas ${item.icon}"></i>
+            <div style="font-size: 40px; font-style: normal;">${item.icon}</div>
             <div class="mc-seller-avatar" title="Sprzedawca: ${item.seller}"></div>
             ${lockHtml}
         </div>
         <div class="mc-body">
             <div class="mc-sparkline">${barsHtml}</div>
-            <div class="mc-title">${item.name}</div>
+            <div class="mc-title" style="color:${item.color}">${item.name}</div>
             <div class="mc-sub" style="color:${item.color}">${item.rarity}</div>
             
             <div class="mc-price-row">
@@ -320,7 +317,8 @@ function openMarketItemModal(item) {
     if(!modal) return;
     
     // Populate Data
-    document.getElementById('mmIcon').className = `fas ${item.icon}`;
+    document.getElementById('mmIcon').innerHTML = item.icon;
+    document.getElementById('mmIcon').className = ''; // Remove FontAwesome classes
     document.getElementById('mmCard').style.color = item.color;
     document.getElementById('mmSellerName').textContent = item.seller;
     
@@ -349,7 +347,6 @@ function openMarketItemModal(item) {
     let reqRankName = '';
     let isLocked = false;
     if(item.rarity === 'Divine' && currentRankId > 2) { isLocked = true; reqRankName = "RNG God"; }
-    else if(item.rarity === 'Relic' && currentRankId > 3) { isLocked = true; reqRankName = "Alpha Whale"; }
     
     if(isLocked) {
         warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: ${reqRankName} (do założenia)`;
@@ -579,8 +576,11 @@ function renderTreasures() {
     if(!list) return;
     list.innerHTML = '';
     
-    // Używamy myInventory zamiast allTreasures
-    const currentItems = myInventory.slice(0, shownTreasures);
+    // Sortujemy ekwipunek od najdroższego dla profilu (Show Off)
+    const sortedProfileInv = [...myInventory].sort((a, b) => b.rawPrice - a.rawPrice);
+
+    // Używamy posortowanej kopii zamiast surowego myInventory
+    const currentItems = sortedProfileInv.slice(0, shownTreasures);
     
     currentItems.forEach(item => {
         const div = document.createElement('div');
@@ -613,7 +613,7 @@ function renderTreasures() {
         `;
 
         div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-img" style="font-style: normal;">${item.icon}</div>
             <div class="item-info">
                 <h5>${item.name}</h5>
                 <div class="item-price-row">
@@ -1110,8 +1110,14 @@ function renderInventoryView() {
         if (isEquipped) badgeHtml = `<div class="equipped-badge">EQ</div>`;
         else if (isOnSale) badgeHtml = `<div class="on-sale-badge">NA RYNKU</div>`;
 
+        // Rank Lock Logic (Divine req Rank <= 2)
+        if (item.rarity === 'Divine' && currentRankId > 2) {
+            badgeHtml += `<div class="inv-lock-overlay"><i class="fas fa-lock"></i></div>`;
+            slot.classList.add('is-rank-locked');
+        }
+
         slot.innerHTML = `
-            <i class="fas ${item.icon} inv-item-icon" style="color: ${item.color};"></i>
+            <div class="inv-item-icon" style="font-style: normal; color: initial;">${item.icon}</div>
             <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
             ${badgeHtml}
         `;
@@ -1228,8 +1234,8 @@ function renderItemInSlot(slotElement, item) {
     // Podmień HTML slotu na ikonę przedmiotu
     let rarityColor = getRarityColor(item.rarity);
     
-    // Zwiększono rozmiar ikony do 70px dla slotów 150px
-    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 70px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
+    // Zmniejszono rozmiar ikony do 45px dla slotów 110px
+    slotElement.innerHTML = `<div style="font-size: 50px; font-style: normal; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${item.icon}</div>`;
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
@@ -1242,11 +1248,11 @@ function resetSlotVisuals(slotElement) {
     slotElement.style = ""; // Reset inline styles
     const type = slotElement.dataset.type;
     let icon = "fa-plus";
-    if(type === 'head') icon = "fa-glasses";
+    if(type === 'head') icon = "fa-hat-cowboy";
     if(type === 'neck') icon = "fa-link";
     if(type === 'suit') icon = "fa-user-tie";
     if(type === 'watch') icon = "fa-clock";
-    if(type === 'gadget') icon = "fa-mobile-alt";
+    if(type === 'gadget') icon = "fa-microchip";
     if(type === 'ring') icon = "fa-ring";
     if(type === 'belt') icon = "fa-grip-lines";
     if(type === 'pants') icon = "fa-columns";
@@ -1286,7 +1292,7 @@ function renderDashInventory() {
         const badgeClass = `badge-${item.rarity.toLowerCase()}`;
         
         div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-img" style="font-style: normal;">${item.icon}</div>
             <div class="item-info">
                 <h5>${item.name}</h5>
                 <div class="item-price-row">
@@ -1315,14 +1321,6 @@ function hexToRgb(hex) {
     });
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
     return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
-}
-
-function renderMarketView() {
-    const container = document.getElementById('marketContainer');
-    container.innerHTML = '';
-    // Mock items for market
-    // Renderowanie nowego rynku
-    renderMarketView();
 }
 
 let currentDepositMethod = 'visa';
@@ -1801,7 +1799,7 @@ function renderDashInventory() {
         // Reuse existing layout but simplified
         const badgeClass = `badge-${item.rarity.toLowerCase()}`;
         div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-img" style="font-style: normal;">${item.icon}</div>
             <div class="item-info"><h5>${item.name}</h5></div>
             <div class="item-right-status"><div class="rarity-tag-badge ${badgeClass}" style="min-width:auto; font-size:8px;">${item.rarity}</div></div>
         `;
@@ -1855,63 +1853,63 @@ data.js
 
 let allTreasures = [
     // --- SKRZYNKI (Wszystkie to walizki) ---
-    { id: 1, name: "Peasant Case", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "fa-briefcase", rarity: "Peasant", desc: "Stara, skórzana teczka.", bonus: "Może zawierać kanapki." },
-    { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-briefcase", rarity: "Rare", desc: "Walizka z szyfrem.", bonus: "Gwarantowany gadżet." },
-    { id: 3, name: "Epic Case", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "fa-briefcase", rarity: "Epic", desc: "Wzmocniona tytanem.", bonus: "Pachnie drogimi perfumami." },
-    { id: 4, name: "Relic Case", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "fa-briefcase", rarity: "Relic", desc: "Używana przez mafię.", bonus: "Ryzykowna zawartość." },
-    { id: 5, name: "Divine Case", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "fa-briefcase", rarity: "Divine", desc: "Wykonana ze złota i diamentów.", bonus: "Tylko dla 1%." },
+    { id: 1, name: "Peasant Case", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💼", rarity: "Peasant", desc: "Stara, skórzana teczka.", bonus: "Może zawierać kanapki." },
+    { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "💼", rarity: "Rare", desc: "Walizka z szyfrem.", bonus: "Gwarantowany gadżet." },
+    { id: 3, name: "Epic Case", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "💼", rarity: "Epic", desc: "Wzmocniona tytanem.", bonus: "Pachnie drogimi perfumami." },
+    { id: 4, name: "Relic Case", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "💼", rarity: "Relic", desc: "Używana przez mafię.", bonus: "Ryzykowna zawartość." },
+    { id: 5, name: "Divine Case", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💼", rarity: "Divine", desc: "Wykonana ze złota i diamentów.", bonus: "Tylko dla 1%." },
 
     // --- ITEMY BIZNESOWE ---
     
     // HEAD (Okulary / Kapelusze)
-    { id: 6, name: "Czapka z daszkiem", type: "head", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "fa-hat-cowboy-side", rarity: "Peasant", desc: "Z logo stacji benzynowej.", bonus: "-5 do Stylu" },
-    { id: 7, name: "RayBan Aviator", type: "head", price: "1,500 $", rawPrice: 1500, color: "#3b82f6", icon: "fa-glasses", rarity: "Rare", desc: "Ukrywają poker face.", bonus: "+10 do Blefowania" },
-    { id: 8, name: "Gogle VR Pro", type: "head", price: "15,000 $", rawPrice: 15000, color: "#ef4444", icon: "fa-vr-cardboard", rarity: "Relic", desc: "Widzisz algorytm kasyna.", bonus: "Przewidywanie Wygranej" },
+    { id: 6, name: "Czapka z daszkiem", type: "head", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧢", rarity: "Peasant", desc: "Z logo stacji benzynowej.", bonus: "-5 do Stylu" },
+    { id: 7, name: "RayBan Aviator", type: "head", price: "1,500 $", rawPrice: 1500, color: "#3b82f6", icon: "🕶️", rarity: "Rare", desc: "Ukrywają poker face.", bonus: "+10 do Blefowania" },
+    { id: 8, name: "Gogle VR Pro", type: "head", price: "15,000 $", rawPrice: 15000, color: "#ef4444", icon: "🥽", rarity: "Relic", desc: "Widzisz algorytm kasyna.", bonus: "Przewidywanie Wygranej" },
 
     // NECK (Krawaty / Łańcuchy)
-    { id: 9, name: "Krawat z Poliestru", type: "neck", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "fa-user-tie", rarity: "Peasant", desc: "Drapie w szyję.", bonus: "Brak" },
-    { id: 10, name: "Złoty Łańcuch", type: "neck", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "fa-link", rarity: "Epic", desc: "Waży 2kg.", bonus: "+20 do Respectu" },
+    { id: 9, name: "Krawat z Poliestru", type: "neck", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "👔", rarity: "Peasant", desc: "Drapie w szyję.", bonus: "Brak" },
+    { id: 10, name: "Złoty Łańcuch", type: "neck", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "⛓️", rarity: "Epic", desc: "Waży 2kg.", bonus: "+20 do Respectu" },
     
     // SUIT (Garnitur)
-    { id: 11, name: "Koszula Hawajska", type: "suit", price: "80 $", rawPrice: 80, color: "#9ca3af", icon: "fa-tshirt", rarity: "Peasant", desc: "Idealna na wakacje, nie do kasyna.", bonus: "Luz +100" },
-    { id: 12, name: "Garnitur Hugo Boss", type: "suit", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-user-secret", rarity: "Rare", desc: "Klasyczna elegancja.", bonus: "+5 do Negocjacji" },
-    { id: 13, name: "Smoking Bonda", type: "suit", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "fa-user-tie", rarity: "Divine", desc: "Wstrząśnięty, nie zmieszany.", bonus: "Kuloodporność finansowa" },
+    { id: 11, name: "Koszula Hawajska", type: "suit", price: "80 $", rawPrice: 80, color: "#9ca3af", icon: "👕", rarity: "Peasant", desc: "Idealna na wakacje, nie do kasyna.", bonus: "Luz +100" },
+    { id: 12, name: "Garnitur Hugo Boss", type: "suit", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "🤵", rarity: "Rare", desc: "Klasyczna elegancja.", bonus: "+5 do Negocjacji" },
+    { id: 13, name: "Smoking Bonda", type: "suit", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "🍸", rarity: "Divine", desc: "Wstrząśnięty, nie zmieszany.", bonus: "Kuloodporność finansowa" },
 
     // WATCH (Zegarek - Ważny!)
-    { id: 14, name: "Zegarek z Komunii", type: "watch", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "fa-clock", rarity: "Peasant", desc: "Pamiątka rodzinna.", bonus: "Pokazuje czas" },
-    { id: 15, name: "Rolex Submariner", type: "watch", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "fa-clock", rarity: "Epic", desc: "Znasz jego wartość.", bonus: "+15 do Prestiżu" },
-    { id: 16, name: "Patek Philippe", type: "watch", price: "2,500,000 $", rawPrice: 2500000, color: "#ffd700", icon: "fa-clock", rarity: "Divine", desc: "Nie ty go masz, ty go przechowujesz dla pokoleń.", bonus: "Zatrzymuje czas (długów)" },
+    { id: 14, name: "Zegarek z Komunii", type: "watch", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "⌚", rarity: "Peasant", desc: "Pamiątka rodzinna.", bonus: "Pokazuje czas" },
+    { id: 15, name: "Rolex Submariner", type: "watch", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "⌚", rarity: "Epic", desc: "Znasz jego wartość.", bonus: "+15 do Prestiżu" },
+    { id: 16, name: "Patek Philippe", type: "watch", price: "2,500,000 $", rawPrice: 2500000, color: "#ffd700", icon: "🕰️", rarity: "Divine", desc: "Nie ty go masz, ty go przechowujesz dla pokoleń.", bonus: "Zatrzymuje czas (długów)" },
 
     // BELT (Pasek)
-    { id: 17, name: "Sznurek", type: "belt", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "fa-grip-lines", rarity: "Peasant", desc: "Trzyma spodnie.", bonus: "Brak" },
-    { id: 18, name: "Pasek Gucci", type: "belt", price: "800 $", rawPrice: 800, color: "#3b82f6", icon: "fa-infinity", rarity: "Rare", desc: "Wielka klamra.", bonus: "+2 do Lansu" },
+    { id: 17, name: "Sznurek", type: "belt", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "🧶", rarity: "Peasant", desc: "Trzyma spodnie.", bonus: "Brak" },
+    { id: 18, name: "Pasek Gucci", type: "belt", price: "800 $", rawPrice: 800, color: "#3b82f6", icon: "🐍", rarity: "Rare", desc: "Wielka klamra.", bonus: "+2 do Lansu" },
 
     // PANTS (Spodnie)
-    { id: 19, name: "Dżinsy z Dziurami", type: "pants", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "fa-columns", rarity: "Peasant", desc: "Modne, ale czy w kasynie?", bonus: "Wentylacja" },
-    { id: 20, name: "Spodnie od Garnituru", type: "pants", price: "2,000 $", rawPrice: 2000, color: "#3b82f6", icon: "fa-columns", rarity: "Rare", desc: "Dopasowane.", bonus: "Wygoda +5" },
+    { id: 19, name: "Dżinsy z Dziurami", type: "pants", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "👖", rarity: "Peasant", desc: "Modne, ale czy w kasynie?", bonus: "Wentylacja" },
+    { id: 20, name: "Spodnie od Garnituru", type: "pants", price: "2,000 $", rawPrice: 2000, color: "#3b82f6", icon: "👖", rarity: "Rare", desc: "Dopasowane.", bonus: "Wygoda +5" },
 
     // SHOES (Buty)
-    { id: 21, name: "Klapki Basenowe", type: "shoes", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "fa-shoe-prints", rarity: "Peasant", desc: "Szur szur.", bonus: "-50 do Poważania" },
-    { id: 22, name: "Mokasyny", type: "shoes", price: "3,000 $", rawPrice: 3000, color: "#8b5cf6", icon: "fa-socks", rarity: "Epic", desc: "Włoska skóra.", bonus: "Cichy chód" },
+    { id: 21, name: "Klapki Basenowe", type: "shoes", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "🩴", rarity: "Peasant", desc: "Szur szur.", bonus: "-50 do Poważania" },
+    { id: 22, name: "Mokasyny", type: "shoes", price: "3,000 $", rawPrice: 3000, color: "#8b5cf6", icon: "👞", rarity: "Epic", desc: "Włoska skóra.", bonus: "Cichy chód" },
 
     // RINGS (Biżuteria)
-    { id: 23, name: "Sygnet Rodowy", type: "ring", price: "15,000 $", rawPrice: 15000, color: "#8b5cf6", icon: "fa-ring", rarity: "Epic", desc: "Z herbem nieistniejącego rodu.", bonus: "+10 do Blefu" },
-    { id: 24, name: "Obrączka", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "fa-circle", rarity: "Peasant", desc: "Z grawerem.", bonus: "Wierność" },
+    { id: 23, name: "Sygnet Rodowy", type: "ring", price: "15,000 $", rawPrice: 15000, color: "#8b5cf6", icon: "🧿", rarity: "Epic", desc: "Z herbem nieistniejącego rodu.", bonus: "+10 do Blefu" },
+    { id: 24, name: "Obrączka", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💍", rarity: "Peasant", desc: "Z grawerem.", bonus: "Wierność" },
 
     // VEHICLE (Kluczyki)
-    { id: 25, name: "Bilet Autobusowy", type: "vehicle", price: "2 $", rawPrice: 2, color: "#9ca3af", icon: "fa-bus", rarity: "Peasant", desc: "Ważny 20 minut.", bonus: "Transport publiczny" },
-    { id: 26, name: "Kluczyki BMW", type: "vehicle", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "fa-car", rarity: "Rare", desc: "M3 w leasingu.", bonus: "Szybki dojazd" },
-    { id: 27, name: "Karta do Bugatti", type: "vehicle", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "fa-car-side", rarity: "Divine", desc: "Top G.", bonus: "Prędkość światła" },
+    { id: 25, name: "Bilet Autobusowy", type: "vehicle", price: "2 $", rawPrice: 2, color: "#9ca3af", icon: "🚌", rarity: "Peasant", desc: "Ważny 20 minut.", bonus: "Transport publiczny" },
+    { id: 26, name: "Kluczyki BMW", type: "vehicle", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "🔑", rarity: "Rare", desc: "M3 w leasingu.", bonus: "Szybki dojazd" },
+    { id: 27, name: "Karta do Bugatti", type: "vehicle", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "🏎️", rarity: "Divine", desc: "Top G.", bonus: "Prędkość światła" },
 
     // GADGET (Elektronika / Ręka)
-    { id: 28, name: "Nokia 3310", type: "gadget", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "fa-mobile-alt", rarity: "Peasant", desc: "Niezniszczalna.", bonus: "Samoobrona" },
-    { id: 29, name: "iPhone 16 Pro Max", type: "gadget", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "fa-mobile", rarity: "Rare", desc: "Więcej aparatów niż sensu.", bonus: "+5 do Selfie" },
-    { id: 30, name: "Szyfrowany Telefon", type: "gadget", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "fa-satellite-dish", rarity: "Relic", desc: "Nikt nie podsłucha.", bonus: "Anonimowość" },
-    { id: 31, name: "Czarne American Express", type: "gadget", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "fa-credit-card", rarity: "Divine", desc: "Bez limitu.", bonus: "Nieskończony debet" },
+    { id: 28, name: "Nokia 3310", type: "gadget", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧱", rarity: "Peasant", desc: "Niezniszczalna.", bonus: "Samoobrona" },
+    { id: 29, name: "iPhone 16 Pro Max", type: "gadget", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "📱", rarity: "Rare", desc: "Więcej aparatów niż sensu.", bonus: "+5 do Selfie" },
+    { id: 30, name: "Szyfrowany Telefon", type: "gadget", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "📡", rarity: "Relic", desc: "Nikt nie podsłucha.", bonus: "Anonimowość" },
+    { id: 31, name: "Czarne American Express", type: "gadget", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💳", rarity: "Divine", desc: "Bez limitu.", bonus: "Nieskończony debet" },
     
     // EXTRAS
-    { id: 32, name: "Cygaro Kubańskie", type: "gadget", price: "500 $", rawPrice: 500, color: "#3b82f6", icon: "fa-smoking", rarity: "Rare", desc: "Kopci jak smok.", bonus: "Relaks" },
-    { id: 33, name: "Szklanka Whisky", type: "gadget", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "fa-glass-whiskey", rarity: "Peasant", desc: "Z lodem.", bonus: "Odwaga +5" }
+    { id: 32, name: "Cygaro Kubańskie", type: "gadget", price: "500 $", rawPrice: 500, color: "#3b82f6", icon: "🚬", rarity: "Rare", desc: "Kopci jak smok.", bonus: "Relaks" },
+    { id: 33, name: "Szklanka Whisky", type: "gadget", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "🥃", rarity: "Peasant", desc: "Z lodem.", bonus: "Odwaga +5" }
 ];
 
 // --- PLAYERS DATABASE ---
@@ -2553,32 +2551,24 @@ index.html
                     </div>
                     
                     <div class="paper-doll-container">
-                        <!-- BUSINESS LOADOUT GRID (12 Slots 3x4) -->
                         <div class="pd-formation">
                             <div class="pd-silhouette"><i class="fas fa-user-tie"></i></div>
                             
-                            <!-- Row 1: Head | Glasses | Neck -->
-                            <!-- Note: Icons are placeholders, will be filled by JS if items present -->
-                            
-                            <!-- Row 1 -->
-                            <div class="pd-slot slot-glasses" data-type="head" title="Okulary / Nakrycie Głowy"><i class="fas fa-glasses placeholder"></i></div>
-                            <div class="pd-slot slot-neck" data-type="neck" title="Łańcuch / Krawat"><i class="fas fa-link placeholder"></i></div>
-                            <div class="pd-slot slot-earpiece" data-type="gadget" title="Słuchawka / Gadżet"><i class="fas fa-headset placeholder"></i></div>
+                            <div class="pd-slot slot-glasses" data-type="head" title="HEAD"><i class="fas fa-hat-cowboy placeholder"></i></div>
+                            <div class="pd-slot slot-neck" data-type="neck" title="NECK"><i class="fas fa-link placeholder"></i></div>
+                            <div class="pd-slot slot-earpiece" data-type="gadget" title="GADGET"><i class="fas fa-microchip placeholder"></i></div>
 
-                            <!-- Row 2 -->
-                            <div class="pd-slot slot-watch" data-type="watch" title="Zegarek"><i class="fas fa-clock placeholder"></i></div>
-                            <div class="pd-slot slot-suit" data-type="suit" title="Garnitur"><i class="fas fa-user-tie placeholder"></i></div>
-                            <div class="pd-slot slot-cufflink" data-type="ring" title="Sygnet / Spinki"><i class="fas fa-ring placeholder"></i></div>
+                            <div class="pd-slot slot-watch" data-type="watch" title="WATCH"><i class="fas fa-clock placeholder"></i></div>
+                            <div class="pd-slot slot-suit" data-type="suit" title="SUIT"><i class="fas fa-user-tie placeholder"></i></div>
+                            <div class="pd-slot slot-cufflink" data-type="ring" title="RING"><i class="fas fa-ring placeholder"></i></div>
 
-                            <!-- Row 3 -->
-                            <div class="pd-slot slot-ring" data-type="ring" title="Pierścień"><i class="fas fa-ring placeholder"></i></div>
-                            <div class="pd-slot slot-belt" data-type="belt" title="Pasek"><i class="fas fa-grip-lines placeholder"></i></div>
-                            <div class="pd-slot slot-pants" data-type="pants" title="Spodnie"><i class="fas fa-columns placeholder"></i></div>
+                            <div class="pd-slot slot-ring" data-type="ring" title="RING"><i class="fas fa-ring placeholder"></i></div>
+                            <div class="pd-slot slot-belt" data-type="belt" title="BELT"><i class="fas fa-grip-lines placeholder"></i></div>
+                            <div class="pd-slot slot-pants" data-type="pants" title="PANTS"><i class="fas fa-columns placeholder"></i></div>
 
-                            <!-- Row 4 -->
-                            <div class="pd-slot slot-vehicle" data-type="vehicle" title="Pojazd (Kluczyki)"><i class="fas fa-car placeholder"></i></div>
-                            <div class="pd-slot slot-shoes" data-type="shoes" title="Buty"><i class="fas fa-shoe-prints placeholder"></i></div>
-                            <div class="pd-slot slot-hand" data-type="gadget" title="Ręka (Telefon/Portfel)"><i class="fas fa-mobile-alt placeholder"></i></div>
+                            <div class="pd-slot slot-vehicle" data-type="vehicle" title="VEHICLE"><i class="fas fa-car placeholder"></i></div>
+                            <div class="pd-slot slot-shoes" data-type="shoes" title="SHOES"><i class="fas fa-shoe-prints placeholder"></i></div>
+                            <div class="pd-slot slot-hand" data-type="gadget" title="GADGET"><i class="fas fa-mobile-alt placeholder"></i></div>
                         </div>
                     </div>
                 </div>
@@ -2612,17 +2602,17 @@ index.html
                     <div class="ms-section" id="slotFilterSection">
                         <div class="ms-label">Slot Ekwipunku</div>
                         <div class="ms-slots-grid" style="grid-template-columns: repeat(5, 1fr);">
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('head', this)" title="Głowa"><i class="fas fa-glasses"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('neck', this)" title="Szyja"><i class="fas fa-link"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('suit', this)" title="Garnitur"><i class="fas fa-user-tie"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('watch', this)" title="Zegarek"><i class="fas fa-clock"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('gadget', this)" title="Gadżet"><i class="fas fa-mobile-alt"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('head', this)" title="Głowa"><i class="fas fa-glasses"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('neck', this)" title="Szyja"><i class="fas fa-link"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('suit', this)" title="Garnitur"><i class="fas fa-user-tie"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('watch', this)" title="Zegarek"><i class="fas fa-clock"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('gadget', this)" title="Gadżet"><i class="fas fa-mobile-alt"></i></div>
                             
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('belt', this)" title="Pasek"><i class="fas fa-grip-lines"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('pants', this)" title="Spodnie"><i class="fas fa-columns"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('shoes', this)" title="Buty"><i class="fas fa-shoe-prints"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('ring', this)" title="Biżuteria"><i class="fas fa-ring"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('vehicle', this)" title="Pojazd"><i class="fas fa-car"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('belt', this)" title="Pasek"><i class="fas fa-grip-lines"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('pants', this)" title="Spodnie"><i class="fas fa-columns"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('shoes', this)" title="Buty"><i class="fas fa-shoe-prints"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('ring', this)" title="Biżuteria"><i class="fas fa-ring"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('vehicle', this)" title="Pojazd"><i class="fas fa-car"></i></div>
                         </div>
                     </div>
 
@@ -2648,16 +2638,21 @@ index.html
                             </label>
                             <label class="ms-check-row">
                                 <input type="checkbox" value="Epic" onchange="filterMarket()" checked> 
-                                <span class="dot-r epic"></span> Epic <i class="fas fa-lock lock-icon" id="lockEpic"></i>
+                                <span class="dot-r epic"></span> Epic
                             </label>
                             <label class="ms-check-row">
                                 <input type="checkbox" value="Relic" onchange="filterMarket()" checked> 
-                                <span class="dot-r relic"></span> Relic <i class="fas fa-lock lock-icon" id="lockRelic"></i>
+                                <span class="dot-r relic"></span> Relic
                             </label>
                             <label class="ms-check-row">
                                 <input type="checkbox" value="Divine" onchange="filterMarket()" checked> 
                                 <span class="dot-r divine"></span> Divine <i class="fas fa-lock lock-icon" id="lockDivine"></i>
                             </label>
+                        </div>
+                    </div>
+                    <div class="ms-section" style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
+                        <div style="font-size: 10px; color: #666; line-height: 1.4; font-style: italic;">
+                            <i class="fas fa-lock" style="color: var(--accent-red);"></i> - Oznacza brak wymaganej rangi do <b>założenia</b> przedmiotu. Nadal możesz nim handlować w 100%.
                         </div>
                     </div>
                 </aside>
@@ -3289,7 +3284,7 @@ index.html
                 <!-- Lewa kolumna: Wizualizacja -->
                 <div class="mm-visual-col">
                     <div class="mm-item-card-large" id="mmCard">
-                        <i class="fas fa-cube" id="mmIcon"></i>
+                        <div id="mmIcon" style="font-size: 100px; font-style: normal;"></div>
                     </div>
                     <div class="mm-seller-info">
                         <div class="user-avatar small" id="mmSellerAvatar"></div>
@@ -5509,27 +5504,27 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 .inv-filter-btn:hover { background: rgba(255,255,255,0.1); color: white; }
 
-/* Left Grid - SCALED SLOT SIZE (150px) */
+/* Left Grid - SCALED SLOT SIZE (110px) */
 .inventory-grid-scroll {
     flex: 1;
     overflow-y: auto;
     padding: 20px;
     display: grid;
-    /* Skalowanie do 150px + gap 15px */
-    grid-template-columns: repeat(auto-fill, 150px);
-    grid-auto-rows: 150px;
-    gap: 15px;
+    /* Skalowanie do 110px + gap 10px (Mieści 5 w rzędzie) */
+    grid-template-columns: repeat(auto-fill, 110px);
+    grid-auto-rows: 110px;
+    gap: 10px;
     align-content: start;
     justify-content: center;
 }
 
-/* UNIVERSAL SLOT STYLE (150px) */
+/* UNIVERSAL SLOT STYLE (110px) */
 .inv-grid-slot, .pd-slot {
-    width: 150px !important; /* WYMUSZONY ROZMIAR */
-    height: 150px !important; /* WYMUSZONY ROZMIAR */
+    width: 110px !important; /* WYMUSZONY ROZMIAR */
+    height: 110px !important; /* WYMUSZONY ROZMIAR */
     background: rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 16px !important; /* Większe zaokrąglenie */
+    border-radius: 12px !important; /* Mniejsze zaokrąglenie */
     position: relative;
     cursor: pointer;
     transition: all 0.2s ease;
@@ -5546,8 +5541,8 @@ input:checked + .slider:before { transform: translateX(16px); }
     z-index: 10;
 }
 
-/* Zwiększona ikona dla slotu 150px */
-.inv-item-icon { font-size: 70px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)); transition: 0.2s; margin-bottom: 20px; }
+/* Skalowana ikona dla slotu 110px */
+.inv-item-icon { font-size: 45px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)); transition: 0.2s; margin-bottom: 15px; }
 
 .inv-item-name {
     position: absolute;
@@ -5638,6 +5633,24 @@ input:checked + .slider:before { transform: translateX(16px); }
     padding: 1px 3px;
     border-radius: 2px;
     font-weight: 800;
+}
+.inv-lock-overlay {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: var(--accent-red);
+    font-size: 14px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,1));
+    z-index: 6;
+}
+
+/* Usunięto efekty wizualne (grayscale/border) dla zablokowanych slotów - zostaje sama kłódka overlay */
+.inv-grid-slot.is-rank-locked {
+    /* Brak stylów modyfikujących slot */
+}
+
+.inv-grid-slot.is-rank-locked .inv-item-icon {
+    /* Brak stylów modyfikujących ikonę */
 }
 
 .inv-grid-slot.empty {
@@ -5757,13 +5770,14 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 .mc-lock-overlay {
     position: absolute;
-    top: 8px;
-    right: 8px;
-    background: rgba(0,0,0,0.6);
-    padding: 4px;
-    border-radius: 4px;
+    top: 5px;
+    right: 5px;
+    background: transparent;
+    padding: 0;
     color: var(--accent-red);
-    font-size: 10px;
+    font-size: 12px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,1));
+    z-index: 10;
 }
 
 .mc-body {
@@ -5852,20 +5866,20 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .hidden { display: none !important; }
 
-/* Grid Calculation for 3x4 (SCALED 150px):
-   Slot Size: 150px
-   Gap: 15px
-   Step: 165px
-   Column Steps: 0, 165px, 330px
-   Row Steps: 0, 165px, 330px, 495px
-   Total Width: 480px
-   Total Height: 645px
+/* Grid Calculation for 3x4 (SCALED 110px):
+   Slot Size: 110px
+   Gap: 10px
+   Step: 120px
+   Column Steps: 0, 120px, 240px
+   Row Steps: 0, 120px, 240px, 360px
+   Total Width: 350px
+   Total Height: 470px
 */
 
 .pd-formation {
     position: relative;
-    width: 480px;
-    height: 645px; /* Scaled 3x4 */
+    width: 350px;
+    height: 470px; /* Scaled 3x4 */
 }
 
 .pd-silhouette {
@@ -5873,7 +5887,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 580px; /* Zwiększona sylwetka dla 150px */
+    font-size: 400px; /* Zmniejszona sylwetka dla 110px */
     color: rgba(0,0,0,0.3);
     filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
     z-index: 0;
@@ -5883,35 +5897,35 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* UNIVERSAL SLOT SIZE FORCE (Redundant but kept for overrides) */
 .pd-slot {
     position: absolute;
-    width: 150px !important;
-    height: 150px !important;
-    border-radius: 16px !important;
+    width: 110px !important;
+    height: 110px !important;
+    border-radius: 12px !important;
     box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
     background: rgba(0,0,0,0.6);
 }
-.pd-slot .placeholder { font-size: 60px; opacity: 0.3; } /* Większy placeholder */
+.pd-slot .placeholder { font-size: 40px; opacity: 0.3; } /* Mniejszy placeholder */
 
-/* --- GRID POSITIONS 3x4 (Recalculated for 150px + 15px gap) --- */
+/* --- GRID POSITIONS 3x4 (Recalculated for 110px + 10px gap) --- */
 
 /* ROW 1 (Y=0) */
 .slot-glasses   { top: 0; left: 0; }
-.slot-neck      { top: 0; left: 165px; z-index: 5; }
-.slot-earpiece  { top: 0; left: 330px; }
+.slot-neck      { top: 0; left: 120px; z-index: 5; }
+.slot-earpiece  { top: 0; left: 240px; }
 
-/* ROW 2 (Y=165) */
-.slot-watch     { top: 165px; left: 0; }
-.slot-suit      { top: 165px; left: 165px; z-index: 4; }
-.slot-cufflink  { top: 165px; left: 330px; }
+/* ROW 2 (Y=120) */
+.slot-watch     { top: 120px; left: 0; }
+.slot-suit      { top: 120px; left: 120px; z-index: 4; }
+.slot-cufflink  { top: 120px; left: 240px; }
 
-/* ROW 3 (Y=330) */
-.slot-ring      { top: 330px; left: 0; }
-.slot-belt      { top: 330px; left: 165px; z-index: 3; }
-.slot-pants     { top: 330px; left: 330px; }
+/* ROW 3 (Y=240) */
+.slot-ring      { top: 240px; left: 0; }
+.slot-belt      { top: 240px; left: 120px; z-index: 3; }
+.slot-pants     { top: 240px; left: 240px; }
 
-/* ROW 4 (Y=495) */
-.slot-vehicle   { top: 495px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
-.slot-shoes     { top: 495px; left: 165px; z-index: 2; }
-.slot-hand      { top: 495px; left: 330px; border-color: rgba(16, 185, 129, 0.4); }
+/* ROW 4 (Y=360) */
+.slot-vehicle   { top: 360px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
+.slot-shoes     { top: 360px; left: 120px; z-index: 2; }
+.slot-hand      { top: 360px; left: 240px; border-color: rgba(16, 185, 129, 0.4); }
 
 /* Modal tweaks */
 .full-height-logs { max-height: 500px; }

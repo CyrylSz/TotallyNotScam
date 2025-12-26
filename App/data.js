@@ -69,7 +69,7 @@ const playersDB = [
     {
         username: "MrGambler",
         rank: "Alpha Whale",
-        avatar: "fa-user-astronaut",
+        pfp: "https://i.pravatar.cc/150?u=MrGambler",
         inventory: [
             // LOADOUT (IDs)
             7, 10, 12, 15, 18, 20, 22, 23, 26, 31,
@@ -82,25 +82,25 @@ const playersDB = [
     {
         username: "Whale_Killer",
         rank: "RNG God",
-        avatar: "fa-dragon",
+        pfp: "https://i.pravatar.cc/150?u=Whale_Killer",
         inventory: [27, 31, 13, 16, 5, 5, 4] // High End Stuff
     },
     {
         username: "LuckyLuke",
         rank: "Table Shark",
-        avatar: "fa-hat-cowboy",
+        pfp: "https://i.pravatar.cc/150?u=LuckyLuke",
         inventory: [7, 11, 21, 2, 3, 3] // Mid Tier
     },
     {
         username: "CryptoBro",
         rank: "Risk Taker",
-        avatar: "fa-bitcoin",
+        pfp: "https://i.pravatar.cc/150?u=CryptoBro",
         inventory: [30, 8, 26, 2, 2] // Tech stuff
     },
     {
         username: "Bot_Network_01",
         rank: "Small Fry",
-        avatar: "fa-robot",
+        pfp: "https://i.pravatar.cc/150?u=Bot_Network_01",
         inventory: [1, 1, 1, 1, 1, 1, 1, 1, 25, 25] // Spam items
     }
 ];

@@ -64,10 +64,16 @@ function initMarketData() {
             history.push(cur);
         }
         
+        // Pobieramy zdjęcie (z bazy lub fallback)
+        let sellerImg = `https://i.pravatar.cc/150?u=${sellerName}`;
+        const dbPlayer = typeof playersDB !== 'undefined' ? playersDB.find(p => p.username === sellerName) : null;
+        if(dbPlayer && dbPlayer.pfp) sellerImg = dbPlayer.pfp;
+
         marketState.listings.push({
             uid: finalUid,
             templateId: template.id,
             seller: sellerName,
+            sellerImg: sellerImg, // NOWE
             price: priceOverride,
             change: ((Math.random() * 20) - 10).toFixed(1),
             history: history,
@@ -291,14 +297,16 @@ function createMarketCard(item) {
 
     el.innerHTML = `
         <div class="mc-header" style="color:${item.color};">
-            <div style="font-size: 40px; font-style: normal;">${item.icon}</div>
-            <div class="mc-seller-avatar" title="Sprzedawca: ${item.seller}"></div>
+            <div style="font-size: 85px; font-style: normal; line-height: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding-top: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">${item.icon}</div>
+            <div class="mc-seller-row" title="Sprzedawca: ${item.seller}">
+                <div class="mc-seller-avatar" style="background-image: url('${item.sellerImg}');"></div>
+                <div class="mc-seller-name">${item.seller}</div>
+            </div>
             ${lockHtml}
         </div>
         <div class="mc-body">
             <div class="mc-sparkline">${barsHtml}</div>
-            <div class="mc-title" style="color:${item.color}">${item.name}</div>
-            <div class="mc-sub" style="color:${item.color}">${item.rarity}</div>
+            <div class="mc-title" style="color:${item.color}; font-size: 14px; margin-bottom: 12px;">${item.name}</div>
             
             <div class="mc-price-row">
                 <div class="mc-price">${item.price.toLocaleString()} $</div>
