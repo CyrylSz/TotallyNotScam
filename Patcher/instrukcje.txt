@@ -1,12 +1,47 @@
 KROK 1:
+PLIK: "style.css"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+}
+TREŚĆ:
+.loadout-select-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    height: 40px;
+}
+
+.minimal-select {
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    margin-top: 3px;
+    width: 140px;
+}
+
+.minimal-select option {
+    background: var(--bg-dark);
+    color: #ccc;
+    padding: 10px;
+}
+
+KROK 2:
 PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
                         <div class="inv-stats">
-                            <div class="inv-value-display" style="border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.1);">
-                                <div class="iv-label">
+                            <div class="inv-value-display">
+                                <div class="iv-label" style="display: flex; align-items: center; gap: 6px;">
                                     GEAR SCORE
-                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; margin-left: 6px; font-size: 11px; vertical-align: middle;" onclick="alert('Gear Score to suma punktów twoich założonych przedmiotów.')"></i>
+                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Score to suma punktów twoich założonych przedmiotów.')"></i>
                                 </div>
                                 <div class="iv-val" style="color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">145</div>
                             </div>
@@ -19,5 +54,13 @@ TREŚĆ:
                                     <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Score to suma punktów twoich założonych przedmiotów.')"></i>
                                 </div>
                                 <div class="iv-val" style="color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">145</div>
+                            </div>
+                            <div class="loadout-select-box">
+                                <div class="iv-label">ACTIVE LOADOUT</div>
+                                <select class="minimal-select">
+                                    <option selected>Poker Face Outfit</option>
+                                    <option>High Roller Set</option>
+                                    <option>Lucky Charm</option>
+                                </select>
                             </div>
                         </div>
