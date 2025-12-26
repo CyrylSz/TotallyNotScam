@@ -23,7 +23,7 @@ let invFilterState = { item: true, case: true };
 let marketState = {
     tab: 'global', // 'global' or 'my'
     search: '',
-    type: 'item', // 'item' or 'case'
+    types: { item: true, case: true }, // Multiselect
     slots: [], // array of selected slots e.g. ['watch', 'head']
     priceMin: null,
     priceMax: null,
@@ -144,16 +144,15 @@ function switchMarketTab(tab) {
     filterMarket();
 }
 
-function setMarketType(type, btnElement) {
-    marketState.type = type;
+function toggleMarketType(type, btnElement) {
+    marketState.types[type] = !marketState.types[type];
     
     // Visual Toggle
-    document.querySelectorAll('.ms-type-btn').forEach(b => b.classList.remove('active'));
-    btnElement.classList.add('active');
+    btnElement.classList.toggle('active', marketState.types[type]);
     
-    // Show/Hide Slot filters (only for items)
+    // Show/Hide Slot filters (only if Item is active)
     const slotSection = document.getElementById('slotFilterSection');
-    if(type === 'item') slotSection.classList.remove('hidden');
+    if(marketState.types['item']) slotSection.classList.remove('hidden');
     else slotSection.classList.add('hidden');
     
     filterMarket();
@@ -220,8 +219,8 @@ function filterMarket() {
         if(marketState.tab === 'global' && item.isMine) return false; // Usually global shows all, but separate tabs implies separation. Let's show others in global. Actually prompt says: "Global: All items of all players". Usually implies excluding mine or highlighting mine. Let's keep separation for clean UI.
         
         // Type
-        if(marketState.type === 'case' && !item.isChest) return false;
-        if(marketState.type === 'item' && item.isChest) return false;
+        if(item.isChest && !marketState.types.case) return false;
+        if(!item.isChest && !marketState.types.item) return false;
         
         // Search
         if(marketState.search && !item.name.toLowerCase().includes(marketState.search)) return false;

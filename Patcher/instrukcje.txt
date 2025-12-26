@@ -2,67 +2,97 @@ KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-            // Fix dla brakujących danych rynkowych (dla nowych itemów biznesowych)
-            if (!item.change) {
-                const changeVal = (Math.random() * 10 - 5).toFixed(1);
-                item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
-                item.type = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
-            }
+    tab: 'global', // 'global' or 'my'
+    search: '',
+    type: 'item', // 'item' or 'case'
+    slots: [], // array of selected slots e.g. ['watch', 'head']
 TREŚĆ:
-            // Fix dla brakujących danych rynkowych (dla nowych itemów biznesowych)
-            if (!item.change) {
-                const changeVal = (Math.random() * 10 - 5).toFixed(1);
-                item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
-                // Zmieniamy nazwę pola na 'trend', aby nie nadpisywać item.type (np. 'chest', 'watch')
-                item.trend = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
-            }
+    tab: 'global', // 'global' or 'my'
+    search: '',
+    types: { item: true, case: true }, // Multiselect
+    slots: [], // array of selected slots e.g. ['watch', 'head']
 
 KROK 2:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-        let priceClass = 'price-neutral';
-        let icon = '';
-        let colorClass = '';
-
-        if (item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
-        else if (item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
+function setMarketType(type, btnElement) {
+    marketState.type = type;
+    
+    // Visual Toggle
+    document.querySelectorAll('.ms-type-btn').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
+    
+    // Show/Hide Slot filters (only for items)
+    const slotSection = document.getElementById('slotFilterSection');
+    if(type === 'item') slotSection.classList.remove('hidden');
+    else slotSection.classList.add('hidden');
+    
+    filterMarket();
+}
 TREŚĆ:
-        let priceClass = 'price-neutral';
-        let icon = '';
-        let colorClass = '';
-
-        // Używamy item.trend zamiast item.type
-        if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
-        else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
+function toggleMarketType(type, btnElement) {
+    marketState.types[type] = !marketState.types[type];
+    
+    // Visual Toggle
+    btnElement.classList.toggle('active', marketState.types[type]);
+    
+    // Show/Hide Slot filters (only if Item is active)
+    const slotSection = document.getElementById('slotFilterSection');
+    if(marketState.types['item']) slotSection.classList.remove('hidden');
+    else slotSection.classList.add('hidden');
+    
+    filterMarket();
+}
 
 KROK 3:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-        let priceClass = 'price-neutral';
-        let iconHtml = '';
-        if (item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
-        else if (item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
+        // Type
+        if(marketState.type === 'case' && !item.isChest) return false;
+        if(marketState.type === 'item' && item.isChest) return false;
+        
+        // Search
 TREŚĆ:
-        let priceClass = 'price-neutral';
-        let iconHtml = '';
-        // Używamy item.trend zamiast item.type
-        if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
-        else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
+        // Type
+        if(item.isChest && !marketState.types.case) return false;
+        if(!item.isChest && !marketState.types.item) return false;
+        
+        // Search
 
 KROK 4:
-PLIK: "app.js"
+PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-                <div class="item-price-row">
-                    <p class="${priceClass}">${item.price}</p>
-                    <div class="val-change-inline ${item.type === 'up' ? 'val-up' : item.type === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
-                        ${item.change} ${iconHtml}
+                            <div class="inv-type-toggles">
+                                <button id="btnInvItem" class="inv-type-btn active" onclick="toggleInvFilter('item')">Item</button>
+                                <button id="btnInvCase" class="inv-type-btn active" onclick="toggleInvFilter('case')">Case</button>
+                            </div>
+TREŚĆ:
+                            <div class="ms-toggle-row" style="display:inline-flex; margin-left:15px; padding:2px; vertical-align:middle;">
+                                <button id="btnInvItem" class="ms-type-btn active" onclick="toggleInvFilter('item')" style="margin:0; min-width: 60px;">
+                                    <i class="fas fa-cube"></i> Item
+                                </button>
+                                <button id="btnInvCase" class="ms-type-btn active" onclick="toggleInvFilter('case')" style="margin:0; min-width: 60px;">
+                                    <i class="fas fa-briefcase"></i> Case
+                                </button>
+                            </div>
+
+KROK 5:
+PLIK: "index.html"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+                        <div class="ms-label">Typ Aktywa</div>
+                        <div class="ms-toggle-row">
+                            <button class="ms-type-btn active" onclick="setMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
+                            <button class="ms-type-btn" onclick="setMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
+                        </div>
                     </div>
 TREŚĆ:
-                <div class="item-price-row">
-                    <p class="${priceClass}">${item.price}</p>
-                    <div class="val-change-inline ${item.trend === 'up' ? 'val-up' : item.trend === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
-                        ${item.change} ${iconHtml}
+                        <div class="ms-label">Typ Aktywa</div>
+                        <div class="ms-toggle-row">
+                            <button class="ms-type-btn active" onclick="toggleMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
+                            <button class="ms-type-btn active" onclick="toggleMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
+                        </div>
                     </div>

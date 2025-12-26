@@ -339,9 +339,13 @@
                     <div class="inv-header">
                         <div class="inv-title">
                             <i class="fas fa-box-open"></i> MAGAZYN
-                            <div class="inv-type-toggles">
-                                <button id="btnInvItem" class="inv-type-btn active" onclick="toggleInvFilter('item')">Item</button>
-                                <button id="btnInvCase" class="inv-type-btn active" onclick="toggleInvFilter('case')">Case</button>
+                            <div class="ms-toggle-row" style="display:inline-flex; margin-left:15px; padding:2px; vertical-align:middle;">
+                                <button id="btnInvItem" class="ms-type-btn active" onclick="toggleInvFilter('item')" style="margin:0; min-width: 60px;">
+                                    <i class="fas fa-cube"></i> Item
+                                </button>
+                                <button id="btnInvCase" class="ms-type-btn active" onclick="toggleInvFilter('case')" style="margin:0; min-width: 60px;">
+                                    <i class="fas fa-briefcase"></i> Case
+                                </button>
                             </div>
                         </div>
                         <div class="inv-stats">
@@ -421,8 +425,8 @@
                     <div class="ms-section">
                         <div class="ms-label">Typ Aktywa</div>
                         <div class="ms-toggle-row">
-                            <button class="ms-type-btn active" onclick="setMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
-                            <button class="ms-type-btn" onclick="setMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
+                            <button class="ms-type-btn active" onclick="toggleMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
+                            <button class="ms-type-btn active" onclick="toggleMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
                         </div>
                     </div>
 
