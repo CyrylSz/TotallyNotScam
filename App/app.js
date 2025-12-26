@@ -24,7 +24,7 @@ let marketState = {
     tab: 'global', // 'global' or 'my'
     search: '',
     types: { item: true, case: true }, // Multiselect
-    slots: [], // array of selected slots e.g. ['watch', 'head']
+    slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], // All active by default
     priceMin: null,
     priceMax: null,
     rarities: ['Peasant', 'Rare', 'Epic', 'Relic', 'Divine'],
@@ -226,7 +226,7 @@ function filterMarket() {
         if(marketState.priceMax && item.price > marketState.priceMax) return false;
         
         // Slots (only if items)
-        if(marketState.type === 'item' && marketState.slots.length > 0) {
+        if(!item.isChest) {
             if(!marketState.slots.includes(item.type)) return false;
         }
         
