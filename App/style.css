@@ -2254,6 +2254,24 @@ input:checked + .slider:before { transform: translateX(16px); }
     border-radius: 2px;
     font-weight: 800;
 }
+.inv-lock-overlay {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    color: var(--accent-red);
+    font-size: 14px;
+    filter: drop-shadow(0 2px 4px rgba(0,0,0,1));
+    z-index: 6;
+}
+
+/* Usunięto efekty wizualne (grayscale/border) dla zablokowanych slotów - zostaje sama kłódka overlay */
+.inv-grid-slot.is-rank-locked {
+    /* Brak stylów modyfikujących slot */
+}
+
+.inv-grid-slot.is-rank-locked .inv-item-icon {
+    /* Brak stylów modyfikujących ikonę */
+}
 
 .inv-grid-slot.empty {
     opacity: 0.1;
@@ -2377,7 +2395,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     background: transparent;
     padding: 0;
     color: var(--accent-red);
-    font-size: 18px;
+    font-size: 12px;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,1));
     z-index: 10;
 }

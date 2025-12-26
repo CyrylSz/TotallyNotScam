@@ -1105,6 +1105,12 @@ function renderInventoryView() {
         if (isEquipped) badgeHtml = `<div class="equipped-badge">EQ</div>`;
         else if (isOnSale) badgeHtml = `<div class="on-sale-badge">NA RYNKU</div>`;
 
+        // Rank Lock Logic (Divine req Rank <= 2)
+        if (item.rarity === 'Divine' && currentRankId > 2) {
+            badgeHtml += `<div class="inv-lock-overlay"><i class="fas fa-lock"></i></div>`;
+            slot.classList.add('is-rank-locked');
+        }
+
         slot.innerHTML = `
             <div class="inv-item-icon" style="font-style: normal; color: initial;">${item.icon}</div>
             <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
