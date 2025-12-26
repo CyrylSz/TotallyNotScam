@@ -2,60 +2,13 @@ KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    search: '',
-    types: { item: true, case: true }, // Multiselect
-    slots: [], // array of selected slots e.g. ['watch', 'head']
-    priceMin: null,
-    priceMax: null,
+    // 1. OFERTY MR GAMBLERA (Muszą pasować do tego co ma w data.js -> inventory)
+    // MrGambler ma: Divine Case (5), Patek (16). Wystawiamy je.
+    addListing(5, "MrGambler", 1250000, true); // Divine Case - Drogo
+    addListing(16, "MrGambler", 2400000, true); // Patek - Okazja
 TREŚĆ:
-    search: '',
-    types: { item: true, case: true }, // Multiselect
-    slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], // All active by default
-    priceMin: null,
-    priceMax: null,
-
-KROK 2:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-        // Slots (only if items)
-        if(marketState.type === 'item' && marketState.slots.length > 0) {
-            if(!marketState.slots.includes(item.type)) return false;
-        }
-TREŚĆ:
-        // Slots (only if items)
-        if(!item.isChest) {
-            if(!marketState.slots.includes(item.type)) return false;
-        }
-
-KROK 3:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-                        <div class="ms-slots-grid" style="grid-template-columns: repeat(5, 1fr);">
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('head', this)" title="Głowa"><i class="fas fa-glasses"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('neck', this)" title="Szyja"><i class="fas fa-link"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('suit', this)" title="Garnitur"><i class="fas fa-user-tie"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('watch', this)" title="Zegarek"><i class="fas fa-clock"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('gadget', this)" title="Gadżet"><i class="fas fa-mobile-alt"></i></div>
-                            
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('belt', this)" title="Pasek"><i class="fas fa-grip-lines"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('pants', this)" title="Spodnie"><i class="fas fa-columns"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('shoes', this)" title="Buty"><i class="fas fa-shoe-prints"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('ring', this)" title="Biżuteria"><i class="fas fa-ring"></i></div>
-                            <div class="ms-slot-icon" onclick="toggleSlotFilter('vehicle', this)" title="Pojazd"><i class="fas fa-car"></i></div>
-                        </div>
-TREŚĆ:
-                        <div class="ms-slots-grid" style="grid-template-columns: repeat(5, 1fr);">
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('head', this)" title="Głowa"><i class="fas fa-glasses"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('neck', this)" title="Szyja"><i class="fas fa-link"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('suit', this)" title="Garnitur"><i class="fas fa-user-tie"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('watch', this)" title="Zegarek"><i class="fas fa-clock"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('gadget', this)" title="Gadżet"><i class="fas fa-mobile-alt"></i></div>
-                            
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('belt', this)" title="Pasek"><i class="fas fa-grip-lines"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('pants', this)" title="Spodnie"><i class="fas fa-columns"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('shoes', this)" title="Buty"><i class="fas fa-shoe-prints"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('ring', this)" title="Biżuteria"><i class="fas fa-ring"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('vehicle', this)" title="Pojazd"><i class="fas fa-car"></i></div>
-                        </div>
+    // 1. OFERTY MR GAMBLERA (Muszą pasować do tego co ma w data.js -> inventory)
+    // MrGambler ma: Divine Case (5), Patek (16). Wystawiamy je.
+    addListing(5, "MrGambler", 1250000, true); // Divine Case - Drogo
+    addListing(16, "MrGambler", 2400000, true); // Patek - Okazja
+    addListing(15, "MrGambler", 45000, true); // Rolex Submariner (Epic)

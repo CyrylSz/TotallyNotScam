@@ -88,6 +88,7 @@ function initMarketData() {
     // MrGambler ma: Divine Case (5), Patek (16). Wystawiamy je.
     addListing(5, "MrGambler", 1250000, true); // Divine Case - Drogo
     addListing(16, "MrGambler", 2400000, true); // Patek - Okazja
+    addListing(15, "MrGambler", 45000, true); // Rolex Submariner (Epic)
 
     // 2. OFERTY INNYCH GRACZY (Hardcoded, Specific)
     
