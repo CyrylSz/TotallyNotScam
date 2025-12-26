@@ -2152,6 +2152,31 @@ input:checked + .slider:before { transform: translateX(16px); }
     justify-content: center;
     align-items: center;
 }
+/* DRAG AND DROP STYLES */
+.inv-grid-slot.is-equipped {
+    opacity: 0.4;
+    border-style: dashed;
+    cursor: not-allowed;
+}
+
+.equipped-badge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 8px;
+    background: var(--accent-blue);
+    color: white;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: 800;
+}
+
+.inv-grid-slot.empty {
+    opacity: 0.1;
+    border-color: transparent;
+    background: rgba(0,0,0,0.2);
+    cursor: default;
+}
 
 /* Grid Calculation for 3x4:
    Slot Size: 70px

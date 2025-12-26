@@ -15,14 +15,43 @@ let prevDraws = 0;
 // Current Player State (Hardcoded for Demo)
 const currentRankId = 3; // Alpha Whale
 
+// --- GLOBAL STATE ---
+let myInventory = []; // Tablica obiektów (instancji)
+let myLoadout = {};   // Mapa: slotId -> itemUid
+
 // --- RENDER FUNCTIONS ---
 function initDashboard() {
-    renderTreasures();
+    initInventorySystem(); // Inicjalizacja systemu itemów i DnD
+    renderDashInventory(); // Dashboard Inventory
+    renderTreasures();     // Profile Inventory (zmienione na items MrGamblera)
     renderGames(); 
     renderTrophies();
     updateStats();
-    // Render ladder initially to populate DOM, then visuals will update on modal open
     renderLadder();
+}
+
+// Inicjalizacja danych inventory z bazy + dodanie mockowych danych rynkowych
+function initInventorySystem() {
+    const player = playersDB.find(p => p.username === "MrGambler");
+    if (!player) return;
+
+    myInventory = [];
+    player.inventory.forEach((itemId, index) => {
+        const template = allTreasures.find(t => t.id === itemId);
+        if (template) {
+            // Tworzymy unikalną instancję
+            const item = { ...template, uid: `item_${itemId}_${index}` };
+            
+            // Fix dla brakujących danych rynkowych (dla nowych itemów biznesowych)
+            if (!item.change) {
+                const changeVal = (Math.random() * 10 - 5).toFixed(1);
+                item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
+                item.type = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
+            }
+            
+            myInventory.push(item);
+        }
+    });
 }
 
 function updateStats() {
@@ -171,47 +200,44 @@ function sortTreasures(items) {
     });
 }
 
+// Unified Render Function for Profile List using MrGambler's Items
 function renderTreasures() {
     const list = document.getElementById('treasuresList');
     const btn = document.getElementById('btnTreasures');
+    if(!list) return;
     list.innerHTML = '';
     
-    sortTreasures(allTreasures);
-    const currentItems = allTreasures.slice(0, shownTreasures);
+    // Używamy myInventory zamiast allTreasures
+    const currentItems = myInventory.slice(0, shownTreasures);
     
     currentItems.forEach(item => {
         const div = document.createElement('div');
         div.className = 'item-row';
         
         let priceClass = 'price-neutral';
-        if (item.type === 'up') priceClass = 'price-up';
-        if (item.type === 'down') priceClass = 'price-down';
+        let icon = '';
+        let colorClass = '';
 
-        let icon = item.type === 'up' ? 'fa-caret-up' : 'fa-caret-down';
-        let colorClass = item.type === 'up' ? 'val-up' : 'val-down';
+        if (item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
+        else if (item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
 
         let changeHtml = '';
-        if(item.type !== 'neutral') {
+        // Wyświetl zmianę tylko jeśli jest różna od 0% lub jeśli item ma typ up/down
+        if(item.change && item.change !== "0%") {
             changeHtml = `<div class="val-change-inline ${colorClass}" title="ostatnie 24h">${item.change} <i class="fas ${icon}"></i></div>`;
         }
         
-        let rightSideHtml = '';
-        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+        // Sprawdź czy założony
+        const isEquipped = Object.values(myLoadout).includes(item.uid);
+        let equippedTag = isEquipped ? `<span style="font-size:9px; color:var(--accent-blue); font-weight:700; margin-right:5px;">[EQ]</span>` : '';
 
-        if (item.isChest) {
-            rightSideHtml = `
-                <div class="item-right-status">
-                    <button class="open-chest-btn" onclick="openChest(${item.id})">Open Case!</button>
-                    <div class="rarity-tag-badge ${badgeClass}">${item.rarity}</div>
-                </div>
-            `;
-        } else {
-            rightSideHtml = `
-                <div class="item-right-status">
-                    <div class="rarity-tag-badge ${badgeClass}">${item.rarity}</div>
-                </div>
-            `;
-        }
+        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+        let rightSideHtml = `
+            <div class="item-right-status">
+                ${equippedTag}
+                <div class="rarity-tag-badge ${badgeClass}">${item.rarity}</div>
+            </div>
+        `;
 
         div.innerHTML = `
             <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
@@ -226,7 +252,12 @@ function renderTreasures() {
         `;
         list.appendChild(div);
     });
-    if (shownTreasures >= allTreasures.length) btn.classList.add('hidden');
+    
+    if (shownTreasures >= myInventory.length) {
+        if(btn) btn.classList.add('hidden');
+    } else {
+        if(btn) btn.classList.remove('hidden');
+    }
 }
 
 function showMoreTreasures() {

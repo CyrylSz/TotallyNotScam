@@ -13,14 +13,43 @@ let prevDraws = 0;
 // Current Player State (Hardcoded for Demo)
 const currentRankId = 3; // Alpha Whale
 
+// --- GLOBAL STATE ---
+let myInventory = []; // Tablica obiektów (instancji)
+let myLoadout = {};   // Mapa: slotId -> itemUid
+
 // --- RENDER FUNCTIONS ---
 function initDashboard() {
-    renderTreasures();
+    initInventorySystem(); // Inicjalizacja systemu itemów i DnD
+    renderDashInventory(); // Dashboard Inventory
+    renderTreasures();     // Profile Inventory (zmienione na items MrGamblera)
     renderGames(); 
     renderTrophies();
     updateStats();
-    // Render ladder initially to populate DOM, then visuals will update on modal open
     renderLadder();
+}
+
+// Inicjalizacja danych inventory z bazy + dodanie mockowych danych rynkowych
+function initInventorySystem() {
+    const player = playersDB.find(p => p.username === "MrGambler");
+    if (!player) return;
+
+    myInventory = [];
+    player.inventory.forEach((itemId, index) => {
+        const template = allTreasures.find(t => t.id === itemId);
+        if (template) {
+            // Tworzymy unikalną instancję
+            const item = { ...template, uid: `item_${itemId}_${index}` };
+            
+            // Fix dla brakujących danych rynkowych (dla nowych itemów biznesowych)
+            if (!item.change) {
+                const changeVal = (Math.random() * 10 - 5).toFixed(1);
+                item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
+                item.type = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
+            }
+            
+            myInventory.push(item);
+        }
+    });
 }
 
 function updateStats() {
@@ -169,47 +198,44 @@ function sortTreasures(items) {
     });
 }
 
+// Unified Render Function for Profile List using MrGambler's Items
 function renderTreasures() {
     const list = document.getElementById('treasuresList');
     const btn = document.getElementById('btnTreasures');
+    if(!list) return;
     list.innerHTML = '';
     
-    sortTreasures(allTreasures);
-    const currentItems = allTreasures.slice(0, shownTreasures);
+    // Używamy myInventory zamiast allTreasures
+    const currentItems = myInventory.slice(0, shownTreasures);
     
     currentItems.forEach(item => {
         const div = document.createElement('div');
         div.className = 'item-row';
         
         let priceClass = 'price-neutral';
-        if (item.type === 'up') priceClass = 'price-up';
-        if (item.type === 'down') priceClass = 'price-down';
+        let icon = '';
+        let colorClass = '';
 
-        let icon = item.type === 'up' ? 'fa-caret-up' : 'fa-caret-down';
-        let colorClass = item.type === 'up' ? 'val-up' : 'val-down';
+        if (item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
+        else if (item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
 
         let changeHtml = '';
-        if(item.type !== 'neutral') {
+        // Wyświetl zmianę tylko jeśli jest różna od 0% lub jeśli item ma typ up/down
+        if(item.change && item.change !== "0%") {
             changeHtml = `<div class="val-change-inline ${colorClass}" title="ostatnie 24h">${item.change} <i class="fas ${icon}"></i></div>`;
         }
         
-        let rightSideHtml = '';
-        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+        // Sprawdź czy założony
+        const isEquipped = Object.values(myLoadout).includes(item.uid);
+        let equippedTag = isEquipped ? `<span style="font-size:9px; color:var(--accent-blue); font-weight:700; margin-right:5px;">[EQ]</span>` : '';
 
-        if (item.isChest) {
-            rightSideHtml = `
-                <div class="item-right-status">
-                    <button class="open-chest-btn" onclick="openChest(${item.id})">Open Case!</button>
-                    <div class="rarity-tag-badge ${badgeClass}">${item.rarity}</div>
-                </div>
-            `;
-        } else {
-            rightSideHtml = `
-                <div class="item-right-status">
-                    <div class="rarity-tag-badge ${badgeClass}">${item.rarity}</div>
-                </div>
-            `;
-        }
+        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+        let rightSideHtml = `
+            <div class="item-right-status">
+                ${equippedTag}
+                <div class="rarity-tag-badge ${badgeClass}">${item.rarity}</div>
+            </div>
+        `;
 
         div.innerHTML = `
             <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
@@ -224,7 +250,12 @@ function renderTreasures() {
         `;
         list.appendChild(div);
     });
-    if (shownTreasures >= allTreasures.length) btn.classList.add('hidden');
+    
+    if (shownTreasures >= myInventory.length) {
+        if(btn) btn.classList.add('hidden');
+    } else {
+        if(btn) btn.classList.remove('hidden');
+    }
 }
 
 function showMoreTreasures() {
@@ -645,62 +676,235 @@ chatInput.addEventListener('keypress', function (e) {
 
 // --- NEW VIEW RENDERS ---
 
+// --- DRAG AND DROP & INVENTORY LOGIC ---
+
 function renderInventoryView() {
     const container = document.getElementById('inventoryContainer');
     if(!container) return; 
     container.innerHTML = '';
     
-    // 1. Pobierz profil gracza (MrGambler)
-    const player = playersDB.find(p => p.username === "MrGambler");
-    if (!player) return;
+    // Inicjalizacja slotów loadoutu (dodanie listenerów)
+    setupLoadoutSlots();
 
-    // 2. Mapowanie ID ekwipunku na obiekty (z duplikacją jeśli istnieje)
-    let inventoryItems = [];
-    player.inventory.forEach(itemId => {
-        const itemObj = allTreasures.find(t => t.id === itemId);
-        if(itemObj) inventoryItems.push(itemObj);
-    });
-
-    // 3. Sortowanie (Rzadkość potem cena)
-    inventoryItems.sort((a, b) => b.rawPrice - a.rawPrice);
+    // Sortowanie
+    const sortedInv = [...myInventory].sort((a, b) => b.rawPrice - a.rawPrice);
     
-    // 4. Render Grid Slots
-    inventoryItems.forEach(item => {
+    // Render Grid
+    sortedInv.forEach(item => {
         const slot = document.createElement('div');
         slot.className = 'inv-grid-slot';
         
-        let rarityColor = '#ccc';
-        if(item.rarity === 'Rare') rarityColor = '#3b82f6';
-        if(item.rarity === 'Epic') rarityColor = '#8b5cf6';
-        if(item.rarity === 'Relic') rarityColor = '#ef4444';
-        if(item.rarity === 'Divine') rarityColor = '#ffd700';
+        // Sprawdź czy przedmiot jest założony
+        const isEquipped = Object.values(myLoadout).includes(item.uid);
+
+        if (isEquipped) {
+            slot.classList.add('is-equipped');
+        }
+
+        // Draggable Attributes
+        slot.setAttribute('draggable', !isEquipped);
+        slot.dataset.uid = item.uid;
+        slot.addEventListener('dragstart', handleDragStart);
+
+        let rarityColor = getRarityColor(item.rarity);
 
         slot.style.borderColor = `rgba(${hexToRgb(rarityColor)}, 0.5)`;
         slot.style.backgroundColor = `rgba(${hexToRgb(rarityColor)}, 0.05)`;
 
+        // Badge 'EQ' dla założonych
+        const eqBadge = isEquipped ? `<div class="equipped-badge">EQ</div>` : '';
+
         slot.innerHTML = `
             <i class="fas ${item.icon} inv-item-icon" style="color: ${item.color};"></i>
             <div class="inv-slot-rarity-dot" style="background-color: ${rarityColor}; box-shadow: 0 0 5px ${rarityColor};"></div>
-            <!-- Usunięto licznik, każdy item to instancja -->
+            ${eqBadge}
         `;
         
-        // Expanded Tooltip Info
-        slot.title = `${item.name}\n[${item.type.toUpperCase()}] • ${item.rarity}\n\n"${item.desc}"\n\nBONUS: ${item.bonus}\nWartość: ${item.price}`;
+        // Rozbudowany tooltip
+        slot.title = `${item.name} (${item.rarity})\nTyp: ${item.type}\nBonus: ${item.bonus}\nCena: ${item.price}`;
+        
         container.appendChild(slot);
     });
 
-    // 5. Wypełnij puste sloty (Minimalnie 50 slotów lub więcej, by wyglądało jak grid)
-    const minSlots = 63; // 7x9 grid approx
-    const currentCount = inventoryItems.length;
-    
-    for(let i = currentCount; i < minSlots; i++) {
+    // Puste sloty
+    const minSlots = 63;
+    for(let i = sortedInv.length; i < minSlots; i++) {
         const emptySlot = document.createElement('div');
-        emptySlot.className = 'inv-grid-slot';
-        emptySlot.style.opacity = '0.1';
-        emptySlot.style.cursor = 'default';
-        emptySlot.style.borderColor = 'transparent';
-        emptySlot.style.background = 'rgba(0,0,0,0.2)';
+        emptySlot.className = 'inv-grid-slot empty';
         container.appendChild(emptySlot);
+    }
+}
+
+function setupLoadoutSlots() {
+    const slots = document.querySelectorAll('.pd-slot');
+    slots.forEach(slot => {
+        // Usuwamy stare listenery (klonowanie niszczy listenery)
+        const newSlot = slot.cloneNode(true);
+        slot.parentNode.replaceChild(newSlot, slot);
+        
+        // Dodajemy nowe
+        newSlot.addEventListener('dragover', handleDragOver);
+        newSlot.addEventListener('drop', handleDrop);
+        newSlot.addEventListener('click', handleUnequip); // Kliknięcie zdejmuje
+        
+        // Rerender zawartości slota jeśli coś w nim jest
+        const slotType = newSlot.dataset.type; // np. 'watch', 'suit'
+        // Znajdź unikalny klucz slotu w myLoadout. 
+        // UWAGA: Mamy kilka slotów tego samego typu (np. 2 ringi). 
+        // W HTML musimy je rozróżnić ID lub klasą, albo użyć mapowania.
+        // Dla uproszczenia w tym patchu: używamy klasy slotu jako klucza w myLoadout.
+        
+        // Pobieramy unikalną klasę identyfikującą slot (np. 'slot-watch')
+        const slotClass = Array.from(newSlot.classList).find(c => c.startsWith('slot-'));
+        
+        if (slotClass && myLoadout[slotClass]) {
+            const itemUid = myLoadout[slotClass];
+            const item = myInventory.find(i => i.uid === itemUid);
+            if (item) {
+                renderItemInSlot(newSlot, item);
+            }
+        } else {
+            // Reset do placeholder
+            resetSlotVisuals(newSlot);
+        }
+    });
+}
+
+function handleDragStart(e) {
+    e.dataTransfer.setData("text/plain", e.target.dataset.uid);
+    e.dataTransfer.effectAllowed = "move";
+    e.target.style.opacity = '0.4';
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    const uid = e.dataTransfer.getData("text/plain");
+    const item = myInventory.find(i => i.uid === uid);
+    
+    // Znajdź element slotu (mogł być drop na ikonę wewnątrz slotu)
+    let slot = e.target;
+    while (!slot.classList.contains('pd-slot') && slot.parentElement) {
+        slot = slot.parentElement;
+    }
+
+    if (!item || !slot) return;
+
+    // Walidacja Typu
+    // item.type w bazie to np. 'watch', 'suit'. slot.dataset.type to też 'watch', 'suit'.
+    if (item.type !== slot.dataset.type) {
+        alert(`Nie możesz włożyć ${item.name} (${item.type}) do slotu ${slot.dataset.type}!`);
+        renderInventoryView(); // Reset opacity
+        return;
+    }
+
+    // Zapisz w loadout
+    const slotClass = Array.from(slot.classList).find(c => c.startsWith('slot-'));
+    if (slotClass) {
+        myLoadout[slotClass] = uid;
+        // Odśwież widoki
+        renderInventoryView(); // To przerysuje siatkę i zablokuje przedmiot
+        setupLoadoutSlots();   // To zaktualizuje wizualnie postać
+    }
+}
+
+function handleUnequip(e) {
+    let slot = e.target;
+    while (!slot.classList.contains('pd-slot') && slot.parentElement) {
+        slot = slot.parentElement;
+    }
+    
+    const slotClass = Array.from(slot.classList).find(c => c.startsWith('slot-'));
+    
+    // Jeśli slot jest pełny, zdejmij przedmiot
+    if (slotClass && myLoadout[slotClass]) {
+        delete myLoadout[slotClass];
+        renderInventoryView();
+        setupLoadoutSlots();
+    }
+}
+
+function renderItemInSlot(slotElement, item) {
+    // Podmień HTML slotu na ikonę przedmiotu
+    let rarityColor = getRarityColor(item.rarity);
+    
+    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 32px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
+    slotElement.style.borderColor = item.color;
+    slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
+    slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
+    slotElement.title = `${item.name} (Kliknij aby zdjąć)`;
+}
+
+function resetSlotVisuals(slotElement) {
+    // Przywróć placeholder (wymaga mapy ikon dla typów, lub pobrania z HTML startowego)
+    // Uproszczenie: Resetujemy styl, ikonę przywracamy generyczną
+    slotElement.style = ""; // Reset inline styles
+    const type = slotElement.dataset.type;
+    let icon = "fa-plus";
+    if(type === 'head') icon = "fa-glasses";
+    if(type === 'neck') icon = "fa-link";
+    if(type === 'suit') icon = "fa-user-tie";
+    if(type === 'watch') icon = "fa-clock";
+    if(type === 'gadget') icon = "fa-mobile-alt";
+    if(type === 'ring') icon = "fa-ring";
+    if(type === 'belt') icon = "fa-grip-lines";
+    if(type === 'pants') icon = "fa-columns";
+    if(type === 'vehicle') icon = "fa-car";
+    if(type === 'shoes') icon = "fa-shoe-prints";
+
+    slotElement.innerHTML = `<i class="fas ${icon} placeholder"></i>`;
+}
+
+function getRarityColor(rarity) {
+    if(rarity === 'Rare') return '#3b82f6';
+    if(rarity === 'Epic') return '#8b5cf6';
+    if(rarity === 'Relic') return '#ef4444';
+    if(rarity === 'Divine') return '#ffd700';
+    return '#9ca3af'; // Peasant
+}
+
+// --- DASHBOARD INVENTORY FIX ---
+function renderDashInventory() {
+    const container = document.getElementById('dashInventoryList');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    // Pokaż pierwsze 4 przedmioty MrGamblera
+    const dashItems = myInventory.slice(0, 4);
+    
+    dashItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        
+        let priceClass = 'price-neutral';
+        let iconHtml = '';
+        if (item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
+        else if (item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
+        
+        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+        
+        div.innerHTML = `
+            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-info">
+                <h5>${item.name}</h5>
+                <div class="item-price-row">
+                    <p class="${priceClass}">${item.price}</p>
+                    <div class="val-change-inline ${item.type === 'up' ? 'val-up' : item.type === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
+                        ${item.change} ${iconHtml}
+                    </div>
+                </div>
+            </div>
+            <div class="item-right-status"><div class="rarity-tag-badge ${badgeClass}" style="min-width:auto; font-size:8px;">${item.rarity}</div></div>
+        `;
+        container.appendChild(div);
+    });
+    
+    if(dashItems.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:20px;">Ekwipunek pusty</div>';
     }
 }
 
