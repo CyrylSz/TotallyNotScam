@@ -337,7 +337,13 @@
                 <!-- LEWA STRONA: Magazyn -->
                 <div class="inv-panel left-panel">
                     <div class="inv-header">
-                        <div class="inv-title"><i class="fas fa-box-open"></i> MAGAZYN</div>
+                        <div class="inv-title">
+                            <i class="fas fa-box-open"></i> MAGAZYN
+                            <div class="inv-type-toggles">
+                                <button id="btnInvItem" class="inv-type-btn active" onclick="toggleInvFilter('item')">Item</button>
+                                <button id="btnInvCase" class="inv-type-btn active" onclick="toggleInvFilter('case')">Case</button>
+                            </div>
+                        </div>
                         <div class="inv-stats">
                             <div class="inv-value-display">
                                 Items Value: <span style="color:white;">2,790,000.00 $</span>

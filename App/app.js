@@ -16,6 +16,7 @@ const currentRankId = 3; // Alpha Whale
 // --- GLOBAL STATE ---
 let myInventory = []; // Tablica obiektów (instancji)
 let myLoadout = {};   // Mapa: slotId -> itemUid
+let invFilterState = { item: true, case: true };
 
 // --- RENDER FUNCTIONS ---
 // --- MARKET SYSTEM START ---
@@ -415,7 +416,8 @@ function initInventorySystem() {
             if (!item.change) {
                 const changeVal = (Math.random() * 10 - 5).toFixed(1);
                 item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
-                item.type = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
+                // Zmieniamy nazwę pola na 'trend', aby nie nadpisywać item.type (np. 'chest', 'watch')
+                item.trend = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
             }
             
             myInventory.push(item);
@@ -587,8 +589,9 @@ function renderTreasures() {
         let icon = '';
         let colorClass = '';
 
-        if (item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
-        else if (item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
+        // Używamy item.trend zamiast item.type
+        if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
+        else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
 
         let changeHtml = '';
         // Wyświetl zmianę tylko jeśli jest różna od 0% lub jeśli item ma typ up/down
@@ -1049,6 +1052,12 @@ chatInput.addEventListener('keypress', function (e) {
 
 // --- DRAG AND DROP & INVENTORY LOGIC ---
 
+function toggleInvFilter(type) {
+    invFilterState[type] = !invFilterState[type];
+    const btn = document.getElementById(type === 'item' ? 'btnInvItem' : 'btnInvCase');
+    if(btn) btn.classList.toggle('active', invFilterState[type]);
+    renderInventoryView();
+}
 function renderInventoryView() {
     const container = document.getElementById('inventoryContainer');
     if(!container) return; 
@@ -1057,8 +1066,15 @@ function renderInventoryView() {
     // Inicjalizacja slotów loadoutu (dodanie listenerów)
     setupLoadoutSlots();
 
-    // Sortowanie
-    const sortedInv = [...myInventory].sort((a, b) => b.rawPrice - a.rawPrice);
+    // Filtrowanie i Sortowanie
+    let filteredInv = myInventory.filter(item => {
+        const isCase = item.type === 'chest'; // ID 1-5 (skrzynki) mają typ 'chest'
+        if(isCase && !invFilterState.case) return false;
+        if(!isCase && !invFilterState.item) return false;
+        return true;
+    });
+
+    const sortedInv = filteredInv.sort((a, b) => b.rawPrice - a.rawPrice);
     
     // Render Grid
     sortedInv.forEach(item => {
@@ -1261,8 +1277,9 @@ function renderDashInventory() {
         
         let priceClass = 'price-neutral';
         let iconHtml = '';
-        if (item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
-        else if (item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
+        // Używamy item.trend zamiast item.type
+        if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
+        else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
         
         const badgeClass = `badge-${item.rarity.toLowerCase()}`;
         
@@ -1272,7 +1289,7 @@ function renderDashInventory() {
                 <h5>${item.name}</h5>
                 <div class="item-price-row">
                     <p class="${priceClass}">${item.price}</p>
-                    <div class="val-change-inline ${item.type === 'up' ? 'val-up' : item.type === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
+                    <div class="val-change-inline ${item.trend === 'up' ? 'val-up' : item.trend === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
                         ${item.change} ${iconHtml}
                     </div>
                 </div>

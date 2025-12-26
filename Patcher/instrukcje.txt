@@ -1,0 +1,68 @@
+KROK 1:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+            // Fix dla brakujących danych rynkowych (dla nowych itemów biznesowych)
+            if (!item.change) {
+                const changeVal = (Math.random() * 10 - 5).toFixed(1);
+                item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
+                item.type = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
+            }
+TREŚĆ:
+            // Fix dla brakujących danych rynkowych (dla nowych itemów biznesowych)
+            if (!item.change) {
+                const changeVal = (Math.random() * 10 - 5).toFixed(1);
+                item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
+                // Zmieniamy nazwę pola na 'trend', aby nie nadpisywać item.type (np. 'chest', 'watch')
+                item.trend = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
+            }
+
+KROK 2:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+        let priceClass = 'price-neutral';
+        let icon = '';
+        let colorClass = '';
+
+        if (item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
+        else if (item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
+TREŚĆ:
+        let priceClass = 'price-neutral';
+        let icon = '';
+        let colorClass = '';
+
+        // Używamy item.trend zamiast item.type
+        if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
+        else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
+
+KROK 3:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+        let priceClass = 'price-neutral';
+        let iconHtml = '';
+        if (item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
+        else if (item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
+TREŚĆ:
+        let priceClass = 'price-neutral';
+        let iconHtml = '';
+        // Używamy item.trend zamiast item.type
+        if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
+        else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
+
+KROK 4:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+                <div class="item-price-row">
+                    <p class="${priceClass}">${item.price}</p>
+                    <div class="val-change-inline ${item.type === 'up' ? 'val-up' : item.type === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
+                        ${item.change} ${iconHtml}
+                    </div>
+TREŚĆ:
+                <div class="item-price-row">
+                    <p class="${priceClass}">${item.price}</p>
+                    <div class="val-change-inline ${item.trend === 'up' ? 'val-up' : item.trend === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
+                        ${item.change} ${iconHtml}
+                    </div>

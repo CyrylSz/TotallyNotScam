@@ -20,14 +20,385 @@ let myInventory = []; // Tablica obiektów (instancji)
 let myLoadout = {};   // Mapa: slotId -> itemUid
 
 // --- RENDER FUNCTIONS ---
+// --- MARKET SYSTEM START ---
+let marketState = {
+    tab: 'global', // 'global' or 'my'
+    search: '',
+    type: 'item', // 'item' or 'case'
+    slots: [], // array of selected slots e.g. ['watch', 'head']
+    priceMin: null,
+    priceMax: null,
+    rarities: ['Peasant', 'Rare', 'Epic', 'Relic', 'Divine'],
+    sort: 'best_deal',
+    listings: [] // Will be populated with mock data
+};
+
+function initMarketData() {
+    marketState.listings = [];
+    
+    // Helper do tworzenia ofert
+    const addListing = (itemTemplateId, sellerName, priceOverride, isMine = false, inventoryUid = null) => {
+        const template = allTreasures.find(t => t.id === itemTemplateId);
+        if(!template) return;
+
+        // Jeśli to mój przedmiot, muszę znaleźć jego UID w moim ekwipunku
+        let finalUid = `mkt_${Date.now()}_${Math.random()}`;
+        
+        if (isMine) {
+            // Znajdź przedmiot w myInventory, który pasuje do ID i nie jest jeszcze wystawiony (teoretycznie)
+            // W tym demo zakładamy, że initInventorySystem() już stworzył instancje.
+            // Szukamy instancji tego przedmiotu u MrGamblera
+            const myItem = myInventory.find(i => i.id === itemTemplateId && !i.isOnSale);
+            if (myItem) {
+                finalUid = myItem.uid;
+                myItem.isOnSale = true; // Oznaczamy w ekwipunku!
+            } else {
+                return; // Nie mam tego przedmiotu, błąd danych
+            }
+        }
+
+        // Generowanie historii cen
+        const history = [];
+        let cur = priceOverride;
+        for(let j=0; j<10; j++) {
+            cur = cur * (1 + ((Math.random() * 0.1) - 0.05));
+            history.push(cur);
+        }
+        
+        marketState.listings.push({
+            uid: finalUid,
+            templateId: template.id,
+            seller: sellerName,
+            price: priceOverride,
+            change: ((Math.random() * 20) - 10).toFixed(1),
+            history: history,
+            isMine: isMine,
+            date: Date.now() - Math.floor(Math.random() * 86400000 * 3),
+            
+            // Props for easier filtering
+            name: template.name,
+            rarity: template.rarity,
+            type: template.type,
+            icon: template.icon,
+            color: template.color,
+            isChest: template.type === 'chest'
+        });
+    };
+
+    // 1. OFERTY MR GAMBLERA (Muszą pasować do tego co ma w data.js -> inventory)
+    // MrGambler ma: Divine Case (5), Patek (16). Wystawiamy je.
+    addListing(5, "MrGambler", 1250000, true); // Divine Case - Drogo
+    addListing(16, "MrGambler", 2400000, true); // Patek - Okazja
+
+    // 2. OFERTY INNYCH GRACZY (Hardcoded, Specific)
+    
+    // Whale_Killer (Sprzedaje Top Tier)
+    addListing(27, "Whale_Killer", 1900000); // Karta do Bugatti
+    addListing(13, "Whale_Killer", 480000);  // Smoking Bonda
+    addListing(4, "Whale_Killer", 95000);    // Relic Case
+
+    // LuckyLuke (Mid Tier)
+    addListing(7, "LuckyLuke", 1400);        // RayBan
+    addListing(12, "LuckyLuke", 4200);       // Hugo Boss
+    addListing(3, "LuckyLuke", 22000);       // Epic Case
+
+    // CryptoBro (Tech & High Risk)
+    addListing(30, "CryptoBro", 110000);     // Szyfrowany Telefon (Drogo)
+    addListing(8, "CryptoBro", 14000);       // Gogle VR
+    addListing(26, "CryptoBro", 48000);      // Kluczyki BMW
+
+    // Bot_Network (Spam tanich itemów)
+    addListing(1, "Bot_Network_01", 450);    // Peasant Case
+    addListing(1, "Bot_Network_01", 440);
+    addListing(25, "Bot_Network_01", 2);     // Bilet
+    addListing(19, "Bot_Network_01", 120);   // Dżinsy
+
+    // Random Fillers (Dla zapełnienia rynku)
+    const fillers = [
+        {id: 2, seller: "Anon_99", price: 4800},
+        {id: 15, seller: "WatchMaster", price: 42000},
+        {id: 22, seller: "Luigi", price: 2800},
+        {id: 33, seller: "Barman", price: 90}
+    ];
+    fillers.forEach(f => addListing(f.id, f.seller, f.price));
+}
+
+function renderMarketView() {
+    // Upewnij się, że mamy dane
+    if(marketState.listings.length === 0) initMarketData();
+    
+    // Reset filtrów wizualnych w sidebarze (jeśli to pierwsze wejście)
+    updateMarketLockIcons();
+    
+    // Render Grid
+    filterMarket();
+}
+
+function switchMarketTab(tab) {
+    marketState.tab = tab;
+    
+    // Update UI Styles
+    document.getElementById('tabGlobalMarket').classList.toggle('active', tab === 'global');
+    document.getElementById('tabMyListings').classList.toggle('active', tab === 'my');
+    
+    // Re-render
+    filterMarket();
+}
+
+function setMarketType(type, btnElement) {
+    marketState.type = type;
+    
+    // Visual Toggle
+    document.querySelectorAll('.ms-type-btn').forEach(b => b.classList.remove('active'));
+    btnElement.classList.add('active');
+    
+    // Show/Hide Slot filters (only for items)
+    const slotSection = document.getElementById('slotFilterSection');
+    if(type === 'item') slotSection.classList.remove('hidden');
+    else slotSection.classList.add('hidden');
+    
+    filterMarket();
+}
+
+function toggleSlotFilter(slot, btnElement) {
+    const idx = marketState.slots.indexOf(slot);
+    if(idx === -1) {
+        marketState.slots.push(slot);
+        btnElement.classList.add('active');
+    } else {
+        marketState.slots.splice(idx, 1);
+        btnElement.classList.remove('active');
+    }
+    filterMarket();
+}
+
+function updateMarketLockIcons() {
+    // Mapowanie rang do rzadkości (Hardcoded logic from prompt)
+    // Divine needs Rng God (id: 2+), Relic needs Alpha Whale (id: 3+), Epic needs Table Shark (id: 5+)
+    // Player Rank: currentRankId (defined in app.js as 3 - Alpha Whale)
+    
+    // Logic: If RankID > RequirementID (Remember: Lower ID is better rank in original code, ID 1 is King)
+    // Actually looking at ranksDB: 8 is Bankrupt, 1 is King. So Higher ID = Worse Rank?
+    // Let's check: Bankrupt ID 8 (bottom), King ID 1 (top).
+    // So BETTER rank means LOWER ID.
+    
+    const pRank = currentRankId; // 3 (Alpha Whale)
+    
+    // Lock logic: Lock if playerRankID > requiredRankID
+    const checkLock = (reqId, elId) => {
+        const el = document.getElementById(elId);
+        if(!el) return;
+        if(pRank > reqId) el.classList.add('locked'); // E.g. Player is 5, Req is 3 -> Locked
+        else el.classList.remove('locked');
+    };
+    
+    // Divine (Req: RNG God - ID 2)
+    checkLock(2, 'lockDivine');
+    // Relic (Req: Alpha Whale - ID 3)
+    checkLock(3, 'lockRelic');
+    // Epic (Req: Table Shark - ID 5)
+    checkLock(5, 'lockEpic');
+}
+
+function filterMarket() {
+    const grid = document.getElementById('marketGrid');
+    if(!grid) return;
+    grid.innerHTML = '';
+    
+    // Get Input Values
+    marketState.search = document.getElementById('marketSearchInput').value.toLowerCase();
+    marketState.priceMin = document.getElementById('priceMin').value;
+    marketState.priceMax = document.getElementById('priceMax').value;
+    marketState.sort = document.getElementById('marketSortSelect').value;
+    
+    // Rarities Checkboxes
+    const checkedRarities = Array.from(document.querySelectorAll('.ms-check-row input:checked')).map(cb => cb.value);
+
+    // Filtering Logic
+    let results = marketState.listings.filter(item => {
+        // Tab
+        if(marketState.tab === 'my' && !item.isMine) return false;
+        if(marketState.tab === 'global' && item.isMine) return false; // Usually global shows all, but separate tabs implies separation. Let's show others in global. Actually prompt says: "Global: All items of all players". Usually implies excluding mine or highlighting mine. Let's keep separation for clean UI.
+        
+        // Type
+        if(marketState.type === 'case' && !item.isChest) return false;
+        if(marketState.type === 'item' && item.isChest) return false;
+        
+        // Search
+        if(marketState.search && !item.name.toLowerCase().includes(marketState.search)) return false;
+        
+        // Price
+        if(marketState.priceMin && item.price < marketState.priceMin) return false;
+        if(marketState.priceMax && item.price > marketState.priceMax) return false;
+        
+        // Slots (only if items)
+        if(marketState.type === 'item' && marketState.slots.length > 0) {
+            if(!marketState.slots.includes(item.type)) return false;
+        }
+        
+        // Rarity
+        if(!checkedRarities.includes(item.rarity)) return false;
+        
+        return true;
+    });
+    
+    // Sorting Logic
+    results.sort((a, b) => {
+        switch(marketState.sort) {
+            case 'price_asc': return a.price - b.price;
+            case 'price_desc': return b.price - a.price;
+            case 'newest': return b.date - a.date;
+            case 'trending': return parseFloat(b.change) - parseFloat(a.change);
+            case 'best_deal': 
+                // Mock best deal: high rarity + low price relative to base
+                const ratioA = (allTreasures.find(t=>t.id===a.templateId).rawPrice) / a.price;
+                const ratioB = (allTreasures.find(t=>t.id===b.templateId).rawPrice) / b.price;
+                return ratioB - ratioA;
+            default: return 0;
+        }
+    });
+    
+    // Render Results
+    results.forEach(item => {
+        const card = createMarketCard(item);
+        grid.appendChild(card);
+    });
+    
+    if(results.length === 0) {
+        grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#666;">Brak ofert spełniających kryteria.</div>';
+    }
+}
+
+function createMarketCard(item) {
+    const el = document.createElement('div');
+    el.className = 'm-card';
+    el.onclick = () => openMarketItemModal(item);
+    
+    // Background Sparkline Bars
+    let barsHtml = '';
+    item.history.forEach((val, idx) => {
+        const prev = idx > 0 ? item.history[idx-1] : val;
+        const colorClass = val >= prev ? '' : 'down';
+        const height = Math.min(100, Math.max(10, (val / item.price) * 30));
+        barsHtml += `<div class="mc-bar ${colorClass}" style="height:${height}%;"></div>`;
+    });
+    
+    const changeClass = parseFloat(item.change) >= 0 ? 'val-up' : 'val-down';
+    const changeIcon = parseFloat(item.change) >= 0 ? '+' : '';
+    
+    // Lock logic for Card
+    let isLocked = false;
+    if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
+    if(item.rarity === 'Relic' && currentRankId > 3) isLocked = true;
+    if(item.rarity === 'Epic' && currentRankId > 5) isLocked = true;
+    
+    const lockHtml = isLocked ? `<div class="mc-lock-overlay"><i class="fas fa-lock"></i></div>` : '';
+
+    el.innerHTML = `
+        <div class="mc-header" style="color:${item.color};">
+            <i class="fas ${item.icon}"></i>
+            <div class="mc-seller-avatar" title="Sprzedawca: ${item.seller}"></div>
+            ${lockHtml}
+        </div>
+        <div class="mc-body">
+            <div class="mc-sparkline">${barsHtml}</div>
+            <div class="mc-title">${item.name}</div>
+            <div class="mc-sub" style="color:${item.color}">${item.rarity}</div>
+            
+            <div class="mc-price-row">
+                <div class="mc-price">${item.price.toLocaleString()} $</div>
+                <div class="mc-change ${changeClass}">${changeIcon}${item.change}%</div>
+            </div>
+        </div>
+    `;
+    return el;
+}
+
+// MARKET MODAL
+function openMarketItemModal(item) {
+    const modal = document.getElementById('marketModal');
+    if(!modal) return;
+    
+    // Populate Data
+    document.getElementById('mmIcon').className = `fas ${item.icon}`;
+    document.getElementById('mmCard').style.color = item.color;
+    document.getElementById('mmSellerName').textContent = item.seller;
+    
+    document.getElementById('mmItemName').textContent = item.name;
+    document.getElementById('mmCurrentPrice').textContent = item.price.toLocaleString() + ' $';
+    document.getElementById('mmLastPrice').textContent = (item.price * (1 - (parseFloat(item.change)/100))).toFixed(0).toLocaleString() + ' $';
+    
+    const chgEl = document.getElementById('mmChange');
+    chgEl.textContent = (parseFloat(item.change) > 0 ? '+' : '') + item.change + '%';
+    chgEl.className = 'mm-v ' + (parseFloat(item.change) >= 0 ? 'val-up' : 'val-down');
+    
+    // Tags
+    const tags = document.getElementById('mmTags');
+    const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+    tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
+    if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
+    else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
+    
+    // Desc & Warning
+    const template = allTreasures.find(t => t.id === item.templateId);
+    let desc = template ? (template.desc + ' ' + template.bonus) : '';
+    document.getElementById('mmDesc').textContent = desc;
+    
+    // Rank Lock Warning in Modal
+    const warning = document.getElementById('mmReqWarning');
+    let reqRankName = '';
+    let isLocked = false;
+    if(item.rarity === 'Divine' && currentRankId > 2) { isLocked = true; reqRankName = "RNG God"; }
+    else if(item.rarity === 'Relic' && currentRankId > 3) { isLocked = true; reqRankName = "Alpha Whale"; }
+    
+    if(isLocked) {
+        warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: ${reqRankName} (do założenia)`;
+        warning.classList.remove('hidden');
+    } else {
+        warning.classList.add('hidden');
+    }
+    
+    // My Listing Actions vs Buy Actions
+    const btnBuy = document.getElementById('btnBuyNow');
+    const btnOffer = document.getElementById('btnOffer');
+    
+    if(item.isMine) {
+        btnBuy.textContent = "USUŃ OFERTĘ";
+        btnBuy.onclick = () => { alert("Oferta usunięta."); closeMarketModal(); };
+        btnBuy.style.background = "var(--accent-red)";
+        
+        btnOffer.textContent = "INSTANT SELL (Floor)";
+        btnOffer.onclick = () => { alert(`Sprzedano natychmiastowo za ${Math.floor(item.price*0.7)} $ (Floor Price).`); closeMarketModal(); };
+    } else {
+        btnBuy.textContent = "KUP TERAZ";
+        btnBuy.onclick = () => { alert("Zakupiono przedmiot!"); closeMarketModal(); };
+        btnBuy.style.background = "var(--accent-green)";
+        
+        btnOffer.textContent = "ZŁÓŻ OFERTĘ";
+        btnOffer.onclick = () => { alert("Oferta wysłana do sprzedawcy."); };
+    }
+
+    modal.classList.add('active');
+}
+
+function closeMarketModal() {
+    document.getElementById('marketModal').classList.remove('active');
+}
+// --- MARKET SYSTEM END ---
 function initDashboard() {
-    initInventorySystem(); // Inicjalizacja systemu itemów i DnD
-    renderDashInventory(); // Dashboard Inventory
-    renderTreasures();     // Profile Inventory (zmienione na items MrGamblera)
+    initInventorySystem(); // 1. Najpierw ładujemy ekwipunek gracza
+    initMarketData();      // 2. Potem ładujemy rynek (żeby powiązać itemy)
+    
+    // 3. Renderujemy widoki
+    renderDashInventory(); 
+    renderTreasures();    
     renderGames(); 
     renderTrophies();
     updateStats();
     renderLadder();
+    
+    // 4. Odświeżamy widok inventory (bo initMarketData mogło dodać flagi 'onSale')
+    renderInventoryView();
 }
 
 // Inicjalizacja danych inventory z bazy + dodanie mockowych danych rynkowych
@@ -678,62 +1049,243 @@ chatInput.addEventListener('keypress', function (e) {
 
 // --- NEW VIEW RENDERS ---
 
+// --- DRAG AND DROP & INVENTORY LOGIC ---
+
 function renderInventoryView() {
     const container = document.getElementById('inventoryContainer');
     if(!container) return; 
     container.innerHTML = '';
     
-    // 1. Pobierz profil gracza (MrGambler)
-    const player = playersDB.find(p => p.username === "MrGambler");
-    if (!player) return;
+    // Inicjalizacja slotów loadoutu (dodanie listenerów)
+    setupLoadoutSlots();
 
-    // 2. Mapowanie ID ekwipunku na obiekty (z duplikacją jeśli istnieje)
-    let inventoryItems = [];
-    player.inventory.forEach(itemId => {
-        const itemObj = allTreasures.find(t => t.id === itemId);
-        if(itemObj) inventoryItems.push(itemObj);
-    });
-
-    // 3. Sortowanie (Rzadkość potem cena)
-    inventoryItems.sort((a, b) => b.rawPrice - a.rawPrice);
+    // Sortowanie
+    const sortedInv = [...myInventory].sort((a, b) => b.rawPrice - a.rawPrice);
     
-    // 4. Render Grid Slots
-    inventoryItems.forEach(item => {
+    // Render Grid
+    sortedInv.forEach(item => {
         const slot = document.createElement('div');
         slot.className = 'inv-grid-slot';
         
-        let rarityColor = '#ccc';
-        if(item.rarity === 'Rare') rarityColor = '#3b82f6';
-        if(item.rarity === 'Epic') rarityColor = '#8b5cf6';
-        if(item.rarity === 'Relic') rarityColor = '#ef4444';
-        if(item.rarity === 'Divine') rarityColor = '#ffd700';
+        // Sprawdź czy przedmiot jest założony
+        const isEquipped = Object.values(myLoadout).includes(item.uid);
+        // Sprawdź czy jest na Rynku (dodana flaga w initMarketData)
+        const isOnSale = item.isOnSale === true;
+
+        if (isEquipped) slot.classList.add('is-equipped');
+        if (isOnSale) slot.classList.add('on-sale');
+
+        // Draggable Attributes (Zablokuj jeśli EQ lub SALE)
+        const isLocked = isEquipped || isOnSale;
+        slot.setAttribute('draggable', !isLocked);
+        slot.dataset.uid = item.uid;
+        slot.addEventListener('dragstart', handleDragStart);
+
+        let rarityColor = getRarityColor(item.rarity);
 
         slot.style.borderColor = `rgba(${hexToRgb(rarityColor)}, 0.5)`;
         slot.style.backgroundColor = `rgba(${hexToRgb(rarityColor)}, 0.05)`;
+        
+        if (isOnSale) {
+            slot.style.borderColor = 'var(--accent-orange)';
+        }
+
+        // Badges
+        let badgeHtml = '';
+        if (isEquipped) badgeHtml = `<div class="equipped-badge">EQ</div>`;
+        else if (isOnSale) badgeHtml = `<div class="on-sale-badge">NA RYNKU</div>`;
 
         slot.innerHTML = `
             <i class="fas ${item.icon} inv-item-icon" style="color: ${item.color};"></i>
             <div class="inv-slot-rarity-dot" style="background-color: ${rarityColor}; box-shadow: 0 0 5px ${rarityColor};"></div>
-            <!-- Usunięto licznik, każdy item to instancja -->
+            ${badgeHtml}
         `;
         
-        // Expanded Tooltip Info
-        slot.title = `${item.name}\n[${item.type.toUpperCase()}] • ${item.rarity}\n\n"${item.desc}"\n\nBONUS: ${item.bonus}\nWartość: ${item.price}`;
+        // Rozbudowany tooltip
+        slot.title = `${item.name} (${item.rarity})\nTyp: ${item.type}\nBonus: ${item.bonus}\nCena: ${item.price}`;
+        
         container.appendChild(slot);
     });
 
-    // 5. Wypełnij puste sloty (Minimalnie 50 slotów lub więcej, by wyglądało jak grid)
-    const minSlots = 63; // 7x9 grid approx
-    const currentCount = inventoryItems.length;
-    
-    for(let i = currentCount; i < minSlots; i++) {
+    // Puste sloty
+    const minSlots = 63;
+    for(let i = sortedInv.length; i < minSlots; i++) {
         const emptySlot = document.createElement('div');
-        emptySlot.className = 'inv-grid-slot';
-        emptySlot.style.opacity = '0.1';
-        emptySlot.style.cursor = 'default';
-        emptySlot.style.borderColor = 'transparent';
-        emptySlot.style.background = 'rgba(0,0,0,0.2)';
+        emptySlot.className = 'inv-grid-slot empty';
         container.appendChild(emptySlot);
+    }
+}
+
+function setupLoadoutSlots() {
+    const slots = document.querySelectorAll('.pd-slot');
+    slots.forEach(slot => {
+        // Usuwamy stare listenery (klonowanie niszczy listenery)
+        const newSlot = slot.cloneNode(true);
+        slot.parentNode.replaceChild(newSlot, slot);
+        
+        // Dodajemy nowe
+        newSlot.addEventListener('dragover', handleDragOver);
+        newSlot.addEventListener('drop', handleDrop);
+        newSlot.addEventListener('click', handleUnequip); // Kliknięcie zdejmuje
+        
+        // Rerender zawartości slota jeśli coś w nim jest
+        const slotType = newSlot.dataset.type; // np. 'watch', 'suit'
+        // Znajdź unikalny klucz slotu w myLoadout. 
+        // UWAGA: Mamy kilka slotów tego samego typu (np. 2 ringi). 
+        // W HTML musimy je rozróżnić ID lub klasą, albo użyć mapowania.
+        // Dla uproszczenia w tym patchu: używamy klasy slotu jako klucza w myLoadout.
+        
+        // Pobieramy unikalną klasę identyfikującą slot (np. 'slot-watch')
+        const slotClass = Array.from(newSlot.classList).find(c => c.startsWith('slot-'));
+        
+        if (slotClass && myLoadout[slotClass]) {
+            const itemUid = myLoadout[slotClass];
+            const item = myInventory.find(i => i.uid === itemUid);
+            if (item) {
+                renderItemInSlot(newSlot, item);
+            }
+        } else {
+            // Reset do placeholder
+            resetSlotVisuals(newSlot);
+        }
+    });
+}
+
+function handleDragStart(e) {
+    e.dataTransfer.setData("text/plain", e.target.dataset.uid);
+    e.dataTransfer.effectAllowed = "move";
+    e.target.style.opacity = '0.4';
+}
+
+function handleDragOver(e) {
+    e.preventDefault();
+    e.dataTransfer.dropEffect = "move";
+}
+
+function handleDrop(e) {
+    e.preventDefault();
+    const uid = e.dataTransfer.getData("text/plain");
+    const item = myInventory.find(i => i.uid === uid);
+    
+    // Znajdź element slotu (mogł być drop na ikonę wewnątrz slotu)
+    let slot = e.target;
+    while (!slot.classList.contains('pd-slot') && slot.parentElement) {
+        slot = slot.parentElement;
+    }
+
+    if (!item || !slot) return;
+
+    // Walidacja Typu
+    // item.type w bazie to np. 'watch', 'suit'. slot.dataset.type to też 'watch', 'suit'.
+    if (item.type !== slot.dataset.type) {
+        alert(`Nie możesz włożyć ${item.name} (${item.type}) do slotu ${slot.dataset.type}!`);
+        renderInventoryView(); // Reset opacity
+        return;
+    }
+
+    // Zapisz w loadout
+    const slotClass = Array.from(slot.classList).find(c => c.startsWith('slot-'));
+    if (slotClass) {
+        myLoadout[slotClass] = uid;
+        // Odśwież widoki
+        renderInventoryView(); // To przerysuje siatkę i zablokuje przedmiot
+        setupLoadoutSlots();   // To zaktualizuje wizualnie postać
+    }
+}
+
+function handleUnequip(e) {
+    let slot = e.target;
+    while (!slot.classList.contains('pd-slot') && slot.parentElement) {
+        slot = slot.parentElement;
+    }
+    
+    const slotClass = Array.from(slot.classList).find(c => c.startsWith('slot-'));
+    
+    // Jeśli slot jest pełny, zdejmij przedmiot
+    if (slotClass && myLoadout[slotClass]) {
+        delete myLoadout[slotClass];
+        renderInventoryView();
+        setupLoadoutSlots();
+    }
+}
+
+function renderItemInSlot(slotElement, item) {
+    // Podmień HTML slotu na ikonę przedmiotu
+    let rarityColor = getRarityColor(item.rarity);
+    
+    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 32px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
+    slotElement.style.borderColor = item.color;
+    slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
+    slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
+    slotElement.title = `${item.name} (Kliknij aby zdjąć)`;
+}
+
+function resetSlotVisuals(slotElement) {
+    // Przywróć placeholder (wymaga mapy ikon dla typów, lub pobrania z HTML startowego)
+    // Uproszczenie: Resetujemy styl, ikonę przywracamy generyczną
+    slotElement.style = ""; // Reset inline styles
+    const type = slotElement.dataset.type;
+    let icon = "fa-plus";
+    if(type === 'head') icon = "fa-glasses";
+    if(type === 'neck') icon = "fa-link";
+    if(type === 'suit') icon = "fa-user-tie";
+    if(type === 'watch') icon = "fa-clock";
+    if(type === 'gadget') icon = "fa-mobile-alt";
+    if(type === 'ring') icon = "fa-ring";
+    if(type === 'belt') icon = "fa-grip-lines";
+    if(type === 'pants') icon = "fa-columns";
+    if(type === 'vehicle') icon = "fa-car";
+    if(type === 'shoes') icon = "fa-shoe-prints";
+
+    slotElement.innerHTML = `<i class="fas ${icon} placeholder"></i>`;
+}
+
+function getRarityColor(rarity) {
+    if(rarity === 'Rare') return '#3b82f6';
+    if(rarity === 'Epic') return '#8b5cf6';
+    if(rarity === 'Relic') return '#ef4444';
+    if(rarity === 'Divine') return '#ffd700';
+    return '#9ca3af'; // Peasant
+}
+
+// --- DASHBOARD INVENTORY FIX ---
+function renderDashInventory() {
+    const container = document.getElementById('dashInventoryList');
+    if(!container) return;
+    container.innerHTML = '';
+    
+    // Pokaż pierwsze 4 przedmioty MrGamblera
+    const dashItems = myInventory.slice(0, 4);
+    
+    dashItems.forEach(item => {
+        const div = document.createElement('div');
+        div.className = 'item-row';
+        
+        let priceClass = 'price-neutral';
+        let iconHtml = '';
+        if (item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
+        else if (item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
+        
+        const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+        
+        div.innerHTML = `
+            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
+            <div class="item-info">
+                <h5>${item.name}</h5>
+                <div class="item-price-row">
+                    <p class="${priceClass}">${item.price}</p>
+                    <div class="val-change-inline ${item.type === 'up' ? 'val-up' : item.type === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
+                        ${item.change} ${iconHtml}
+                    </div>
+                </div>
+            </div>
+            <div class="item-right-status"><div class="rarity-tag-badge ${badgeClass}" style="min-width:auto; font-size:8px;">${item.rarity}</div></div>
+        `;
+        container.appendChild(div);
+    });
+    
+    if(dashItems.length === 0) {
+        container.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:20px;">Ekwipunek pusty</div>';
     }
 }
 
@@ -752,21 +1304,8 @@ function renderMarketView() {
     const container = document.getElementById('marketContainer');
     container.innerHTML = '';
     // Mock items for market
-    const marketItems = [
-        { name: "Klucz do Skarbca", price: "500,000 $", icon: "fa-key", color: "gold", rarity: "Divine" },
-        { name: "NFT Małpy", price: "2,000 $", icon: "fa-image", color: "purple", rarity: "Epic" },
-        { name: "Licencja Kasyna", price: "5,000,000 $", icon: "fa-file-contract", color: "white", rarity: "Relic" }
-    ];
-    marketItems.forEach(item => {
-        const div = document.createElement('div');
-        div.className = 'item-row';
-        div.innerHTML = `
-            <div class="item-img" style="color: ${item.color};"><i class="fas ${item.icon}"></i></div>
-            <div class="item-info"><h5>${item.name}</h5><p class="price-up">${item.price}</p></div>
-            <button class="claim-btn" style="margin-left:auto;">KUP TERAZ</button>
-        `;
-        container.appendChild(div);
-    });
+    // Renderowanie nowego rynku
+    renderMarketView();
 }
 
 let currentDepositMethod = 'visa';
@@ -1363,23 +1902,39 @@ const playersDB = [
     {
         username: "MrGambler",
         rank: "Alpha Whale",
+        avatar: "fa-user-astronaut",
         inventory: [
-            // Loadout MrGamblera (High End)
-            7, // RayBan
-            10, // Złoty Łańcuch
-            12, // Garnitur Boss
-            15, // Rolex
-            18, // Pasek Gucci
-            20, // Spodnie
-            22, // Mokasyny
-            23, // Sygnet
-            26, // BMW Keys
-            31, // Black Card
-            
-            // Inventory
-            1, 1, 1, 2, 2, 5, // Cases
-            28, 9, 33, 21 // Śmieci
+            // LOADOUT (IDs)
+            7, 10, 12, 15, 18, 20, 22, 23, 26, 31,
+            // STASH (Items to be listed on market)
+            5, // Divine Case (Będziemy to sprzedawać)
+            16, // Patek Philippe (Też na sprzedaż)
+            28, 9, 33, 21, 1, 1, 2 // Junk
         ]
+    },
+    {
+        username: "Whale_Killer",
+        rank: "RNG God",
+        avatar: "fa-dragon",
+        inventory: [27, 31, 13, 16, 5, 5, 4] // High End Stuff
+    },
+    {
+        username: "LuckyLuke",
+        rank: "Table Shark",
+        avatar: "fa-hat-cowboy",
+        inventory: [7, 11, 21, 2, 3, 3] // Mid Tier
+    },
+    {
+        username: "CryptoBro",
+        rank: "Risk Taker",
+        avatar: "fa-bitcoin",
+        inventory: [30, 8, 26, 2, 2] // Tech stuff
+    },
+    {
+        username: "Bot_Network_01",
+        rank: "Small Fry",
+        avatar: "fa-robot",
+        inventory: [1, 1, 1, 1, 1, 1, 1, 1, 25, 25] // Spam items
     }
 ];
 
@@ -1991,21 +2546,105 @@ index.html
         </div>
 
         <div class="view-container" id="viewMarket">
-             <div class="games-hub-grid">
-                <div class="games-column">
-                    <div class="card">
-                        <div class="card-header"><div class="card-title">Oferty Rynkowe</div></div>
-                        <div class="list-container" id="marketContainer" style="max-height: 600px;">
-                            </div>
+            <div class="market-layout-main">
+                <!-- LEWY SIDEBAR: FILTRY -->
+                <aside class="market-sidebar">
+                    <div class="ms-header">
+                        <i class="fas fa-filter"></i> FILTRY
                     </div>
-                </div>
-                <div class="leaderboard-column">
-                    <div class="card">
-                        <div class="card-header"><div class="card-title">Trendy</div></div>
-                        <div style="padding: 15px; color: var(--text-muted); font-size: 12px;">
-                            <p>🔥 Smocze Jajo (+15%)</p>
-                            <p style="margin-top:5px;">📉 Pusty Portfel (-99%)</p>
+                    
+                    <div class="ms-section">
+                        <div class="ms-label">Wyszukaj</div>
+                        <div class="input-group small" style="margin-bottom: 0;">
+                            <input type="text" id="marketSearchInput" placeholder="Nazwa przedmiotu..." onkeyup="filterMarket()">
+                            <button class="ms-search-btn"><i class="fas fa-search"></i></button>
                         </div>
+                    </div>
+
+                    <div class="ms-section">
+                        <div class="ms-label">Typ Aktywa</div>
+                        <div class="ms-toggle-row">
+                            <button class="ms-type-btn active" onclick="setMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
+                            <button class="ms-type-btn" onclick="setMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
+                        </div>
+                    </div>
+
+                    <div class="ms-section" id="slotFilterSection">
+                        <div class="ms-label">Slot Ekwipunku</div>
+                        <div class="ms-slots-grid" style="grid-template-columns: repeat(5, 1fr);">
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('head', this)" title="Głowa"><i class="fas fa-glasses"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('neck', this)" title="Szyja"><i class="fas fa-link"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('suit', this)" title="Garnitur"><i class="fas fa-user-tie"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('watch', this)" title="Zegarek"><i class="fas fa-clock"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('gadget', this)" title="Gadżet"><i class="fas fa-mobile-alt"></i></div>
+                            
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('belt', this)" title="Pasek"><i class="fas fa-grip-lines"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('pants', this)" title="Spodnie"><i class="fas fa-columns"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('shoes', this)" title="Buty"><i class="fas fa-shoe-prints"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('ring', this)" title="Biżuteria"><i class="fas fa-ring"></i></div>
+                            <div class="ms-slot-icon" onclick="toggleSlotFilter('vehicle', this)" title="Pojazd"><i class="fas fa-car"></i></div>
+                        </div>
+                    </div>
+
+                    <div class="ms-section">
+                        <div class="ms-label">Cena ($)</div>
+                        <div class="ms-price-inputs">
+                            <input type="number" id="priceMin" placeholder="Od" onchange="filterMarket()">
+                            <span style="color:#666">-</span>
+                            <input type="number" id="priceMax" placeholder="Do" onchange="filterMarket()">
+                        </div>
+                    </div>
+
+                    <div class="ms-section">
+                        <div class="ms-label">Rzadkość (Wymagana Ranga)</div>
+                        <div class="ms-rarity-list">
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Peasant" onchange="filterMarket()" checked> 
+                                <span class="dot-r peasant"></span> Peasant
+                            </label>
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Rare" onchange="filterMarket()" checked> 
+                                <span class="dot-r rare"></span> Rare
+                            </label>
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Epic" onchange="filterMarket()" checked> 
+                                <span class="dot-r epic"></span> Epic <i class="fas fa-lock lock-icon" id="lockEpic"></i>
+                            </label>
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Relic" onchange="filterMarket()" checked> 
+                                <span class="dot-r relic"></span> Relic <i class="fas fa-lock lock-icon" id="lockRelic"></i>
+                            </label>
+                            <label class="ms-check-row">
+                                <input type="checkbox" value="Divine" onchange="filterMarket()" checked> 
+                                <span class="dot-r divine"></span> Divine <i class="fas fa-lock lock-icon" id="lockDivine"></i>
+                            </label>
+                        </div>
+                    </div>
+                </aside>
+
+                <!-- PRAWY KONTENT: GRID -->
+                <div class="market-content">
+                    <!-- Topbar Nawigacyjny -->
+                    <div class="market-topbar">
+                        <div class="mt-tabs">
+                            <button class="mt-tab active" onclick="switchMarketTab('global')" id="tabGlobalMarket">Globalny Rynek</button>
+                            <button class="mt-tab" onclick="switchMarketTab('my')" id="tabMyListings">Moje Oferty</button>
+                        </div>
+                        <div class="mt-sort">
+                            <span style="font-size:11px; color:#888; margin-right:5px;">Sortuj:</span>
+                            <select id="marketSortSelect" onchange="filterMarket()">
+                                <option value="best_deal">🔥 Najlepsza Okazja</option>
+                                <option value="trending">📈 Trending (24h)</option>
+                                <option value="price_asc">💰 Cena: Rosnąco</option>
+                                <option value="price_desc">💎 Cena: Malejąco</option>
+                                <option value="newest">🕒 Najnowsze</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <!-- Siatka Ofert -->
+                    <div class="market-grid" id="marketGrid">
+                        <!-- Generowane przez JS -->
                     </div>
                 </div>
             </div>
@@ -2594,6 +3233,78 @@ index.html
             <div class="sm-content" style="padding-top: 0;">
                 <div class="history-list-container full-height-logs" id="financialLogsList">
                     <!-- Logs injected via JS -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Market Item Detail Modal -->
+    <div class="modal-overlay" id="marketModal">
+        <div class="steam-modal market-modal-size">
+            <div class="sm-header" id="marketModalHeader" style="border-bottom:none;">
+                <div class="sm-title" id="marketModalTitle">SZCZEGÓŁY OFERTY</div>
+                <div class="sm-close" onclick="closeMarketModal()"><i class="fas fa-times"></i></div>
+            </div>
+            
+            <div class="mm-layout">
+                <!-- Lewa kolumna: Wizualizacja -->
+                <div class="mm-visual-col">
+                    <div class="mm-item-card-large" id="mmCard">
+                        <i class="fas fa-cube" id="mmIcon"></i>
+                    </div>
+                    <div class="mm-seller-info">
+                        <div class="user-avatar small" id="mmSellerAvatar"></div>
+                        <div>
+                            <div class="mm-label">Sprzedawca</div>
+                            <div class="mm-val" id="mmSellerName">User_123</div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Prawa kolumna: Dane -->
+                <div class="mm-data-col">
+                    <h2 id="mmItemName">Nazwa Przedmiotu</h2>
+                    <div class="mm-tags" id="mmTags">
+                        <span class="badge-epic">EPIC</span>
+                        <span class="badge-slot">WATCH</span>
+                    </div>
+
+                    <div class="mm-stats-grid">
+                        <div class="mm-stat">
+                            <div class="mm-lbl">Ostatnia cena</div>
+                            <div class="mm-v" id="mmLastPrice">2,400 $</div>
+                        </div>
+                        <div class="mm-stat">
+                            <div class="mm-lbl">Zmienna 24h</div>
+                            <div class="mm-v val-up" id="mmChange">+12%</div>
+                        </div>
+                        <div class="mm-stat">
+                            <div class="mm-lbl">Floor Price</div>
+                            <div class="mm-v" id="mmFloor">2,100 $</div>
+                        </div>
+                        <div class="mm-stat">
+                            <div class="mm-lbl">Wolumen</div>
+                            <div class="mm-v">324</div>
+                        </div>
+                    </div>
+
+                    <div class="mm-chart-placeholder">
+                        <div class="chart-line-mock"></div>
+                        <div class="chart-label">Historia Cen (7 Dni)</div>
+                    </div>
+
+                    <div class="mm-desc-box">
+                        <div class="mm-lbl">Efekt / Zawartość</div>
+                        <p id="mmDesc">Zatrzymuje czas długów. +15 do Prestiżu.</p>
+                        <div id="mmReqWarning" class="mm-warning hidden"><i class="fas fa-lock"></i> Wymagana ranga: Alpha Whale</div>
+                    </div>
+
+                    <div class="mm-actions">
+                        <div class="mm-price-large" id="mmCurrentPrice">2,500 $</div>
+                        <div class="mm-btn-row">
+                            <button class="action-btn-large" id="btnBuyNow" onclick="buyItem()">KUP TERAZ</button>
+                            <button class="action-btn-large outline" id="btnOffer">ZŁÓŻ OFERTĘ</button>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -4786,6 +5497,255 @@ input:checked + .slider:before { transform: translateX(16px); }
     justify-content: center;
     align-items: center;
 }
+/* DRAG AND DROP STYLES */
+.inv-grid-slot.is-equipped {
+    opacity: 0.4;
+    border-style: dashed;
+    cursor: not-allowed;
+}
+.inv-grid-slot.on-sale {
+    border-color: var(--accent-orange);
+    background: rgba(245, 158, 11, 0.1);
+}
+.on-sale-badge {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) rotate(-15deg);
+    background: var(--accent-orange);
+    color: black;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 2px 6px;
+    border: 1px solid white;
+    white-space: nowrap;
+    z-index: 5;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+}
+
+.equipped-badge {
+    position: absolute;
+    top: 2px;
+    left: 2px;
+    font-size: 8px;
+    background: var(--accent-blue);
+    color: white;
+    padding: 1px 3px;
+    border-radius: 2px;
+    font-weight: 800;
+}
+
+.inv-grid-slot.empty {
+    opacity: 0.1;
+    border-color: transparent;
+    background: rgba(0,0,0,0.2);
+    cursor: default;
+}
+/* --- MARKET 2.0 STYLES --- */
+
+.market-layout-main {
+    display: flex;
+    gap: 20px;
+    height: calc(100vh - 120px);
+}
+
+/* SIDEBAR FILTERS */
+.market-sidebar {
+    width: 260px;
+    background: var(--card-bg);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    overflow-y: auto;
+    flex-shrink: 0;
+}
+
+.ms-header { font-size: 12px; color: var(--accent-purple); font-weight: 800; letter-spacing: 1px; margin-bottom: 5px; display: flex; align-items: center; gap: 8px; }
+.ms-section { display: flex; flex-direction: column; gap: 8px; }
+.ms-label { font-size: 11px; color: var(--text-muted); font-weight: 600; text-transform: uppercase; }
+
+.ms-search-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 30px; cursor: pointer; border-radius: 0 4px 4px 0; }
+.ms-search-btn:hover { background: var(--accent-purple); }
+
+.ms-toggle-row { display: flex; background: rgba(0,0,0,0.2); padding: 3px; border-radius: 6px; }
+.ms-type-btn { flex: 1; background: transparent; border: none; color: #666; padding: 6px; font-size: 11px; cursor: pointer; border-radius: 4px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
+.ms-type-btn.active { background: var(--accent-purple); color: white; font-weight: 600; }
+
+.ms-slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
+.ms-slot-icon { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; height: 35px; display: flex; align-items: center; justify-content: center; color: #666; cursor: pointer; transition: 0.2s; font-size: 14px; }
+.ms-slot-icon:hover { color: white; border-color: #888; }
+.ms-slot-icon.active { background: rgba(59, 130, 246, 0.2); border-color: var(--accent-blue); color: var(--accent-blue); box-shadow: 0 0 10px rgba(59, 130, 246, 0.1); }
+
+.ms-price-inputs { display: flex; align-items: center; gap: 5px; }
+.ms-price-inputs input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 6px; color: white; font-size: 11px; border-radius: 4px; }
+
+.ms-check-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #ccc; cursor: pointer; padding: 4px 0; }
+.ms-check-row input { accent-color: var(--accent-purple); }
+.dot-r { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
+.dot-r.peasant { background: #9ca3af; }
+.dot-r.rare { background: #3b82f6; box-shadow: 0 0 5px #3b82f6; }
+.dot-r.epic { background: #8b5cf6; box-shadow: 0 0 5px #8b5cf6; }
+.dot-r.relic { background: #ef4444; box-shadow: 0 0 5px #ef4444; }
+.dot-r.divine { background: #ffd700; box-shadow: 0 0 5px #ffd700; }
+.lock-icon { font-size: 10px; color: #555; margin-left: auto; }
+.lock-icon.locked { color: var(--accent-red); }
+
+/* MARKET CONTENT */
+.market-content { flex: 1; display: flex; flex-direction: column; overflow: hidden; }
+
+.market-topbar { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; background: rgba(255,255,255,0.02); padding: 5px; border-radius: 8px; border: 1px solid rgba(255,255,255,0.05); }
+.mt-tabs { display: flex; gap: 5px; }
+.mt-tab { background: transparent; border: none; color: #888; padding: 8px 15px; border-radius: 6px; cursor: pointer; font-size: 12px; font-weight: 600; transition: 0.2s; }
+.mt-tab:hover { color: white; background: rgba(255,255,255,0.05); }
+.mt-tab.active { background: rgba(255,255,255,0.1); color: white; }
+
+.mt-sort select { background: #000; color: white; border: 1px solid #333; padding: 5px; border-radius: 4px; font-size: 11px; outline: none; }
+
+.market-grid {
+    flex: 1;
+    overflow-y: auto;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+    gap: 15px;
+    padding-right: 5px;
+    align-content: start;
+}
+
+/* MARKET CARD */
+.m-card {
+    background: #151a2d;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    overflow: hidden;
+    position: relative;
+    transition: 0.3s;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+}
+.m-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 5; border-color: var(--accent-purple); }
+
+.mc-header {
+    height: 100px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+}
+.mc-header i { font-size: 40px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); transition: 0.3s; }
+.m-card:hover .mc-header i { transform: scale(1.1); }
+
+.mc-seller-avatar {
+    position: absolute;
+    top: 8px;
+    left: 8px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: #333;
+    border: 1px solid #555;
+    background-size: cover;
+}
+.mc-lock-overlay {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    background: rgba(0,0,0,0.6);
+    padding: 4px;
+    border-radius: 4px;
+    color: var(--accent-red);
+    font-size: 10px;
+}
+
+.mc-body {
+    padding: 10px;
+    background: rgba(0,0,0,0.2);
+    border-top: 1px solid rgba(255,255,255,0.05);
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
+}
+
+/* Sparkline in background */
+.mc-sparkline {
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 40px;
+    display: flex;
+    align-items: flex-end;
+    gap: 2px;
+    opacity: 0.15;
+    padding: 0 10px 5px 10px;
+    z-index: 0;
+}
+.mc-bar { flex: 1; background: var(--accent-green); border-radius: 1px 1px 0 0; }
+.mc-bar.down { background: var(--accent-red); }
+
+.mc-title { font-size: 12px; font-weight: 700; color: white; margin-bottom: 2px; z-index: 1; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mc-sub { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; z-index: 1; }
+
+.mc-price-row { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; z-index: 1; }
+.mc-price { font-size: 14px; font-weight: 700; color: var(--accent-green); }
+.mc-change { font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 2px; }
+
+/* MODAL STYLES */
+.market-modal-size { width: 800px; max-height: 85vh; display: flex; flex-direction: column; }
+.mm-layout { display: flex; padding: 20px; gap: 30px; height: 100%; }
+
+.mm-visual-col { width: 300px; display: flex; flex-direction: column; gap: 20px; }
+.mm-item-card-large {
+    width: 100%;
+    aspect-ratio: 1/1;
+    background: radial-gradient(circle at center, rgba(139, 92, 246, 0.2) 0%, rgba(21, 26, 45, 1) 70%);
+    border: 1px solid rgba(139, 92, 246, 0.3);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 100px;
+    color: white;
+    box-shadow: 0 0 30px rgba(139, 92, 246, 0.15);
+}
+
+.mm-seller-info { display: flex; align-items: center; gap: 10px; background: rgba(255,255,255,0.03); padding: 10px; border-radius: 8px; }
+.mm-data-col { flex: 1; display: flex; flex-direction: column; gap: 15px; }
+
+.mm-tags { display: flex; gap: 5px; }
+.badge-slot { background: rgba(255,255,255,0.1); font-size: 10px; padding: 2px 6px; border-radius: 3px; color: #ccc; }
+
+.mm-stats-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.mm-stat { background: rgba(0,0,0,0.3); padding: 8px; border-radius: 6px; border: 1px solid rgba(255,255,255,0.05); }
+.mm-lbl { font-size: 9px; color: var(--text-muted); text-transform: uppercase; margin-bottom: 2px; }
+.mm-v { font-size: 12px; font-weight: 700; color: white; }
+
+.mm-chart-placeholder {
+    height: 120px;
+    background: rgba(0,0,0,0.4);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+.chart-line-mock { width: 80%; height: 50%; border-bottom: 2px solid var(--accent-green); border-right: 2px solid var(--accent-green); opacity: 0.5; }
+.chart-label { position: absolute; top: 5px; left: 10px; font-size: 10px; color: #666; }
+
+.mm-desc-box { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; font-size: 12px; line-height: 1.4; color: #ccc; }
+.mm-warning { color: var(--accent-red); margin-top: 5px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
+
+.mm-actions { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; display: flex; justify-content: space-between; align-items: center; }
+.mm-price-large { font-size: 24px; font-weight: 800; color: var(--accent-green); }
+.mm-btn-row { display: flex; gap: 10px; }
+
+.hidden { display: none !important; }
 
 /* Grid Calculation for 3x4:
    Slot Size: 70px
