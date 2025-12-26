@@ -5,26 +5,166 @@ SZUKAJ:
 /* Networth Card */
 .nw-main-card {
     width: 100%;
-    background: linear-gradient(180deg, #1e2538 0%, #151a2d 100%);
-TREŚĆ:
-/* Networth Card */
-.nw-main-card {
-    width: 100%;
     max-width: 650px; /* Zwężenie panelu zgodnie z instrukcją */
     background: linear-gradient(180deg, #1e2538 0%, #151a2d 100%);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+TREŚĆ:
+/* Networth Card - WIDERSZY PANEL */
+.nw-main-card {
+    width: 100%;
+    max-width: 800px; /* Zwiększona szerokość dla lepszej ekspozycji bogactwa */
+    background: linear-gradient(180deg, #1e2538 0%, #151a2d 100%);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    border-radius: 16px;
+    padding: 30px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+}
+
+/* Dynamic Forms Styles */
+.deposit-dynamic-form {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.cc-visual {
+    background: linear-gradient(135deg, #4c1d95, #3b82f6);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    color: white;
+    font-family: monospace;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.blik-code-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+.blik-digit {
+    width: 40px;
+    height: 50px;
+    background: white;
+    color: #333;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.transfer-toggle-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.transfer-toggle {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 11px;
+    color: #888;
+    transition: 0.2s;
+}
+.transfer-toggle:hover { background: rgba(255,255,255,0.1); }
+.transfer-toggle.active {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--accent-blue);
+    color: white;
+    font-weight: 700;
+}
+.transfer-section {
+    display: none;
+    padding: 10px;
+    border-left: 2px solid var(--accent-blue);
+    background: rgba(59, 130, 246, 0.05);
+    margin-bottom: 10px;
+}
+.transfer-section.active { display: block; animation: slideIn 0.2s ease; }
 
 KROK 2:
+PLIK: "style.css"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+/* Action Center Centered */
+.action-center-container {
+    width: 100%;
+    max-width: 650px; /* Limit width as requested */
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+TREŚĆ:
+/* Action Center Centered - WĘŻSZY NIŻ NETWORTH */
+.action-center-container {
+    width: 100%;
+    max-width: 550px; /* Wyraźnie węższy niż panel Networth (800px) */
+    background: var(--card-bg);
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    flex-direction: column;
+    overflow: hidden;
+    box-shadow: 0 5px 20px rgba(0,0,0,0.2);
+}
+
+KROK 3:
 PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-                    <div class="nw-loyalty-bar">
-                        <div class="nw-loyalty-info">
-                            <span><i class="fas fa-gem"></i> Loyalty Points: <b style="color:var(--accent-purple);">12,500</b></span>
-                            <span class="nw-loyalty-sub">Level 4 (Gold)</span>
-                        </div>
-                        <button class="nw-loyalty-btn">Sklep</button>
+        <div class="view-container" id="viewWallet">
+            
+            <div class="wallet-layout-centered">
+                
+                <!-- 1. NET WORTH PANEL -->
+                <div class="nw-main-card">
+                    <div class="nw-header">
+                        <div class="nw-title">TOTAL NET WORTH</div>
+                        <button class="nw-history-btn" onclick="openFinancialLogsModal()" title="Logi Finansowe"><i class="fas fa-history"></i></button>
                     </div>
-TREŚĆ:
+                    
+                    <div class="nw-big-val">
+                        <span id="nwTotalDisplay">0.00</span> <small>$</small>
+                    </div>
+
+                    <div class="nw-split-row">
+                        <div class="nw-split-item">
+                            <div class="nw-split-lbl"><i class="fas fa-wallet"></i> Real Money</div>
+                            <div class="nw-split-val" id="nwRealDisplay">0.00 $</div>
+                        </div>
+                        <div class="nw-split-divider"></div>
+                        <div class="nw-split-item">
+                            <div class="nw-split-lbl"><i class="fas fa-suitcase"></i> Items Value</div>
+                            <div class="nw-split-val" id="nwItemsDisplay">0.00 $</div>
+                        </div>
+                    </div>
+
                     <div class="nw-loyalty-bar">
                         <div class="nw-loyalty-info">
                             <span><i class="fas fa-gem"></i> Loyalty Points: <b style="color:var(--accent-purple);">12,500</b></span>
@@ -32,25 +172,40 @@ TREŚĆ:
                         </div>
                         <button class="nw-loyalty-btn" onclick="alert('Nagroda odebrana! Dodano środki do konta.')">Odbierz Nagrodę</button>
                     </div>
+                </div>
 
-KROK 3:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-                            <div class="deposit-form centered-form">
-                                <label>Kwota wpłaty</label>
-                                <div class="input-group">
-                                    <span class="curr-prefix">$</span>
-                                    <input type="number" value="100" placeholder="0.00">
-                                </div>
-                                <div class="quick-amounts">
-                                    <button>50</button><button class="active">100</button><button>250</button><button>MAX</button>
-                                </div>
-                                <div class="dep-footer centered-footer">
-                                    <button class="action-btn-large full-width">WPŁAĆ TERAZ</button>
+                <!-- 2. ACTION CENTER -->
+                <div class="action-center-container">
+                    <div class="w-tabs centered-tabs">
+                        <button class="w-tab active" onclick="switchWalletTab('deposit')"><i class="fas fa-arrow-down"></i> Wpłata</button>
+                        <button class="w-tab" onclick="switchWalletTab('withdraw')"><i class="fas fa-arrow-up"></i> Wypłata</button>
+                        <button class="w-tab" onclick="switchWalletTab('transfer')"><i class="fas fa-exchange-alt"></i> Transfer</button>
+                    </div>
+
+                    <div class="w-tab-content-container">
+                        
+                        <!-- TAB: DEPOSIT -->
+                        <div class="w-content active" id="tab-deposit">
+                            <div class="pay-methods-grid compact">
+                                <div class="pm-item active"><i class="fab fa-cc-visa"></i> Visa</div>
+                                <div class="pm-item"><i class="fas fa-mobile-alt"></i> BLIK</div>
+                                <div class="pm-item" onclick="document.getElementById('depCryptoSection').classList.toggle('hidden')"><i class="fab fa-bitcoin"></i> Crypto</div>
+                                <div class="pm-item"><i class="fas fa-wallet"></i> Skrill</div>
+                            </div>
+                            
+                            <!-- Hidden Crypto Section inside Deposit -->
+                            <div id="depCryptoSection" class="hidden crypto-inline-panel">
+                                <div class="crypto-box small-box">
+                                    <div class="crypto-details">
+                                        <label style="font-size:10px; color:var(--accent-purple);">USDT (TRC20) Deposit Address</label>
+                                        <div class="copy-input">
+                                            <input type="text" readonly value="T9yB7...Kj8L2x">
+                                            <button><i class="fas fa-copy"></i></button>
+                                        </div>
+                                    </div>
                                 </div>
                             </div>
-TREŚĆ:
+
                             <div class="deposit-form centered-form">
                                 <label>Kwota wpłaty</label>
                                 <div class="input-group">
@@ -67,20 +222,17 @@ TREŚĆ:
                                     <button class="action-btn-large full-width" onclick="handleWalletAction('deposit')">WPŁAĆ TERAZ</button>
                                 </div>
                             </div>
-
-KROK 4:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-                                <label>Kwota do wypłaty</label>
-                                <div class="input-group">
-                                    <span class="curr-prefix">$</span>
-                                    <input type="number" placeholder="Dostępne: 2,450,000">
-                                </div>
-                                <button class="action-btn-large outline full-width">ZLEĆ WYPŁATĘ</button>
-                            </div>
                         </div>
-TREŚĆ:
+
+                        <!-- TAB: WITHDRAW -->
+                        <div class="w-content" id="tab-withdraw">
+                            <div class="withdraw-form centered-form">
+                                <label>Metoda wypłaty</label>
+                                <div class="pay-methods-grid compact">
+                                    <div class="pm-item active"><i class="fab fa-cc-visa"></i> Visa</div>
+                                    <div class="pm-item"><i class="fab fa-bitcoin"></i> Wallet</div>
+                                </div>
+
                                 <label>Kwota do wypłaty</label>
                                 <div class="input-group">
                                     <span class="curr-prefix">$</span>
@@ -90,31 +242,6 @@ TREŚĆ:
                             </div>
                         </div>
 
-KROK 5:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-                         <!-- TAB: TRANSFER (NEW) -->
-                         <div class="w-content" id="tab-transfer">
-                            <div class="transfer-form centered-form">
-                                <div class="transfer-notice">
-                                    <i class="fas fa-info-circle"></i> Przelewy są natychmiastowe i nieodwracalne.
-                                </div>
-                                <label>ID Odbiorcy</label>
-                                <div class="input-group">
-                                    <span class="curr-prefix"><i class="fas fa-user"></i></span>
-                                    <input type="text" placeholder="np. User_99 lub ID">
-                                </div>
-
-                                <label>Kwota przelewu</label>
-                                <div class="input-group">
-                                    <span class="curr-prefix">$</span>
-                                    <input type="number" placeholder="0.00">
-                                </div>
-                                <button class="action-btn-large full-width" style="background: var(--accent-blue);">WYŚLIJ ŚRODKI</button>
-                            </div>
-                        </div>
-TREŚĆ:
                          <!-- TAB: TRANSFER (NEW) -->
                          <div class="w-content" id="tab-transfer">
                             <div class="transfer-form centered-form">
@@ -146,79 +273,174 @@ TREŚĆ:
                             </div>
                         </div>
 
-KROK 6:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-    <!-- Financial Logs Modal -->
-    <div class="modal-overlay" id="financialLogsModal">
-        <div class="steam-modal" style="width: 800px;">
-            <div class="sm-header">
-                <div class="sm-title"><i class="fas fa-database"></i> Logi Finansowe</div>
-                <div class="sm-close" onclick="closeFinancialLogsModal()"><i class="fas fa-times"></i></div>
-            </div>
-            
-            <div style="padding: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <div style="font-size: 10px; color: var(--text-muted);">BILANS MIESIĘCZNY</div>
-                    <div style="font-size: 16px; font-weight: 700; color: var(--accent-red);">-200.00 $</div>
+                    </div>
                 </div>
-                <button class="gc-btn lobby"><i class="fas fa-download"></i> Eksportuj CSV</button>
+
+                <!-- 3. SIMPLIFIED FOOTER -->
+                <div class="wallet-footer-simple">
+                    <div class="rg-stat centered">
+                        <div class="rg-label">Czas Sesji</div>
+                        <div class="rg-val timer">04:20:15</div>
+                    </div>
+                    <div class="rg-stat centered">
+                         <div class="rg-label">Odpowiedzialna Gra</div>
+                        <button class="rg-link-btn">Zarządzaj Limitami</button>
+                    </div>
+                </div>
+
             </div>
+        </div>
 TREŚĆ:
-    <!-- Financial Logs Modal -->
-    <div class="modal-overlay" id="financialLogsModal">
-        <div class="steam-modal" style="width: 800px;">
-            <div class="sm-header">
-                <div class="sm-title"><i class="fas fa-database"></i> Logi Finansowe</div>
-                <div class="sm-close" onclick="closeFinancialLogsModal()"><i class="fas fa-times"></i></div>
-            </div>
+        <div class="view-container" id="viewWallet">
             
-            <div style="padding: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                <div style="display: flex; align-items: center; gap: 20px;">
-                    <div>
-                        <div style="font-size: 10px; color: var(--text-muted);">BILANS MIESIĘCZNY</div>
-                        <div style="font-size: 16px; font-weight: 700; color: var(--accent-red);">-200.00 $</div>
+            <div class="wallet-layout-centered">
+                
+                <!-- 1. NET WORTH PANEL (WIDER) -->
+                <div class="nw-main-card">
+                    <div class="nw-header">
+                        <div class="nw-title">TOTAL NET WORTH</div>
+                        <button class="nw-history-btn" onclick="openFinancialLogsModal()" title="Logi Finansowe"><i class="fas fa-history"></i></button>
                     </div>
                     
-                    <!-- Toggle Switch for Games -->
-                    <div class="switch-container">
-                        <label class="switch">
-                            <input type="checkbox" id="hideGamesSwitch" checked onchange="renderFinancialLogsList()">
-                            <span class="slider"></span>
-                        </label>
-                        <span class="switch-label">Ukryj gry</span>
+                    <div class="nw-big-val">
+                        <span id="nwTotalDisplay">0.00</span> <small>$</small>
+                    </div>
+
+                    <div class="nw-split-row">
+                        <div class="nw-split-item">
+                            <div class="nw-split-lbl"><i class="fas fa-wallet"></i> Real Money</div>
+                            <div class="nw-split-val" id="nwRealDisplay">0.00 $</div>
+                        </div>
+                        <div class="nw-split-divider"></div>
+                        <div class="nw-split-item">
+                            <div class="nw-split-lbl"><i class="fas fa-suitcase"></i> Items Value</div>
+                            <div class="nw-split-val" id="nwItemsDisplay">0.00 $</div>
+                        </div>
+                    </div>
+
+                    <div class="nw-loyalty-bar">
+                        <div class="nw-loyalty-info">
+                            <span><i class="fas fa-gem"></i> Loyalty Points: <b style="color:var(--accent-purple);">12,500</b></span>
+                            <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; margin-left: 8px;" onclick="alert('Punkty Lojalnościowe (LP) zdobywasz za każdy obrót w grach.')"></i>
+                        </div>
+                        <button class="nw-loyalty-btn" onclick="alert('Nagroda odebrana!')">Odbierz Nagrodę</button>
                     </div>
                 </div>
-                <button class="gc-btn lobby"><i class="fas fa-download"></i> Eksportuj CSV</button>
-            </div>
 
-KROK 7:
+                <!-- 2. ACTION CENTER (NARROWER) -->
+                <div class="action-center-container">
+                    <div class="w-tabs centered-tabs">
+                        <button class="w-tab active" onclick="switchWalletTab('deposit')"><i class="fas fa-arrow-down"></i> Wpłata</button>
+                        <button class="w-tab" onclick="switchWalletTab('withdraw')"><i class="fas fa-arrow-up"></i> Wypłata</button>
+                        <button class="w-tab" onclick="switchWalletTab('transfer')"><i class="fas fa-exchange-alt"></i> Transfer</button>
+                    </div>
+
+                    <div class="w-tab-content-container">
+                        
+                        <!-- TAB: DEPOSIT (Dynamic) -->
+                        <div class="w-content active" id="tab-deposit">
+                            <label style="margin-bottom:10px; display:block; color:var(--text-muted); font-size:11px;">WYBIERZ METODĘ PŁATNOŚCI:</label>
+                            
+                            <div class="pay-methods-grid compact" id="depositMethodsGrid">
+                                <!-- Generated by JS -->
+                            </div>
+                            
+                            <!-- Dynamic Content Container -->
+                            <div id="depositDynamicContainer"></div>
+
+                            <div class="deposit-form centered-form" style="padding:0;">
+                                <label>Kwota wpłaty</label>
+                                <div class="input-group">
+                                    <span class="curr-prefix">$</span>
+                                    <input type="number" id="depositAmount" value="100" placeholder="0.00">
+                                </div>
+                                <div class="quick-amounts">
+                                    <button onclick="document.getElementById('depositAmount').value=50">50</button>
+                                    <button onclick="document.getElementById('depositAmount').value=100" class="active">100</button>
+                                    <button onclick="document.getElementById('depositAmount').value=250">250</button>
+                                    <button onclick="document.getElementById('depositAmount').value=5000">MAX</button>
+                                </div>
+                                <div class="dep-footer centered-footer">
+                                    <button class="action-btn-large full-width" onclick="handleWalletAction('deposit')">WPŁAĆ TERAZ</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- TAB: WITHDRAW -->
+                        <div class="w-content" id="tab-withdraw">
+                            <div class="withdraw-form centered-form">
+                                <label>Metoda wypłaty</label>
+                                <div class="pay-methods-grid compact">
+                                    <div class="pm-item active"><i class="fab fa-cc-visa"></i> Visa</div>
+                                    <div class="pm-item"><i class="fab fa-bitcoin"></i> Wallet</div>
+                                </div>
+
+                                <label>Kwota do wypłaty</label>
+                                <div class="input-group">
+                                    <span class="curr-prefix">$</span>
+                                    <input type="number" id="withdrawAmount" placeholder="Dostępne: 2,450,000">
+                                </div>
+                                <button class="action-btn-large outline full-width" onclick="handleWalletAction('withdraw')">ZLEĆ WYPŁATĘ</button>
+                            </div>
+                        </div>
+
+                         <!-- TAB: TRANSFER (REWORKED) -->
+                         <div class="w-content" id="tab-transfer">
+                            <div class="transfer-form centered-form">
+                                <label>Odbiorca</label>
+                                <div class="input-group">
+                                    <span class="curr-prefix"><i class="fas fa-user"></i></span>
+                                    <input type="text" id="transferRecipient" placeholder="np. User_99 lub ID">
+                                </div>
+
+                                <label style="margin-bottom:8px; display:block;">Co chcesz wysłać?</label>
+                                <div class="transfer-toggle-row">
+                                    <div class="transfer-toggle active" id="toggleMoney" onclick="toggleTransferSection('Money')"><i class="fas fa-dollar-sign"></i> PRZELEW</div>
+                                    <div class="transfer-toggle" id="toggleItem" onclick="toggleTransferSection('Item')"><i class="fas fa-box"></i> PRZEDMIOT</div>
+                                </div>
+
+                                <div class="transfer-section active" id="secMoney">
+                                    <label style="font-size:10px;">Kwota przelewu ($)</label>
+                                    <div class="input-group small">
+                                        <input type="number" id="transferAmount" placeholder="0.00">
+                                    </div>
+                                </div>
+
+                                <div class="transfer-section" id="secItem">
+                                    <label style="font-size:10px;">Wybierz przedmiot</label>
+                                    <div class="input-group small">
+                                        <select id="transferItemSelect" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid #444; color:white; padding:8px; border-radius:4px;">
+                                            <option value="">-- Wybierz przedmiot --</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <button class="action-btn-large full-width" style="background: var(--accent-blue); margin-top:10px;" onclick="handleWalletAction('transfer')">WYŚLIJ AKTYWA</button>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+
+                <!-- 3. SIMPLIFIED FOOTER -->
+                <div class="wallet-footer-simple">
+                    <div class="rg-stat centered">
+                        <div class="rg-label">Czas Sesji</div>
+                        <div class="rg-val timer">04:20:15</div>
+                    </div>
+                    <div class="rg-stat centered">
+                         <div class="rg-label">Limit Dzienny</div>
+                        <div class="rg-val negative">92%</div>
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
+KROK 4:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-function renderWalletView() {
-    // 1. Calculate Networth (Real Money + Items)
-    const realMoney = 2450000; // Hardcoded simulation
-    let itemValue = 0;
-    
-    // Sum all items rawPrice
-    if (typeof allTreasures !== 'undefined') {
-        itemValue = allTreasures.reduce((sum, item) => sum + (item.rawPrice || 0), 0);
-    }
-    
-    const totalNetWorth = realMoney + itemValue;
-    
-    // 2. Update DOM
-    const nwTotal = document.getElementById('nwTotalDisplay');
-    const nwReal = document.getElementById('nwRealDisplay');
-    const nwItems = document.getElementById('nwItemsDisplay');
-    
-    if (nwTotal) nwTotal.textContent = totalNetWorth.toLocaleString('en-US', {minimumFractionDigits: 2});
-    if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
-    if (nwItems) nwItems.textContent = itemValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
-}
-TREŚĆ:
 function renderWalletView() {
     // 1. Calculate Networth (Real Money + Items)
     const realMoney = 2450000; // Hardcoded simulation
@@ -294,95 +516,172 @@ function handleWalletAction(type) {
         else alert("Musisz wybrać kwotę lub przedmiot do wysłania.");
     }
 }
+TREŚĆ:
+let currentDepositMethod = 'visa';
 
-KROK 8:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-function renderFinancialLogsList() {
-    const container = document.getElementById('financialLogsList');
-    if (!container) return;
-    container.innerHTML = '';
+function renderWalletView() {
+    // 1. ZMODYFIKOWANA LOGIKA NETWORTH
+    // Cel: Net Worth = 5,240,000, Real Money = 2,450,000.
+    // Obliczamy Items Value z różnicy.
+    const realMoney = 2450000; 
+    const targetNetWorth = 5240000;
+    const itemsValue = targetNetWorth - realMoney; // = 2,790,000
     
-    walletLogsDB.forEach(t => {
+    // 2. Update DOM
+    const nwTotal = document.getElementById('nwTotalDisplay');
+    const nwReal = document.getElementById('nwRealDisplay');
+    const nwItems = document.getElementById('nwItemsDisplay');
+    
+    if (nwTotal) nwTotal.textContent = targetNetWorth.toLocaleString('en-US', {minimumFractionDigits: 2});
+    if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+    if (nwItems) nwItems.textContent = itemsValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+
+    // 3. Init Deposit Methods
+    selectDepositMethod(currentDepositMethod);
+
+    // 4. Populate Transfer Item Select
+    const transferSelect = document.getElementById('transferItemSelect');
+    if (transferSelect && typeof allTreasures !== 'undefined') {
+        // Reset and keep first option
+        transferSelect.innerHTML = '<option value="">-- Wybierz przedmiot --</option>';
+
+        allTreasures.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.textContent = `${item.name} (${item.rarity})`;
+            transferSelect.appendChild(opt);
+        });
+    }
+}
+
+// Funkcja obsługująca zmianę metody wpłaty i dynamiczne panele
+function selectDepositMethod(method) {
+    currentDepositMethod = method;
+    const container = document.getElementById('depositMethodsGrid');
+    const dynamicContent = document.getElementById('depositDynamicContainer');
+    if(!container || !dynamicContent) return;
+
+    // Render Buttons
+    const methods = [
+        { id: 'visa', icon: 'fab fa-cc-visa', name: 'Visa' },
+        { id: 'blik', icon: 'fas fa-mobile-alt', name: 'BLIK' },
+        { id: 'crypto', icon: 'fab fa-bitcoin', name: 'Crypto' },
+        { id: 'skrill', icon: 'fas fa-wallet', name: 'Skrill' }
+    ];
+
+    container.innerHTML = '';
+    methods.forEach(m => {
         const div = document.createElement('div');
-        div.className = 'hist-row';
-        
-        let valColor = 'white';
-        if (t.val.startsWith('+')) valColor = 'var(--accent-green)';
-        if (t.val.startsWith('-')) valColor = 'var(--accent-red)';
-        
-        let statusClass = t.status.toLowerCase();
-        
-        div.innerHTML = `
-            <div class="hist-left">
-                <div class="hist-type">${t.type}</div>
-                <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
-                <div style="font-size:9px; color:#555;">${t.detail}</div>
-            </div>
-            <div class="hist-right">
-                <div class="hist-val" style="color:${valColor}">${t.val}</div>
-                <div class="hist-status st-${statusClass}">${t.status}</div>
-            </div>
-        `;
+        div.className = `pm-item ${m.id === method ? 'active' : ''}`;
+        div.onclick = () => selectDepositMethod(m.id);
+        div.innerHTML = `<i class="${m.icon}"></i> ${m.name}`;
         container.appendChild(div);
     });
-}
-TREŚĆ:
-function renderFinancialLogsList() {
-    const container = document.getElementById('financialLogsList');
-    if (!container) return;
-    container.innerHTML = '';
-    
-    // Check toggle state
-    const hideGames = document.getElementById('hideGamesSwitch')?.checked ?? true;
 
-    walletLogsDB.forEach(t => {
-        // Filter Logic: If filtering is ON, skip game related logs
-        if (hideGames) {
-            const lowerType = t.type.toLowerCase();
-            const lowerDetail = t.detail.toLowerCase();
-            // Simple heuristics for game logs
-            if (lowerType.includes('wygrana') || lowerType.includes('przegrana') || 
-                lowerType.includes('korekta') || lowerType.includes('bonus') ||
-                lowerDetail.includes('game') || lowerDetail.includes('session')) {
-                return; // Skip this iteration
-            }
-        }
+    // Render Dynamic Content Form
+    dynamicContent.innerHTML = '';
+    const formDiv = document.createElement('div');
+    formDiv.className = 'deposit-dynamic-form';
 
-        const div = document.createElement('div');
-        div.className = 'hist-row';
-        
-        let valColor = 'white';
-        if (t.val.startsWith('+')) valColor = 'var(--accent-green)';
-        if (t.val.startsWith('-')) valColor = 'var(--accent-red)';
-        
-        let statusClass = t.status.toLowerCase();
-        
-        // Logic for Cancel Button (Only if status is Processing or Pending and value is negative/withdrawal)
-        let actionHtml = '';
-        if ((t.status === 'Processing' || t.status === 'Pending') && t.val.startsWith('-')) {
-            actionHtml = `<button class="cancel-tx-btn" title="Anuluj wypłatę" onclick="alert('Wypłata ${t.id} została anulowana. Środki zwrócone.')"><i class="fas fa-times"></i></button>`;
-        }
-
-        div.innerHTML = `
-            <div class="hist-left">
-                <div class="hist-type">${t.type}</div>
-                <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
-                <div style="font-size:9px; color:#555;">${t.detail}</div>
+    if (method === 'visa') {
+        formDiv.innerHTML = `
+            <div class="cc-visual">
+                <div style="font-size:18px; margin-bottom:10px;">VISA <i class="fas fa-wifi" style="float:right; transform: rotate(90deg);"></i></div>
+                <div style="font-size:20px; letter-spacing:2px; margin-bottom:10px;">•••• •••• •••• 4242</div>
+                <div style="font-size:10px; opacity:0.8;">MR GAMBLER &nbsp;&nbsp;&nbsp; 12/28</div>
             </div>
-            <div class="hist-right">
-                <div class="hist-val" style="color:${valColor}">${t.val}</div>
-                <div style="display:flex; align-items:center; justify-content:flex-end; gap:5px;">
-                    <div class="hist-status st-${statusClass}">${t.status}</div>
-                    ${actionHtml}
+            <div style="font-size:11px; color:#aaa; margin-bottom:5px;">Używasz zapisanej karty. CVV nie wymagane dla zaufanych urządzeń.</div>
+        `;
+    } else if (method === 'blik') {
+        formDiv.innerHTML = `
+            <div style="text-align:center; margin-bottom:10px; font-weight:700;">Podaj kod BLIK</div>
+            <div class="blik-code-container">
+                <div class="blik-digit">7</div>
+                <div class="blik-digit">2</div>
+                <div class="blik-digit">0</div>
+                <div class="blik-digit">9</div>
+                <div class="blik-digit">1</div>
+                <div class="blik-digit">5</div>
+            </div>
+            <div style="text-align:center; font-size:10px; color:#aaa;">Potwierdź w aplikacji bankowej. Czas: 01:20</div>
+        `;
+    } else if (method === 'crypto') {
+        formDiv.innerHTML = `
+             <div class="crypto-box small-box">
+                <div style="background:white; padding:5px; border-radius:4px; margin-right:15px;"><i class="fas fa-qrcode" style="font-size:40px; color:black;"></i></div>
+                <div class="crypto-details">
+                    <label style="font-size:10px; color:var(--accent-purple);">USDT (TRC20) Deposit Address</label>
+                    <div class="copy-input">
+                        <input type="text" id="cryptoAddr" readonly value="TEj3...x8L2">
+                        <button onclick="copyCrypto()"><i class="fas fa-copy"></i></button>
+                    </div>
                 </div>
             </div>
+            <div style="margin-top:10px; font-size:10px; color:var(--accent-orange);">Minimalna wpłata: 10 USDT. Środki poniżej tej kwoty przepadną.</div>
         `;
-        container.appendChild(div);
-    });
+    } else if (method === 'skrill') {
+        formDiv.innerHTML = `
+             <div class="input-group small" style="margin-bottom:5px;">
+                <span class="curr-prefix"><i class="fas fa-envelope"></i></span>
+                <input type="text" value="admin@casinolab.pl" readonly style="color:#888;">
+             </div>
+             <div style="font-size:11px; color:#aaa;">Zalogowany jako MrGambler. Przekierowanie nastąpi automatycznie.</div>
+        `;
+    }
+    dynamicContent.appendChild(formDiv);
+}
+
+// Toggle dla transferu (Money / Item)
+function toggleTransferSection(type) {
+    const sec = document.getElementById(`sec${type}`);
+    const tog = document.getElementById(`toggle${type}`);
     
-    if (container.children.length === 0) {
-        container.innerHTML = '<div style="text-align:center; padding:20px; color:#666;">Brak logów do wyświetlenia dla wybranych filtrów.</div>';
+    // Toggle active class visually
+    tog.classList.toggle('active');
+    sec.classList.toggle('active');
+}
+
+function handleWalletAction(type) {
+    if (type === 'deposit') {
+        const amount = document.getElementById('depositAmount').value;
+        if(amount > 0) {
+            alert(`[SYSTEM] Przetwarzanie wpłaty metodą: ${currentDepositMethod.toUpperCase()}.\nKwota: ${amount} $.\n\nŚrodki dodane (symulacja).`);
+        } else alert("Wprowadź poprawną kwotę wpłaty.");
+
+    } else if (type === 'withdraw') {
+        const amount = document.getElementById('withdrawAmount').value;
+        if(amount > 0) alert(`Zlecono wypłatę: ${amount} $. Środki dotrą w ciągu 24h.`);
+        else alert("Wprowadź poprawną kwotę wypłaty.");
+
+    } else if (type === 'transfer') {
+        const recipient = document.getElementById('transferRecipient').value;
+        const sendMoney = document.getElementById('secMoney').classList.contains('active');
+        const sendItem = document.getElementById('secItem').classList.contains('active');
+        
+        if (!recipient) {
+            alert("Podaj ID odbiorcy.");
+            return;
+        }
+        if (!sendMoney && !sendItem) {
+            alert("Musisz wybrać co chcesz wysłać (Przelew lub Przedmiot).");
+            return;
+        }
+
+        let msg = `Wysłano do ${recipient}:`;
+        
+        if (sendMoney) {
+            const amount = document.getElementById('transferAmount').value;
+            if(amount <= 0) { alert("Podaj poprawną kwotę przelewu."); return; }
+            msg += `\n- Gotówka: ${amount} $`;
+        }
+        
+        if (sendItem) {
+            const itemVal = document.getElementById('transferItemSelect').value;
+            if(!itemVal) { alert("Wybierz przedmiot z listy."); return; }
+            const itemName = allTreasures.find(i => i.id == itemVal)?.name || "Przedmiot";
+            msg += `\n- Przedmiot: ${itemName}`;
+        }
+
+        alert(msg);
     }
 }

@@ -1797,10 +1797,10 @@ input:checked + .slider:before { transform: translateX(16px); }
     width: 100%;
 }
 
-/* Networth Card */
+/* Networth Card - WIDERSZY PANEL */
 .nw-main-card {
     width: 100%;
-    max-width: 650px; /* Zwężenie panelu zgodnie z instrukcją */
+    max-width: 800px; /* Zwiększona szerokość dla lepszej ekspozycji bogactwa */
     background: linear-gradient(180deg, #1e2538 0%, #151a2d 100%);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 16px;
@@ -1811,6 +1811,78 @@ input:checked + .slider:before { transform: translateX(16px); }
     position: relative;
     box-shadow: 0 10px 40px rgba(0,0,0,0.3);
 }
+
+/* Dynamic Forms Styles */
+.deposit-dynamic-form {
+    background: rgba(0, 0, 0, 0.2);
+    border: 1px solid rgba(255, 255, 255, 0.05);
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+    animation: fadeIn 0.3s ease;
+}
+
+.cc-visual {
+    background: linear-gradient(135deg, #4c1d95, #3b82f6);
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 15px;
+    color: white;
+    font-family: monospace;
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.blik-code-container {
+    display: flex;
+    gap: 10px;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+.blik-digit {
+    width: 40px;
+    height: 50px;
+    background: white;
+    color: #333;
+    font-size: 24px;
+    font-weight: 700;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border-radius: 6px;
+}
+
+.transfer-toggle-row {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 20px;
+}
+.transfer-toggle {
+    flex: 1;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 10px;
+    border-radius: 8px;
+    cursor: pointer;
+    text-align: center;
+    font-size: 11px;
+    color: #888;
+    transition: 0.2s;
+}
+.transfer-toggle:hover { background: rgba(255,255,255,0.1); }
+.transfer-toggle.active {
+    background: rgba(59, 130, 246, 0.15);
+    border-color: var(--accent-blue);
+    color: white;
+    font-weight: 700;
+}
+.transfer-section {
+    display: none;
+    padding: 10px;
+    border-left: 2px solid var(--accent-blue);
+    background: rgba(59, 130, 246, 0.05);
+    margin-bottom: 10px;
+}
+.transfer-section.active { display: block; animation: slideIn 0.2s ease; }
 
 .nw-header {
     width: 100%;
@@ -1883,10 +1955,10 @@ input:checked + .slider:before { transform: translateX(16px); }
 .nw-loyalty-btn { background: transparent; border: 1px solid var(--accent-purple); color: var(--accent-purple); font-size: 10px; padding: 4px 12px; border-radius: 4px; cursor: pointer; text-transform: uppercase; font-weight: 700; }
 .nw-loyalty-btn:hover { background: var(--accent-purple); color: white; }
 
-/* Action Center Centered */
+/* Action Center Centered - WĘŻSZY NIŻ NETWORTH */
 .action-center-container {
     width: 100%;
-    max-width: 650px; /* Limit width as requested */
+    max-width: 550px; /* Wyraźnie węższy niż panel Networth (800px) */
     background: var(--card-bg);
     border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.05);

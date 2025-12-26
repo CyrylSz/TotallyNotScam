@@ -707,6 +707,60 @@ function renderWalletView() {
     if (nwTotal) nwTotal.textContent = totalNetWorth.toLocaleString('en-US', {minimumFractionDigits: 2});
     if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
     if (nwItems) nwItems.textContent = itemValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+
+    // 3. Populate Transfer Item Select
+    const transferSelect = document.getElementById('transferItemSelect');
+    if (transferSelect && typeof allTreasures !== 'undefined') {
+        // Keep the first option
+        const firstOption = transferSelect.firstElementChild;
+        transferSelect.innerHTML = '';
+        transferSelect.appendChild(firstOption);
+
+        allTreasures.forEach(item => {
+            const opt = document.createElement('option');
+            opt.value = item.id;
+            opt.textContent = `${item.name} (${item.rarity})`;
+            transferSelect.appendChild(opt);
+        });
+    }
+}
+
+function handleWalletAction(type) {
+    if (type === 'deposit') {
+        const amount = document.getElementById('depositAmount').value;
+        if(amount > 0) alert(`Rozpoczęto proces wpłaty: ${amount} $. Przekierowywanie do bramki płatności...`);
+        else alert("Wprowadź poprawną kwotę wpłaty.");
+    } else if (type === 'withdraw') {
+        const amount = document.getElementById('withdrawAmount').value;
+        if(amount > 0) alert(`Zlecono wypłatę: ${amount} $. Środki dotrą w ciągu 24h.`);
+        else alert("Wprowadź poprawną kwotę wypłaty.");
+    } else if (type === 'transfer') {
+        const recipient = document.getElementById('transferRecipient').value;
+        const amount = document.getElementById('transferAmount').value;
+        const item = document.getElementById('transferItemSelect').value;
+        
+        if (!recipient) {
+            alert("Podaj ID odbiorcy.");
+            return;
+        }
+
+        let msg = `Wysłano do ${recipient}:`;
+        let sent = false;
+        
+        if (amount > 0) {
+            msg += `\n- Gotówka: ${amount} $`;
+            sent = true;
+        }
+        if (item) {
+            // Find item name logic purely for alert
+            const itemName = allTreasures.find(i => i.id == item)?.name || "Przedmiot";
+            msg += `\n- Przedmiot: ${itemName}`;
+            sent = true;
+        }
+
+        if (sent) alert(msg);
+        else alert("Musisz wybrać kwotę lub przedmiot do wysłania.");
+    }
 }
 
 function openFinancialLogsModal() {
@@ -723,7 +777,22 @@ function renderFinancialLogsList() {
     if (!container) return;
     container.innerHTML = '';
     
+    // Check toggle state
+    const hideGames = document.getElementById('hideGamesSwitch')?.checked ?? true;
+
     walletLogsDB.forEach(t => {
+        // Filter Logic: If filtering is ON, skip game related logs
+        if (hideGames) {
+            const lowerType = t.type.toLowerCase();
+            const lowerDetail = t.detail.toLowerCase();
+            // Simple heuristics for game logs
+            if (lowerType.includes('wygrana') || lowerType.includes('przegrana') || 
+                lowerType.includes('korekta') || lowerType.includes('bonus') ||
+                lowerDetail.includes('game') || lowerDetail.includes('session')) {
+                return; // Skip this iteration
+            }
+        }
+
         const div = document.createElement('div');
         div.className = 'hist-row';
         
@@ -733,6 +802,12 @@ function renderFinancialLogsList() {
         
         let statusClass = t.status.toLowerCase();
         
+        // Logic for Cancel Button (Only if status is Processing or Pending and value is negative/withdrawal)
+        let actionHtml = '';
+        if ((t.status === 'Processing' || t.status === 'Pending') && t.val.startsWith('-')) {
+            actionHtml = `<button class="cancel-tx-btn" title="Anuluj wypłatę" onclick="alert('Wypłata ${t.id} została anulowana. Środki zwrócone.')"><i class="fas fa-times"></i></button>`;
+        }
+
         div.innerHTML = `
             <div class="hist-left">
                 <div class="hist-type">${t.type}</div>
@@ -741,11 +816,18 @@ function renderFinancialLogsList() {
             </div>
             <div class="hist-right">
                 <div class="hist-val" style="color:${valColor}">${t.val}</div>
-                <div class="hist-status st-${statusClass}">${t.status}</div>
+                <div style="display:flex; align-items:center; justify-content:flex-end; gap:5px;">
+                    <div class="hist-status st-${statusClass}">${t.status}</div>
+                    ${actionHtml}
+                </div>
             </div>
         `;
         container.appendChild(div);
     });
+    
+    if (container.children.length === 0) {
+        container.innerHTML = '<div style="text-align:center; padding:20px; color:#666;">Brak logów do wyświetlenia dla wybranych filtrów.</div>';
+    }
 }
 
 // WALLET HELPER FUNCTIONS
@@ -1613,9 +1695,9 @@ index.html
                     <div class="nw-loyalty-bar">
                         <div class="nw-loyalty-info">
                             <span><i class="fas fa-gem"></i> Loyalty Points: <b style="color:var(--accent-purple);">12,500</b></span>
-                            <span class="nw-loyalty-sub">Level 4 (Gold)</span>
+                            <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; margin-left: 8px;" onclick="alert('Punkty Lojalnościowe (LP) zdobywasz za każdy obrót w grach. Wymieniaj je na gotówkę lub unikalne skrzynki.')" title="Kliknij, aby dowiedzieć się więcej"></i>
                         </div>
-                        <button class="nw-loyalty-btn">Sklep</button>
+                        <button class="nw-loyalty-btn" onclick="alert('Nagroda odebrana! Dodano środki do konta.')">Odbierz Nagrodę</button>
                     </div>
                 </div>
 
@@ -1655,13 +1737,16 @@ index.html
                                 <label>Kwota wpłaty</label>
                                 <div class="input-group">
                                     <span class="curr-prefix">$</span>
-                                    <input type="number" value="100" placeholder="0.00">
+                                    <input type="number" id="depositAmount" value="100" placeholder="0.00">
                                 </div>
                                 <div class="quick-amounts">
-                                    <button>50</button><button class="active">100</button><button>250</button><button>MAX</button>
+                                    <button onclick="document.getElementById('depositAmount').value=50">50</button>
+                                    <button onclick="document.getElementById('depositAmount').value=100" class="active">100</button>
+                                    <button onclick="document.getElementById('depositAmount').value=250">250</button>
+                                    <button onclick="document.getElementById('depositAmount').value=5000">MAX</button>
                                 </div>
                                 <div class="dep-footer centered-footer">
-                                    <button class="action-btn-large full-width">WPŁAĆ TERAZ</button>
+                                    <button class="action-btn-large full-width" onclick="handleWalletAction('deposit')">WPŁAĆ TERAZ</button>
                                 </div>
                             </div>
                         </div>
@@ -1678,9 +1763,9 @@ index.html
                                 <label>Kwota do wypłaty</label>
                                 <div class="input-group">
                                     <span class="curr-prefix">$</span>
-                                    <input type="number" placeholder="Dostępne: 2,450,000">
+                                    <input type="number" id="withdrawAmount" placeholder="Dostępne: 2,450,000">
                                 </div>
-                                <button class="action-btn-large outline full-width">ZLEĆ WYPŁATĘ</button>
+                                <button class="action-btn-large outline full-width" onclick="handleWalletAction('withdraw')">ZLEĆ WYPŁATĘ</button>
                             </div>
                         </div>
 
@@ -1693,15 +1778,25 @@ index.html
                                 <label>ID Odbiorcy</label>
                                 <div class="input-group">
                                     <span class="curr-prefix"><i class="fas fa-user"></i></span>
-                                    <input type="text" placeholder="np. User_99 lub ID">
+                                    <input type="text" id="transferRecipient" placeholder="np. User_99 lub ID">
                                 </div>
 
                                 <label>Kwota przelewu</label>
                                 <div class="input-group">
                                     <span class="curr-prefix">$</span>
-                                    <input type="number" placeholder="0.00">
+                                    <input type="number" id="transferAmount" placeholder="0.00">
                                 </div>
-                                <button class="action-btn-large full-width" style="background: var(--accent-blue);">WYŚLIJ ŚRODKI</button>
+
+                                <label style="margin-top: 10px; display:block;">Wyślij Przedmiot (Opcjonalne)</label>
+                                <div class="input-group">
+                                    <span class="curr-prefix"><i class="fas fa-box"></i></span>
+                                    <select id="transferItemSelect" style="flex-grow: 1; background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); border-left: none; padding: 12px; color: white; font-size: 14px; border-radius: 0 8px 8px 0; outline: none;">
+                                        <option value="">-- Nie wysyłaj przedmiotu --</option>
+                                        <!-- Populated via JS -->
+                                    </select>
+                                </div>
+
+                                <button class="action-btn-large full-width" style="background: var(--accent-blue);" onclick="handleWalletAction('transfer')">WYŚLIJ ŚRODKI</button>
                             </div>
                         </div>
 
@@ -2139,9 +2234,20 @@ index.html
             </div>
             
             <div style="padding: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
-                <div>
-                    <div style="font-size: 10px; color: var(--text-muted);">BILANS MIESIĘCZNY</div>
-                    <div style="font-size: 16px; font-weight: 700; color: var(--accent-red);">-200.00 $</div>
+                <div style="display: flex; align-items: center; gap: 20px;">
+                    <div>
+                        <div style="font-size: 10px; color: var(--text-muted);">BILANS MIESIĘCZNY</div>
+                        <div style="font-size: 16px; font-weight: 700; color: var(--accent-red);">-200.00 $</div>
+                    </div>
+                    
+                    <!-- Toggle Switch for Games -->
+                    <div class="switch-container">
+                        <label class="switch">
+                            <input type="checkbox" id="hideGamesSwitch" checked onchange="renderFinancialLogsList()">
+                            <span class="slider"></span>
+                        </label>
+                        <span class="switch-label">Ukryj gry</span>
+                    </div>
                 </div>
                 <button class="gc-btn lobby"><i class="fas fa-download"></i> Eksportuj CSV</button>
             </div>
@@ -3989,6 +4095,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* Networth Card */
 .nw-main-card {
     width: 100%;
+    max-width: 650px; /* Zwężenie panelu zgodnie z instrukcją */
     background: linear-gradient(180deg, #1e2538 0%, #151a2d 100%);
     border: 1px solid rgba(59, 130, 246, 0.2);
     border-radius: 16px;

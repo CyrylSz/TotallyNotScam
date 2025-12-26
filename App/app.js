@@ -685,34 +685,33 @@ function renderMarketView() {
     });
 }
 
+let currentDepositMethod = 'visa';
+
 function renderWalletView() {
-    // 1. Calculate Networth (Real Money + Items)
-    const realMoney = 2450000; // Hardcoded simulation
-    let itemValue = 0;
-    
-    // Sum all items rawPrice
-    if (typeof allTreasures !== 'undefined') {
-        itemValue = allTreasures.reduce((sum, item) => sum + (item.rawPrice || 0), 0);
-    }
-    
-    const totalNetWorth = realMoney + itemValue;
+    // 1. ZMODYFIKOWANA LOGIKA NETWORTH
+    // Cel: Net Worth = 5,240,000, Real Money = 2,450,000.
+    // Obliczamy Items Value z różnicy.
+    const realMoney = 2450000; 
+    const targetNetWorth = 5240000;
+    const itemsValue = targetNetWorth - realMoney; // = 2,790,000
     
     // 2. Update DOM
     const nwTotal = document.getElementById('nwTotalDisplay');
     const nwReal = document.getElementById('nwRealDisplay');
     const nwItems = document.getElementById('nwItemsDisplay');
     
-    if (nwTotal) nwTotal.textContent = totalNetWorth.toLocaleString('en-US', {minimumFractionDigits: 2});
+    if (nwTotal) nwTotal.textContent = targetNetWorth.toLocaleString('en-US', {minimumFractionDigits: 2});
     if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
-    if (nwItems) nwItems.textContent = itemValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+    if (nwItems) nwItems.textContent = itemsValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
 
-    // 3. Populate Transfer Item Select
+    // 3. Init Deposit Methods
+    selectDepositMethod(currentDepositMethod);
+
+    // 4. Populate Transfer Item Select
     const transferSelect = document.getElementById('transferItemSelect');
     if (transferSelect && typeof allTreasures !== 'undefined') {
-        // Keep the first option
-        const firstOption = transferSelect.firstElementChild;
-        transferSelect.innerHTML = '';
-        transferSelect.appendChild(firstOption);
+        // Reset and keep first option
+        transferSelect.innerHTML = '<option value="">-- Wybierz przedmiot --</option>';
 
         allTreasures.forEach(item => {
             const opt = document.createElement('option');
@@ -723,41 +722,135 @@ function renderWalletView() {
     }
 }
 
+// Funkcja obsługująca zmianę metody wpłaty i dynamiczne panele
+function selectDepositMethod(method) {
+    currentDepositMethod = method;
+    const container = document.getElementById('depositMethodsGrid');
+    const dynamicContent = document.getElementById('depositDynamicContainer');
+    if(!container || !dynamicContent) return;
+
+    // Render Buttons
+    const methods = [
+        { id: 'visa', icon: 'fab fa-cc-visa', name: 'Visa' },
+        { id: 'blik', icon: 'fas fa-mobile-alt', name: 'BLIK' },
+        { id: 'crypto', icon: 'fab fa-bitcoin', name: 'Crypto' },
+        { id: 'skrill', icon: 'fas fa-wallet', name: 'Skrill' }
+    ];
+
+    container.innerHTML = '';
+    methods.forEach(m => {
+        const div = document.createElement('div');
+        div.className = `pm-item ${m.id === method ? 'active' : ''}`;
+        div.onclick = () => selectDepositMethod(m.id);
+        div.innerHTML = `<i class="${m.icon}"></i> ${m.name}`;
+        container.appendChild(div);
+    });
+
+    // Render Dynamic Content Form
+    dynamicContent.innerHTML = '';
+    const formDiv = document.createElement('div');
+    formDiv.className = 'deposit-dynamic-form';
+
+    if (method === 'visa') {
+        formDiv.innerHTML = `
+            <div class="cc-visual">
+                <div style="font-size:18px; margin-bottom:10px;">VISA <i class="fas fa-wifi" style="float:right; transform: rotate(90deg);"></i></div>
+                <div style="font-size:20px; letter-spacing:2px; margin-bottom:10px;">•••• •••• •••• 4242</div>
+                <div style="font-size:10px; opacity:0.8;">MR GAMBLER &nbsp;&nbsp;&nbsp; 12/28</div>
+            </div>
+            <div style="font-size:11px; color:#aaa; margin-bottom:5px;">Używasz zapisanej karty. CVV nie wymagane dla zaufanych urządzeń.</div>
+        `;
+    } else if (method === 'blik') {
+        formDiv.innerHTML = `
+            <div style="text-align:center; margin-bottom:10px; font-weight:700;">Podaj kod BLIK</div>
+            <div class="blik-code-container">
+                <div class="blik-digit">7</div>
+                <div class="blik-digit">2</div>
+                <div class="blik-digit">0</div>
+                <div class="blik-digit">9</div>
+                <div class="blik-digit">1</div>
+                <div class="blik-digit">5</div>
+            </div>
+            <div style="text-align:center; font-size:10px; color:#aaa;">Potwierdź w aplikacji bankowej. Czas: 01:20</div>
+        `;
+    } else if (method === 'crypto') {
+        formDiv.innerHTML = `
+             <div class="crypto-box small-box">
+                <div style="background:white; padding:5px; border-radius:4px; margin-right:15px;"><i class="fas fa-qrcode" style="font-size:40px; color:black;"></i></div>
+                <div class="crypto-details">
+                    <label style="font-size:10px; color:var(--accent-purple);">USDT (TRC20) Deposit Address</label>
+                    <div class="copy-input">
+                        <input type="text" id="cryptoAddr" readonly value="TEj3...x8L2">
+                        <button onclick="copyCrypto()"><i class="fas fa-copy"></i></button>
+                    </div>
+                </div>
+            </div>
+            <div style="margin-top:10px; font-size:10px; color:var(--accent-orange);">Minimalna wpłata: 10 USDT. Środki poniżej tej kwoty przepadną.</div>
+        `;
+    } else if (method === 'skrill') {
+        formDiv.innerHTML = `
+             <div class="input-group small" style="margin-bottom:5px;">
+                <span class="curr-prefix"><i class="fas fa-envelope"></i></span>
+                <input type="text" value="admin@casinolab.pl" readonly style="color:#888;">
+             </div>
+             <div style="font-size:11px; color:#aaa;">Zalogowany jako MrGambler. Przekierowanie nastąpi automatycznie.</div>
+        `;
+    }
+    dynamicContent.appendChild(formDiv);
+}
+
+// Toggle dla transferu (Money / Item)
+function toggleTransferSection(type) {
+    const sec = document.getElementById(`sec${type}`);
+    const tog = document.getElementById(`toggle${type}`);
+    
+    // Toggle active class visually
+    tog.classList.toggle('active');
+    sec.classList.toggle('active');
+}
+
 function handleWalletAction(type) {
     if (type === 'deposit') {
         const amount = document.getElementById('depositAmount').value;
-        if(amount > 0) alert(`Rozpoczęto proces wpłaty: ${amount} $. Przekierowywanie do bramki płatności...`);
-        else alert("Wprowadź poprawną kwotę wpłaty.");
+        if(amount > 0) {
+            alert(`[SYSTEM] Przetwarzanie wpłaty metodą: ${currentDepositMethod.toUpperCase()}.\nKwota: ${amount} $.\n\nŚrodki dodane (symulacja).`);
+        } else alert("Wprowadź poprawną kwotę wpłaty.");
+
     } else if (type === 'withdraw') {
         const amount = document.getElementById('withdrawAmount').value;
         if(amount > 0) alert(`Zlecono wypłatę: ${amount} $. Środki dotrą w ciągu 24h.`);
         else alert("Wprowadź poprawną kwotę wypłaty.");
+
     } else if (type === 'transfer') {
         const recipient = document.getElementById('transferRecipient').value;
-        const amount = document.getElementById('transferAmount').value;
-        const item = document.getElementById('transferItemSelect').value;
+        const sendMoney = document.getElementById('secMoney').classList.contains('active');
+        const sendItem = document.getElementById('secItem').classList.contains('active');
         
         if (!recipient) {
             alert("Podaj ID odbiorcy.");
             return;
         }
+        if (!sendMoney && !sendItem) {
+            alert("Musisz wybrać co chcesz wysłać (Przelew lub Przedmiot).");
+            return;
+        }
 
         let msg = `Wysłano do ${recipient}:`;
-        let sent = false;
         
-        if (amount > 0) {
+        if (sendMoney) {
+            const amount = document.getElementById('transferAmount').value;
+            if(amount <= 0) { alert("Podaj poprawną kwotę przelewu."); return; }
             msg += `\n- Gotówka: ${amount} $`;
-            sent = true;
         }
-        if (item) {
-            // Find item name logic purely for alert
-            const itemName = allTreasures.find(i => i.id == item)?.name || "Przedmiot";
+        
+        if (sendItem) {
+            const itemVal = document.getElementById('transferItemSelect').value;
+            if(!itemVal) { alert("Wybierz przedmiot z listy."); return; }
+            const itemName = allTreasures.find(i => i.id == itemVal)?.name || "Przedmiot";
             msg += `\n- Przedmiot: ${itemName}`;
-            sent = true;
         }
 
-        if (sent) alert(msg);
-        else alert("Musisz wybrać kwotę lub przedmiot do wysłania.");
+        alert(msg);
     }
 }
 
