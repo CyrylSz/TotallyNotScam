@@ -2124,34 +2124,34 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 .inv-filter-btn:hover { background: rgba(255,255,255,0.1); color: white; }
 
-/* Left Grid - SCALED SLOT SIZE (100px) */
+/* Left Grid - SCALED SLOT SIZE (110px) */
 .inventory-grid-scroll {
     flex: 1;
     overflow-y: auto;
     padding: 20px;
     display: grid;
-    /* Skalowanie do 100px + gap 15px */
-    grid-template-columns: repeat(auto-fill, 100px);
-    grid-auto-rows: 100px;
-    gap: 15px;
+    /* Skalowanie do 110px + gap 10px (Mieści 5 w rzędzie) */
+    grid-template-columns: repeat(auto-fill, 110px);
+    grid-auto-rows: 110px;
+    gap: 10px;
     align-content: start;
     justify-content: center;
 }
 
-/* UNIVERSAL SLOT STYLE (100px) */
+/* UNIVERSAL SLOT STYLE (110px) */
 .inv-grid-slot, .pd-slot {
-    width: 100px !important; /* WYMUSZONY ROZMIAR */
-    height: 100px !important; /* WYMUSZONY ROZMIAR */
+    width: 110px !important; /* WYMUSZONY ROZMIAR */
+    height: 110px !important; /* WYMUSZONY ROZMIAR */
     background: rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 12px !important; /* Większe zaokrąglenie */
+    border-radius: 12px !important; /* Mniejsze zaokrąglenie */
     position: relative;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: inset 0 0 15px rgba(0,0,0,0.6);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
 }
 
 .inv-grid-slot:hover, .pd-slot:hover {
@@ -2161,15 +2161,15 @@ input:checked + .slider:before { transform: translateX(16px); }
     z-index: 10;
 }
 
-/* Zwiększona ikona dla większego slotu */
-.inv-item-icon { font-size: 42px; filter: drop-shadow(0 4px 6px rgba(0,0,0,0.8)); transition: 0.2s; margin-bottom: 15px; }
+/* Skalowana ikona dla slotu 110px */
+.inv-item-icon { font-size: 45px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)); transition: 0.2s; margin-bottom: 15px; }
 
 .inv-item-name {
     position: absolute;
-    bottom: 5px;
-    left: 2px;
-    right: 2px;
-    font-size: 9px;
+    bottom: 8px;
+    left: 4px;
+    right: 4px;
+    font-size: 11px;
     font-weight: 700;
     text-align: center;
     white-space: nowrap;
@@ -2205,15 +2205,17 @@ input:checked + .slider:before { transform: translateX(16px); }
     border-radius: 3px;
 }
 
-/* Right Paper Doll - CENTERED BUSINESS LAYOUT (70px Slots) */
+/* Right Paper Doll - TOP ALIGNED WITH SCROLL */
 .paper-doll-container {
     flex: 1;
     position: relative;
     background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
-    overflow: hidden;
+    overflow-y: auto; /* Dodano scroll */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Przeniesiono do góry */
+    padding-top: 30px; /* Odstęp od góry */
+    padding-bottom: 30px;
 }
 /* DRAG AND DROP STYLES */
 .inv-grid-slot.is-equipped {
@@ -2465,20 +2467,20 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .hidden { display: none !important; }
 
-/* Grid Calculation for 3x4 (SCALED UP):
-   Slot Size: 100px
-   Gap: 15px
-   Step: 115px
-   Column Steps: 0, 115px, 230px
-   Row Steps: 0, 115px, 230px, 345px
-   Total Width: 330px
-   Total Height: 445px
+/* Grid Calculation for 3x4 (SCALED 110px):
+   Slot Size: 110px
+   Gap: 10px
+   Step: 120px
+   Column Steps: 0, 120px, 240px
+   Row Steps: 0, 120px, 240px, 360px
+   Total Width: 350px
+   Total Height: 470px
 */
 
 .pd-formation {
     position: relative;
-    width: 330px;
-    height: 445px; /* Scaled 3x4 */
+    width: 350px;
+    height: 470px; /* Scaled 3x4 */
 }
 
 .pd-silhouette {
@@ -2486,9 +2488,9 @@ input:checked + .slider:before { transform: translateX(16px); }
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 380px; /* Zwiększona sylwetka */
+    font-size: 400px; /* Zmniejszona sylwetka dla 110px */
     color: rgba(0,0,0,0.3);
-    filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+    filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
     z-index: 0;
     pointer-events: none;
 }
@@ -2496,35 +2498,35 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* UNIVERSAL SLOT SIZE FORCE (Redundant but kept for overrides) */
 .pd-slot {
     position: absolute;
-    width: 100px !important;
-    height: 100px !important;
+    width: 110px !important;
+    height: 110px !important;
     border-radius: 12px !important;
-    box-shadow: inset 0 0 25px rgba(0,0,0,0.8);
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
     background: rgba(0,0,0,0.6);
 }
-.pd-slot .placeholder { font-size: 40px; opacity: 0.3; } /* Większy placeholder */
+.pd-slot .placeholder { font-size: 40px; opacity: 0.3; } /* Mniejszy placeholder */
 
-/* --- GRID POSITIONS 3x4 (Recalculated for 100px + 15px gap) --- */
+/* --- GRID POSITIONS 3x4 (Recalculated for 110px + 10px gap) --- */
 
 /* ROW 1 (Y=0) */
 .slot-glasses   { top: 0; left: 0; }
-.slot-neck      { top: 0; left: 115px; z-index: 5; }
-.slot-earpiece  { top: 0; left: 230px; }
+.slot-neck      { top: 0; left: 120px; z-index: 5; }
+.slot-earpiece  { top: 0; left: 240px; }
 
-/* ROW 2 (Y=115) */
-.slot-watch     { top: 115px; left: 0; }
-.slot-suit      { top: 115px; left: 115px; z-index: 4; }
-.slot-cufflink  { top: 115px; left: 230px; }
+/* ROW 2 (Y=120) */
+.slot-watch     { top: 120px; left: 0; }
+.slot-suit      { top: 120px; left: 120px; z-index: 4; }
+.slot-cufflink  { top: 120px; left: 240px; }
 
-/* ROW 3 (Y=230) */
-.slot-ring      { top: 230px; left: 0; }
-.slot-belt      { top: 230px; left: 115px; z-index: 3; }
-.slot-pants     { top: 230px; left: 230px; }
+/* ROW 3 (Y=240) */
+.slot-ring      { top: 240px; left: 0; }
+.slot-belt      { top: 240px; left: 120px; z-index: 3; }
+.slot-pants     { top: 240px; left: 240px; }
 
-/* ROW 4 (Y=345) */
-.slot-vehicle   { top: 345px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
-.slot-shoes     { top: 345px; left: 115px; z-index: 2; }
-.slot-hand      { top: 345px; left: 230px; border-color: rgba(16, 185, 129, 0.4); }
+/* ROW 4 (Y=360) */
+.slot-vehicle   { top: 360px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
+.slot-shoes     { top: 360px; left: 120px; z-index: 2; }
+.slot-hand      { top: 360px; left: 240px; border-color: rgba(16, 185, 129, 0.4); }
 
 /* Modal tweaks */
 .full-height-logs { max-height: 500px; }

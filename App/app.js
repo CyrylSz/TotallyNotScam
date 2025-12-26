@@ -1226,8 +1226,8 @@ function renderItemInSlot(slotElement, item) {
     // Podmień HTML slotu na ikonę przedmiotu
     let rarityColor = getRarityColor(item.rarity);
     
-    // Zwiększono rozmiar ikony do 48px dla slotów 100px
-    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 48px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
+    // Zmniejszono rozmiar ikony do 45px dla slotów 110px
+    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 45px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
@@ -1240,11 +1240,11 @@ function resetSlotVisuals(slotElement) {
     slotElement.style = ""; // Reset inline styles
     const type = slotElement.dataset.type;
     let icon = "fa-plus";
-    if(type === 'head') icon = "fa-glasses";
+    if(type === 'head') icon = "fa-hat-cowboy";
     if(type === 'neck') icon = "fa-link";
     if(type === 'suit') icon = "fa-user-tie";
     if(type === 'watch') icon = "fa-clock";
-    if(type === 'gadget') icon = "fa-mobile-alt";
+    if(type === 'gadget') icon = "fa-microchip";
     if(type === 'ring') icon = "fa-ring";
     if(type === 'belt') icon = "fa-grip-lines";
     if(type === 'pants') icon = "fa-columns";

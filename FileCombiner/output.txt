@@ -18,13 +18,14 @@ const currentRankId = 3; // Alpha Whale
 // --- GLOBAL STATE ---
 let myInventory = []; // Tablica obiektów (instancji)
 let myLoadout = {};   // Mapa: slotId -> itemUid
+let invFilterState = { item: true, case: true };
 
 // --- RENDER FUNCTIONS ---
 // --- MARKET SYSTEM START ---
 let marketState = {
     tab: 'global', // 'global' or 'my'
     search: '',
-    type: 'item', // 'item' or 'case'
+    types: { item: true, case: true }, // Multiselect
     slots: [], // array of selected slots e.g. ['watch', 'head']
     priceMin: null,
     priceMax: null,
@@ -145,16 +146,15 @@ function switchMarketTab(tab) {
     filterMarket();
 }
 
-function setMarketType(type, btnElement) {
-    marketState.type = type;
+function toggleMarketType(type, btnElement) {
+    marketState.types[type] = !marketState.types[type];
     
     // Visual Toggle
-    document.querySelectorAll('.ms-type-btn').forEach(b => b.classList.remove('active'));
-    btnElement.classList.add('active');
+    btnElement.classList.toggle('active', marketState.types[type]);
     
-    // Show/Hide Slot filters (only for items)
+    // Show/Hide Slot filters (only if Item is active)
     const slotSection = document.getElementById('slotFilterSection');
-    if(type === 'item') slotSection.classList.remove('hidden');
+    if(marketState.types['item']) slotSection.classList.remove('hidden');
     else slotSection.classList.add('hidden');
     
     filterMarket();
@@ -221,8 +221,8 @@ function filterMarket() {
         if(marketState.tab === 'global' && item.isMine) return false; // Usually global shows all, but separate tabs implies separation. Let's show others in global. Actually prompt says: "Global: All items of all players". Usually implies excluding mine or highlighting mine. Let's keep separation for clean UI.
         
         // Type
-        if(marketState.type === 'case' && !item.isChest) return false;
-        if(marketState.type === 'item' && item.isChest) return false;
+        if(item.isChest && !marketState.types.case) return false;
+        if(!item.isChest && !marketState.types.item) return false;
         
         // Search
         if(marketState.search && !item.name.toLowerCase().includes(marketState.search)) return false;
@@ -417,7 +417,8 @@ function initInventorySystem() {
             if (!item.change) {
                 const changeVal = (Math.random() * 10 - 5).toFixed(1);
                 item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
-                item.type = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
+                // Zmieniamy nazwę pola na 'trend', aby nie nadpisywać item.type (np. 'chest', 'watch')
+                item.trend = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
             }
             
             myInventory.push(item);
@@ -589,8 +590,9 @@ function renderTreasures() {
         let icon = '';
         let colorClass = '';
 
-        if (item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
-        else if (item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
+        // Używamy item.trend zamiast item.type
+        if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
+        else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
 
         let changeHtml = '';
         // Wyświetl zmianę tylko jeśli jest różna od 0% lub jeśli item ma typ up/down
@@ -1051,6 +1053,12 @@ chatInput.addEventListener('keypress', function (e) {
 
 // --- DRAG AND DROP & INVENTORY LOGIC ---
 
+function toggleInvFilter(type) {
+    invFilterState[type] = !invFilterState[type];
+    const btn = document.getElementById(type === 'item' ? 'btnInvItem' : 'btnInvCase');
+    if(btn) btn.classList.toggle('active', invFilterState[type]);
+    renderInventoryView();
+}
 function renderInventoryView() {
     const container = document.getElementById('inventoryContainer');
     if(!container) return; 
@@ -1059,8 +1067,15 @@ function renderInventoryView() {
     // Inicjalizacja slotów loadoutu (dodanie listenerów)
     setupLoadoutSlots();
 
-    // Sortowanie
-    const sortedInv = [...myInventory].sort((a, b) => b.rawPrice - a.rawPrice);
+    // Filtrowanie i Sortowanie
+    let filteredInv = myInventory.filter(item => {
+        const isCase = item.type === 'chest'; // ID 1-5 (skrzynki) mają typ 'chest'
+        if(isCase && !invFilterState.case) return false;
+        if(!isCase && !invFilterState.item) return false;
+        return true;
+    });
+
+    const sortedInv = filteredInv.sort((a, b) => b.rawPrice - a.rawPrice);
     
     // Render Grid
     sortedInv.forEach(item => {
@@ -1097,7 +1112,7 @@ function renderInventoryView() {
 
         slot.innerHTML = `
             <i class="fas ${item.icon} inv-item-icon" style="color: ${item.color};"></i>
-            <div class="inv-slot-rarity-dot" style="background-color: ${rarityColor}; box-shadow: 0 0 5px ${rarityColor};"></div>
+            <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
             ${badgeHtml}
         `;
         
@@ -1213,7 +1228,8 @@ function renderItemInSlot(slotElement, item) {
     // Podmień HTML slotu na ikonę przedmiotu
     let rarityColor = getRarityColor(item.rarity);
     
-    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 32px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
+    // Zwiększono rozmiar ikony do 70px dla slotów 150px
+    slotElement.innerHTML = `<i class="fas ${item.icon}" style="color: ${item.color}; font-size: 70px; filter: drop-shadow(0 0 5px ${item.color});"></i>`;
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
@@ -1263,8 +1279,9 @@ function renderDashInventory() {
         
         let priceClass = 'price-neutral';
         let iconHtml = '';
-        if (item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
-        else if (item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
+        // Używamy item.trend zamiast item.type
+        if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
+        else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
         
         const badgeClass = `badge-${item.rarity.toLowerCase()}`;
         
@@ -1274,7 +1291,7 @@ function renderDashInventory() {
                 <h5>${item.name}</h5>
                 <div class="item-price-row">
                     <p class="${priceClass}">${item.price}</p>
-                    <div class="val-change-inline ${item.type === 'up' ? 'val-up' : item.type === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
+                    <div class="val-change-inline ${item.trend === 'up' ? 'val-up' : item.trend === 'down' ? 'val-down' : ''}" style="margin-left:5px;">
                         ${item.change} ${iconHtml}
                     </div>
                 </div>
@@ -2486,14 +2503,25 @@ index.html
                 <!-- LEWA STRONA: Magazyn -->
                 <div class="inv-panel left-panel">
                     <div class="inv-header">
-                        <div class="inv-title"><i class="fas fa-box-open"></i> MAGAZYN</div>
+                        <div class="inv-title">
+                            <i class="fas fa-box-open"></i> MAGAZYN
+                            <div class="ms-toggle-row" style="display:inline-flex; width: 200px; margin-left:20px; vertical-align:middle;">
+                                <button id="btnInvItem" class="ms-type-btn active" onclick="toggleInvFilter('item')" style="margin:0;">
+                                    <i class="fas fa-cube"></i> Item
+                                </button>
+                                <button id="btnInvCase" class="ms-type-btn active" onclick="toggleInvFilter('case')" style="margin:0;">
+                                    <i class="fas fa-briefcase"></i> Case
+                                </button>
+                            </div>
+                        </div>
                         <div class="inv-stats">
                             <div class="inv-value-display">
-                                Items Value: <span style="color:white;">2,790,000.00 $</span>
+                                <div class="iv-label">TOTAL VALUE</div>
+                                <div class="iv-val">2,790,000 $</div>
                             </div>
-                            <div class="inv-filter-btn" title="Sortuj / Filtruj">
+                            <button class="inv-filter-btn" title="Sortuj / Filtruj">
                                 <i class="fas fa-filter"></i>
-                            </div>
+                            </button>
                         </div>
                     </div>
                     <div class="inventory-grid-scroll" id="inventoryContainer">
@@ -2506,8 +2534,20 @@ index.html
                     <div class="inv-header">
                         <div class="inv-title"><i class="fas fa-user-astronaut"></i> LOADOUT</div>
                         <div class="inv-stats">
-                            <div class="inv-value-display" style="border-color: rgba(59, 130, 246, 0.3); background: rgba(59, 130, 246, 0.1);">
-                                <span style="color:var(--accent-blue);">MrGambler</span>
+                            <div class="inv-value-display">
+                                <div class="iv-label" style="display: flex; align-items: center; gap: 6px;">
+                                    GEAR SCORE
+                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Score to suma punktów twoich założonych przedmiotów.')"></i>
+                                </div>
+                                <div class="iv-val" style="color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">145</div>
+                            </div>
+                            <div class="loadout-select-box">
+                                <div class="iv-label">ACTIVE LOADOUT</div>
+                                <select class="minimal-select">
+                                    <option selected>Poker Face Outfit</option>
+                                    <option>High Roller Set</option>
+                                    <option>Lucky Charm</option>
+                                </select>
                             </div>
                         </div>
                     </div>
@@ -2564,8 +2604,8 @@ index.html
                     <div class="ms-section">
                         <div class="ms-label">Typ Aktywa</div>
                         <div class="ms-toggle-row">
-                            <button class="ms-type-btn active" onclick="setMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
-                            <button class="ms-type-btn" onclick="setMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
+                            <button class="ms-type-btn active" onclick="toggleMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
+                            <button class="ms-type-btn active" onclick="toggleMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
                         </div>
                     </div>
 
@@ -5392,76 +5432,139 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 
 .inv-title { font-size: 14px; font-weight: 700; color: white; letter-spacing: 1px; display: flex; gap: 8px; align-items: center; }
+.inv-type-toggles { display: flex; gap: 5px; margin-left: 15px; }
+.inv-type-btn { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.1); color: #888; padding: 2px 8px; font-size: 10px; border-radius: 4px; cursor: pointer; transition: 0.2s; font-weight: 600; }
+.inv-type-btn:hover { background: rgba(255,255,255,0.1); }
+.inv-type-btn.active { background: var(--accent-purple); color: white; border-color: var(--accent-purple); }
 .inv-stats { display: flex; align-items: center; gap: 15px; }
 
 /* Nowy styl dla Value */
 .inv-value-display {
-    font-family: monospace;
-    font-size: 16px;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: center;
+    padding-right: 15px;
+    margin-right: 15px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+    height: 40px;
+}
+
+.iv-label {
+    font-size: 9px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    line-height: 1;
+    margin-bottom: 3px;
+}
+
+.iv-val {
+    font-size: 18px;
     font-weight: 700;
     color: var(--accent-green);
-    background: rgba(16, 185, 129, 0.1);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    padding: 4px 10px;
-    border-radius: 6px;
+    text-shadow: 0 0 15px rgba(16, 185, 129, 0.4);
+    font-family: 'Inter', sans-serif;
+    line-height: 1;
+}
+.loadout-select-box {
     display: flex;
-    align-items: center;
-    gap: 6px;
+    flex-direction: column;
+    justify-content: center;
+    height: 40px;
+}
+
+.minimal-select {
+    background: transparent;
+    border: none;
+    color: white;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 13px;
+    cursor: pointer;
+    outline: none;
+    padding: 0;
+    margin-top: 3px;
+    width: 140px;
+}
+
+.minimal-select option {
+    background: var(--bg-dark);
+    color: #ccc;
+    padding: 10px;
 }
 
 .inv-filter-btn {
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(255,255,255,0.05);
-    border-radius: 4px;
+    background: transparent;
+    border: none;
     color: var(--text-muted);
     cursor: pointer;
     transition: 0.2s;
+    font-size: 18px;
+    padding: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
 .inv-filter-btn:hover { background: rgba(255,255,255,0.1); color: white; }
 
-/* Left Grid - FIXED SLOT SIZE */
+/* Left Grid - SCALED SLOT SIZE (150px) */
 .inventory-grid-scroll {
     flex: 1;
     overflow-y: auto;
     padding: 20px;
     display: grid;
-    /* Sztywny rozmiar kolumn dopasowany do slotu */
-    grid-template-columns: repeat(auto-fill, 70px);
-    grid-auto-rows: 70px;
-    gap: 10px;
+    /* Skalowanie do 150px + gap 15px */
+    grid-template-columns: repeat(auto-fill, 150px);
+    grid-auto-rows: 150px;
+    gap: 15px;
     align-content: start;
-    justify-content: center; /* Wycentrowanie siatki */
+    justify-content: center;
 }
 
-/* UNIVERSAL SLOT STYLE */
+/* UNIVERSAL SLOT STYLE (150px) */
 .inv-grid-slot, .pd-slot {
-    width: 70px; /* WYMUSZONY ROZMIAR */
-    height: 70px; /* WYMUSZONY ROZMIAR */
+    width: 150px !important; /* WYMUSZONY ROZMIAR */
+    height: 150px !important; /* WYMUSZONY ROZMIAR */
     background: rgba(0,0,0,0.4);
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 6px;
+    border-radius: 16px !important; /* Większe zaokrąglenie */
     position: relative;
     cursor: pointer;
     transition: all 0.2s ease;
     display: flex;
     align-items: center;
     justify-content: center;
-    box-shadow: inset 0 0 10px rgba(0,0,0,0.5);
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.6);
 }
 
 .inv-grid-slot:hover, .pd-slot:hover {
     border-color: var(--accent-purple);
     background: rgba(139, 92, 246, 0.15);
-    box-shadow: 0 0 15px rgba(139, 92, 246, 0.3);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.4);
     z-index: 10;
 }
 
-.inv-item-icon { font-size: 28px; filter: drop-shadow(0 4px 4px rgba(0,0,0,0.8)); transition: 0.2s; }
-.inv-grid-slot:hover .inv-item-icon, .pd-slot:hover i { transform: scale(1.15); }
+/* Zwiększona ikona dla slotu 150px */
+.inv-item-icon { font-size: 70px; filter: drop-shadow(0 4px 8px rgba(0,0,0,0.8)); transition: 0.2s; margin-bottom: 20px; }
+
+.inv-item-name {
+    position: absolute;
+    bottom: 8px;
+    left: 4px;
+    right: 4px;
+    font-size: 11px;
+    font-weight: 700;
+    text-align: center;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    text-shadow: 0 1px 2px black;
+    opacity: 0.9;
+    pointer-events: none;
+}
+.inv-grid-slot:hover .inv-item-icon, .pd-slot:hover i { transform: scale(1.1); }
 
 .inv-slot-rarity-dot {
     position: absolute;
@@ -5487,15 +5590,17 @@ input:checked + .slider:before { transform: translateX(16px); }
     border-radius: 3px;
 }
 
-/* Right Paper Doll - CENTERED BUSINESS LAYOUT (70px Slots) */
+/* Right Paper Doll - TOP ALIGNED WITH SCROLL */
 .paper-doll-container {
     flex: 1;
     position: relative;
     background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
-    overflow: hidden;
+    overflow-y: auto; /* Dodano scroll */
     display: flex;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start; /* Przeniesiono do góry */
+    padding-top: 30px; /* Odstęp od góry */
+    padding-bottom: 30px;
 }
 /* DRAG AND DROP STYLES */
 .inv-grid-slot.is-equipped {
@@ -5747,19 +5852,20 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .hidden { display: none !important; }
 
-/* Grid Calculation for 3x4:
-   Slot Size: 70px
+/* Grid Calculation for 3x4 (SCALED 150px):
+   Slot Size: 150px
    Gap: 15px
-   Column Steps: 0, 85px, 170px
-   Row Steps: 0, 85px, 170px, 255px
-   Total Width: 240px
-   Total Height: 325px
+   Step: 165px
+   Column Steps: 0, 165px, 330px
+   Row Steps: 0, 165px, 330px, 495px
+   Total Width: 480px
+   Total Height: 645px
 */
 
 .pd-formation {
     position: relative;
-    width: 240px;
-    height: 325px; /* Compact 3x4 */
+    width: 480px;
+    height: 645px; /* Scaled 3x4 */
 }
 
 .pd-silhouette {
@@ -5767,45 +5873,45 @@ input:checked + .slider:before { transform: translateX(16px); }
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 280px;
+    font-size: 580px; /* Zwiększona sylwetka dla 150px */
     color: rgba(0,0,0,0.3);
-    filter: drop-shadow(0 0 40px rgba(0,0,0,0.8));
+    filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
     z-index: 0;
     pointer-events: none;
 }
 
-/* UNIVERSAL SLOT SIZE FORCE */
+/* UNIVERSAL SLOT SIZE FORCE (Redundant but kept for overrides) */
 .pd-slot {
     position: absolute;
-    width: 70px !important;
-    height: 70px !important;
-    border-radius: 6px !important; /* Square shape */
-    box-shadow: inset 0 0 20px rgba(0,0,0,0.8);
+    width: 150px !important;
+    height: 150px !important;
+    border-radius: 16px !important;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
     background: rgba(0,0,0,0.6);
 }
-.pd-slot .placeholder { font-size: 28px; opacity: 0.3; }
+.pd-slot .placeholder { font-size: 60px; opacity: 0.3; } /* Większy placeholder */
 
-/* --- GRID POSITIONS 3x4 --- */
+/* --- GRID POSITIONS 3x4 (Recalculated for 150px + 15px gap) --- */
 
 /* ROW 1 (Y=0) */
 .slot-glasses   { top: 0; left: 0; }
-.slot-neck      { top: 0; left: 85px; z-index: 5; }
-.slot-earpiece  { top: 0; left: 170px; }
+.slot-neck      { top: 0; left: 165px; z-index: 5; }
+.slot-earpiece  { top: 0; left: 330px; }
 
-/* ROW 2 (Y=85) */
-.slot-watch     { top: 85px; left: 0; }
-.slot-suit      { top: 85px; left: 85px; z-index: 4; }
-.slot-cufflink  { top: 85px; left: 170px; }
+/* ROW 2 (Y=165) */
+.slot-watch     { top: 165px; left: 0; }
+.slot-suit      { top: 165px; left: 165px; z-index: 4; }
+.slot-cufflink  { top: 165px; left: 330px; }
 
-/* ROW 3 (Y=170) */
-.slot-ring      { top: 170px; left: 0; }
-.slot-belt      { top: 170px; left: 85px; z-index: 3; }
-.slot-pants     { top: 170px; left: 170px; }
+/* ROW 3 (Y=330) */
+.slot-ring      { top: 330px; left: 0; }
+.slot-belt      { top: 330px; left: 165px; z-index: 3; }
+.slot-pants     { top: 330px; left: 330px; }
 
-/* ROW 4 (Y=255) */
-.slot-vehicle   { top: 255px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
-.slot-shoes     { top: 255px; left: 85px; z-index: 2; }
-.slot-hand      { top: 255px; left: 170px; border-color: rgba(16, 185, 129, 0.4); }
+/* ROW 4 (Y=495) */
+.slot-vehicle   { top: 495px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
+.slot-shoes     { top: 495px; left: 165px; z-index: 2; }
+.slot-hand      { top: 495px; left: 330px; border-color: rgba(16, 185, 129, 0.4); }
 
 /* Modal tweaks */
 .full-height-logs { max-height: 500px; }
