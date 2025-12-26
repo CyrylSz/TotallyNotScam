@@ -1110,7 +1110,7 @@ function renderInventoryView() {
 
         slot.innerHTML = `
             <i class="fas ${item.icon} inv-item-icon" style="color: ${item.color};"></i>
-            <div class="inv-slot-rarity-dot" style="background-color: ${rarityColor}; box-shadow: 0 0 5px ${rarityColor};"></div>
+            <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
             ${badgeHtml}
         `;
         
