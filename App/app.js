@@ -686,6 +686,7 @@ function renderMarketView() {
 }
 
 let currentDepositMethod = 'visa';
+let currentWithdrawMethod = 'visa';
 
 function renderWalletView() {
     // 1. ZMODYFIKOWANA LOGIKA NETWORTH
@@ -704,8 +705,9 @@ function renderWalletView() {
     if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
     if (nwItems) nwItems.textContent = itemsValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
 
-    // 3. Init Deposit Methods
+    // 3. Init Deposit & Withdraw Methods
     selectDepositMethod(currentDepositMethod);
+    selectWithdrawMethod(currentWithdrawMethod);
 
     // 4. Populate Transfer Item Select
     const transferSelect = document.getElementById('transferItemSelect');
@@ -797,6 +799,48 @@ function selectDepositMethod(method) {
         `;
     }
     dynamicContent.appendChild(formDiv);
+}
+
+function selectWithdrawMethod(method) {
+    currentWithdrawMethod = method;
+    const container = document.getElementById('withdrawMethodsGrid');
+    const dynamicContent = document.getElementById('withdrawDynamicContainer');
+    if(!container || !dynamicContent) return;
+
+    // Render Buttons
+    const methods = [
+        { id: 'visa', icon: 'fab fa-cc-visa', name: 'Visa' },
+        { id: 'crypto', icon: 'fab fa-bitcoin', name: 'Crypto' }
+    ];
+
+    container.innerHTML = '';
+    methods.forEach(m => {
+        const div = document.createElement('div');
+        div.className = `pm-item ${m.id === method ? 'active' : ''}`;
+        div.onclick = () => selectWithdrawMethod(m.id);
+        div.innerHTML = `<i class="${m.icon}"></i> ${m.name}`;
+        container.appendChild(div);
+    });
+
+    // Render Dynamic Content
+    dynamicContent.innerHTML = '';
+    
+    if (method === 'visa') {
+        dynamicContent.innerHTML = `
+             <div style="font-size:11px; color:#aaa; text-align:center; padding:10px; background:rgba(255,255,255,0.02); border-radius:6px;">
+                Środki wrócą na kartę: <b style="color:white;">Visa •••• 4242</b><br>
+                Czas realizacji: 1-3 dni robocze.
+            </div>
+        `;
+    } else if (method === 'crypto') {
+        dynamicContent.innerHTML = `
+            <div class="input-group small" style="margin-bottom:5px;">
+                <span class="curr-prefix" style="font-size:10px;">ADDR</span>
+                <input type="text" placeholder="Wklej adres USDT (TRC20)..." style="font-size:11px;">
+             </div>
+             <div style="font-size:10px; color:var(--accent-orange); text-align:center;">Upewnij się, że sieć to TRC20.</div>
+        `;
+    }
 }
 
 // Toggle dla transferu (Money / Item)
