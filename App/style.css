@@ -3032,25 +3032,24 @@ input:checked + .slider:before { transform: translateX(16px); }
     text-overflow: ellipsis;
 }
 
-/* Nowy, bardziej widoczny badge zakresu graczy */
 .gh-capacity-badge {
-    font-size: 11px; /* Większa czcionka */
-    color: #e2e8f0; /* Jasny szary/biały (Slate-200) */
-    background: rgba(255, 255, 255, 0.1); /* Lekkie tło */
-    border: 1px solid rgba(255, 255, 255, 0.15); /* Subtelna ramka */
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.4); 
+    background: rgba(255, 255, 255, 0.02); 
+    border: 1px solid rgba(255, 255, 255, 0.05); 
     padding: 3px 8px;
     border-radius: 6px;
     font-weight: 600;
     display: flex;
     align-items: center;
     gap: 6px;
-    white-space: nowrap; /* Zapobiega łamaniu tekstu */
-    flex-shrink: 0; /* Zapobiega zgniataniu badge'a */
+    white-space: nowrap;
+    flex-shrink: 0;
 }
 
 .gh-capacity-badge i {
     font-size: 10px;
-    color: #94a3b8; /* Ikona lekko ciemniejsza dla kontrastu */
+    color: rgba(255, 255, 255, 0.2); 
 }
 
 .gh-game-desc {

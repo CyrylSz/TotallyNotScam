@@ -1943,7 +1943,7 @@ function renderGamesContent() {
                     <div class="gh-title-row">
                         <h4 class="gh-game-title">${game.name}</h4>
                         <div class="gh-capacity-badge" title="Wymagani gracze / Miejsca">
-                            <i class="fas fa-chair"></i> ${game.players}
+                            <i class="fas fa-user"></i> ${game.players}
                         </div>
                     </div>
                     

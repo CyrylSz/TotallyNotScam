@@ -1932,6 +1932,7 @@ function renderGamesContent() {
                         <i class="fas ${game.icon}"></i>
                     </div>
                     <div class="gh-card-meta">
+                        <!-- Tylko Online Count i Variants zostają tutaj -->
                         <div class="gh-online-badge">
                             <i class="fas fa-user-group gh-online-icon"></i> ${game.onlineCount.toLocaleString()}
                         </div>
@@ -1940,7 +1941,14 @@ function renderGamesContent() {
                 </div>
 
                 <div class="gh-card-body">
-                    <h4 class="gh-game-title">${game.name}</h4>
+                    <!-- NOWA SEKCJA TYTUŁOWA -->
+                    <div class="gh-title-row">
+                        <h4 class="gh-game-title">${game.name}</h4>
+                        <div class="gh-capacity-badge" title="Wymagani gracze / Miejsca">
+                            <i class="fas fa-chair"></i> ${game.players}
+                        </div>
+                    </div>
+                    
                     <p class="gh-game-desc">${game.desc}</p>
                 </div>
             `;
@@ -2087,22 +2095,22 @@ const gamesHubStructure = [
                 title: 'Karty (Card Games)',
                 games: [
                     // Kolor 1: Emerald (Klasyczny Stół)
-                    { name: 'Poker Klasyczny', variants: 4, onlineCount: 4520, players: '2-10 PvP', icon: 'fa-heart', color: '#10b981', desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.' },
+                    { name: 'Poker Klasyczny', variants: 4, onlineCount: 4520, players: '2–10', icon: 'fa-heart', color: '#10b981', desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.' },
                     // Kolor 2: Indigo (Strategia/Chłód)
-                    { name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1-7 PvE', icon: 'fa-spade', color: '#4f46e5', desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.' },
+                    { name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1–7', icon: 'fa-spade', color: '#4f46e5', desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.' },
                     // Kolor 3: Crimson (Ryzyko/Azja)
-                    { name: 'Baccarat', variants: 4, onlineCount: 1240, players: '1-14', icon: 'fa-dragon', color: '#e11d48', desc: 'Gracz czy Bankier? Czysta intuicja w królewskim stylu.' },
+                    { name: 'Baccarat', variants: 4, onlineCount: 1240, players: '1–14', icon: 'fa-dragon', color: '#e11d48', desc: 'Gracz czy Bankier? Czysta intuicja w królewskim stylu.' },
                     // Kolor 4: Violet (Prestiż)
-                    { name: 'Casino Poker', variants: 4, onlineCount: 890, players: '1-5 PvE', icon: 'fa-crown', color: '#7c3aed', desc: 'Pokerowe układy w pojedynku 1 na 1 z kasynem.' }
+                    { name: 'Casino Poker', variants: 4, onlineCount: 890, players: '1–7', icon: 'fa-crown', color: '#7c3aed', desc: 'Pokerowe układy w pojedynku 1 na 1 z kasynem.' }
                 ]
             },
             {
                 title: 'Stoły (Table Games)',
                 games: [
                     // Kolor 5: Amber/Gold (Koło/Bogactwo)
-                    { name: 'Ruletka', variants: 5, onlineCount: 5600, players: '∞', icon: 'fa-circle-notch', color: '#f59e0b', desc: 'Obstaw liczbę i zaufaj fizyce. Symbol hazardu.' },
+                    { name: 'Ruletka', variants: 5, onlineCount: 5600, players: '2+', icon: 'fa-circle-notch', color: '#f59e0b', desc: 'Obstaw liczbę i zaufaj fizyce. Symbol hazardu.' },
                     // Kolor 6: Cyan (Szybkość/Kości)
-                    { name: 'Kości', variants: 3, onlineCount: 950, players: '1-16', icon: 'fa-dice', color: '#06b6d4', desc: 'Rzuć kośćmi. Emocje tłumu i skomplikowane zakłady.' }
+                    { name: 'Kości', variants: 3, onlineCount: 950, players: '1+', icon: 'fa-dice', color: '#06b6d4', desc: 'Rzuć kośćmi. Emocje tłumu i skomplikowane zakłady.' }
                 ]
             }
         ]
@@ -2120,14 +2128,14 @@ const gamesHubStructure = [
                     // Kolor 1: Fuchsia (Neon/Vegas)
                     { name: 'Automaty', variants: 6, onlineCount: 12400, players: '1', icon: 'fa-star', color: '#d946ef', desc: 'Pociągnij wajchę. Jackpoty, Megaways i czysty los.' },
                     // Kolor 2: Orange (Ogień/Rywalizacja)
-                    { name: 'Slot Wars', variants: 2, onlineCount: 320, players: 'Ranking', icon: 'fa-trophy', color: '#f97316', desc: 'Turniej spinów. Kto wykręci więcej w 5 minut?' }
+                    { name: 'Slot Wars', variants: 2, onlineCount: 320, players: '2+', icon: 'fa-trophy', color: '#f97316', desc: 'Turniej spinów. Kto wykręci więcej w 5 minut?' }
                 ]
             },
             {
                 title: 'Gry Instant (Fast Paced)',
                 games: [
                     // Kolor 3: Red (Danger/Crash)
-                    { name: 'Crash', variants: 5, onlineCount: 8500, players: '∞', icon: 'fa-chart-line', color: '#ef4444', desc: 'Chciwość vs strach. Wypłać zanim rakieta wybuchnie.' },
+                    { name: 'Crash', variants: 5, onlineCount: 8500, players: '1+', icon: 'fa-chart-line', color: '#ef4444', desc: 'Chciwość vs strach. Wypłać zanim rakieta wybuchnie.' },
                     // Kolor 4: Light Blue (Physics)
                     { name: 'Plinko', variants: 2, onlineCount: 4100, players: '1', icon: 'fa-bowling-ball', color: '#38bdf8', desc: 'Grawitacja decyduje. Kulka spada prosto do mnożnika.' },
                     // Kolor 5: Purple/Grey (Mines/Mystery)
@@ -2153,7 +2161,7 @@ const gamesHubStructure = [
                     // 2. Dark Red (War)
                     { name: 'Age of Gambling', variants: 1, onlineCount: 85, players: '2', icon: 'fa-shield-alt', color: '#b91c1c', desc: 'RTS. Kupuj nuklearne czołgi za $$ i zniszcz bazę.' },
                     // 3. Deep Purple (Mystery)
-                    { name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4+', icon: 'fa-user-secret', color: '#6d28d9', desc: 'Mafia na pieniądze. Kłam, manipuluj, zgarnij pulę.' },
+                    { name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4-15', icon: 'fa-user-secret', color: '#6d28d9', desc: 'Mafia na pieniądze. Kłam, manipuluj, zgarnij pulę.' },
                     
                     // --- NOWA GRA ---
                     // 4. Lime Green (Toxic/Worms)
@@ -2161,10 +2169,10 @@ const gamesHubStructure = [
                         name: 'Degenerate Worms', 
                         variants: 1, 
                         onlineCount: 450, 
-                        players: '2+ Turowa', 
+                        players: '2-8', 
                         icon: 'fa-skull-crossbones', // lub fa-bacteria / fa-biohazard
                         color: '#84cc16', 
-                        desc: 'Artyleria 2D. Dokup "Święty Granat" w trakcie tury za realny hajs i zniszcz mapę.' 
+                        desc: 'Artyleria 2D. Dokup "Święty Granat" w trakcie tury za realny hajs.' 
                     },
                     // ----------------
 
@@ -6692,6 +6700,22 @@ input:checked + .slider:before { transform: translateX(16px); }
     filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.5));
     animation: neon-breath 4s infinite ease-in-out;
 }
+.gh-capacity-info {
+    font-size: 9px;
+    color: #64748b; /* Wygaszony, ciemniejszy kolor (Slate) */
+    margin-top: 2px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+}
+
+.gh-capacity-info i {
+    font-size: 8px; /* Mniejsza ikona */
+    opacity: 0.6;
+}
 
 .gh-variants-badge {
     font-size: 9px;
@@ -6710,13 +6734,48 @@ input:checked + .slider:before { transform: translateX(16px); }
     justify-content: flex-end; /* Tekst na dole */
 }
 
+/* Kontener dla Tytułu i Zakresu graczy */
+.gh-title-row {
+    display: flex;
+    justify-content: space-between; /* Tytuł po lewej, Info po prawej */
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 10px;
+}
+
+/* Modyfikacja tytułu - usuwamy margines dolny, bo teraz zajmuje się tym kontener */
 .gh-game-title {
     font-size: 18px;
     font-weight: 700;
     color: white;
-    margin-bottom: 6px;
+    margin-bottom: 0; 
     letter-spacing: 0.3px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    /* Zabezpieczenie na wypadek długiej nazwy */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Nowy, bardziej widoczny badge zakresu graczy */
+.gh-capacity-badge {
+    font-size: 11px; /* Większa czcionka */
+    color: #e2e8f0; /* Jasny szary/biały (Slate-200) */
+    background: rgba(255, 255, 255, 0.1); /* Lekkie tło */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Subtelna ramka */
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap; /* Zapobiega łamaniu tekstu */
+    flex-shrink: 0; /* Zapobiega zgniataniu badge'a */
+}
+
+.gh-capacity-badge i {
+    font-size: 10px;
+    color: #94a3b8; /* Ikona lekko ciemniejsza dla kontrastu */
 }
 
 .gh-game-desc {
