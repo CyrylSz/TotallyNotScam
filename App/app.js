@@ -1912,7 +1912,7 @@ function renderGamesContent() {
             
             // Dynamic Color styles
             const glowColor = game.color;
-            const variantsText = game.variants > 1 ? `${game.variants} WARIACJE` : 'CLASSIC';
+            const variantsText = game.variants > 1 ? `${game.variants} MODES` : 'CLASSIC';
 
             card.innerHTML = `
                 <!-- Background Glow -->
@@ -1931,7 +1931,7 @@ function renderGamesContent() {
                     </div>
                     <div class="gh-card-meta">
                         <div class="gh-online-badge">
-                            <div class="gh-online-dot"></div> ${game.onlineCount.toLocaleString()}
+                            <i class="fas fa-user-group gh-online-icon"></i> ${game.onlineCount.toLocaleString()}
                         </div>
                         <div class="gh-variants-badge">${variantsText}</div>
                     </div>

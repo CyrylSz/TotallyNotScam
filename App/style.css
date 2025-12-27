@@ -2963,23 +2963,17 @@ input:checked + .slider:before { transform: translateX(16px); }
     border-radius: 12px;
     display: flex;
     align-items: center;
-    gap: 5px;
-    font-weight: 600;
+    gap: 6px;
+    font-weight: 700;
     border: 1px solid rgba(16, 185, 129, 0.2);
 }
-.gh-online-dot {
-    width: 6px;
-    height: 6px;
-    background: var(--accent-green);
-    border-radius: 50%;
-    box-shadow: 0 0 5px var(--accent-green);
-    animation: pulse-online 2s infinite;
-}
 
-@keyframes pulse-online {
-    0% { opacity: 1; }
-    50% { opacity: 0.5; }
-    100% { opacity: 1; }
+.gh-online-icon {
+    font-size: 11px;
+    color: var(--accent-green);
+    opacity: 1; 
+    filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.5));
+    animation: neon-breath 4s infinite ease-in-out;
 }
 
 .gh-variants-badge {
