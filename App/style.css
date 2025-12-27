@@ -2345,7 +2345,41 @@ input:checked + .slider:before { transform: translateX(16px); }
 .ms-price-inputs input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 6px; color: white; font-size: 11px; border-radius: 4px; }
 
 .ms-check-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #ccc; cursor: pointer; padding: 4px 0; }
-.ms-check-row input { accent-color: var(--accent-purple); }
+.ms-check-row input { 
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin: 0;
+}
+.ms-check-row input::after {
+    content: "\f00c"; /* FontAwesome Check Icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 10px;
+    color: white;
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ms-check-row input:checked {
+    background: rgba(139, 92, 246, 0.25);
+    border-color: var(--accent-purple);
+    box-shadow: none;
+}
+.ms-check-row input:checked::after {
+    transform: scale(1);
+}
+.ms-check-row:hover input {
+    border-color: rgba(255,255,255,0.5);
+}
 .dot-r { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .dot-r.peasant { background: #9ca3af; }
 .dot-r.rare { background: #3b82f6; box-shadow: 0 0 5px #3b82f6; }
@@ -2571,7 +2605,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     height: 110px !important;
     border-radius: 12px !important;
     box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.15);
 }
 .pd-slot .placeholder { font-size: 40px; opacity: 0.3; }
 

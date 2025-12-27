@@ -1,27 +1,49 @@
 KROK 1:
-PLIK: "style.css"
+PLIK: "data.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-/* ROW 3 (Middle Row: Ring - Vehicle - Pants - Belt - Ring) */
-.slot-cufflink  { top: 240px; left: 0; }
-.slot-vehicle   { top: 240px; left: 120px; border-color: rgba(59, 130, 246, 0.4); }
-.slot-pants     { top: 240px; left: 240px; }
-.slot-belt      { top: 240px; left: 360px; z-index: 3; }
-.slot-ring      { top: 240px; left: 480px; }
-
-/* ROW 4 (Bottom Row: Gadget - Shoes - Gadget) */
-.slot-earpiece  { top: 360px; left: 120px; }
-.slot-shoes     { top: 360px; left: 240px; z-index: 2; }
-.slot-hand      { top: 360px; left: 360px; border-color: rgba(16, 185, 129, 0.4); }
+    {
+        username: "MrGambler",
+        rank: "Alpha Whale",
+        pfp: "https://placehold.co/400x400/1e293b/4ade80?text=99%25+QUIT%0ABEFORE%0ABIG+WIN", // Meme: 99% Quit
+        inventory: [
+            // LOADOUT (IDs)
 TREŚĆ:
-/* ROW 3 (Middle Row: Ring - Vehicle - Pants - Belt - Ring) */
-.slot-cufflink  { top: 240px; left: 0; }
-.slot-vehicle   { top: 240px; left: 120px; }
-.slot-pants     { top: 240px; left: 240px; }
-.slot-belt      { top: 240px; left: 360px; z-index: 3; }
-.slot-ring      { top: 240px; left: 480px; }
+    {
+        username: "MrGambler",
+        rank: "Alpha Whale",
+        pfp: "https://i.pinimg.com/originals/99/3d/3f/993d3f446059d763749e7b453e970a01.jpg", // Doge Samurai
+        inventory: [
+            // LOADOUT (IDs)
 
-/* ROW 4 (Bottom Row: Gadget - Shoes - Gadget) */
-.slot-earpiece  { top: 360px; left: 120px; }
-.slot-shoes     { top: 360px; left: 240px; z-index: 2; }
-.slot-hand      { top: 360px; left: 360px; }
+KROK 2:
+PLIK: "index.html"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+            <div class="user-profile">
+                <div class="profile-left">
+                    <div class="user-avatar" style="background-image: url('https://placehold.co/400x400/1e293b/4ade80?text=99%25+QUIT%0ABEFORE%0ABIG+WIN'); background-size: cover;"></div>
+                    <div class="user-info">
+                        <div style="font-size: 10px; color: var(--accent-purple); font-weight: 600; margin-bottom: 2px;">ADMIN</div>
+TREŚĆ:
+            <div class="user-profile">
+                <div class="profile-left">
+                    <div class="user-avatar" style="background-image: url('https://i.pinimg.com/originals/99/3d/3f/993d3f446059d763749e7b453e970a01.jpg'); background-size: cover;"></div>
+                    <div class="user-info">
+                        <div style="font-size: 10px; color: var(--accent-purple); font-weight: 600; margin-bottom: 2px;">ADMIN</div>
+
+KROK 3:
+PLIK: "index.html"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+        <div class="view-container" id="viewProfile">
+            <div style="margin-bottom: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;">
+                <div class="user-avatar" style="width: 120px; height: 120px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px; position: relative; background-image: url('https://placehold.co/400x400/1e293b/4ade80?text=99%25+QUIT%0ABEFORE%0ABIG+WIN'); background-size: cover;">
+                    <div class="profile-level-badge">LVL 14</div>
+                </div>
+TREŚĆ:
+        <div class="view-container" id="viewProfile">
+            <div style="margin-bottom: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;">
+                <div class="user-avatar" style="width: 120px; height: 120px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px; position: relative; background-image: url('https://i.pinimg.com/originals/99/3d/3f/993d3f446059d763749e7b453e970a01.jpg'); background-size: cover;">
+                    <div class="profile-level-badge">LVL 14</div>
+                </div>

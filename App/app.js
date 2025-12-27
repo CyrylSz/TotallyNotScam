@@ -1241,7 +1241,10 @@ function renderItemInSlot(slotElement, item) {
     let rarityColor = getRarityColor(item.rarity);
     
     // Zmniejszono rozmiar ikony do 45px dla slotów 110px
-    slotElement.innerHTML = `<div style="font-size: 50px; font-style: normal; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${item.icon}</div>`;
+    slotElement.innerHTML = `
+        <div style="font-size: 50px; font-style: normal; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${item.icon}</div>
+        <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
+    `;
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;

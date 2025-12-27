@@ -69,7 +69,7 @@ const playersDB = [
     {
         username: "MrGambler",
         rank: "Alpha Whale",
-        pfp: "https://i.pravatar.cc/150?u=MrGambler",
+        pfp: "https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false", // Doge Samurai
         inventory: [
             // LOADOUT (IDs)
             7, 10, 12, 15, 18, 20, 22, 23, 26, 31,
