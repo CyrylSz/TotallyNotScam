@@ -2593,6 +2593,63 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .hidden { display: none !important; }
 
+/* --- MARKET UPGRADES STYLES --- */
+
+/* Sidebar Input Styles Override */
+.ms-section .input-group.small {
+    margin-bottom: 5px;
+}
+.ms-section .input-group.small input {
+    border-radius: 0 6px 6px 0;
+    padding: 6px 8px;
+    font-size: 11px;
+}
+
+/* Checkbox Style */
+.ms-check-row input[type="checkbox"] {
+    margin-right: 6px;
+    accent-color: var(--accent-purple);
+}
+
+/* Topbar Tabs New Look */
+.mt-tab {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+}
+.mt-tab i { font-size: 14px; }
+
+.mt-tab.active#tabAuctionMode {
+    background: rgba(245, 158, 11, 0.15); /* Orange tint */
+    color: var(--accent-orange);
+    border: 1px solid rgba(245, 158, 11, 0.3);
+}
+
+.mt-tab.active#tabInstantBuy {
+    background: rgba(16, 185, 129, 0.15); /* Green tint */
+    color: var(--accent-green);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+}
+
+/* Bid Input in Modal */
+.bid-input-modal {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    padding: 0 15px;
+    border-radius: 6px;
+    font-size: 16px;
+    font-weight: 700;
+    width: 120px;
+    outline: none;
+    text-align: center;
+}
+.bid-input-modal:focus {
+    border-color: var(--accent-orange);
+}
+
 /* Grid Calculation for 3x4 (SCALED 110px):
    Slot Size: 110px
    Gap: 10px

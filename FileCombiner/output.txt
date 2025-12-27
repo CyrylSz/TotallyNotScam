@@ -66,10 +66,16 @@ function initMarketData() {
             history.push(cur);
         }
         
+        // Pobieramy zdjęcie (z bazy lub fallback)
+        let sellerImg = `https://i.pravatar.cc/150?u=${sellerName}`;
+        const dbPlayer = typeof playersDB !== 'undefined' ? playersDB.find(p => p.username === sellerName) : null;
+        if(dbPlayer && dbPlayer.pfp) sellerImg = dbPlayer.pfp;
+
         marketState.listings.push({
             uid: finalUid,
             templateId: template.id,
             seller: sellerName,
+            sellerImg: sellerImg, // NOWE
             price: priceOverride,
             change: ((Math.random() * 20) - 10).toFixed(1),
             history: history,
@@ -293,14 +299,16 @@ function createMarketCard(item) {
 
     el.innerHTML = `
         <div class="mc-header" style="color:${item.color};">
-            <div style="font-size: 40px; font-style: normal;">${item.icon}</div>
-            <div class="mc-seller-avatar" title="Sprzedawca: ${item.seller}"></div>
+            <div style="font-size: 60px; font-style: normal; line-height: 1; width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; padding-top: 15px; filter: drop-shadow(0 10px 20px rgba(0,0,0,0.5));">${item.icon}</div>
+            <div class="mc-seller-row" title="Sprzedawca: ${item.seller}">
+                <div class="mc-seller-avatar" style="background-image: url('${item.sellerImg}');"></div>
+                <div class="mc-seller-name">${item.seller}</div>
+            </div>
             ${lockHtml}
         </div>
         <div class="mc-body">
             <div class="mc-sparkline">${barsHtml}</div>
-            <div class="mc-title" style="color:${item.color}">${item.name}</div>
-            <div class="mc-sub" style="color:${item.color}">${item.rarity}</div>
+            <div class="mc-title" style="color:${item.color}; font-size: 12px; margin-bottom: 8px;">${item.name}</div>
             
             <div class="mc-price-row">
                 <div class="mc-price">${item.price.toLocaleString()} $</div>
@@ -1067,24 +1075,57 @@ function renderInventoryView() {
     // Inicjalizacja slotów loadoutu (dodanie listenerów)
     setupLoadoutSlots();
 
-    // Filtrowanie i Sortowanie
+    // 1. Wstępne filtrowanie (według typu Item/Case)
     let filteredInv = myInventory.filter(item => {
-        const isCase = item.type === 'chest'; // ID 1-5 (skrzynki) mają typ 'chest'
+        const isCase = item.type === 'chest'; 
         if(isCase && !invFilterState.case) return false;
         if(!isCase && !invFilterState.item) return false;
         return true;
     });
 
-    const sortedInv = filteredInv.sort((a, b) => b.rawPrice - a.rawPrice);
+    // 2. LOGIKA STAKOWANIA
+    // Tworzymy nową listę do wyświetlenia
+    let displayList = [];
+    let stackMap = {}; // Mapa: templateId -> referencja do obiektu w displayList
+
+    filteredInv.forEach(item => {
+        // Sprawdzamy stan unikalny
+        const isEquipped = Object.values(myLoadout).includes(item.uid);
+        const isOnSale = item.isOnSale === true;
+
+        // Jeśli przedmiot jest "zajęty" (założony lub na rynku), nie stakujemy go
+        if (isEquipped || isOnSale) {
+            displayList.push({ 
+                ...item, 
+                stackCount: 1, // Pojedyncza sztuka
+                forceUnique: true // Flaga pomocnicza
+            });
+        } else {
+            // Przedmiot jest "wolny" w magazynie - próbujemy stakować
+            if (stackMap[item.id]) {
+                // Już mamy taki przedmiot w displayList, inkrementujemy licznik
+                stackMap[item.id].stackCount++;
+            } else {
+                // Pierwszy raz widzimy ten przedmiot (wolny), dodajemy do listy
+                // Tworzymy kopię obiektu, żeby nie modyfikować oryginału w myInventory
+                const stackItem = { ...item, stackCount: 1, forceUnique: false };
+                stackMap[item.id] = stackItem;
+                displayList.push(stackItem);
+            }
+        }
+    });
+
+    // 3. Sortowanie listy wyświetlania (od najdroższego)
+    const sortedInv = displayList.sort((a, b) => b.rawPrice - a.rawPrice);
     
-    // Render Grid
+    // 4. Render Grid
     sortedInv.forEach(item => {
         const slot = document.createElement('div');
         slot.className = 'inv-grid-slot';
         
-        // Sprawdź czy przedmiot jest założony
+        // Sprawdź czy przedmiot jest założony (ponowne sprawdzenie na obiekcie display)
+        // Musimy użyć oryginalnego myLoadout check, bo item.uid w stacku to UID "reprezentanta"
         const isEquipped = Object.values(myLoadout).includes(item.uid);
-        // Sprawdź czy jest na Rynku (dodana flaga w initMarketData)
         const isOnSale = item.isOnSale === true;
 
         if (isEquipped) slot.classList.add('is-equipped');
@@ -1105,12 +1146,19 @@ function renderInventoryView() {
             slot.style.borderColor = 'var(--accent-orange)';
         }
 
-        // Badges
+        // Badges & Counters
         let badgeHtml = '';
-        if (isEquipped) badgeHtml = `<div class="equipped-badge">EQ</div>`;
-        else if (isOnSale) badgeHtml = `<div class="on-sale-badge">NA RYNKU</div>`;
+        
+        // --- STACK COUNTER ---
+        // Dodajemy licznik tylko jeśli jest więcej niż 1 sztuka
+        if (item.stackCount > 1) {
+            badgeHtml += `<div class="item-stack-count">x${item.stackCount}</div>`;
+        }
 
-        // Rank Lock Logic (Divine req Rank <= 2)
+        if (isEquipped) badgeHtml += `<div class="equipped-badge">EQ</div>`;
+        else if (isOnSale) badgeHtml += `<div class="on-sale-badge">NA RYNKU</div>`;
+
+        // Rank Lock Logic
         if (item.rarity === 'Divine' && currentRankId > 2) {
             badgeHtml += `<div class="inv-lock-overlay"><i class="fas fa-lock"></i></div>`;
             slot.classList.add('is-rank-locked');
@@ -1122,13 +1170,15 @@ function renderInventoryView() {
             ${badgeHtml}
         `;
         
-        // Rozbudowany tooltip
-        slot.title = `${item.name} (${item.rarity})\nTyp: ${item.type}\nBonus: ${item.bonus}\nCena: ${item.price}`;
+        // Tooltip
+        let tooltipText = `${item.name} (${item.rarity})\nTyp: ${item.type}\nBonus: ${item.bonus}\nCena: ${item.price}`;
+        if(item.stackCount > 1) tooltipText += `\nIlość w magazynie: ${item.stackCount}`;
+        slot.title = tooltipText;
         
         container.appendChild(slot);
     });
 
-    // Puste sloty
+    // Puste sloty (Wypełniacz)
     const minSlots = 63;
     for(let i = sortedInv.length; i < minSlots; i++) {
         const emptySlot = document.createElement('div');
@@ -1235,7 +1285,10 @@ function renderItemInSlot(slotElement, item) {
     let rarityColor = getRarityColor(item.rarity);
     
     // Zmniejszono rozmiar ikony do 45px dla slotów 110px
-    slotElement.innerHTML = `<div style="font-size: 50px; font-style: normal; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${item.icon}</div>`;
+    slotElement.innerHTML = `
+        <div style="font-size: 50px; font-style: normal; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${item.icon}</div>
+        <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
+    `;
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
@@ -1917,7 +1970,7 @@ const playersDB = [
     {
         username: "MrGambler",
         rank: "Alpha Whale",
-        avatar: "fa-user-astronaut",
+        pfp: "https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false", // Doge Samurai
         inventory: [
             // LOADOUT (IDs)
             7, 10, 12, 15, 18, 20, 22, 23, 26, 31,
@@ -1930,25 +1983,25 @@ const playersDB = [
     {
         username: "Whale_Killer",
         rank: "RNG God",
-        avatar: "fa-dragon",
+        pfp: "https://i.pravatar.cc/150?u=Whale_Killer",
         inventory: [27, 31, 13, 16, 5, 5, 4] // High End Stuff
     },
     {
         username: "LuckyLuke",
         rank: "Table Shark",
-        avatar: "fa-hat-cowboy",
+        pfp: "https://i.pravatar.cc/150?u=LuckyLuke",
         inventory: [7, 11, 21, 2, 3, 3] // Mid Tier
     },
     {
         username: "CryptoBro",
         rank: "Risk Taker",
-        avatar: "fa-bitcoin",
+        pfp: "https://i.pravatar.cc/150?u=CryptoBro",
         inventory: [30, 8, 26, 2, 2] // Tech stuff
     },
     {
         username: "Bot_Network_01",
         rank: "Small Fry",
-        avatar: "fa-robot",
+        pfp: "https://i.pravatar.cc/150?u=Bot_Network_01",
         inventory: [1, 1, 1, 1, 1, 1, 1, 1, 25, 25] // Spam items
     }
 ];
@@ -2206,7 +2259,7 @@ index.html
 
             <div class="user-profile">
                 <div class="profile-left">
-                    <div class="user-avatar"><i class="fas fa-user-astronaut"></i></div>
+                    <div class="user-avatar" style="background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'); background-size: cover;"></div>
                     <div class="user-info">
                         <div style="font-size: 10px; color: var(--accent-purple); font-weight: 600; margin-bottom: 2px;">ADMIN</div>
                         <h4>MrGambler</h4>
@@ -2503,7 +2556,13 @@ index.html
                     <div class="inv-header">
                         <div class="inv-title">
                             <i class="fas fa-box-open"></i> MAGAZYN
-                            <div class="ms-toggle-row" style="display:inline-flex; width: 200px; margin-left:20px; vertical-align:middle;">
+                            <div class="inv-value-display" style="border-right: none; border-left: 1px solid rgba(255,255,255,0.1); align-items: flex-start; margin-left: 15px; padding-left: 15px; padding-right: 0;">
+                                <div class="iv-label">TOTAL VALUE</div>
+                                <div class="iv-val">2,790,000 $</div>
+                            </div>
+                        </div>
+                        <div class="inv-stats">
+                            <div class="ms-toggle-row" style="display:inline-flex; width: 180px;">
                                 <button id="btnInvItem" class="ms-type-btn active" onclick="toggleInvFilter('item')" style="margin:0;">
                                     <i class="fas fa-cube"></i> Item
                                 </button>
@@ -2511,12 +2570,7 @@ index.html
                                     <i class="fas fa-briefcase"></i> Case
                                 </button>
                             </div>
-                        </div>
-                        <div class="inv-stats">
-                            <div class="inv-value-display">
-                                <div class="iv-label">TOTAL VALUE</div>
-                                <div class="iv-val">2,790,000 $</div>
-                            </div>
+                            <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 12px;"></div>
                             <button class="inv-filter-btn" title="Sortuj / Filtruj">
                                 <i class="fas fa-filter"></i>
                             </button>
@@ -2833,8 +2887,7 @@ index.html
 
         <div class="view-container" id="viewProfile">
             <div style="margin-bottom: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;">
-                <div class="user-avatar" style="width: 120px; height: 120px; font-size: 50px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px; position: relative;">
-                    <i class="fas fa-user-astronaut"></i>
+                <div class="user-avatar" style="width: 120px; height: 120px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px; position: relative; background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'); background-size: cover;">
                     <div class="profile-level-badge">LVL 14</div>
                 </div>
                 <div style="text-align: center; display: flex; align-items: center; justify-content: center;">
@@ -4622,6 +4675,28 @@ input:checked + .slider:before { transform: translateX(16px); }
     margin: 15px 0;
 }
 
+/* --- STACK COUNTER (NOWY STYL) --- */
+.item-stack-count {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    z-index: 15; /* Powyżej ikony i tła */
+    
+    font-size: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+    
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1px 5px;
+    border-radius: 4px;
+    
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    pointer-events: none; /* Kliknięcie przenika do slotu */
+    user-select: none;
+}
+
 /* Daily Hub (Right Panel) */
 .daily-hub-card {
     min-height: 400px;
@@ -5625,14 +5700,16 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .equipped-badge {
     position: absolute;
-    top: 2px;
-    left: 2px;
-    font-size: 8px;
+    top: 5px;
+    right: 5px;
+    font-size: 11px;
     background: var(--accent-blue);
     color: white;
-    padding: 1px 3px;
-    border-radius: 2px;
+    padding: 3px 6px;
+    border-radius: 4px;
     font-weight: 800;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.5);
+    z-index: 5;
 }
 .inv-lock-overlay {
     position: absolute;
@@ -5642,15 +5719,6 @@ input:checked + .slider:before { transform: translateX(16px); }
     font-size: 14px;
     filter: drop-shadow(0 2px 4px rgba(0,0,0,1));
     z-index: 6;
-}
-
-/* Usunięto efekty wizualne (grayscale/border) dla zablokowanych slotów - zostaje sama kłódka overlay */
-.inv-grid-slot.is-rank-locked {
-    /* Brak stylów modyfikujących slot */
-}
-
-.inv-grid-slot.is-rank-locked .inv-item-icon {
-    /* Brak stylów modyfikujących ikonę */
 }
 
 .inv-grid-slot.empty {
@@ -5688,9 +5756,40 @@ input:checked + .slider:before { transform: translateX(16px); }
 .ms-search-btn { background: rgba(255,255,255,0.1); border: none; color: white; width: 30px; cursor: pointer; border-radius: 0 4px 4px 0; }
 .ms-search-btn:hover { background: var(--accent-purple); }
 
-.ms-toggle-row { display: flex; background: rgba(0,0,0,0.2); padding: 3px; border-radius: 6px; }
-.ms-type-btn { flex: 1; background: transparent; border: none; color: #666; padding: 6px; font-size: 11px; cursor: pointer; border-radius: 4px; transition: 0.2s; display: flex; align-items: center; justify-content: center; gap: 6px; }
-.ms-type-btn.active { background: var(--accent-purple); color: white; font-weight: 600; }
+.ms-toggle-row { 
+    display: flex; 
+    background: rgba(0,0,0,0.25); 
+    padding: 4px; 
+    border-radius: 8px; 
+    border: 1px solid rgba(255,255,255,0.05);
+    gap: 6px;
+}
+.ms-type-btn { 
+    flex: 1; 
+    background: transparent; 
+    border: 1px solid transparent; 
+    color: var(--text-muted); 
+    padding: 6px 10px; 
+    font-size: 11px; 
+    cursor: pointer; 
+    border-radius: 6px; 
+    transition: all 0.2s ease; 
+    display: flex; 
+    align-items: center; 
+    justify-content: center; 
+    gap: 6px; 
+    font-weight: 500;
+}
+.ms-type-btn:hover { 
+    color: white; 
+    background: rgba(255,255,255,0.03); 
+}
+.ms-type-btn.active { 
+    background: rgba(139, 92, 246, 0.1); 
+    border-color: rgba(139, 92, 246, 0.25);
+    color: var(--accent-purple); 
+    font-weight: 600; 
+}
 
 .ms-slots-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 5px; }
 .ms-slot-icon { background: rgba(255,255,255,0.05); border: 1px solid rgba(255,255,255,0.05); border-radius: 6px; height: 35px; display: flex; align-items: center; justify-content: center; color: #666; cursor: pointer; transition: 0.2s; font-size: 14px; }
@@ -5701,7 +5800,41 @@ input:checked + .slider:before { transform: translateX(16px); }
 .ms-price-inputs input { width: 100%; background: rgba(0,0,0,0.2); border: 1px solid rgba(255,255,255,0.1); padding: 6px; color: white; font-size: 11px; border-radius: 4px; }
 
 .ms-check-row { display: flex; align-items: center; gap: 8px; font-size: 12px; color: #ccc; cursor: pointer; padding: 4px 0; }
-.ms-check-row input { accent-color: var(--accent-purple); }
+.ms-check-row input { 
+    -webkit-appearance: none;
+    appearance: none;
+    width: 16px;
+    height: 16px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 4px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.2s ease;
+    margin: 0;
+}
+.ms-check-row input::after {
+    content: "\f00c"; /* FontAwesome Check Icon */
+    font-family: "Font Awesome 6 Free";
+    font-weight: 900;
+    font-size: 10px;
+    color: white;
+    transform: scale(0);
+    transition: transform 0.2s cubic-bezier(0.4, 0, 0.2, 1);
+}
+.ms-check-row input:checked {
+    background: rgba(139, 92, 246, 0.25);
+    border-color: var(--accent-purple);
+    box-shadow: none;
+}
+.ms-check-row input:checked::after {
+    transform: scale(1);
+}
+.ms-check-row:hover input {
+    border-color: rgba(255,255,255,0.5);
+}
 .dot-r { width: 8px; height: 8px; border-radius: 50%; display: inline-block; }
 .dot-r.peasant { background: #9ca3af; }
 .dot-r.rare { background: #3b82f6; box-shadow: 0 0 5px #3b82f6; }
@@ -5726,8 +5859,8 @@ input:checked + .slider:before { transform: translateX(16px); }
     flex: 1;
     overflow-y: auto;
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+    gap: 12px;
     padding-right: 5px;
     align-content: start;
 }
@@ -5747,26 +5880,50 @@ input:checked + .slider:before { transform: translateX(16px); }
 .m-card:hover { transform: translateY(-5px); box-shadow: 0 10px 30px rgba(0,0,0,0.3); z-index: 5; border-color: var(--accent-purple); }
 
 .mc-header {
-    height: 100px;
+    height: 110px;
     display: flex;
     align-items: center;
     justify-content: center;
     position: relative;
     background: radial-gradient(circle at center, rgba(255,255,255,0.05) 0%, transparent 70%);
+    overflow: hidden;
 }
 .mc-header i { font-size: 40px; filter: drop-shadow(0 5px 15px rgba(0,0,0,0.5)); transition: 0.3s; }
 .m-card:hover .mc-header i { transform: scale(1.1); }
 
-.mc-seller-avatar {
+.mc-seller-row {
     position: absolute;
     top: 8px;
     left: 8px;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    z-index: 5;
+    pointer-events: none; /* Kliknięcie przechodzi do karty */
+}
+
+.mc-seller-avatar {
     width: 24px;
     height: 24px;
-    border-radius: 50%;
+    border-radius: 8px;
     background: #333;
     border: 1px solid #555;
     background-size: cover;
+    background-position: center;
+}
+
+.mc-seller-name {
+    font-size: 10px;
+    font-weight: 700;
+    color: white;
+    text-shadow: 0 1px 3px rgba(0,0,0,0.9); /* Cień dla czytelności na tle gradientu */
+    background: rgba(0,0,0,0.3); /* Lekkie tło dla lepszego kontrastu */
+    padding: 2px 6px;
+    border-radius: 4px;
+    max-width: 100px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
 }
 .mc-lock-overlay {
     position: absolute;
@@ -5775,13 +5932,16 @@ input:checked + .slider:before { transform: translateX(16px); }
     background: transparent;
     padding: 0;
     color: var(--accent-red);
-    font-size: 12px;
-    filter: drop-shadow(0 2px 4px rgba(0,0,0,1));
+    filter: drop-shadow(0 1px 2px rgba(0,0,0,1));
     z-index: 10;
 }
 
+.mc-lock-overlay i {
+    font-size: 14px;
+}
+
 .mc-body {
-    padding: 10px;
+    padding: 8px;
     background: rgba(0,0,0,0.2);
     border-top: 1px solid rgba(255,255,255,0.05);
     flex: 1;
@@ -5811,7 +5971,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .mc-sub { font-size: 10px; color: var(--text-muted); margin-bottom: 8px; z-index: 1; }
 
 .mc-price-row { margin-top: auto; display: flex; justify-content: space-between; align-items: flex-end; z-index: 1; }
-.mc-price { font-size: 14px; font-weight: 700; color: var(--accent-green); }
+.mc-price { font-size: 13px; font-weight: 700; color: var(--accent-green); }
 .mc-change { font-size: 10px; font-weight: 600; padding: 1px 4px; border-radius: 2px; }
 
 /* MODAL STYLES */
@@ -5878,8 +6038,8 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .pd-formation {
     position: relative;
-    width: 350px;
-    height: 470px; /* Scaled 3x4 */
+    width: 600px; /* Zwiększono szerokość dla układu 5-kolumnowego */
+    height: 480px;
 }
 
 .pd-silhouette {
@@ -5887,45 +6047,45 @@ input:checked + .slider:before { transform: translateX(16px); }
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 400px; /* Zmniejszona sylwetka dla 110px */
+    font-size: 400px;
     color: rgba(0,0,0,0.3);
     filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
     z-index: 0;
     pointer-events: none;
 }
 
-/* UNIVERSAL SLOT SIZE FORCE (Redundant but kept for overrides) */
 .pd-slot {
     position: absolute;
     width: 110px !important;
     height: 110px !important;
     border-radius: 12px !important;
     box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
-    background: rgba(0,0,0,0.6);
+    background: rgba(0,0,0,0.15);
 }
-.pd-slot .placeholder { font-size: 40px; opacity: 0.3; } /* Mniejszy placeholder */
+.pd-slot .placeholder { font-size: 40px; opacity: 0.3; }
 
-/* --- GRID POSITIONS 3x4 (Recalculated for 110px + 10px gap) --- */
+/* --- NEW CROSS/DIAMOND LAYOUT (Based on Sketch) --- */
+/* Center X is 240px (Column 3) */
 
-/* ROW 1 (Y=0) */
-.slot-glasses   { top: 0; left: 0; }
-.slot-neck      { top: 0; left: 120px; z-index: 5; }
-.slot-earpiece  { top: 0; left: 240px; }
+/* ROW 1 (Top Center) */
+.slot-glasses   { top: 0; left: 240px; }
 
-/* ROW 2 (Y=120) */
-.slot-watch     { top: 120px; left: 0; }
-.slot-suit      { top: 120px; left: 120px; z-index: 4; }
-.slot-cufflink  { top: 120px; left: 240px; }
+/* ROW 2 (Upper Row: Watch - Suit - Neck) */
+.slot-watch     { top: 120px; left: 120px; }
+.slot-suit      { top: 120px; left: 240px; z-index: 4; }
+.slot-neck      { top: 120px; left: 360px; z-index: 5; }
 
-/* ROW 3 (Y=240) */
-.slot-ring      { top: 240px; left: 0; }
-.slot-belt      { top: 240px; left: 120px; z-index: 3; }
+/* ROW 3 (Middle Row: Ring - Vehicle - Pants - Belt - Ring) */
+.slot-cufflink  { top: 240px; left: 0; }
+.slot-vehicle   { top: 240px; left: 120px; }
 .slot-pants     { top: 240px; left: 240px; }
+.slot-belt      { top: 240px; left: 360px; z-index: 3; }
+.slot-ring      { top: 240px; left: 480px; }
 
-/* ROW 4 (Y=360) */
-.slot-vehicle   { top: 360px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
-.slot-shoes     { top: 360px; left: 120px; z-index: 2; }
-.slot-hand      { top: 360px; left: 240px; border-color: rgba(16, 185, 129, 0.4); }
+/* ROW 4 (Bottom Row: Gadget - Shoes - Gadget) */
+.slot-earpiece  { top: 360px; left: 120px; }
+.slot-shoes     { top: 360px; left: 240px; z-index: 2; }
+.slot-hand      { top: 360px; left: 360px; }
 
 /* Modal tweaks */
 .full-height-logs { max-height: 500px; }
