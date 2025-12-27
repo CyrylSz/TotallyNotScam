@@ -6,22 +6,46 @@ const gamesHubStructure = [
         label: 'Kasyno',
         icon: 'fa-gem',
         desc: 'Elegancja, strategia, ryzyko.',
-        color: '#10b981', // Emerald
+        color: '#10b981',
         subcategories: [
             {
                 title: 'Karty (Card Games)',
                 games: [
-                    { name: 'Klasyczny Poker', variants: 4, onlineCount: 4520, players: '2–10', icon: 'fa-heart', color: '#10b981', desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.' },
-                    { name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1–7', icon: 'fa-layer-group', color: '#4f46e5', desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.' },
-                    { name: 'Baccarat', variants: 4, onlineCount: 1240, players: '1–14', icon: 'fa-dragon', color: '#e11d48', desc: 'Gracz czy Bankier? Czysta intuicja w królewskim stylu.' },
-                    { name: 'Casino Poker', variants: 4, onlineCount: 890, players: '1–7', icon: 'fa-crown', color: '#7c3aed', desc: 'Pokerowe układy w pojedynku 1 na 1 z kasynem.' }
+                    { 
+                        id: 'g_poker', name: 'Poker', variants: 4, onlineCount: 4520, players: '2–10', icon: 'fa-heart', color: '#10b981', 
+                        desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.',
+                        modes: ['No Limit Hold\'em', 'Pot Limit Omaha', 'Cash Games', 'Turnieje SIT&GO']
+                    },
+                    { 
+                        id: 'g_blackjack', name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1–7', icon: 'fa-layer-group', color: '#4f46e5', 
+                        desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.',
+                        modes: ['Classic', 'European', 'Single Deck', 'Switch', 'Pontoon']
+                    },
+                    { 
+                        id: 'g_baccarat', name: 'Baccarat', variants: 4, onlineCount: 1240, players: '1–14', icon: 'fa-dragon', color: '#e11d48', 
+                        desc: 'Gracz czy Bankier? Czysta intuicja w królewskim stylu.',
+                        modes: ['Punto Banco', 'Speed Baccarat', 'No Commission', 'Dragon Tiger']
+                    },
+                    { 
+                        id: 'g_casino_poker', name: 'Casino Poker', variants: 4, onlineCount: 890, players: '1–5', icon: 'fa-crown', color: '#7c3aed', 
+                        desc: 'Pokerowe układy w pojedynku 1 na 1 z kasynem.',
+                        modes: ['Caribbean Stud', 'Three Card Poker', 'Casino Hold\'em', 'Ultimate Texas Hold\'em']
+                    }
                 ]
             },
             {
                 title: 'Stoły (Table Games)',
                 games: [
-                    { name: 'Ruletka', variants: 5, onlineCount: 5600, players: '2+', icon: 'fa-circle-notch', color: '#f59e0b', desc: 'Obstaw liczbę i zaufaj fizyce. Symbol hazardu.' },
-                    { name: 'Kości', variants: 3, onlineCount: 950, players: '1+', icon: 'fa-dice', color: '#06b6d4', desc: 'Rzuć kośćmi. Emocje tłumu i skomplikowane zakłady.' }
+                    { 
+                        id: 'g_roulette', name: 'Ruletka', variants: 5, onlineCount: 5600, players: '2+', icon: 'fa-circle-notch', color: '#f59e0b', 
+                        desc: 'Obstaw liczbę i zaufaj fizyce. Symbol hazardu.',
+                        modes: ['European', 'American', 'French', 'Lightning', 'Immersive']
+                    },
+                    { 
+                        id: 'g_dice', name: 'Kości', variants: 3, onlineCount: 950, players: '1+', icon: 'fa-dice', color: '#06b6d4', 
+                        desc: 'Rzuć kośćmi. Emocje tłumu i skomplikowane zakłady.',
+                        modes: ['Craps', 'Sic Bo', 'Lightning Dice']
+                    }
                 ]
             }
         ]
@@ -31,28 +55,46 @@ const gamesHubStructure = [
         label: 'Arcade',
         icon: 'fa-gamepad',
         desc: 'Refleks, algorytm, dopamina.',
-        color: '#d946ef', // Fuchsia
+        color: '#d946ef',
         subcategories: [
             {
                 title: 'Automaty (Slots)',
                 games: [
-                    // Kolor 1: Fuchsia (Neon/Vegas)
-                    { name: 'Automaty', variants: 6, onlineCount: 12400, players: '1', icon: 'fa-star', color: '#d946ef', desc: 'Pociągnij wajchę. Jackpoty, Megaways i czysty los.' },
-                    // Kolor 2: Orange (Ogień/Rywalizacja)
-                    { name: 'Slot Wars', variants: 2, onlineCount: 320, players: '2+', icon: 'fa-trophy', color: '#f97316', desc: 'Turniej spinów. Kto wykręci więcej w 5 minut?' }
+                    { 
+                        id: 'g_slots', name: 'Automaty', variants: 6, onlineCount: 12400, players: '1', icon: 'fa-star', color: '#d946ef', 
+                        desc: 'Pociągnij wajchę. Jackpoty, Megaways i czysty los.',
+                        modes: ['Classic 3-Reel', 'Video Slots', 'Megaways', 'Jackpot Progressive', 'Bonus Buy', 'Cluster Pays']
+                    },
+                    { 
+                        id: 'g_slotwars', name: 'Slot Wars', variants: 2, onlineCount: 320, players: '2+', icon: 'fa-trophy', color: '#f97316', 
+                        desc: 'Turniej spinów. Kto wykręci więcej w 5 minut?',
+                        modes: ['Slot Tournaments', 'Reel Races']
+                    }
                 ]
             },
             {
                 title: 'Gry Instant (Fast Paced)',
                 games: [
-                    // Kolor 3: Red (Danger/Crash)
-                    { name: 'Crash', variants: 5, onlineCount: 8500, players: '1+', icon: 'fa-chart-line', color: '#ef4444', desc: 'Chciwość vs strach. Wypłać zanim rakieta wybuchnie.' },
-                    // Kolor 4: Light Blue (Physics)
-                    { name: 'Plinko', variants: 2, onlineCount: 4100, players: '1', icon: 'fa-bowling-ball', color: '#38bdf8', desc: 'Grawitacja decyduje. Kulka spada prosto do mnożnika.' },
-                    // Kolor 5: Purple/Grey (Mines/Mystery)
-                    { name: 'Mines', variants: 2, onlineCount: 2200, players: '1', icon: 'fa-bomb', color: '#8b5cf6', desc: 'Saper na sterydach. Każdy krok to zysk lub koniec.' },
-                    // Kolor 6: Green (High/Low)
-                    { name: 'Hi-Lo', variants: 1, onlineCount: 1800, players: '1', icon: 'fa-arrows-alt-v', color: '#22c55e', desc: 'Wyższa czy niższa? Prosta matematyka kart.' }
+                    { 
+                        id: 'g_crash', name: 'Crash', variants: 5, onlineCount: 8500, players: '1+', icon: 'fa-chart-line', color: '#ef4444', 
+                        desc: 'Chciwość vs strach. Wypłać zanim rakieta wybuchnie.',
+                        modes: ['Aviator', 'JetX', 'Spaceman', 'Zeppelin', 'Cash or Crash']
+                    },
+                    { 
+                        id: 'g_plinko', name: 'Plinko', variants: 2, onlineCount: 4100, players: '1', icon: 'fa-bowling-ball', color: '#38bdf8', 
+                        desc: 'Grawitacja decyduje. Kulka spada prosto do mnożnika.',
+                        modes: ['BGaming Plinko', 'Spribe Plinko']
+                    },
+                    { 
+                        id: 'g_mines', name: 'Mines', variants: 2, onlineCount: 2200, players: '1', icon: 'fa-bomb', color: '#8b5cf6', 
+                        desc: 'Saper na sterydach. Każdy krok to zysk lub koniec.',
+                        modes: ['Minesweeper', 'Turbo Mines']
+                    },
+                    { 
+                        id: 'g_hilo', name: 'Hi-Lo', variants: 1, onlineCount: 1800, players: '1', icon: 'fa-arrows-alt-v', color: '#22c55e', 
+                        desc: 'Wyższa czy niższa? Prosta matematyka kart.',
+                        modes: ['Higher vs Lower']
+                    }
                 ]
             }
         ]
@@ -67,30 +109,36 @@ const gamesHubStructure = [
             {
                 title: 'Ekskluzywne Gry PvP',
                 games: [
-                    // 1. Silver (Chess)
-                    { name: 'Gambling Chess', variants: 1, onlineCount: 140, players: '2', icon: 'fa-chess', color: '#94a3b8', desc: 'Szachy. Licytuj każdy ruch i obstawiaj życie pionków.' },
-                    // 2. Dark Red (War)
-                    { name: 'Age of Gambling', variants: 1, onlineCount: 85, players: '2', icon: 'fa-shield-alt', color: '#b91c1c', desc: 'RTS. Kupuj nuklearne czołgi za $$ i zniszcz bazę.' },
-                    // 3. Deep Purple (Mystery)
-                    { name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4-15', icon: 'fa-user-secret', color: '#6d28d9', desc: 'Mafia na pieniądze. Kłam, manipuluj, zgarnij pulę.' },
-                    
-                    // --- NOWA GRA ---
-                    // 4. Lime Green (Toxic/Worms)
                     { 
-                        name: 'Degenerate Worms', 
-                        variants: 1, 
-                        onlineCount: 450, 
-                        players: '2-8', 
-                        icon: 'fa-skull-crossbones', // lub fa-bacteria / fa-biohazard
-                        color: '#84cc16', 
-                        desc: 'Artyleria 2D. Dokup "Święty Granat" w trakcie tury za realny hajs.' 
+                        id: 'g_chess', name: 'Gambling Chess', variants: 1, onlineCount: 140, players: '2', icon: 'fa-chess', color: '#94a3b8', 
+                        desc: 'Szachy. Licytuj każdy ruch i obstawiaj życie pionków.',
+                        modes: ['Standard Match Betting']
                     },
-                    // ----------------
-
-                    // 5. Blue (Logic)
-                    { name: 'Logic Race Bet', variants: 1, onlineCount: 60, players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', desc: 'Wyścig IQ. Kto pierwszy rozwiąże zagadkę, bierze wszystko.' },
-                    // 6. Pink/Rose (Reflex)
-                    { name: 'Aim Duel Bet', variants: 1, onlineCount: 320, players: '2', icon: 'fa-crosshairs', color: '#f43f5e', desc: 'FPS 1v1. Czysty refleks. Kto kliknie szybciej, wygrywa.' }
+                    { 
+                        id: 'g_war', name: 'Age of Gambling', variants: 1, onlineCount: 85, players: '2', icon: 'fa-shield-alt', color: '#b91c1c', 
+                        desc: 'RTS. Kupuj nuklearne czołgi za $$ i zniszcz bazę.',
+                        modes: ['Base Destruction']
+                    },
+                    { 
+                        id: 'g_mystery', name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4-15', icon: 'fa-user-secret', color: '#6d28d9', 
+                        desc: 'Mafia na pieniądze. Kłam, manipuluj, zgarnij pulę.',
+                        modes: ['Role Reveal Bet']
+                    },
+                    { 
+                        id: 'g_worms', name: 'Degenerate Worms', variants: 1, onlineCount: 450, players: '2-8', icon: 'fa-skull-crossbones', color: '#84cc16', 
+                        desc: 'Artyleria 2D. Dokup "Święty Granat" w trakcie tury za realny hajs.',
+                        modes: ['Deathmatch Pay-to-Win']
+                    },
+                    { 
+                        id: 'g_logic', name: 'Logic Race Bet', variants: 1, onlineCount: 60, players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', 
+                        desc: 'Wyścig IQ. Kto pierwszy rozwiąże zagadkę, bierze wszystko.',
+                        modes: ['Speed Puzzle']
+                    },
+                    { 
+                        id: 'g_aim', name: 'Aim Duel Bet', variants: 1, onlineCount: 320, players: '2', icon: 'fa-crosshairs', color: '#f43f5e', 
+                        desc: 'FPS 1v1. Czysty refleks. Kto kliknie szybciej, wygrywa.',
+                        modes: ['Reflex Showdown']
+                    }
                 ]
             }
         ]

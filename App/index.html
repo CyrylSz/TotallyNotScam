@@ -157,21 +157,17 @@
                 </div>
 
                 <div class="d3-col">
-                     <div class="qp-card-centered" style="width: 100%; max-width: 100%;">
-                        <div class="qp-title">Quick Play</div>
-                        <div class="qp-buttons-container">
-                            <button class="qp-btn-small">
-                                <i class="fas fa-plus-circle"></i> Stwórz
-                            </button>
-                            <button class="qp-btn-small primary">
-                                <i class="fas fa-play"></i> Dołącz
-                            </button>
-                            <button class="qp-btn-small">
-                                <i class="fas fa-plane"></i> Offline
-                            </button>
+                    <div class="card dash-card favorites-panel" style="width: 100%; max-width: 100%; min-height: 250px;">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-star" style="color:gold;"></i> Favorites</div>
+                            <i class="fas fa-filter filter-icon-abs" onclick="alert('Filtrowanie ulubionych...')" title="Filtruj"></i>
                         </div>
-                        <div class="qp-online-bottom">
-                            <div class="qp-dot"></div> 1,247 Online
+                        <div class="favorites-grid" id="favoritesGrid">
+                            <!-- JS wstrzyknie tu ulubione gry lub placeholder -->
+                            <div class="fav-placeholder">
+                                <i class="far fa-star"></i>
+                                <span>Dodaj gry do ulubionych, aby mieć do nich szybki dostęp.</span>
+                            </div>
                         </div>
                     </div>
 
@@ -1212,6 +1208,58 @@
         </button>
     </div>
 
+    <!-- GAME DETAILS MODAL -->
+    <div class="modal-overlay" id="gameDetailsModal">
+        <div class="steam-modal" style="width: 850px; max-width: 95vw;">
+            <div class="sm-header" style="background: linear-gradient(90deg, #1e293b, #0f172a);">
+                <div class="sm-title" id="gmTitle">GAME DETAILS</div>
+                <div class="sm-close" onclick="closeGameModal()"><i class="fas fa-times"></i></div>
+            </div>
+            
+            <div class="gm-layout">
+                <!-- Left Side: Info & Loadout -->
+                <div class="gm-sidebar">
+                    <div class="gm-big-icon-box" id="gmIconBox">
+                        <i class="fas fa-gamepad" id="gmIcon"></i>
+                    </div>
+                    
+                    <div class="gm-info-block">
+                        <h2 id="gmName">Game Name</h2>
+                        <p id="gmDesc">Game description goes here.</p>
+                    </div>
+
+                    <div class="gm-stats-row">
+                         <div class="gm-stat">
+                            <span class="lbl">ONLINE</span>
+                            <span class="val" id="gmOnline" style="color: var(--accent-green);">0</span>
+                         </div>
+                         <div class="gm-stat">
+                            <span class="lbl">VARIANTS</span>
+                            <span class="val" id="gmVariants">1</span>
+                         </div>
+                    </div>
+
+                    <div class="gm-loadout-section">
+                        <div class="gm-section-label">ACTIVE LOADOUT</div>
+                        <select class="gm-select" id="gmLoadoutSelect">
+                            <!-- Populated via JS -->
+                        </select>
+                    </div>
+                </div>
+
+                <!-- Right Side: Modes Grid -->
+                <div class="gm-content">
+                    <div class="gm-section-label" style="margin-bottom: 10px; display: flex; justify-content: space-between;">
+                        <span>AVAILABLE MODES</span>
+                        <span style="font-size: 10px; color: #666;">Kliknij gwiazdkę, aby dodać do Dashboardu</span>
+                    </div>
+                    <div class="gm-modes-grid" id="gmModesGrid">
+                        <!-- Modes injected here -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
     <script src="data.js"></script>
     <script src="app.js"></script>
 </body>

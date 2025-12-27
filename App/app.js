@@ -13,6 +13,8 @@ let prevDraws = 0;
 // Current Player State (Hardcoded for Demo)
 const currentRankId = 3; // Alpha Whale
 
+let favoriteModes = []; // Przechowuje stringi w formacie "gameID_modeIndex", np. "g_poker_0"
+
 // --- GLOBAL STATE ---
 let myInventory = []; // Tablica obiektów (instancji)
 let myLoadout = {};   // Mapa: slotId -> itemUid
@@ -1480,6 +1482,32 @@ function hexToRgb(hex) {
     return result ? `${parseInt(result[1], 16)}, ${parseInt(result[2], 16)}, ${parseInt(result[3], 16)}` : '255,255,255';
 }
 
+function distributePlayers(total, count) {
+    if (count <= 0) return [];
+    if (count === 1) return [total];
+    
+    let distribution = [];
+    let remaining = total;
+    
+    // Generujemy losowe wagi
+    let weights = [];
+    for(let i=0; i<count; i++) weights.push(Math.random());
+    let sumWeights = weights.reduce((a,b) => a+b, 0);
+    
+    for(let i=0; i<count; i++) {
+        // Ostatni element bierze resztę, aby uniknąć błędów zaokrągleń
+        if (i === count - 1) {
+            distribution.push(remaining);
+        } else {
+            let val = Math.floor(total * (weights[i] / sumWeights));
+            distribution.push(val);
+            remaining -= val;
+        }
+    }
+    // Sortujemy malejąco, żeby najpopularniejsze mody były pierwsze (lepszy UX)
+    return distribution.sort((a,b) => b-a);
+}
+
 let currentDepositMethod = 'visa';
 let currentWithdrawMethod = 'visa';
 
@@ -1908,7 +1936,7 @@ function renderGamesContent() {
             card.className = 'gh-card';
             
             // Interaction
-            card.onclick = () => alert(`Uruchamianie: ${game.name}\nTryb: ${game.variants > 1 ? 'Wybór wariantu' : 'Standard'}\nOnline: ${game.onlineCount}`);
+            card.onclick = () => openGameDetailsModal(game);
             
             // Dynamic Color styles
             const glowColor = game.color;
@@ -2014,6 +2042,7 @@ function renderGlobalLeaderboard() {
 function initDashboardExtras() {
     renderDashInventory();
     initBannerCarousel();
+    renderFavoritesPanel();
 }
 
 // Render mini inventory in the new dashboard section
@@ -2074,3 +2103,160 @@ function initBannerCarousel() {
 
 // Call extra initialization at startup
 initDashboardExtras();
+
+// --- GAME DETAILS MODAL & FAVORITES LOGIC ---
+
+function openGameDetailsModal(game) {
+    const modal = document.getElementById('gameDetailsModal');
+    if(!modal) return;
+
+    // 1. Populate Basic Info
+    document.getElementById('gmIcon').className = `fas ${game.icon}`;
+    document.getElementById('gmIcon').style.color = game.color;
+    document.getElementById('gmIconBox').style.borderColor = game.color;
+    document.getElementById('gmIconBox').style.background = `linear-gradient(135deg, ${game.color}20, rgba(0,0,0,0.4))`;
+    
+    document.getElementById('gmName').textContent = game.name;
+    document.getElementById('gmDesc').textContent = game.desc;
+    document.getElementById('gmOnline').textContent = game.onlineCount.toLocaleString();
+    document.getElementById('gmVariants').textContent = game.modes.length;
+
+    // 2. Populate Loadout Select (Mock from inventory categories)
+    const loadoutSelect = document.getElementById('gmLoadoutSelect');
+    loadoutSelect.innerHTML = '';
+    const loadouts = ["Poker Face Set", "High Roller Suit", "Lucky Casual", "Friday Night Degen"];
+    loadouts.forEach(l => {
+        const opt = document.createElement('option');
+        opt.value = l;
+        opt.textContent = l;
+        loadoutSelect.appendChild(opt);
+    });
+
+    // 3. Render Modes Grid (The Core Logic)
+    const grid = document.getElementById('gmModesGrid');
+    grid.innerHTML = '';
+
+    // Distribute total players among modes using the helper
+    const playersDistribution = distributePlayers(game.onlineCount, game.modes.length);
+
+    game.modes.forEach((modeName, index) => {
+        const modeId = `${game.id}_${index}`;
+        const playerCount = playersDistribution[index];
+        const isFav = favoriteModes.includes(modeId);
+
+        const card = document.createElement('div');
+        card.className = 'mode-card';
+        // Kliknięcie w kartę = Start gry (symulacja)
+        card.onclick = (e) => {
+            if(e.target.classList.contains('mc-star')) return; // Nie uruchamiaj, jeśli kliknięto gwiazdkę
+            alert(`Uruchamianie trybu: ${modeName} (${game.name})\nLoadout: ${loadoutSelect.value}`);
+            closeGameModal();
+        };
+
+        const starClass = isFav ? 'fas fa-star mc-star active' : 'far fa-star mc-star';
+
+        card.innerHTML = `
+            <div class="mc-top">
+                <div class="mc-icon" style="background:${game.color}40; color:${game.color};">
+                    <i class="fas ${game.icon}"></i>
+                </div>
+                <i class="${starClass}" onclick="toggleFavoriteMode('${modeId}', '${game.id}', '${modeName}', '${game.icon}', '${game.color}', ${playerCount}, this)"></i>
+            </div>
+            <div class="mc-title">${modeName}</div>
+            <div class="mc-players"><i class="fas fa-user"></i> ${playerCount.toLocaleString()}</div>
+            
+            <div class="mc-overlay-play">
+                <div class="play-btn-round"><i class="fas fa-play"></i></div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
+
+    modal.classList.add('active');
+}
+
+function closeGameModal() {
+    document.getElementById('gameDetailsModal').classList.remove('active');
+}
+
+function toggleFavoriteMode(modeId, gameId, modeName, icon, color, players, starElement) {
+    const idx = favoriteModes.indexOf(modeId);
+    
+    if (idx === -1) {
+        // Add
+        favoriteModes.push(modeId);
+        starElement.className = 'fas fa-star mc-star active';
+        // Opcjonalnie: Zapisz metadane o ulubionej grze, aby nie szukać ich później
+        // (W prostym demo odświeżamy panel po ID)
+    } else {
+        // Remove
+        favoriteModes.splice(idx, 1);
+        starElement.className = 'far fa-star mc-star';
+    }
+    
+    // Refresh Dashboard Favorites Panel immediately
+    renderFavoritesPanel();
+}
+
+function renderFavoritesPanel() {
+    const grid = document.getElementById('favoritesGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    if (favoriteModes.length === 0) {
+        grid.innerHTML = `
+            <div class="fav-placeholder">
+                <i class="far fa-star"></i>
+                <span>Dodaj gry do ulubionych, aby mieć do nich szybki dostęp.</span>
+            </div>`;
+        return;
+    }
+
+    // Iterate through all games structure to find data for saved IDs
+    // (This is inefficient O(N^2) but fine for frontend demo with small dataset)
+    favoriteModes.forEach(favId => {
+        const [gameId, modeIndexStr] = favId.split('_g_'); // Hacky split correction because ID contains g_
+        // Lepiej: split by last underscore
+        const lastUnderscore = favId.lastIndexOf('_');
+        const gId = favId.substring(0, lastUnderscore);
+        const mIdx = parseInt(favId.substring(lastUnderscore + 1));
+
+        // Find game data
+        let foundGame = null;
+        gamesHubStructure.forEach(cat => {
+            cat.subcategories.forEach(sub => {
+                const g = sub.games.find(x => x.id === gId);
+                if(g) foundGame = g;
+            });
+        });
+
+        if (foundGame) {
+            const modeName = foundGame.modes[mIdx];
+            // Recalculate players purely for visuals (or store it)
+            // For consistency in demo, just randomize a bit or use static portion
+            const displayPlayers = Math.floor(foundGame.onlineCount / foundGame.modes.length); 
+
+            const card = document.createElement('div');
+            card.className = 'mode-card';
+            card.onclick = (e) => {
+                if(e.target.classList.contains('mc-star')) return;
+                alert(`Szybki start: ${modeName}`);
+            };
+
+            card.innerHTML = `
+                <div class="mc-top">
+                    <div class="mc-icon" style="background:${foundGame.color}40; color:${foundGame.color};">
+                        <i class="fas ${foundGame.icon}"></i>
+                    </div>
+                    <i class="fas fa-star mc-star active" onclick="toggleFavoriteMode('${favId}', null, null, null, null, 0, this)"></i>
+                </div>
+                <div class="mc-title">${modeName}</div>
+                <div class="mc-players"><i class="fas fa-user"></i> ~${displayPlayers}</div>
+                 <div class="mc-overlay-play">
+                    <div class="play-btn-round"><i class="fas fa-play"></i></div>
+                </div>
+            `;
+            grid.appendChild(card);
+        }
+    });
+}
