@@ -163,7 +163,7 @@
                             <i class="fas fa-filter filter-icon-abs" onclick="alert('Filtrowanie ulubionych...')" title="Filtruj"></i>
                         </div>
                         <div class="favorites-grid" id="favoritesGrid">
-                            <!-- JS wstrzyknie tu ulubione gry lub placeholder -->
+                            
                             <div class="fav-placeholder">
                                 <i class="far fa-star"></i>
                                 <span>Dodaj gry do ulubionych, aby mieć do nich szybki dostęp.</span>
@@ -262,11 +262,11 @@
         <div class="view-container" id="viewGames">
             
             <div class="rank-overview-banner" style="position: relative;">
-                <!-- KROK 3: Ikonka Menu (3 kropki) otwierająca modal rangi -->
+                
                 <i class="fas fa-ellipsis-h rob-menu-btn" onclick="openRankModal()"></i>
 
                 <div class="rob-left">
-                    <!-- KROK 1: Ikonka Wieloryba (Emoji) zamiast FontAwesome -->
+                    
                     <div class="rob-icon" style="background: transparent; border: none; font-size: 42px; width: auto; height: auto;">
                         🐋
                     </div> 
@@ -289,7 +289,7 @@
                 </div>
 
                 <div class="rob-right">
-                    <!-- KROK 2: Winstreak i Highest w ładnym formacie -->
+                    
                     <div class="stat-group-vertical">
                         <div class="stat-highlight-val">2 <span style="font-size:12px; color:#fff;">🔥</span></div>
                         <div class="stat-sub-val">Winstreak</div>
@@ -306,20 +306,20 @@
             <div class="games-hub-grid">
                 
                 <div class="games-column">
-                    <!-- New Header Container for Tabs -->
+                    
                     <div id="gamesHubHeader"></div>
 
-                    <!-- This container previously held the simple grid, now holds the dynamic subcategories -->
+                    
                     <div id="availableGamesContainer"></div>
                 </div>
 
                 <div class="leaderboard-column">
-                    <!-- Height: fit-content naprawia niezależność wertykalną (Task 9) -->
+                    
                     <div class="card" style="height: fit-content; max-height: 80vh; display: flex; flex-direction: column;">
                         <div class="card-header" style="justify-content: space-between; padding-right: 0;">
-                            <!-- Task 4: Zmiana nazwy -->
+                            
                             <div class="card-title"><i class="fas fa-trophy" style="color:gold; margin-right:8px;"></i> Leaderboard</div>
-                            <!-- Task 6: Ikonka Lejka -->
+                            
                             <i class="fas fa-filter filter-icon-abs" style="position: static;" title="Filtruj"></i>
                         </div>
                         
@@ -329,12 +329,12 @@
                             <span style="text-align:right;">Net Worth</span>
                         </div>
                         
-                        <!-- Task 5: Fix renderowania (id="globalLeaderboardList") -->
+                        
                         <div class="leaderboard-list" id="globalLeaderboardList" style="overflow-y: auto; max-height: 400px; padding-right: 5px;">
-                            <!-- JS wypełni to danymi -->
+                            
                         </div>
 
-                        <!-- Task 8: Działający przycisk -->
+                        
                         <button class="load-more-btn" style="margin-top:15px;" onclick="scrollToMyPosition()">Pokaż moją pozycję</button>
                     </div>
                 </div>
@@ -344,7 +344,7 @@
 
         <div class="view-container" id="viewInventory">
             <div class="inventory-split-layout">
-                <!-- LEWA STRONA: Magazyn -->
+                
                 <div class="inv-panel left-panel">
                     <div class="inv-header">
                         <div class="inv-title">
@@ -370,11 +370,11 @@
                         </div>
                     </div>
                     <div class="inventory-grid-scroll" id="inventoryContainer">
-                        <!-- Items injected via JS -->
+                        
                     </div>
                 </div>
 
-                <!-- PRAWA STRONA: Loadout -->
+                
                 <div class="inv-panel right-panel">
                     <div class="inv-header">
                         <div class="inv-title"><i class="fas fa-user-astronaut"></i> LOADOUT</div>
@@ -424,13 +424,13 @@
 
         <div class="view-container" id="viewMarket">
             <div class="market-layout-main">
-                <!-- LEWY SIDEBAR: FILTRY -->
+                
                 <aside class="market-sidebar">
                     <div class="ms-header">
                         <i class="fas fa-filter"></i> FILTRY RYNKU
                     </div>
                     
-                    <!-- Wyszukiwanie Przedmiotu -->
+                    
                     <div class="ms-section">
                         <div class="ms-label">Przedmiot</div>
                         <div class="input-group small" style="margin-bottom: 0;">
@@ -439,7 +439,7 @@
                         </div>
                     </div>
 
-                    <!-- Wyszukiwanie Gracza + Checkbox -->
+                    
                     <div class="ms-section">
                         <div class="ms-label">Sprzedawca</div>
                         <div class="input-group small" style="margin-bottom: 5px;">
@@ -493,12 +493,12 @@
                             <label class="ms-check-row"><input type="checkbox" value="Rare" onchange="filterMarket()" checked> <span class="dot-r rare"></span> Rare</label>
                             <label class="ms-check-row"><input type="checkbox" value="Epic" onchange="filterMarket()" checked> <span class="dot-r epic"></span> Epic</label>
                             <label class="ms-check-row"><input type="checkbox" value="Relic" onchange="filterMarket()" checked> <span class="dot-r relic"></span> Relic</label>
-                            <!-- PRZYWRÓCONA KŁÓDKA -->
+                            
                             <label class="ms-check-row"><input type="checkbox" value="Divine" onchange="filterMarket()" checked> <span class="dot-r divine"></span> Divine <i class="fas fa-lock lock-icon" id="lockDivine"></i></label>
                         </div>
                     </div>
 
-                    <!-- PRZYWRÓCONA LEGENDA -->
+                    
                     <div class="ms-section" style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
                         <div style="font-size: 10px; color: #666; line-height: 1.4; font-style: italic;">
                             <i class="fas fa-lock" style="color: var(--accent-red);"></i> - Oznacza brak wymaganej rangi do <b>założenia</b> przedmiotu. Nadal możesz nim handlować w 100%.
@@ -506,9 +506,9 @@
                     </div>
                 </aside>
 
-                <!-- PRAWY KONTENT: GRID -->
+                
                 <div class="market-content">
-                    <!-- Topbar Trybów Gry -->
+                    
                     <div class="market-topbar">
                         <div class="mt-tabs">
                             <button class="mt-tab active" onclick="switchMarketMode('auction')" id="tabAuctionMode">
@@ -530,12 +530,12 @@
                         </div>
                     </div>
 
-                    <!-- Siatka Ofert -->
+                    
                     <div class="market-grid" id="marketGrid">
-                        <!-- Generowane przez JS -->
+                        
                     </div>
 
-                    <!-- PAGINACJA -->
+                    
                     <div class="market-pagination">
                         <button id="btnPrevPage" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i></button>
                         <span id="pageIndicator">Strona 1 z 10</span>
@@ -549,7 +549,7 @@
             
             <div class="wallet-layout-centered">
                 
-                <!-- 1. NET WORTH PANEL (WIDER) -->
+                
                 <div class="nw-main-card">
                     <div class="nw-header">
                         <div class="nw-title">TOTAL NET WORTH</div>
@@ -581,7 +581,7 @@
                     </div>
                 </div>
 
-                <!-- 2. ACTION CENTER (NARROWER) -->
+                
                 <div class="action-center-container">
                     <div class="w-tabs centered-tabs">
                         <button class="w-tab active" onclick="switchWalletTab('deposit')"><i class="fas fa-arrow-down"></i> Wpłata</button>
@@ -591,15 +591,15 @@
 
                     <div class="w-tab-content-container">
                         
-                        <!-- TAB: DEPOSIT (Dynamic) -->
+                        
                         <div class="w-content active" id="tab-deposit">
-                            <!-- Removed obvious label -->
+                            
                             
                             <div class="pay-methods-grid compact" id="depositMethodsGrid">
-                                <!-- Generated by JS -->
+                                
                             </div>
                             
-                            <!-- Dynamic Content Container -->
+                            
                             <div id="depositDynamicContainer"></div>
 
                             <div class="deposit-form centered-form" style="padding:0;">
@@ -620,12 +620,12 @@
                             </div>
                         </div>
 
-                        <!-- TAB: WITHDRAW -->
+                        
                         <div class="w-content" id="tab-withdraw">
                             <div class="withdraw-form centered-form">
-                                <!-- Removed obvious label -->
+                                
                                 <div class="pay-methods-grid compact" id="withdrawMethodsGrid">
-                                    <!-- Generated by JS -->
+                                    
                                 </div>
                                 <div id="withdrawDynamicContainer" style="margin-bottom: 20px;"></div>
 
@@ -638,7 +638,7 @@
                             </div>
                         </div>
 
-                         <!-- TAB: TRANSFER (REWORKED) -->
+                         
                          <div class="w-content" id="tab-transfer">
                             <div class="transfer-form centered-form">
                                 <label>Odbiorca</label>
@@ -676,7 +676,7 @@
                     </div>
                 </div>
 
-                <!-- 3. SIMPLIFIED FOOTER -->
+                
                 <div class="wallet-footer-simple">
                     <div class="rg-stat centered">
                         <div class="rg-label">Czas Sesji</div>
@@ -1097,7 +1097,7 @@
             </div>
         </div>
     </div>
-    <!-- Financial Logs Modal -->
+    
     <div class="modal-overlay" id="financialLogsModal">
         <div class="steam-modal" style="width: 800px;">
             <div class="sm-header">
@@ -1112,7 +1112,7 @@
                         <div style="font-size: 16px; font-weight: 700; color: var(--accent-red);">-200.00 $</div>
                     </div>
                     
-                    <!-- Toggle Switch for Games -->
+                    
                     <div class="switch-container">
                         <label class="switch">
                             <input type="checkbox" id="hideGamesSwitch" checked onchange="renderFinancialLogsList()">
@@ -1126,12 +1126,12 @@
 
             <div class="sm-content" style="padding-top: 0;">
                 <div class="history-list-container full-height-logs" id="financialLogsList">
-                    <!-- Logs injected via JS -->
+                    
                 </div>
             </div>
         </div>
     </div>
-    <!-- Market Item Detail Modal -->
+    
     <div class="modal-overlay" id="marketModal">
         <div class="steam-modal market-modal-size">
             <div class="sm-header" id="marketModalHeader" style="border-bottom:none;">
@@ -1140,7 +1140,7 @@
             </div>
             
             <div class="mm-layout">
-                <!-- Lewa kolumna: Wizualizacja -->
+                
                 <div class="mm-visual-col">
                     <div class="mm-item-card-large" id="mmCard">
                         <div id="mmIcon" style="font-size: 100px; font-style: normal;"></div>
@@ -1154,7 +1154,7 @@
                     </div>
                 </div>
 
-                <!-- Prawa kolumna: Dane -->
+                
                 <div class="mm-data-col">
                     <h2 id="mmItemName">Nazwa Przedmiotu</h2>
                     <div class="mm-tags" id="mmTags">
@@ -1228,7 +1228,7 @@
         </button>
     </div>
 
-    <!-- GAME DETAILS MODAL -->
+    
     <div class="modal-overlay" id="gameDetailsModal">
         <div class="steam-modal" style="width: 850px; max-width: 95vw;">
             <div class="sm-header" style="background: linear-gradient(90deg, #1e293b, #0f172a);">
@@ -1237,7 +1237,7 @@
             </div>
             
             <div class="gm-layout">
-                <!-- Left Side: Info & Loadout -->
+                
                 <div class="gm-sidebar">
                     <div class="gm-big-icon-box" id="gmIconBox">
                         <i class="fas fa-gamepad" id="gmIcon"></i>
@@ -1262,19 +1262,19 @@
                     <div class="gm-loadout-section">
                         <div class="gm-section-label">ACTIVE LOADOUT</div>
                         <select class="gm-select" id="gmLoadoutSelect">
-                            <!-- Populated via JS -->
+                            
                         </select>
                     </div>
                 </div>
 
-                <!-- Right Side: Modes Grid -->
+                
                 <div class="gm-content">
                     <div class="gm-section-label" style="margin-bottom: 10px; display: flex; justify-content: space-between;">
                         <span>AVAILABLE MODES</span>
                         <span style="font-size: 10px; color: #666;">Kliknij gwiazdkę, aby dodać do Dashboardu</span>
                     </div>
                     <div class="gm-modes-grid" id="gmModesGrid">
-                        <!-- Modes injected here -->
+                        
                     </div>
                 </div>
             </div>

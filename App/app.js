@@ -1,27 +1,27 @@
-// State variables
+
 let shownTreasures = 5;
 let shownGames = 20; 
 let shownTrophies = 5;
 let notificationCount = 3;
 
-// Animation State
+
 let prevWinPerc = 0;
 let prevWins = 0;
 let prevLosses = 0;
 let prevDraws = 0;
 
-// Current Player State (Hardcoded for Demo)
-const currentRankId = 3; // Alpha Whale
 
-let favoriteModes = []; // Przechowuje stringi w formacie "gameID_modeIndex", np. "g_poker_0"
+const currentRankId = 3; 
 
-// --- GLOBAL STATE ---
-let myInventory = []; // Tablica obiektów (instancji)
-let myLoadout = {};   // Mapa: slotId -> itemUid
+let favoriteModes = []; 
+
+
+let myInventory = []; 
+let myLoadout = {};   
 let invFilterState = { item: true, case: true };
 
-// --- RENDER FUNCTIONS ---
-// --- MARKET SYSTEM START ---
+
+
 let marketState = {
     mode: 'auction', 
     searchItem: '',  
@@ -34,7 +34,7 @@ let marketState = {
     rarities: ['Peasant', 'Rare', 'Epic', 'Relic', 'Divine'],
     sort: 'best_deal',
     listings: [],
-    // Paginacja - ZMIANA NA 32
+    
     currentPage: 1,
     itemsPerPage: 32 
 };
@@ -42,7 +42,7 @@ let marketState = {
 function initMarketData() {
     marketState.listings = [];
     
-    // Helper generatora
+    
     const addListing = (itemTemplateId, sellerName, overridePrice = null, isMine = false, forceType = null) => {
         const template = allTreasures.find(t => t.id === itemTemplateId);
         if(!template) return;
@@ -62,7 +62,7 @@ function initMarketData() {
 
         const listingType = forceType ? forceType : (Math.random() > 0.5 ? 'auction' : 'instant');
         
-        // Zabezpieczenie: Minimalna wartość bazy to 100$, nawet dla śmieci, żeby uniknąć błędów mnożenia przez 0
+        
         let rawVal = template.rawPrice > 0 ? template.rawPrice : 100;
         let baseValue = overridePrice || rawVal * (0.8 + Math.random() * 0.4); 
         
@@ -72,26 +72,26 @@ function initMarketData() {
         let endTime = 0;
 
         if (listingType === 'auction') {
-            // Cena startowa: 40-60% wartości (nigdy mniej niż 10$)
+            
             price = Math.max(10, Math.floor(baseValue * (0.4 + Math.random() * 0.2))); 
             
-            // Losujemy czy są już oferty (70% szans)
+            
             if(Math.random() > 0.3) {
-                bidCount = Math.floor(Math.random() * 25) + 1; // 1-25 ofert
-                // CurrentBid to cena startowa + (liczba ofert * ~5% podbicia)
-                // GWARANCJA: CurrentBid > Price
+                bidCount = Math.floor(Math.random() * 25) + 1; 
+                
+                
                 currentBid = Math.floor(price * (1 + (bidCount * 0.05)));
             } else {
                 bidCount = 0;
-                currentBid = 0; // 0 oznacza brak ofert, UI wyświetli Price jako start
+                currentBid = 0; 
             }
             endTime = Date.now() + Math.floor(Math.random() * 86400000 * 2); 
         } else {
-            // Instant Buy = Pełna cena
+            
             price = Math.max(10, Math.floor(baseValue));
         }
 
-        // Generowanie historii
+        
         const history = [];
         let cur = baseValue;
         for(let j=0; j<10; j++) {
@@ -105,8 +105,8 @@ function initMarketData() {
             seller: sellerName,
             sellerImg: sellerImg,
             listingType: listingType, 
-            price: price, // Cena Kup Teraz LUB Cena Startowa Aukcji
-            currentBid: currentBid, // Aktualna najwyższa oferta
+            price: price, 
+            currentBid: currentBid, 
             bidCount: bidCount,
             endTime: endTime,
             change: ((Math.random() * 20) - 10).toFixed(1),
@@ -123,12 +123,12 @@ function initMarketData() {
         });
     };
 
-    // 1. OFERTY MR GAMBLERA
+    
     addListing(5, "MrGambler", 1250000, true, 'auction'); 
     addListing(16, "MrGambler", 2400000, true, 'instant'); 
     addListing(15, "MrGambler", 45000, true, 'instant'); 
 
-    // 2. MASS GENERATION (300 items total -> ~150 per mode)
+    
     const players = ["Whale_Killer", "LuckyLuke", "CryptoBro", "Bot_Network_01", "Anon_99", "WatchMaster", "HighRoller", "PokerFace"];
     const itemIds = allTreasures.map(t => t.id);
 
@@ -147,7 +147,7 @@ function renderMarketView() {
 
 function switchMarketMode(mode) {
     marketState.mode = mode;
-    marketState.currentPage = 1; // Reset strony przy zmianie trybu
+    marketState.currentPage = 1; 
     
     document.getElementById('tabAuctionMode').classList.toggle('active', mode === 'auction');
     document.getElementById('tabInstantBuy').classList.toggle('active', mode === 'instant');
@@ -157,7 +157,7 @@ function switchMarketMode(mode) {
 
 function changePage(delta) {
     marketState.currentPage += delta;
-    filterMarket(); // Re-render z nową stroną
+    filterMarket(); 
 }
 
 function toggleMarketType(type, btnElement) {
@@ -188,7 +188,7 @@ function filterMarket() {
     if(!grid) return;
     grid.innerHTML = '';
     
-    // Inputs
+    
     marketState.searchItem = document.getElementById('marketSearchInput').value.toLowerCase();
     marketState.searchPlayer = document.getElementById('marketSearchPlayer').value.toLowerCase();
     marketState.onlyMine = document.getElementById('chkOnlyMine').checked;
@@ -197,7 +197,7 @@ function filterMarket() {
     marketState.sort = document.getElementById('marketSortSelect').value;
     const checkedRarities = Array.from(document.querySelectorAll('.ms-check-row input:checked')).map(cb => cb.value);
 
-    // FILTERING
+    
     let results = marketState.listings.filter(item => {
         if (item.listingType !== marketState.mode) return false;
         if (marketState.onlyMine && !item.isMine) return false;
@@ -216,7 +216,7 @@ function filterMarket() {
         return true;
     });
     
-    // SORTING
+    
     results.sort((a, b) => {
         const pA = a.listingType === 'auction' ? (a.currentBid || a.price) : a.price;
         const pB = b.listingType === 'auction' ? (b.currentBid || b.price) : b.price;
@@ -236,11 +236,11 @@ function filterMarket() {
         }
     });
 
-    // PAGINATION LOGIC
+    
     const totalItems = results.length;
     const totalPages = Math.ceil(totalItems / marketState.itemsPerPage) || 1;
     
-    // Zabezpieczenie bounds
+    
     if (marketState.currentPage < 1) marketState.currentPage = 1;
     if (marketState.currentPage > totalPages) marketState.currentPage = totalPages;
 
@@ -248,18 +248,18 @@ function filterMarket() {
     const endIndex = startIndex + marketState.itemsPerPage;
     const pageItems = results.slice(startIndex, endIndex);
 
-    // RENDER ITEMS
+    
     pageItems.forEach(item => {
         const card = createMarketCard(item);
         grid.appendChild(card);
     });
     
-    // EMPTY STATE
+    
     if(results.length === 0) {
         grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#666;">Brak ofert spełniających kryteria.</div>';
     }
 
-    // UPDATE PAGINATION UI
+    
     document.getElementById('pageIndicator').textContent = `Strona ${marketState.currentPage} z ${totalPages} (${totalItems} ofert)`;
     document.getElementById('btnPrevPage').disabled = marketState.currentPage === 1;
     document.getElementById('btnNextPage').disabled = marketState.currentPage === totalPages;
@@ -273,16 +273,16 @@ function createMarketCard(item) {
     el.style.borderColor = `rgba(${hexToRgb(item.color)}, 0.5)`;
     el.onclick = () => openMarketItemModal(item);
     
-    // Lock logic
+    
     let isLocked = false;
     if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
     const lockHtml = isLocked ? `<div class="mc-lock-overlay"><i class="fas fa-lock"></i></div>` : '';
 
-    // DYNAMIC CONTENT BASED ON MODE
+    
     let footerHtml = '';
     
     if (item.listingType === 'instant') {
-        // INSTANT BUY LAYOUT
+        
         const changeClass = parseFloat(item.change) >= 0 ? 'val-up' : 'val-down';
         const changeIcon = parseFloat(item.change) >= 0 ? '+' : '';
         
@@ -294,7 +294,7 @@ function createMarketCard(item) {
             <div style="font-size:9px; color:#666; margin-top:4px; text-align:right;">Kup Teraz</div>
         `;
     } else {
-        // AUCTION LAYOUT
+        
         const timeLeft = calculateTimeLeft(item.endTime);
         
         const priceToDisplay = item.currentBid > 0 ? item.currentBid : item.price;
@@ -340,40 +340,40 @@ function calculateTimeLeft(endTime) {
     return `${hrs}h ${mins}m`;
 }
 
-// --- DYNAMIC MODAL (The core of the request) ---
+
 
 function openMarketItemModal(item) {
     const modal = document.getElementById('marketModal');
     if(!modal) return;
     
-    // 1. Podstawowe Dane
+    
     document.getElementById('mmIcon').innerHTML = item.icon;
     document.getElementById('mmIcon').className = ''; 
     document.getElementById('mmCard').style.color = item.color;
     
-    // --- FIX: NAPRAWA ZDJĘCIA SPRZEDAWCY ---
+    
     document.getElementById('mmSellerName').textContent = item.seller;
-    // Ustawiamy styl inline background-image. Ważne są backticki ` ` 
+    
     document.getElementById('mmSellerAvatar').style.backgroundImage = `url('${item.sellerImg}')`;
     document.getElementById('mmSellerAvatar').style.backgroundSize = 'cover';
     document.getElementById('mmSellerAvatar').style.backgroundPosition = 'center';
-    // ---------------------------------------
+    
 
     document.getElementById('mmItemName').textContent = item.name;
     
-    // Renderowanie Tagów (Rzadkość + Slot)
+    
     const tags = document.getElementById('mmTags');
     const badgeClass = `badge-${item.rarity.toLowerCase()}`;
     tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
     if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
     else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
     
-    // Opis
+    
     const template = allTreasures.find(t => t.id === item.templateId);
     let desc = template ? (template.desc + ' ' + template.bonus) : '';
     document.getElementById('mmDesc').textContent = desc;
 
-    // Warning o randze
+    
     const warning = document.getElementById('mmReqWarning');
     let reqRankName = '';
     let isLocked = false;
@@ -386,32 +386,32 @@ function openMarketItemModal(item) {
         warning.classList.add('hidden');
     }
 
-    // --- DYNAMICZNE CENY I PRZYCISKI (Zależne od trybu) ---
+    
     const priceEl = document.getElementById('mmCurrentPrice');
     const btnRow = document.querySelector('.mm-btn-row');
     const lastPriceEl = document.getElementById('mmLastPrice');
     const changeEl = document.getElementById('mmChange');
 
-    // Reset przycisków
+    
     btnRow.innerHTML = ''; 
 
     if (item.listingType === 'instant') {
-        // --- TRYB INSTANT BUY ---
+        
         document.getElementById('marketModalTitle').textContent = "KUP TERAZ";
         priceEl.textContent = item.price.toLocaleString() + ' $';
         priceEl.style.color = "var(--accent-green)";
         
-        // Statystyki dla Instant
+        
         lastPriceEl.parentElement.querySelector('.mm-lbl').textContent = "Ostatnia cena";
-        lastPriceEl.textContent = (item.price * 1.1).toFixed(0) + ' $'; // Fake stat
+        lastPriceEl.textContent = (item.price * 1.1).toFixed(0) + ' $'; 
         changeEl.parentElement.querySelector('.mm-lbl').textContent = "Zmienna 24h";
         changeEl.textContent = item.change + '%';
         
-        // Kolorowanie zmiennej
+        
         changeEl.className = 'mm-v ' + (parseFloat(item.change) >= 0 ? 'val-up' : 'val-down');
 
         if (item.isMine) {
-            // Mój przedmiot -> Usuń
+            
             const btnRemove = document.createElement('button');
             btnRemove.className = 'action-btn-large';
             btnRemove.style.background = 'var(--accent-red)';
@@ -419,7 +419,7 @@ function openMarketItemModal(item) {
             btnRemove.onclick = () => { alert("Oferta usunięta."); closeMarketModal(); };
             btnRow.appendChild(btnRemove);
         } else {
-            // Cudzy -> Kup
+            
             const btnBuy = document.createElement('button');
             btnBuy.className = 'action-btn-large';
             btnBuy.textContent = 'KUP TERAZ';
@@ -428,42 +428,42 @@ function openMarketItemModal(item) {
         }
 
     } else {
-        // --- TRYB AUCTION ---
+        
         document.getElementById('marketModalTitle').textContent = "LICYTACJA";
-        // Wyświetlamy najwyższą ofertę LUB cenę startową
+        
         const currentPrice = item.currentBid > 0 ? item.currentBid : item.price;
         priceEl.textContent = currentPrice.toLocaleString() + ' $';
         priceEl.style.color = "var(--accent-orange)";
 
-        // Statystyki dla Aukcji
+        
         lastPriceEl.parentElement.querySelector('.mm-lbl').textContent = "Czas do końca";
         lastPriceEl.textContent = calculateTimeLeft(item.endTime);
         lastPriceEl.style.color = "#fff";
         
         changeEl.parentElement.querySelector('.mm-lbl').textContent = "Liczba ofert";
         changeEl.textContent = item.bidCount;
-        changeEl.className = "mm-v"; // Reset koloru (biały)
+        changeEl.className = "mm-v"; 
 
         if (item.isMine) {
-            // Moja aukcja -> Zarządzaj
+            
             const btnManage = document.createElement('button');
             btnManage.className = 'action-btn-large outline';
             btnManage.textContent = 'ZAKOŃCZ WCZEŚNIEJ';
             btnManage.onclick = () => { alert("Nie możesz zakończyć aukcji przed czasem, jeśli są oferty."); };
             btnRow.appendChild(btnManage);
         } else {
-            // Cudza aukcja -> Licytuj
             
-            // 1. Input
+            
+            
             const bidInput = document.createElement('input');
             bidInput.type = 'number';
             bidInput.className = 'bid-input-modal';
             bidInput.placeholder = 'Kwota...';
-            // Minimalne przebicie: 5% więcej
+            
             const minBid = Math.floor(currentPrice * 1.05);
             bidInput.value = minBid;
             
-            // 2. Button
+            
             const btnBid = document.createElement('button');
             btnBid.className = 'action-btn-large';
             btnBid.style.background = 'var(--accent-orange)';
@@ -477,7 +477,7 @@ function openMarketItemModal(item) {
                 }
             };
             
-            // Kontener na input i przycisk
+            
             const bidContainer = document.createElement('div');
             bidContainer.style.display = 'flex';
             bidContainer.style.gap = '10px';
@@ -495,12 +495,12 @@ function openMarketItemModal(item) {
 function closeMarketModal() {
     document.getElementById('marketModal').classList.remove('active');
 }
-// --- MARKET SYSTEM END ---
+
 function initDashboard() {
-    initInventorySystem(); // 1. Najpierw ładujemy ekwipunek gracza
-    initMarketData();      // 2. Potem ładujemy rynek (żeby powiązać itemy)
+    initInventorySystem(); 
+    initMarketData();      
     
-    // 3. Renderujemy widoki
+    
     renderDashInventory(); 
     renderTreasures();    
     renderGames(); 
@@ -508,11 +508,11 @@ function initDashboard() {
     updateStats();
     renderLadder();
     
-    // 4. Odświeżamy widok inventory (bo initMarketData mogło dodać flagi 'onSale')
+    
     renderInventoryView();
 }
 
-// Inicjalizacja danych inventory z bazy + dodanie mockowych danych rynkowych
+
 function initInventorySystem() {
     const player = playersDB.find(p => p.username === "MrGambler");
     if (!player) return;
@@ -521,14 +521,14 @@ function initInventorySystem() {
     player.inventory.forEach((itemId, index) => {
         const template = allTreasures.find(t => t.id === itemId);
         if (template) {
-            // Tworzymy unikalną instancję
+            
             const item = { ...template, uid: `item_${itemId}_${index}` };
             
-            // Fix dla brakujących danych rynkowych (dla nowych itemów biznesowych)
+            
             if (!item.change) {
                 const changeVal = (Math.random() * 10 - 5).toFixed(1);
                 item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
-                // Zmieniamy nazwę pola na 'trend', aby nie nadpisywać item.type (np. 'chest', 'watch')
+                
                 item.trend = changeVal > 0 ? "up" : (changeVal < 0 ? "down" : "neutral");
             }
             
@@ -542,7 +542,7 @@ function updateStats() {
     const total = achievementsDB.length;
     const perc = Math.round((earned / total) * 100);
 
-    // Update notifications logic (Badge)
+    
     const badge = document.getElementById('headerBellBadge');
     if (notificationCount > 0) {
         badge.textContent = notificationCount;
@@ -557,7 +557,7 @@ function updateStats() {
     document.getElementById('modalProgressBar').style.width = `${perc}%`;
 }
 
-// --- WLD COMPACT LOGIC ---
+
 function updateWLDCompact(visibleGames) {
         let wins = 0, losses = 0, draws = 0;
         visibleGames.forEach(g => {
@@ -634,7 +634,7 @@ function animateDonut(startPerc, endPerc, duration) {
     window.requestAnimationFrame(step);
 }
 
-// --- NAVIGATION LOGIC ---
+
 const navMap = {
     'dashboard': { title: "Dashboard", navId: "navDash", viewId: "viewDashboard" },
     'profile': { title: "Twój Profil", navId: "navProfile", viewId: "viewProfile" },
@@ -651,30 +651,30 @@ function showView(viewName) {
     const config = navMap[viewName];
     if(!config) return;
 
-    // 1. Ukryj widoki i usuń active z nav
+    
     document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
 
-    // 2. Aktywuj odpowiednie elementy
+    
     document.getElementById(config.viewId).classList.add('active');
     const navEl = document.getElementById(config.navId);
     if(navEl) navEl.classList.add('active');
 
-    // 3. Zmień dynamiczny nagłówek
+    
     document.getElementById('pageHeaderTitle').textContent = config.title;
 
-    // 4. Pokaż/ukryj przycisk "Przeglądaj Profile" tylko w widoku profilu
+    
     const browseProfilesBtn = document.getElementById('browseProfilesBtn');
     if (browseProfilesBtn) {
         browseProfilesBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
     }
 
-    // 5. Inicjalizacja specyficzna (jeśli istnieje)
+    
     if (viewName === 'games') renderGamesHub();
     if (config.init) config.init();
 }
 
-// --- ITEMS / TREASURES ---
+
 function sortTreasures(items) {
     return items.sort((a, b) => {
         if (a.isChest && !b.isChest) return -1;
@@ -683,17 +683,17 @@ function sortTreasures(items) {
     });
 }
 
-// Unified Render Function for Profile List using MrGambler's Items
+
 function renderTreasures() {
     const list = document.getElementById('treasuresList');
     const btn = document.getElementById('btnTreasures');
     if(!list) return;
     list.innerHTML = '';
     
-    // Sortujemy ekwipunek od najdroższego dla profilu (Show Off)
+    
     const sortedProfileInv = [...myInventory].sort((a, b) => b.rawPrice - a.rawPrice);
 
-    // Używamy posortowanej kopii zamiast surowego myInventory
+    
     const currentItems = sortedProfileInv.slice(0, shownTreasures);
     
     currentItems.forEach(item => {
@@ -704,17 +704,17 @@ function renderTreasures() {
         let icon = '';
         let colorClass = '';
 
-        // Używamy item.trend zamiast item.type
+        
         if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
         else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
 
         let changeHtml = '';
-        // Wyświetl zmianę tylko jeśli jest różna od 0% lub jeśli item ma typ up/down
+        
         if(item.change && item.change !== "0%") {
             changeHtml = `<div class="val-change-inline ${colorClass}" title="ostatnie 24h">${item.change} <i class="fas ${icon}"></i></div>`;
         }
         
-        // Sprawdź czy założony
+        
         const isEquipped = Object.values(myLoadout).includes(item.uid);
         let equippedTag = isEquipped ? `<span style="font-size:9px; color:var(--accent-blue); font-weight:700; margin-right:5px;">[EQ]</span>` : '';
 
@@ -761,7 +761,7 @@ function openChest(id) {
     }
 }
 
-// --- GAMES LIST ---
+
 function renderGames() {
     const list = document.getElementById('gamesList');
     const btn = document.getElementById('btnGames');
@@ -799,13 +799,13 @@ function showMoreGames() {
     renderGames();
 }
 
-// --- TROPHIES ---
+
 function claimReward(id) {
     const ach = achievementsDB.find(a => a.id === id);
     if (ach) {
         ach.rewardClaimed = true;
         
-        // Decrement notifications only for trophies
+        
         if (notificationCount > 0) {
             notificationCount--;
         }
@@ -819,7 +819,7 @@ function renderTrophies() {
     const list = document.getElementById('trophiesList');
     const btn = document.getElementById('btnTrophies');
     
-    // RESET: Zawsze najpierw pokazujemy przycisk, zanim sprawdzimy czy go ukryć
+    
     if(btn) btn.classList.remove('hidden');
     
     list.innerHTML = '';
@@ -836,7 +836,7 @@ function renderTrophies() {
         return parseFloat(a.rarity) - parseFloat(b.rarity);
     });
 
-    // Tniemy listę do aktualnie pokazywanej liczby
+    
     const currentTrophies = myTrophies.slice(0, shownTrophies);
     
     if (myTrophies.length === 0) {
@@ -872,7 +872,7 @@ function renderTrophies() {
         list.appendChild(div);
     });
 
-    // Jeśli pokazujemy wszystkie dostępne trofea (lub więcej), ukrywamy przycisk
+    
     if (shownTrophies >= myTrophies.length) {
         if(btn) btn.classList.add('hidden');
     }
@@ -883,7 +883,7 @@ function showMoreTrophies() {
     renderTrophies();
 }
 
-// --- VIEW SWITCH ---
+
 function toggleAdminView() {
     const isChecked = document.getElementById('adminSwitch').checked;
     const viewLabel = document.getElementById('viewLabel');
@@ -897,7 +897,7 @@ function toggleAdminView() {
         viewLabel.textContent = "Widok Użytkownika";
         viewLabel.style.color = "var(--text-muted)";
         adminNav.classList.add('hidden');
-        // Jeśli jesteśmy w widoku admina, wróć do dashboardu
+        
         if(document.getElementById('viewAdminDash').classList.contains('active') ||
            document.getElementById('viewUsers').classList.contains('active') ||
            document.getElementById('viewLogs').classList.contains('active')) {
@@ -906,7 +906,7 @@ function toggleAdminView() {
     }
 }
 
-// --- ACHIEVEMENTS MODAL ---
+
 let currentModalTab = 'my';
 function openModal() {
     document.getElementById('achievementsModal').classList.add('active');
@@ -1002,7 +1002,7 @@ function createAchRow(item, viewType) {
     return row;
 }
 
-// --- LADDER SYSTEM (UPDATED LOGIC) ---
+
 
 function renderLadder() {
     const container = document.getElementById('ladderContainer');
@@ -1024,11 +1024,11 @@ function renderLadder() {
             if (index > 0 && ranksDB[index-1].align === 'left') extraZ = 'step-z-1';
         }
 
-        // SPRAWDZAMY ODBLOKOWANIE
+        
         const isUnlocked = rank.id >= currentRankId;
         const unlockedClass = isUnlocked ? 'rank-unlocked' : '';
 
-        // WAŻNE: Dodajemy unlockedClass również do stepDiv (dla linii), a nie tylko do karty
+        
         stepDiv.className = `ladder-step ${stepClass} ${extraZ} ${unlockedClass}`;
         if (rank.margin) stepDiv.style = rank.margin;
         
@@ -1055,25 +1055,25 @@ function updateLadderVisuals() {
     const currentCard = document.getElementById(`rank-card-${currentRankId}`);
     
     if (currentCard && spine) {
-        // Pobieramy wymiary i pozycje
+        
         const spineRect = spine.getBoundingClientRect();
         const cardRect = currentCard.getBoundingClientRect();
         
-        // Obliczamy środek karty (w pionie)
+        
         const cardCenterY = cardRect.top + (cardRect.height / 2);
         
-        // Obliczamy pozycję tego środka względem góry linii (spine)
-        // Odejmujemy spineRect.top, aby dostać wartość lokalną wewnątrz linii
+        
+        
         const relativeY = cardCenterY - spineRect.top;
         
-        // Zamieniamy na procent wysokości samej linii
+        
         let percentage = (relativeY / spineRect.height) * 100;
         
-        // Ograniczenia (clamp)
+        
         percentage = Math.max(0, Math.min(100, percentage));
 
-        // ZMIANA: Wyłączamy światło tylko jeśli ranga to 8 (Degenerate).
-        // Jeśli jest 7 (Small Fry), światło działa i łączy #8 z #7.
+        
+        
         if (currentRankId > 7) { 
             percentage = 0;
             spine.style.boxShadow = `none`;
@@ -1081,9 +1081,9 @@ function updateLadderVisuals() {
             spine.style.boxShadow = `0 0 15px rgba(59, 130, 246, 0.4)`;
         }
 
-        // Aplikujemy gradient
-        // Zauważ, że Blue kończy się na 'percentage', a Dark zaczyna od 'percentage'.
-        // To tworzy efekt "tamy" idealnie na środku karty.
+        
+        
+        
         spine.style.background = `linear-gradient(
             to bottom, 
             #3b82f6 0%, 
@@ -1096,7 +1096,7 @@ function updateLadderVisuals() {
 
 function openRankModal() {
     document.getElementById('rankModal').classList.add('active');
-    // Recalculate visuals after modal is visible (DOM rendered)
+    
     setTimeout(updateLadderVisuals, 50); 
 }
 
@@ -1104,7 +1104,7 @@ function closeRankModal() {
     document.getElementById('rankModal').classList.remove('active');
 }
 
-// --- BATTLE PASS MODAL ---
+
 function openBattlePassModal() {
     document.getElementById('battlePassModal').classList.add('active');
 }
@@ -1112,7 +1112,7 @@ function openBattlePassModal() {
 function closeBattlePassModal() {
     document.getElementById('battlePassModal').classList.remove('active');
 }
-// --- ACCOUNT MODAL ---
+
 function openAccountModal() {
     document.getElementById('accountModal').classList.add('active');
 }
@@ -1121,7 +1121,7 @@ function closeAccountModal() {
     document.getElementById('accountModal').classList.remove('active');
 }
 
-// --- PLAYER STATS MODAL ---
+
 function openPlayerStatsModal() {
     document.getElementById('playerStatsModal').classList.add('active');
 }
@@ -1130,7 +1130,7 @@ function closePlayerStatsModal() {
     document.getElementById('playerStatsModal').classList.remove('active');
 }
 
-// --- CHATBOT ---
+
 const chatWindow = document.getElementById('chatWindow');
 const toggleIcon = document.getElementById('toggleIcon');
 const chatInput = document.getElementById('chatInput');
@@ -1163,9 +1163,9 @@ chatInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') sendMessage();
 });
 
-// --- NEW VIEW RENDERS ---
 
-// --- DRAG AND DROP & INVENTORY LOGIC ---
+
+
 
 function toggleInvFilter(type) {
     invFilterState[type] = !invFilterState[type];
@@ -1178,10 +1178,10 @@ function renderInventoryView() {
     if(!container) return; 
     container.innerHTML = '';
     
-    // Inicjalizacja slotów loadoutu (dodanie listenerów)
+    
     setupLoadoutSlots();
 
-    // 1. Wstępne filtrowanie (według typu Item/Case)
+    
     let filteredInv = myInventory.filter(item => {
         const isCase = item.type === 'chest'; 
         if(isCase && !invFilterState.case) return false;
@@ -1189,31 +1189,31 @@ function renderInventoryView() {
         return true;
     });
 
-    // 2. LOGIKA STAKOWANIA
-    // Tworzymy nową listę do wyświetlenia
+    
+    
     let displayList = [];
-    let stackMap = {}; // Mapa: templateId -> referencja do obiektu w displayList
+    let stackMap = {}; 
 
     filteredInv.forEach(item => {
-        // Sprawdzamy stan unikalny
+        
         const isEquipped = Object.values(myLoadout).includes(item.uid);
         const isOnSale = item.isOnSale === true;
 
-        // Jeśli przedmiot jest "zajęty" (założony lub na rynku), nie stakujemy go
+        
         if (isEquipped || isOnSale) {
             displayList.push({ 
                 ...item, 
-                stackCount: 1, // Pojedyncza sztuka
-                forceUnique: true // Flaga pomocnicza
+                stackCount: 1, 
+                forceUnique: true 
             });
         } else {
-            // Przedmiot jest "wolny" w magazynie - próbujemy stakować
+            
             if (stackMap[item.id]) {
-                // Już mamy taki przedmiot w displayList, inkrementujemy licznik
+                
                 stackMap[item.id].stackCount++;
             } else {
-                // Pierwszy raz widzimy ten przedmiot (wolny), dodajemy do listy
-                // Tworzymy kopię obiektu, żeby nie modyfikować oryginału w myInventory
+                
+                
                 const stackItem = { ...item, stackCount: 1, forceUnique: false };
                 stackMap[item.id] = stackItem;
                 displayList.push(stackItem);
@@ -1221,23 +1221,23 @@ function renderInventoryView() {
         }
     });
 
-    // 3. Sortowanie listy wyświetlania (od najdroższego)
+    
     const sortedInv = displayList.sort((a, b) => b.rawPrice - a.rawPrice);
     
-    // 4. Render Grid
+    
     sortedInv.forEach(item => {
         const slot = document.createElement('div');
         slot.className = 'inv-grid-slot';
         
-        // Sprawdź czy przedmiot jest założony (ponowne sprawdzenie na obiekcie display)
-        // Musimy użyć oryginalnego myLoadout check, bo item.uid w stacku to UID "reprezentanta"
+        
+        
         const isEquipped = Object.values(myLoadout).includes(item.uid);
         const isOnSale = item.isOnSale === true;
 
         if (isEquipped) slot.classList.add('is-equipped');
         if (isOnSale) slot.classList.add('on-sale');
 
-        // Draggable Attributes (Zablokuj jeśli EQ lub SALE)
+        
         const isLocked = isEquipped || isOnSale;
         slot.setAttribute('draggable', !isLocked);
         slot.dataset.uid = item.uid;
@@ -1252,11 +1252,11 @@ function renderInventoryView() {
             slot.style.borderColor = 'var(--accent-orange)';
         }
 
-        // Badges & Counters
+        
         let badgeHtml = '';
         
-        // --- STACK COUNTER ---
-        // Dodajemy licznik tylko jeśli jest więcej niż 1 sztuka
+        
+        
         if (item.stackCount > 1) {
             badgeHtml += `<div class="item-stack-count">x${item.stackCount}</div>`;
         }
@@ -1264,7 +1264,7 @@ function renderInventoryView() {
         if (isEquipped) badgeHtml += `<div class="equipped-badge">EQ</div>`;
         else if (isOnSale) badgeHtml += `<div class="on-sale-badge">NA RYNKU</div>`;
 
-        // Rank Lock Logic
+        
         if (item.rarity === 'Divine' && currentRankId > 2) {
             badgeHtml += `<div class="inv-lock-overlay"><i class="fas fa-lock"></i></div>`;
             slot.classList.add('is-rank-locked');
@@ -1276,7 +1276,7 @@ function renderInventoryView() {
             ${badgeHtml}
         `;
         
-        // Tooltip
+        
         let tooltipText = `${item.name} (${item.rarity})\nTyp: ${item.type}\nBonus: ${item.bonus}\nCena: ${item.price}`;
         if(item.stackCount > 1) tooltipText += `\nIlość w magazynie: ${item.stackCount}`;
         slot.title = tooltipText;
@@ -1284,7 +1284,7 @@ function renderInventoryView() {
         container.appendChild(slot);
     });
 
-    // Puste sloty (Wypełniacz)
+    
     const minSlots = 63;
     for(let i = sortedInv.length; i < minSlots; i++) {
         const emptySlot = document.createElement('div');
@@ -1296,23 +1296,23 @@ function renderInventoryView() {
 function setupLoadoutSlots() {
     const slots = document.querySelectorAll('.pd-slot');
     slots.forEach(slot => {
-        // Usuwamy stare listenery (klonowanie niszczy listenery)
+        
         const newSlot = slot.cloneNode(true);
         slot.parentNode.replaceChild(newSlot, slot);
         
-        // Dodajemy nowe
+        
         newSlot.addEventListener('dragover', handleDragOver);
         newSlot.addEventListener('drop', handleDrop);
-        newSlot.addEventListener('click', handleUnequip); // Kliknięcie zdejmuje
+        newSlot.addEventListener('click', handleUnequip); 
         
-        // Rerender zawartości slota jeśli coś w nim jest
-        const slotType = newSlot.dataset.type; // np. 'watch', 'suit'
-        // Znajdź unikalny klucz slotu w myLoadout. 
-        // UWAGA: Mamy kilka slotów tego samego typu (np. 2 ringi). 
-        // W HTML musimy je rozróżnić ID lub klasą, albo użyć mapowania.
-        // Dla uproszczenia w tym patchu: używamy klasy slotu jako klucza w myLoadout.
         
-        // Pobieramy unikalną klasę identyfikującą slot (np. 'slot-watch')
+        const slotType = newSlot.dataset.type; 
+        
+        
+        
+        
+        
+        
         const slotClass = Array.from(newSlot.classList).find(c => c.startsWith('slot-'));
         
         if (slotClass && myLoadout[slotClass]) {
@@ -1322,7 +1322,7 @@ function setupLoadoutSlots() {
                 renderItemInSlot(newSlot, item);
             }
         } else {
-            // Reset do placeholder
+            
             resetSlotVisuals(newSlot);
         }
     });
@@ -1344,7 +1344,7 @@ function handleDrop(e) {
     const uid = e.dataTransfer.getData("text/plain");
     const item = myInventory.find(i => i.uid === uid);
     
-    // Znajdź element slotu (mogł być drop na ikonę wewnątrz slotu)
+    
     let slot = e.target;
     while (!slot.classList.contains('pd-slot') && slot.parentElement) {
         slot = slot.parentElement;
@@ -1352,21 +1352,21 @@ function handleDrop(e) {
 
     if (!item || !slot) return;
 
-    // Walidacja Typu
-    // item.type w bazie to np. 'watch', 'suit'. slot.dataset.type to też 'watch', 'suit'.
+    
+    
     if (item.type !== slot.dataset.type) {
         alert(`Nie możesz włożyć ${item.name} (${item.type}) do slotu ${slot.dataset.type}!`);
-        renderInventoryView(); // Reset opacity
+        renderInventoryView(); 
         return;
     }
 
-    // Zapisz w loadout
+    
     const slotClass = Array.from(slot.classList).find(c => c.startsWith('slot-'));
     if (slotClass) {
         myLoadout[slotClass] = uid;
-        // Odśwież widoki
-        renderInventoryView(); // To przerysuje siatkę i zablokuje przedmiot
-        setupLoadoutSlots();   // To zaktualizuje wizualnie postać
+        
+        renderInventoryView(); 
+        setupLoadoutSlots();   
     }
 }
 
@@ -1378,7 +1378,7 @@ function handleUnequip(e) {
     
     const slotClass = Array.from(slot.classList).find(c => c.startsWith('slot-'));
     
-    // Jeśli slot jest pełny, zdejmij przedmiot
+    
     if (slotClass && myLoadout[slotClass]) {
         delete myLoadout[slotClass];
         renderInventoryView();
@@ -1387,10 +1387,10 @@ function handleUnequip(e) {
 }
 
 function renderItemInSlot(slotElement, item) {
-    // Podmień HTML slotu na ikonę przedmiotu
+    
     let rarityColor = getRarityColor(item.rarity);
     
-    // Zmniejszono rozmiar ikony do 45px dla slotów 110px
+    
     slotElement.innerHTML = `
         <div style="font-size: 50px; font-style: normal; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${item.icon}</div>
         <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
@@ -1402,9 +1402,9 @@ function renderItemInSlot(slotElement, item) {
 }
 
 function resetSlotVisuals(slotElement) {
-    // Przywróć placeholder (wymaga mapy ikon dla typów, lub pobrania z HTML startowego)
-    // Uproszczenie: Resetujemy styl, ikonę przywracamy generyczną
-    slotElement.style = ""; // Reset inline styles
+    
+    
+    slotElement.style = ""; 
     const type = slotElement.dataset.type;
     let icon = "fa-plus";
     if(type === 'head') icon = "fa-hat-cowboy";
@@ -1426,16 +1426,16 @@ function getRarityColor(rarity) {
     if(rarity === 'Epic') return '#8b5cf6';
     if(rarity === 'Relic') return '#ef4444';
     if(rarity === 'Divine') return '#ffd700';
-    return '#9ca3af'; // Peasant
+    return '#9ca3af'; 
 }
 
-// --- DASHBOARD INVENTORY FIX ---
+
 function renderDashInventory() {
     const container = document.getElementById('dashInventoryList');
     if(!container) return;
     container.innerHTML = '';
     
-    // Pokaż pierwsze 4 przedmioty MrGamblera
+    
     const dashItems = myInventory.slice(0, 4);
     
     dashItems.forEach(item => {
@@ -1444,7 +1444,7 @@ function renderDashInventory() {
         
         let priceClass = 'price-neutral';
         let iconHtml = '';
-        // Używamy item.trend zamiast item.type
+        
         if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; iconHtml = '<i class="fas fa-caret-up"></i>'; }
         else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; iconHtml = '<i class="fas fa-caret-down"></i>'; }
         
@@ -1471,9 +1471,9 @@ function renderDashInventory() {
     }
 }
 
-// Helper do konwersji koloru
+
 function hexToRgb(hex) {
-    // Expand shorthand form (e.g. "03F") to full form (e.g. "0033FF")
+    
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
     hex = hex.replace(shorthandRegex, function(m, r, g, b) {
         return r + r + g + g + b + b;
@@ -1489,13 +1489,13 @@ function distributePlayers(total, count) {
     let distribution = [];
     let remaining = total;
     
-    // Generujemy losowe wagi
+    
     let weights = [];
     for(let i=0; i<count; i++) weights.push(Math.random());
     let sumWeights = weights.reduce((a,b) => a+b, 0);
     
     for(let i=0; i<count; i++) {
-        // Ostatni element bierze resztę, aby uniknąć błędów zaokrągleń
+        
         if (i === count - 1) {
             distribution.push(remaining);
         } else {
@@ -1504,7 +1504,7 @@ function distributePlayers(total, count) {
             remaining -= val;
         }
     }
-    // Sortujemy malejąco, żeby najpopularniejsze mody były pierwsze (lepszy UX)
+    
     return distribution.sort((a,b) => b-a);
 }
 
@@ -1512,14 +1512,14 @@ let currentDepositMethod = 'visa';
 let currentWithdrawMethod = 'visa';
 
 function renderWalletView() {
-    // 1. ZMODYFIKOWANA LOGIKA NETWORTH
-    // Cel: Net Worth = 5,240,000, Real Money = 2,450,000.
-    // Obliczamy Items Value z różnicy.
+    
+    
+    
     const realMoney = 2450000; 
     const targetNetWorth = 5240000;
-    const itemsValue = targetNetWorth - realMoney; // = 2,790,000
+    const itemsValue = targetNetWorth - realMoney; 
     
-    // 2. Update DOM
+    
     const nwTotal = document.getElementById('nwTotalDisplay');
     const nwReal = document.getElementById('nwRealDisplay');
     const nwItems = document.getElementById('nwItemsDisplay');
@@ -1528,14 +1528,14 @@ function renderWalletView() {
     if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
     if (nwItems) nwItems.textContent = itemsValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
 
-    // 3. Init Deposit & Withdraw Methods
+    
     selectDepositMethod(currentDepositMethod);
     selectWithdrawMethod(currentWithdrawMethod);
 
-    // 4. Populate Transfer Item Select
+    
     const transferSelect = document.getElementById('transferItemSelect');
     if (transferSelect && typeof allTreasures !== 'undefined') {
-        // Reset and keep first option
+        
         transferSelect.innerHTML = '<option value="">-- Wybierz przedmiot --</option>';
 
         allTreasures.forEach(item => {
@@ -1547,14 +1547,14 @@ function renderWalletView() {
     }
 }
 
-// Funkcja obsługująca zmianę metody wpłaty i dynamiczne panele
+
 function selectDepositMethod(method) {
     currentDepositMethod = method;
     const container = document.getElementById('depositMethodsGrid');
     const dynamicContent = document.getElementById('depositDynamicContainer');
     if(!container || !dynamicContent) return;
 
-    // Render Buttons
+    
     const methods = [
         { id: 'visa', icon: 'fab fa-cc-visa', name: 'Visa' },
         { id: 'blik', icon: 'fas fa-mobile-alt', name: 'BLIK' },
@@ -1571,7 +1571,7 @@ function selectDepositMethod(method) {
         container.appendChild(div);
     });
 
-    // Render Dynamic Content Form
+    
     dynamicContent.innerHTML = '';
     const formDiv = document.createElement('div');
     formDiv.className = 'deposit-dynamic-form';
@@ -1630,7 +1630,7 @@ function selectWithdrawMethod(method) {
     const dynamicContent = document.getElementById('withdrawDynamicContainer');
     if(!container || !dynamicContent) return;
 
-    // Render Buttons
+    
     const methods = [
         { id: 'visa', icon: 'fab fa-cc-visa', name: 'Visa' },
         { id: 'crypto', icon: 'fab fa-bitcoin', name: 'Crypto' }
@@ -1645,7 +1645,7 @@ function selectWithdrawMethod(method) {
         container.appendChild(div);
     });
 
-    // Render Dynamic Content
+    
     dynamicContent.innerHTML = '';
     
     if (method === 'visa') {
@@ -1666,12 +1666,12 @@ function selectWithdrawMethod(method) {
     }
 }
 
-// Toggle dla transferu (Money / Item)
+
 function toggleTransferSection(type) {
     const sec = document.getElementById(`sec${type}`);
     const tog = document.getElementById(`toggle${type}`);
     
-    // Toggle active class visually
+    
     tog.classList.toggle('active');
     sec.classList.toggle('active');
 }
@@ -1735,19 +1735,19 @@ function renderFinancialLogsList() {
     if (!container) return;
     container.innerHTML = '';
     
-    // Check toggle state
+    
     const hideGames = document.getElementById('hideGamesSwitch')?.checked ?? true;
 
     walletLogsDB.forEach(t => {
-        // Filter Logic: If filtering is ON, skip game related logs
+        
         if (hideGames) {
             const lowerType = t.type.toLowerCase();
             const lowerDetail = t.detail.toLowerCase();
-            // Simple heuristics for game logs
+            
             if (lowerType.includes('wygrana') || lowerType.includes('przegrana') || 
                 lowerType.includes('korekta') || lowerType.includes('bonus') ||
                 lowerDetail.includes('game') || lowerDetail.includes('session')) {
-                return; // Skip this iteration
+                return; 
             }
         }
 
@@ -1760,7 +1760,7 @@ function renderFinancialLogsList() {
         
         let statusClass = t.status.toLowerCase();
         
-        // Logic for Cancel Button (Only if status is Processing or Pending and value is negative/withdrawal)
+        
         let actionHtml = '';
         if ((t.status === 'Processing' || t.status === 'Pending') && t.val.startsWith('-')) {
             actionHtml = `<button class="cancel-tx-btn" title="Anuluj wypłatę" onclick="alert('Wypłata ${t.id} została anulowana. Środki zwrócone.')"><i class="fas fa-times"></i></button>`;
@@ -1788,14 +1788,14 @@ function renderFinancialLogsList() {
     }
 }
 
-// WALLET HELPER FUNCTIONS
+
 function switchWalletTab(tabName) {
-    // Buttons
+    
     document.querySelectorAll('.w-tab').forEach(b => b.classList.remove('active'));
-    // Content
+    
     document.querySelectorAll('.w-content').forEach(c => c.classList.remove('active'));
 
-    // Activate
+    
     const btn = document.querySelector(`.w-tab[onclick="switchWalletTab('${tabName}')"]`);
     if(btn) btn.classList.add('active');
     
@@ -1806,7 +1806,7 @@ function switchWalletTab(tabName) {
 function copyCrypto() {
     const input = document.getElementById('cryptoAddr');
     input.select();
-    // In real app: document.execCommand('copy');
+    
     const btn = input.nextElementSibling;
     const originalIcon = btn.innerHTML;
     
@@ -1863,23 +1863,23 @@ function renderLogsView() {
     });
 }
 
-// Initialize
+
 initDashboard();
 
 
-// --- GAMES HUB LOGIC ---
+
 
 let activeGamesTabId = 'casino';
 
-// Main function to initialize the Games View
+
 function renderGamesHub() {
     renderGamesTabs();
     renderGamesContent();
-    renderGlobalLeaderboard(); // Keep existing leaderboard
+    renderGlobalLeaderboard(); 
 }
 
 function renderGamesTabs() {
-    const container = document.getElementById('gamesHubHeader'); // We will create this in HTML
+    const container = document.getElementById('gamesHubHeader'); 
     if (!container) return;
     container.innerHTML = '';
 
@@ -1907,8 +1907,8 @@ function renderGamesTabs() {
 
 function switchGameHubTab(id) {
     activeGamesTabId = id;
-    renderGamesTabs(); // Re-render tabs for active state
-    renderGamesContent(); // Re-render content
+    renderGamesTabs(); 
+    renderGamesContent(); 
 }
 
 function renderGamesContent() {
@@ -1935,10 +1935,10 @@ function renderGamesContent() {
             const card = document.createElement('div');
             card.className = 'gh-card';
             
-            // Interaction
+            
             card.onclick = () => openGameDetailsModal(game);
             
-            // Dynamic Color styles
+            
             const glowColor = game.color;
             const variantsText = game.variants > 1 ? `${game.variants} MODES` : 'CLASSIC';
 
@@ -1988,25 +1988,25 @@ function renderGamesContent() {
     container.appendChild(wrapper);
 }
 
-// --- LEADERBOARD LOGIC FIX ---
+
 
 function renderGlobalLeaderboard() {
     const list = document.getElementById('globalLeaderboardList');
     if(!list) return;
     list.innerHTML = '';
 
-    // Task 7: Sortowanie domyślnie po Net Worth malejąco (Najbogatsi na górze)
+    
     const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
 
     sortedPlayers.forEach((p, index) => {
         const div = document.createElement('div');
-        // Dodajemy ID dla wiersza gracza, aby móc do niego przewinąć
+        
         if (p.isMe) div.id = 'lb-my-row';
         
-        // Task 5 Fix: Lepszy styling, highlight dla gracza
+        
         div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
         
-        // Inline style dla wyróżnienia gracza (jeśli nie masz klasy w CSS)
+        
         if(p.isMe) {
             div.style.background = "rgba(59, 130, 246, 0.2)";
             div.style.border = "1px solid rgba(59, 130, 246, 0.4)";
@@ -2022,11 +2022,11 @@ function renderGlobalLeaderboard() {
         else { trophyIcon = `<span style="color:#666">#</span>`; }
 
         const rankData = ranksDB.find(r => r.id === p.rankVal);
-        // Jeśli nie ma ikony w DB, fallback do fa-user
+        
         const rIcon = rankData ? rankData.icon : 'fa-user';
         const rColor = rankData ? rankData.color : '#888';
 
-        // Formatowanie kasy (M = miliony, k = tysiące)
+        
         let nwDisplay = p.netWorth >= 1000000 
             ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
             : (p.netWorth / 1000).toFixed(0) + 'k $';
@@ -2051,21 +2051,21 @@ function renderGlobalLeaderboard() {
     });
 }
 
-// Task 8: Funkcja scrollowania do pozycji
+
 function scrollToMyPosition() {
     const myRow = document.getElementById('lb-my-row');
     const container = document.getElementById('globalLeaderboardList');
     
     if (myRow && container) {
-        // Obliczamy pozycję
+        
         const topPos = myRow.offsetTop - container.offsetTop;
         
         container.scrollTo({
-            top: topPos - 50, // -50px marginesu żeby było widać kontekst
+            top: topPos - 50, 
             behavior: 'smooth'
         });
         
-        // Efekt wizualny (mrugnięcie)
+        
         myRow.style.transition = "background 0.3s";
         const oldBg = myRow.style.background;
         myRow.style.background = "rgba(59, 130, 246, 0.6)";
@@ -2077,29 +2077,29 @@ function scrollToMyPosition() {
     }
 }
 
-// --- NEW DASHBOARD LOGIC (Instructions Implementation) ---
 
-// Initialize new dashboard features
+
+
 function initDashboardExtras() {
     renderDashInventory();
     initBannerCarousel();
     renderFavoritesPanel();
 }
 
-// Render mini inventory in the new dashboard section
+
 function renderDashInventory() {
     const container = document.getElementById('dashInventoryList');
     if(!container) return;
     container.innerHTML = '';
     
-    // Take first 4 items from the sorted list
+    
     sortTreasures(allTreasures);
     const dashItems = allTreasures.slice(0, 4);
     
     dashItems.forEach(item => {
         const div = document.createElement('div');
         div.className = 'item-row';
-        // Reuse existing layout but simplified
+        
         const badgeClass = `badge-${item.rarity.toLowerCase()}`;
         div.innerHTML = `
             <div class="item-img" style="font-style: normal;">${item.icon}</div>
@@ -2114,7 +2114,7 @@ function renderDashInventory() {
     }
 }
 
-// Simple Banner Carousel Logic
+
 function initBannerCarousel() {
     const slides = document.querySelectorAll('.carousel-slide');
     const dots = document.querySelectorAll('.carousel-dots .dot');
@@ -2133,25 +2133,25 @@ function initBannerCarousel() {
         showSlide(next);
     }
     
-    // Auto rotate every 5 seconds
+    
     setInterval(nextSlide, 5000);
     
-    // Optional click handling for dots (not strictly required by prompt but good practice)
+    
     dots.forEach((dot, index) => {
         dot.addEventListener('click', () => showSlide(index));
     });
 }
 
-// Call extra initialization at startup
+
 initDashboardExtras();
 
-// --- GAME DETAILS MODAL & FAVORITES LOGIC ---
+
 
 function openGameDetailsModal(game) {
     const modal = document.getElementById('gameDetailsModal');
     if(!modal) return;
 
-    // 1. Populate Basic Info
+    
     document.getElementById('gmIcon').className = `fas ${game.icon}`;
     document.getElementById('gmIcon').style.color = game.color;
     document.getElementById('gmIconBox').style.borderColor = game.color;
@@ -2162,7 +2162,7 @@ function openGameDetailsModal(game) {
     document.getElementById('gmOnline').textContent = game.onlineCount.toLocaleString();
     document.getElementById('gmVariants').textContent = game.modes.length;
 
-    // 2. Populate Loadout Select (Mock from inventory categories)
+    
     const loadoutSelect = document.getElementById('gmLoadoutSelect');
     loadoutSelect.innerHTML = '';
     const loadouts = ["Poker Face Outfit", "High Roller Suit", "Lucky Casual", "Friday Night Degen"];
@@ -2173,11 +2173,11 @@ function openGameDetailsModal(game) {
         loadoutSelect.appendChild(opt);
     });
 
-    // 3. Render Modes Grid (The Core Logic)
+    
     const grid = document.getElementById('gmModesGrid');
     grid.innerHTML = '';
 
-    // Distribute total players among modes using the helper
+    
     const playersDistribution = distributePlayers(game.onlineCount, game.modes.length);
 
     game.modes.forEach((modeName, index) => {
@@ -2188,7 +2188,7 @@ function openGameDetailsModal(game) {
         const card = document.createElement('div');
         card.className = 'mode-card';
         
-        // GŁÓWNA AKCJA: Kliknięcie w kartę uruchamia grę
+        
         card.onclick = () => {
             alert(`Uruchamianie trybu: ${modeName} (${game.name})\nLoadout: ${loadoutSelect.value}`);
             closeGameModal();
@@ -2196,7 +2196,7 @@ function openGameDetailsModal(game) {
 
         const starClass = isFav ? 'fas fa-star mc-star active' : 'far fa-star mc-star';
 
-        // UWAGA: Dodajemy event.stopPropagation() do on click gwiazdki!
+        
         card.innerHTML = `
             <div class="mc-top">
                 <div class="mc-icon" style="background:${game.color}40; color:${game.color};">
@@ -2228,18 +2228,18 @@ function toggleFavoriteMode(modeId, gameId, modeName, icon, color, players, star
     const idx = favoriteModes.indexOf(modeId);
     
     if (idx === -1) {
-        // Add
+        
         favoriteModes.push(modeId);
         starElement.className = 'fas fa-star mc-star active';
-        // Opcjonalnie: Zapisz metadane o ulubionej grze, aby nie szukać ich później
-        // (W prostym demo odświeżamy panel po ID)
+        
+        
     } else {
-        // Remove
+        
         favoriteModes.splice(idx, 1);
         starElement.className = 'far fa-star mc-star';
     }
     
-    // Refresh Dashboard Favorites Panel immediately
+    
     renderFavoritesPanel();
 }
 
@@ -2257,16 +2257,16 @@ function renderFavoritesPanel() {
         return;
     }
 
-    // Iterate through all games structure to find data for saved IDs
-    // (This is inefficient O(N^2) but fine for frontend demo with small dataset)
+    
+    
     favoriteModes.forEach(favId => {
-        const [gameId, modeIndexStr] = favId.split('_g_'); // Hacky split correction because ID contains g_
-        // Lepiej: split by last underscore
+        const [gameId, modeIndexStr] = favId.split('_g_'); 
+        
         const lastUnderscore = favId.lastIndexOf('_');
         const gId = favId.substring(0, lastUnderscore);
         const mIdx = parseInt(favId.substring(lastUnderscore + 1));
 
-        // Find game data
+        
         let foundGame = null;
         gamesHubStructure.forEach(cat => {
             cat.subcategories.forEach(sub => {
@@ -2277,8 +2277,8 @@ function renderFavoritesPanel() {
 
         if (foundGame) {
             const modeName = foundGame.modes[mIdx];
-            // Recalculate players purely for visuals (or store it)
-            // For consistency in demo, just randomize a bit or use static portion
+            
+            
             const displayPlayers = Math.floor(foundGame.onlineCount / foundGame.modes.length); 
 
             const card = document.createElement('div');
