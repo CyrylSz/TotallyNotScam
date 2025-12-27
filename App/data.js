@@ -12,22 +12,22 @@ const gamesHubStructure = [
                 title: 'Karty (Card Games)',
                 games: [
                     // Kolor 1: Emerald (Klasyczny Stół)
-                    { name: 'Poker Klasyczny', variants: 4, onlineCount: 4520, players: '2-10 PvP', icon: 'fa-heart', color: '#10b981', desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.' },
+                    { name: 'Poker Klasyczny', variants: 4, onlineCount: 4520, players: '2–10', icon: 'fa-heart', color: '#10b981', desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.' },
                     // Kolor 2: Indigo (Strategia/Chłód)
-                    { name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1-7 PvE', icon: 'fa-spade', color: '#4f46e5', desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.' },
+                    { name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1–7', icon: 'fa-spade', color: '#4f46e5', desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.' },
                     // Kolor 3: Crimson (Ryzyko/Azja)
-                    { name: 'Baccarat', variants: 4, onlineCount: 1240, players: '1-14', icon: 'fa-dragon', color: '#e11d48', desc: 'Gracz czy Bankier? Czysta intuicja w królewskim stylu.' },
+                    { name: 'Baccarat', variants: 4, onlineCount: 1240, players: '1–14', icon: 'fa-dragon', color: '#e11d48', desc: 'Gracz czy Bankier? Czysta intuicja w królewskim stylu.' },
                     // Kolor 4: Violet (Prestiż)
-                    { name: 'Casino Poker', variants: 4, onlineCount: 890, players: '1-5 PvE', icon: 'fa-crown', color: '#7c3aed', desc: 'Pokerowe układy w pojedynku 1 na 1 z kasynem.' }
+                    { name: 'Casino Poker', variants: 4, onlineCount: 890, players: '1–7', icon: 'fa-crown', color: '#7c3aed', desc: 'Pokerowe układy w pojedynku 1 na 1 z kasynem.' }
                 ]
             },
             {
                 title: 'Stoły (Table Games)',
                 games: [
                     // Kolor 5: Amber/Gold (Koło/Bogactwo)
-                    { name: 'Ruletka', variants: 5, onlineCount: 5600, players: '∞', icon: 'fa-circle-notch', color: '#f59e0b', desc: 'Obstaw liczbę i zaufaj fizyce. Symbol hazardu.' },
+                    { name: 'Ruletka', variants: 5, onlineCount: 5600, players: '2+', icon: 'fa-circle-notch', color: '#f59e0b', desc: 'Obstaw liczbę i zaufaj fizyce. Symbol hazardu.' },
                     // Kolor 6: Cyan (Szybkość/Kości)
-                    { name: 'Kości', variants: 3, onlineCount: 950, players: '1-16', icon: 'fa-dice', color: '#06b6d4', desc: 'Rzuć kośćmi. Emocje tłumu i skomplikowane zakłady.' }
+                    { name: 'Kości', variants: 3, onlineCount: 950, players: '1+', icon: 'fa-dice', color: '#06b6d4', desc: 'Rzuć kośćmi. Emocje tłumu i skomplikowane zakłady.' }
                 ]
             }
         ]
@@ -45,14 +45,14 @@ const gamesHubStructure = [
                     // Kolor 1: Fuchsia (Neon/Vegas)
                     { name: 'Automaty', variants: 6, onlineCount: 12400, players: '1', icon: 'fa-star', color: '#d946ef', desc: 'Pociągnij wajchę. Jackpoty, Megaways i czysty los.' },
                     // Kolor 2: Orange (Ogień/Rywalizacja)
-                    { name: 'Slot Wars', variants: 2, onlineCount: 320, players: 'Ranking', icon: 'fa-trophy', color: '#f97316', desc: 'Turniej spinów. Kto wykręci więcej w 5 minut?' }
+                    { name: 'Slot Wars', variants: 2, onlineCount: 320, players: '2+', icon: 'fa-trophy', color: '#f97316', desc: 'Turniej spinów. Kto wykręci więcej w 5 minut?' }
                 ]
             },
             {
                 title: 'Gry Instant (Fast Paced)',
                 games: [
                     // Kolor 3: Red (Danger/Crash)
-                    { name: 'Crash', variants: 5, onlineCount: 8500, players: '∞', icon: 'fa-chart-line', color: '#ef4444', desc: 'Chciwość vs strach. Wypłać zanim rakieta wybuchnie.' },
+                    { name: 'Crash', variants: 5, onlineCount: 8500, players: '1+', icon: 'fa-chart-line', color: '#ef4444', desc: 'Chciwość vs strach. Wypłać zanim rakieta wybuchnie.' },
                     // Kolor 4: Light Blue (Physics)
                     { name: 'Plinko', variants: 2, onlineCount: 4100, players: '1', icon: 'fa-bowling-ball', color: '#38bdf8', desc: 'Grawitacja decyduje. Kulka spada prosto do mnożnika.' },
                     // Kolor 5: Purple/Grey (Mines/Mystery)
@@ -78,7 +78,7 @@ const gamesHubStructure = [
                     // 2. Dark Red (War)
                     { name: 'Age of Gambling', variants: 1, onlineCount: 85, players: '2', icon: 'fa-shield-alt', color: '#b91c1c', desc: 'RTS. Kupuj nuklearne czołgi za $$ i zniszcz bazę.' },
                     // 3. Deep Purple (Mystery)
-                    { name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4+', icon: 'fa-user-secret', color: '#6d28d9', desc: 'Mafia na pieniądze. Kłam, manipuluj, zgarnij pulę.' },
+                    { name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4-15', icon: 'fa-user-secret', color: '#6d28d9', desc: 'Mafia na pieniądze. Kłam, manipuluj, zgarnij pulę.' },
                     
                     // --- NOWA GRA ---
                     // 4. Lime Green (Toxic/Worms)
@@ -86,10 +86,10 @@ const gamesHubStructure = [
                         name: 'Degenerate Worms', 
                         variants: 1, 
                         onlineCount: 450, 
-                        players: '2+ Turowa', 
+                        players: '2-8', 
                         icon: 'fa-skull-crossbones', // lub fa-bacteria / fa-biohazard
                         color: '#84cc16', 
-                        desc: 'Artyleria 2D. Dokup "Święty Granat" w trakcie tury za realny hajs i zniszcz mapę.' 
+                        desc: 'Artyleria 2D. Dokup "Święty Granat" w trakcie tury za realny hajs.' 
                     },
                     // ----------------
 

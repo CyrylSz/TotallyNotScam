@@ -1930,6 +1930,7 @@ function renderGamesContent() {
                         <i class="fas ${game.icon}"></i>
                     </div>
                     <div class="gh-card-meta">
+                        <!-- Tylko Online Count i Variants zostają tutaj -->
                         <div class="gh-online-badge">
                             <i class="fas fa-user-group gh-online-icon"></i> ${game.onlineCount.toLocaleString()}
                         </div>
@@ -1938,7 +1939,14 @@ function renderGamesContent() {
                 </div>
 
                 <div class="gh-card-body">
-                    <h4 class="gh-game-title">${game.name}</h4>
+                    <!-- NOWA SEKCJA TYTUŁOWA -->
+                    <div class="gh-title-row">
+                        <h4 class="gh-game-title">${game.name}</h4>
+                        <div class="gh-capacity-badge" title="Wymagani gracze / Miejsca">
+                            <i class="fas fa-chair"></i> ${game.players}
+                        </div>
+                    </div>
+                    
                     <p class="gh-game-desc">${game.desc}</p>
                 </div>
             `;

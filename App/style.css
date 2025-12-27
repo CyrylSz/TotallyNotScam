@@ -2975,6 +2975,22 @@ input:checked + .slider:before { transform: translateX(16px); }
     filter: drop-shadow(0 0 2px rgba(16, 185, 129, 0.5));
     animation: neon-breath 4s infinite ease-in-out;
 }
+.gh-capacity-info {
+    font-size: 9px;
+    color: #64748b; /* Wygaszony, ciemniejszy kolor (Slate) */
+    margin-top: 2px;
+    margin-bottom: 2px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    opacity: 0.8;
+    letter-spacing: 0.5px;
+}
+
+.gh-capacity-info i {
+    font-size: 8px; /* Mniejsza ikona */
+    opacity: 0.6;
+}
 
 .gh-variants-badge {
     font-size: 9px;
@@ -2993,13 +3009,48 @@ input:checked + .slider:before { transform: translateX(16px); }
     justify-content: flex-end; /* Tekst na dole */
 }
 
+/* Kontener dla Tytułu i Zakresu graczy */
+.gh-title-row {
+    display: flex;
+    justify-content: space-between; /* Tytuł po lewej, Info po prawej */
+    align-items: center;
+    margin-bottom: 6px;
+    gap: 10px;
+}
+
+/* Modyfikacja tytułu - usuwamy margines dolny, bo teraz zajmuje się tym kontener */
 .gh-game-title {
     font-size: 18px;
     font-weight: 700;
     color: white;
-    margin-bottom: 6px;
+    margin-bottom: 0; 
     letter-spacing: 0.3px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    /* Zabezpieczenie na wypadek długiej nazwy */
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+/* Nowy, bardziej widoczny badge zakresu graczy */
+.gh-capacity-badge {
+    font-size: 11px; /* Większa czcionka */
+    color: #e2e8f0; /* Jasny szary/biały (Slate-200) */
+    background: rgba(255, 255, 255, 0.1); /* Lekkie tło */
+    border: 1px solid rgba(255, 255, 255, 0.15); /* Subtelna ramka */
+    padding: 3px 8px;
+    border-radius: 6px;
+    font-weight: 600;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    white-space: nowrap; /* Zapobiega łamaniu tekstu */
+    flex-shrink: 0; /* Zapobiega zgniataniu badge'a */
+}
+
+.gh-capacity-badge i {
+    font-size: 10px;
+    color: #94a3b8; /* Ikona lekko ciemniejsza dla kontrastu */
 }
 
 .gh-game-desc {
