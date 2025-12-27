@@ -433,6 +433,8 @@ const globalLeaderboardDB = [
     { rankVal: 7, rankName: "RNG God", name: "LuckyLuke", lp: 4200, netWorth: 25000000 },
     { rankVal: 7, rankName: "RNG God", name: "Casino_AI", lp: 3800, netWorth: 18500000 },
     { rankVal: 6, rankName: "Alpha Whale", name: "DiamondH", lp: 1950, netWorth: 8500000 },
+    // Dodajemy Ciebie (MrGambler) tutaj:
+    { rankVal: 6, rankName: "Alpha Whale", name: "MrGambler", lp: 1469, netWorth: 5240000, isMe: true }, 
     { rankVal: 6, rankName: "Alpha Whale", name: "CryptoBro", lp: 1200, netWorth: 5200000 },
     { rankVal: 5, rankName: "Casino Legend", name: "ZeroCool", lp: 980, netWorth: 2100000 },
     { rankVal: 5, rankName: "Casino Legend", name: "MatrixNeo", lp: 850, netWorth: 1500000 },

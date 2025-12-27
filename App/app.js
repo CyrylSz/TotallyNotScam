@@ -1988,52 +1988,93 @@ function renderGamesContent() {
     container.appendChild(wrapper);
 }
 
+// --- LEADERBOARD LOGIC FIX ---
+
 function renderGlobalLeaderboard() {
     const list = document.getElementById('globalLeaderboardList');
+    if(!list) return;
     list.innerHTML = '';
 
-    const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => {
-        if (b.rankVal !== a.rankVal) return b.rankVal - a.rankVal;
-        return b.netWorth - a.netWorth;
-    });
+    // Task 7: Sortowanie domyślnie po Net Worth malejąco (Najbogatsi na górze)
+    const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
 
     sortedPlayers.forEach((p, index) => {
         const div = document.createElement('div');
-        div.className = 'lb-row';
+        // Dodajemy ID dla wiersza gracza, aby móc do niego przewinąć
+        if (p.isMe) div.id = 'lb-my-row';
+        
+        // Task 5 Fix: Lepszy styling, highlight dla gracza
+        div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
+        
+        // Inline style dla wyróżnienia gracza (jeśli nie masz klasy w CSS)
+        if(p.isMe) {
+            div.style.background = "rgba(59, 130, 246, 0.2)";
+            div.style.border = "1px solid rgba(59, 130, 246, 0.4)";
+        }
+
         const rankNum = index + 1;
         
         let rankClass = '';
-        if (rankNum === 1) rankClass = 'top1';
-        else if (rankNum === 2) rankClass = 'top2';
-        else if (rankNum === 3) rankClass = 'top3';
+        let trophyIcon = '';
+        if (rankNum === 1) { rankClass = 'top1'; trophyIcon = '🥇'; }
+        else if (rankNum === 2) { rankClass = 'top2'; trophyIcon = '🥈'; }
+        else if (rankNum === 3) { rankClass = 'top3'; trophyIcon = '🥉'; }
+        else { trophyIcon = `<span style="color:#666">#</span>`; }
 
-        // ZMIANA: Znajdź dane o randze w ranksDB (ikonę i kolor)
         const rankData = ranksDB.find(r => r.id === p.rankVal);
-        const rankIconHtml = rankData 
-            ? `<i class="fas ${rankData.icon}" style="color:${rankData.color}; margin-right:4px;"></i>` 
-            : '';
+        // Jeśli nie ma ikony w DB, fallback do fa-user
+        const rIcon = rankData ? rankData.icon : 'fa-user';
+        const rColor = rankData ? rankData.color : '#888';
 
+        // Formatowanie kasy (M = miliony, k = tysiące)
         let nwDisplay = p.netWorth >= 1000000 
             ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
             : (p.netWorth / 1000).toFixed(0) + 'k $';
 
         div.innerHTML = `
-            <div class="lb-rank ${rankClass}">${rankNum}</div>
+            <div class="lb-rank ${rankClass}" style="display:flex; justify-content:center; align-items:center;">
+                ${rankNum <= 3 ? trophyIcon : rankNum}
+            </div>
             <div class="lb-user">
-                <div class="lb-name">
-                   ${p.name} 
+                <div class="lb-name" style="${p.isMe ? 'color:var(--accent-blue); font-weight:800;' : ''}">
+                   ${p.name} ${p.isMe ? '(Ty)' : ''}
                 </div>
-                <div style="font-size:10px; color:#8b92a5;">
-                    ${rankIconHtml} ${p.rankName}
+                <div style="font-size:10px; color:#8b92a5; display:flex; align-items:center; gap:4px;">
+                    <i class="fas ${rIcon}" style="color:${rColor}; font-size:9px;"></i> ${p.rankName}
                 </div>
             </div>
-            <div class="lb-stats">
-                <div class="lb-lp">${p.lp} LP</div>
-                <div class="lb-nw">${nwDisplay}</div>
+            <div class="lb-stats" style="justify-content:center;">
+                <div class="lb-nw" style="font-size:12px; color:var(--accent-green); font-weight:700;">${nwDisplay}</div>
             </div>
         `;
         list.appendChild(div);
     });
+}
+
+// Task 8: Funkcja scrollowania do pozycji
+function scrollToMyPosition() {
+    const myRow = document.getElementById('lb-my-row');
+    const container = document.getElementById('globalLeaderboardList');
+    
+    if (myRow && container) {
+        // Obliczamy pozycję
+        const topPos = myRow.offsetTop - container.offsetTop;
+        
+        container.scrollTo({
+            top: topPos - 50, // -50px marginesu żeby było widać kontekst
+            behavior: 'smooth'
+        });
+        
+        // Efekt wizualny (mrugnięcie)
+        myRow.style.transition = "background 0.3s";
+        const oldBg = myRow.style.background;
+        myRow.style.background = "rgba(59, 130, 246, 0.6)";
+        setTimeout(() => {
+            myRow.style.background = oldBg;
+        }, 1000);
+    } else {
+        alert("Nie znaleziono Twojej pozycji w rankingu (możesz być poza TOP listą).");
+    }
 }
 
 // --- NEW DASHBOARD LOGIC (Instructions Implementation) ---

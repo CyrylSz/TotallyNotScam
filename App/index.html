@@ -261,9 +261,16 @@
 
         <div class="view-container" id="viewGames">
             
-            <div class="rank-overview-banner">
+            <div class="rank-overview-banner" style="position: relative;">
+                <!-- KROK 3: Ikonka Menu (3 kropki) otwierająca modal rangi -->
+                <i class="fas fa-ellipsis-h rob-menu-btn" onclick="openRankModal()"></i>
+
                 <div class="rob-left">
-                    <div class="rob-icon"><i class="fas fa-whale"></i></div> <div class="rob-info">
+                    <!-- KROK 1: Ikonka Wieloryba (Emoji) zamiast FontAwesome -->
+                    <div class="rob-icon" style="background: transparent; border: none; font-size: 42px; width: auto; height: auto;">
+                        🐋
+                    </div> 
+                    <div class="rob-info">
                         <div class="rob-label">Twoja Ranga</div>
                         <div class="rob-title">Alpha Whale</div>
                         <div class="rob-sub">#25 na świecie (LP)</div>
@@ -276,18 +283,21 @@
                         <span>Następna ranga: <b>2,000 LP</b></span>
                     </div>
                     <div class="rob-progress-bar">
-                        <div class="rob-progress-fill" style="width: 72.5%;"></div> </div>
+                        <div class="rob-progress-fill" style="width: 72.5%;"></div> 
+                    </div>
                     <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-red);">531 LP</span> do próby awansu na <b>RNG God</b></div>
                 </div>
 
                 <div class="rob-right">
-                    <div class="stat-mini">
-                        <div class="sm-val">58%</div>
-                        <div class="sm-lbl">Win Rate</div>
+                    <!-- KROK 2: Winstreak i Highest w ładnym formacie -->
+                    <div class="stat-group-vertical">
+                        <div class="stat-highlight-val">2 <span style="font-size:12px; color:#fff;">🔥</span></div>
+                        <div class="stat-sub-val">Winstreak</div>
                     </div>
-                    <div class="stat-mini">
-                        <div class="sm-val text-green">+12.5%</div>
-                        <div class="sm-lbl">Net Worth 24h</div>
+                    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.1); margin: 0 15px;"></div>
+                    <div class="stat-group-vertical">
+                        <div class="stat-highlight-val" style="color: var(--accent-orange);">11</div>
+                        <div class="stat-sub-val">Highest</div>
                     </div>
                 </div>
             </div>
@@ -304,18 +314,28 @@
                 </div>
 
                 <div class="leaderboard-column">
-                    <div class="card" style="height: 100%;">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-trophy" style="color:gold; margin-right:8px;"></i> Top Gamblers</div>
+                    <!-- Height: fit-content naprawia niezależność wertykalną (Task 9) -->
+                    <div class="card" style="height: fit-content; max-height: 80vh; display: flex; flex-direction: column;">
+                        <div class="card-header" style="justify-content: space-between; padding-right: 0;">
+                            <!-- Task 4: Zmiana nazwy -->
+                            <div class="card-title"><i class="fas fa-trophy" style="color:gold; margin-right:8px;"></i> Leaderboard</div>
+                            <!-- Task 6: Ikonka Lejka -->
+                            <i class="fas fa-filter filter-icon-abs" style="position: static;" title="Filtruj"></i>
                         </div>
+                        
                         <div class="leaderboard-header">
                             <span>#</span>
                             <span>Gracz</span>
-                            <span style="text-align:right;">LP / Net Worth</span>
+                            <span style="text-align:right;">Net Worth</span>
                         </div>
-                        <div class="leaderboard-list" id="globalLeaderboardList">
-                            </div>
-                        <button class="load-more-btn" style="margin-top:15px;">Pokaż moją pozycję</button>
+                        
+                        <!-- Task 5: Fix renderowania (id="globalLeaderboardList") -->
+                        <div class="leaderboard-list" id="globalLeaderboardList" style="overflow-y: auto; max-height: 400px; padding-right: 5px;">
+                            <!-- JS wypełni to danymi -->
+                        </div>
+
+                        <!-- Task 8: Działający przycisk -->
+                        <button class="load-more-btn" style="margin-top:15px;" onclick="scrollToMyPosition()">Pokaż moją pozycję</button>
                     </div>
                 </div>
 
