@@ -1886,7 +1886,7 @@ function switchGameHubTab(id) {
 function renderGamesContent() {
     const container = document.getElementById('availableGamesContainer');
     if (!container) return;
-    container.innerHTML = ''; // Clear old
+    container.innerHTML = ''; 
 
     const currentTab = gamesHubStructure.find(t => t.id === activeGamesTabId);
     if (!currentTab) return;
@@ -1898,37 +1898,48 @@ function renderGamesContent() {
         const subSection = document.createElement('div');
         subSection.className = 'gh-sub-section';
 
-        // Sub Header
-        subSection.innerHTML = `<div class="gh-sub-header"><i class="fas fa-circle"></i> ${sub.title}</div>`;
+        subSection.innerHTML = `<div class="gh-sub-header"><i class="fas fa-layer-group"></i> ${sub.title}</div>`;
 
-        // Grid
         const grid = document.createElement('div');
         grid.className = 'gh-grid';
 
         sub.games.forEach(game => {
             const card = document.createElement('div');
             card.className = 'gh-card';
-            card.onclick = () => alert(`Uruchamianie gry: ${game.name}\nTryb: ${game.tags.join(', ')}`);
-
-            // Icon Color Logic
-            const iconStyle = `color: ${game.color}; border-color: ${game.color}33; background: ${game.color}11;`;
-
-            // Tags HTML
-            const tagsHtml = game.tags.map(t => `<span class="gh-tag">${t}</span>`).join('');
+            
+            // Interaction
+            card.onclick = () => alert(`Uruchamianie: ${game.name}\nTryb: ${game.variants > 1 ? 'Wybór wariantu' : 'Standard'}\nOnline: ${game.onlineCount}`);
+            
+            // Dynamic Color styles
+            const glowColor = game.color;
+            const variantsText = game.variants > 1 ? `${game.variants} WARIACJE` : 'CLASSIC';
 
             card.innerHTML = `
-                <div class="gh-card-top">
-                    <div class="gh-icon-box" style="${iconStyle}">
+                <!-- Background Glow -->
+                <div class="gh-card-bg-glow" style="background: ${glowColor};"></div>
+                
+                <!-- Hover Play Overlay -->
+                <div class="gh-play-overlay">
+                    <div class="gh-play-icon-container">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+
+                <div class="gh-card-header">
+                    <div class="gh-icon-large" style="color: ${glowColor}; text-shadow: 0 0 20px ${glowColor}40;">
                         <i class="fas ${game.icon}"></i>
                     </div>
-                    <div class="gh-players"><i class="fas fa-user"></i> ${game.players}</div>
+                    <div class="gh-card-meta">
+                        <div class="gh-online-badge">
+                            <div class="gh-online-dot"></div> ${game.onlineCount.toLocaleString()}
+                        </div>
+                        <div class="gh-variants-badge">${variantsText}</div>
+                    </div>
                 </div>
-                <div class="gh-card-main">
-                    <h4>${game.name}</h4>
-                    <div class="gh-card-desc">${game.desc}</div>
-                </div>
-                <div class="gh-tags">
-                    ${tagsHtml}
+
+                <div class="gh-card-body">
+                    <h4 class="gh-game-title">${game.name}</h4>
+                    <p class="gh-game-desc">${game.desc}</p>
                 </div>
             `;
             grid.appendChild(card);

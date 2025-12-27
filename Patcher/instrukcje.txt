@@ -1,347 +1,339 @@
 KROK 1:
-PLIK: "data.js"
-OPERACJA: [WSTAW_PO]
-SZUKAJ:
-// --- DATA SETS ---
-TREŚĆ:
-
-// REPLACING/AUGMENTING EXISTING GAME DATA
-const gamesHubStructure = [
-    {
-        id: 'casino',
-        label: 'Kasyno',
-        icon: 'fa-dice',
-        desc: 'Sloty, Ruletka & Klasyki',
-        color: 'var(--accent-purple)',
-        subcategories: [
-            {
-                title: 'A. Automaty i Sloty',
-                games: [
-                    { name: 'Automaty / Sloty', tags: ['RNG', 'Jackpot'], players: '1', icon: 'fa-slot-machine', color: '#ec4899', desc: 'Classic 3-Reel, Video Slots, Megaways' },
-                    { name: 'Slot Wars PvP', tags: ['Tournament', 'PvP'], players: '2+', icon: 'fa-trophy', color: '#f59e0b', desc: 'Rywalizacja o najwyższą wygraną' }
-                ]
-            },
-            {
-                title: 'B. Poker i Gry Karciane',
-                games: [
-                    { name: 'Texas Hold’em', tags: ['PvP', 'Skill'], players: '2-10', icon: 'fa-playing-card', color: '#10b981', desc: 'Cash Games, Turnieje SIT&GO' },
-                    { name: 'Blackjack', tags: ['PvE', 'Strategy'], players: '1-7', icon: 'fa-heart', color: '#ef4444', desc: 'Pokonaj krupiera, nie przekrocz 21' },
-                    { name: 'Baccarat', tags: ['Chance', 'Fast'], players: '1-14', icon: 'fa-gem', color: '#3b82f6', desc: 'Punto Banco, Dragon Tiger' },
-                    { name: 'Casino Poker', tags: ['PvE'], players: '1-5', icon: 'fa-spade', color: '#8b5cf6', desc: 'Caribbean Stud, Three Card Poker' }
-                ]
-            },
-            {
-                title: 'C. Ruletka i Gry Stołowe',
-                games: [
-                    { name: 'Ruletka', tags: ['Live', 'Classic'], players: '∞', icon: 'fa-circle-notch', color: '#ef4444', desc: 'European, American, Lightning' },
-                    { name: 'Kości / Craps', tags: ['Dice'], players: '1-16', icon: 'fa-dice-d6', color: '#fff', desc: 'Sic Bo, Lightning Dice' }
-                ]
-            },
-            {
-                title: 'D. Gry Szybkie (Instant & Crypto)',
-                games: [
-                    { name: 'Crash', tags: ['Multi', 'Risk'], players: '1000+', icon: 'fa-plane-departure', color: '#f59e0b', desc: 'Aviator, JetX. Cash out before crash.' },
-                    { name: 'Plinko', tags: ['RNG'], players: '1', icon: 'fa-bowling-ball', color: '#ec4899', desc: 'Spribe Plinko, kulka i piramida.' },
-                    { name: 'Mines', tags: ['Logic'], players: '1', icon: 'fa-bomb', color: '#ef4444', desc: 'Unikaj bomb, zbieraj mnożniki.' },
-                    { name: 'Hi-Lo', tags: ['Card'], players: '1', icon: 'fa-arrows-alt-v', color: '#3b82f6', desc: 'Wyższa czy niższa?' }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'betting',
-        label: 'Zakłady',
-        icon: 'fa-futbol',
-        desc: 'Sport & E-Sport',
-        color: 'var(--accent-green)',
-        subcategories: [
-            {
-                title: 'A. Bukmacherka (Sportsbook)',
-                games: [
-                    { name: 'Zakłady Sportowe', tags: ['Live', 'Prematch'], players: '∞', icon: 'fa-futbol', color: '#10b981', desc: 'Piłka nożna, Koszykówka, Tenis. AKO/Solo.' },
-                    { name: 'eSports Betting', tags: ['Gaming'], players: '∞', icon: 'fa-headset', color: '#8b5cf6', desc: 'CS:GO, LoL, Dota 2, Valorant.' },
-                    { name: 'Zakłady Specjalne', tags: ['Fun'], players: '∞', icon: 'fa-newspaper', color: '#f59e0b', desc: 'Polityka, Oscary, Finanse.' }
-                ]
-            }
-        ]
-    },
-    {
-        id: 'originals',
-        label: 'Oryginały',
-        icon: 'fa-chess-knight',
-        desc: 'Skill & PvP Exclusive',
-        color: '#f59e0b', // Gold/Orange
-        subcategories: [
-            {
-                title: 'Ekskluzywne Gry PvP',
-                games: [
-                    { name: 'Gambling Chess', tags: ['Skill', 'PvP'], players: '2', icon: 'fa-chess', color: '#fff', desc: 'Szachy z licytacją ruchu. Wygrana partii = Pula.' },
-                    { name: 'Age of Gambling', tags: ['Strategy', 'RTS'], players: '2', icon: 'fa-shield-alt', color: '#ef4444', desc: 'Kupuj jednostki za $$, niszcz bazę wroga.' },
-                    { name: 'Gambling Mystery', tags: ['Social', 'Bluff'], players: '4+', icon: 'fa-user-secret', color: '#8b5cf6', desc: 'Mafia/Among Us na pieniądze.' },
-                    { name: 'Logic Race Bet', tags: ['IQ', 'Speed'], players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', desc: 'Kto pierwszy rozwiąże zagadkę, zgarnia pulę.' },
-                    { name: 'Aim Duel Bet', tags: ['FPS', 'Reflex'], players: '2', icon: 'fa-crosshairs', color: '#ec4899', desc: 'Kliknij cel szybciej. Czysty skill.' }
-                ]
-            }
-        ]
-    }
-];
-
-KROK 2:
 PLIK: "style.css"
-OPERACJA: [WSTAW_PO]
+OPERACJA: [ZASTĄP]
 SZUKAJ:
-.market-pagination span {
-    font-size: 12px;
-    color: var(--text-muted);
-    font-weight: 600;
-}
-TREŚĆ:
-
-/* --- GAMES HUB 2.0 STYLES --- */
-
-/* Tabs Container */
-.gh-tabs-container {
-    display: flex;
-    gap: 15px;
-    margin-bottom: 25px;
-    background: rgba(0,0,0,0.2);
-    padding: 5px;
-    border-radius: 12px;
-    border: 1px solid rgba(255,255,255,0.05);
-}
-
-.gh-tab {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 10px;
-    padding: 15px;
-    border-radius: 8px;
-    cursor: pointer;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    background: transparent;
-    border: 1px solid transparent;
-    position: relative;
-    overflow: hidden;
-}
-
-.gh-tab:hover {
-    background: rgba(255,255,255,0.03);
-}
-
-.gh-tab.active {
-    background: rgba(255,255,255,0.05);
-    border-color: rgba(255,255,255,0.1);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
-
-/* Active Indicator Line */
-.gh-tab.active::after {
-    content: '';
-    position: absolute;
-    bottom: 0;
-    left: 20%;
-    right: 20%;
-    height: 3px;
-    background: currentColor; /* Uses the inline color style */
-    border-radius: 3px 3px 0 0;
-    box-shadow: 0 -2px 10px currentColor;
-}
-
-.gh-tab-icon { font-size: 20px; transition: 0.3s; }
-.gh-tab.active .gh-tab-icon { transform: scale(1.2); }
-
-.gh-tab-info { display: flex; flex-direction: column; }
-.gh-tab-title { font-size: 14px; font-weight: 700; color: white; letter-spacing: 0.5px; }
-.gh-tab-desc { font-size: 10px; color: var(--text-muted); }
-
-/* Content Area */
-.gh-content-area {
-    display: flex;
-    flex-direction: column;
-    gap: 30px;
-    animation: fadeIn 0.4s ease;
-}
-
-.gh-sub-section {
-    display: flex;
-    flex-direction: column;
-    gap: 12px;
-}
-
-.gh-sub-header {
-    font-size: 11px;
-    text-transform: uppercase;
-    color: var(--text-muted);
-    font-weight: 700;
-    letter-spacing: 1px;
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    padding-bottom: 5px;
-    margin-left: 5px;
-    display: flex;
-    align-items: center;
-    gap: 8px;
-}
-.gh-sub-header i { color: var(--accent-blue); font-size: 8px; }
-
-/* New Game Card Grid */
 .gh-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
-    gap: 15px;
+    grid-template-columns: repeat(auto-fill, minmax(260px, 1fr)); /* Szersze karty */
+    gap: 20px;
 }
 
-/* Enhanced Game Card */
 .gh-card {
-    background: linear-gradient(145deg, #1e2538, #151a2d);
+    background: #151a2d;
     border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 10px;
-    padding: 15px;
+    border-radius: 16px;
+    padding: 20px;
     display: flex;
     flex-direction: column;
-    gap: 10px;
-    transition: 0.2s;
+    gap: 15px;
+    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
     cursor: pointer;
     position: relative;
     overflow: hidden;
+    min-height: 220px; /* Wyższe karty */
 }
 
 .gh-card:hover {
-    transform: translateY(-3px);
-    border-color: rgba(255,255,255,0.2);
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    transform: translateY(-5px);
+    border-color: rgba(255,255,255,0.15);
+    box-shadow: 0 10px 30px rgba(0,0,0,0.4);
 }
 
-.gh-card-top { display: flex; align-items: flex-start; justify-content: space-between; }
-.gh-icon-box {
-    width: 36px; height: 36px;
-    border-radius: 8px;
-    background: rgba(255,255,255,0.05);
-    display: flex; align-items: center; justify-content: center;
-    font-size: 16px;
+/* Subtelna poświata w tle */
+.gh-card-bg-glow {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 150px;
+    height: 150px;
+    border-radius: 50%;
+    opacity: 0.15;
+    filter: blur(40px);
+    transition: 0.3s;
+}
+.gh-card:hover .gh-card-bg-glow {
+    opacity: 0.25;
+    transform: scale(1.2);
+}
+
+/* Header: Ikona i Badges */
+.gh-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+}
+
+.gh-icon-large {
+    font-size: 32px;
+    transition: 0.3s;
+}
+.gh-card:hover .gh-icon-large {
+    transform: scale(1.1) rotate(-5deg);
+}
+
+.gh-card-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.gh-variants-badge {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    background: rgba(255,255,255,0.08);
+    color: white;
+    padding: 4px 8px;
+    border-radius: 6px;
     border: 1px solid rgba(255,255,255,0.05);
 }
+.gh-variants-badge.single {
+    background: transparent;
+    color: var(--text-muted);
+    border: none;
+}
 
-.gh-players {
+.gh-players-badge {
     font-size: 10px;
-    color: #888;
-    background: rgba(0,0,0,0.3);
-    padding: 2px 6px;
-    border-radius: 4px;
-    display: flex; align-items: center; gap: 4px;
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    gap: 4px;
 }
 
-.gh-card-main h4 { font-size: 13px; font-weight: 700; color: white; margin-bottom: 4px; }
-.gh-card-desc { font-size: 10px; color: #8b92a5; line-height: 1.4; }
+/* Body: Tytuł i Opis */
+.gh-card-body {
+    position: relative;
+    z-index: 2;
+    flex-grow: 1;
+}
 
-.gh-tags { display: flex; gap: 4px; margin-top: auto; flex-wrap: wrap; }
-.gh-tag {
+.gh-game-title {
+    font-size: 16px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+}
+
+.gh-game-desc {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.5;
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+}
+
+/* Footer: Przycisk */
+.gh-card-footer {
+    position: relative;
+    z-index: 2;
+    margin-top: auto;
+}
+
+.gh-play-btn {
+    width: 100%;
+    border: none;
+    padding: 10px;
+    border-radius: 8px;
+    color: white;
+    font-size: 12px;
+    font-weight: 700;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    opacity: 0.8;
+    transform: translateY(0);
+    transition: 0.2s;
+}
+
+.gh-card:hover .gh-play-btn {
+    opacity: 1;
+    transform: scale(1.02);
+}
+TREŚĆ:
+.gh-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); /* Nieco szersze */
+    gap: 20px;
+}
+
+.gh-card {
+    background: #151a2d;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 16px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+    min-height: 200px;
+}
+
+/* Interakcja Hover - Cała karta */
+.gh-card:hover {
+    transform: translateY(-5px) scale(1.02);
+    border-color: rgba(255,255,255,0.2);
+    box-shadow: 0 15px 35px rgba(0,0,0,0.5);
+}
+
+/* Tło Glow */
+.gh-card-bg-glow {
+    position: absolute;
+    top: -50px;
+    right: -50px;
+    width: 180px;
+    height: 180px;
+    border-radius: 50%;
+    opacity: 0.1;
+    filter: blur(50px);
+    transition: 0.4s;
+}
+.gh-card:hover .gh-card-bg-glow {
+    opacity: 0.3;
+    transform: scale(1.1);
+}
+
+/* PLAY OVERLAY (Nowy element) */
+.gh-play-overlay {
+    position: absolute;
+    inset: 0;
+    background: rgba(21, 26, 45, 0.6);
+    backdrop-filter: blur(2px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transition: all 0.3s ease;
+    z-index: 10;
+}
+
+.gh-card:hover .gh-play-overlay {
+    opacity: 1;
+}
+
+/* Trójkąt Play */
+.gh-play-icon-container {
+    width: 60px;
+    height: 60px;
+    background: white;
+    border-radius: 50%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transform: scale(0.5);
+    transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1); /* Efekt sprężyny */
+    box-shadow: 0 0 20px rgba(255,255,255,0.3);
+}
+
+.gh-play-icon-container i {
+    color: var(--bg-dark);
+    font-size: 24px;
+    margin-left: 4px; /* Optyczne wyrównanie */
+}
+
+.gh-card:hover .gh-play-icon-container {
+    transform: scale(1);
+}
+
+/* Header Karty */
+.gh-card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    position: relative;
+    z-index: 2;
+}
+
+.gh-icon-large {
+    font-size: 36px;
+    transition: 0.3s;
+}
+/* Subtelny ruch ikony przy hoverze (pod spodem overlayu) */
+.gh-card:hover .gh-icon-large {
+    transform: rotate(-10deg) scale(0.9);
+    opacity: 0.5; 
+}
+
+/* Meta Data (Online count) */
+.gh-card-meta {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 6px;
+}
+
+.gh-online-badge {
+    font-size: 10px;
+    color: var(--accent-green);
+    background: rgba(16, 185, 129, 0.1);
+    padding: 3px 8px;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-weight: 600;
+    border: 1px solid rgba(16, 185, 129, 0.2);
+}
+.gh-online-dot {
+    width: 6px;
+    height: 6px;
+    background: var(--accent-green);
+    border-radius: 50%;
+    box-shadow: 0 0 5px var(--accent-green);
+    animation: pulse-online 2s infinite;
+}
+
+@keyframes pulse-online {
+    0% { opacity: 1; }
+    50% { opacity: 0.5; }
+    100% { opacity: 1; }
+}
+
+.gh-variants-badge {
     font-size: 9px;
-    padding: 2px 6px;
-    border-radius: 3px;
-    background: rgba(255,255,255,0.05);
-    color: #ccc;
-    font-weight: 500;
+    font-weight: 700;
+    text-transform: uppercase;
+    color: var(--text-muted);
 }
 
-KROK 3:
+/* Body */
+.gh-card-body {
+    position: relative;
+    z-index: 2;
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end; /* Tekst na dole */
+}
+
+.gh-game-title {
+    font-size: 18px;
+    font-weight: 700;
+    color: white;
+    margin-bottom: 6px;
+    letter-spacing: 0.3px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+}
+
+.gh-game-desc {
+    font-size: 11px;
+    color: #94a3b8;
+    line-height: 1.4;
+    opacity: 0.9;
+}
+
+/* Usuwamy stary footer z przyciskiem */
+.gh-card-footer { display: none; }
+
+KROK 2:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-// --- GAMES HUB LOGIC ---
-
-function renderGamesHub() {
-    renderAvailableGames();
-    renderGlobalLeaderboard();
-}
-
-function renderAvailableGames() {
-    const container = document.getElementById('availableGamesContainer');
-    container.innerHTML = '';
-    const sortedGames = [...availableGamesDB].sort((a, b) => b.players - a.players);
-
-    sortedGames.forEach(game => {
-        const div = document.createElement('div');
-        div.className = 'game-card';
-        let hotBadge = game.isHot ? `<span class="gc-badge hot">HOT</span>` : '';
-        let bgStyle = `background: linear-gradient(135deg, ${game.imgColor} 0%, #151a2d 100%);`;
-
-        // ZMIANA: Wstawiamy ${game.icon} w sekcji icony (dolny lewy róg nagłówka)
-        div.innerHTML = `
-            <div class="gc-header" style="${bgStyle}">
-                <div class="gc-overlay"></div>
-                <div class="gc-badges">
-                    ${hotBadge}
-                    <span class="gc-badge">${game.type}</span>
-                </div>
-                <div style="position:absolute; bottom:10px; left:12px;">
-                    <i class="fas ${game.icon}" style="font-size:24px; color:rgba(255,255,255,0.8);"></i>
-                </div>
-            </div>
-            <div class="gc-body">
-                <div class="gc-title">${game.name}</div>
-                <div class="gc-pop"><i class="fas fa-user"></i> ${game.players.toLocaleString()} online</div>
-                
-                <div class="gc-actions">
-                    <button class="gc-btn play">GRAJ TERAZ</button>
-                    <button class="gc-btn lobby">Lobby</button>
-                    <button class="gc-btn offline">Offline</button>
-                </div>
-            </div>
-        `;
-        container.appendChild(div);
-    });
-}
-TREŚĆ:
-// --- GAMES HUB LOGIC ---
-
-let activeGamesTabId = 'casino';
-
-// Main function to initialize the Games View
-function renderGamesHub() {
-    renderGamesTabs();
-    renderGamesContent();
-    renderGlobalLeaderboard(); // Keep existing leaderboard
-}
-
-function renderGamesTabs() {
-    const container = document.getElementById('gamesHubHeader'); // We will create this in HTML
-    if (!container) return;
-    container.innerHTML = '';
-
-    const tabContainer = document.createElement('div');
-    tabContainer.className = 'gh-tabs-container';
-
-    gamesHubStructure.forEach(tab => {
-        const el = document.createElement('div');
-        el.className = `gh-tab ${tab.id === activeGamesTabId ? 'active' : ''}`;
-        el.style.color = tab.id === activeGamesTabId ? tab.color : '#8b92a5';
-        el.onclick = () => switchGameHubTab(tab.id);
-
-        el.innerHTML = `
-            <i class="fas ${tab.icon} gh-tab-icon"></i>
-            <div class="gh-tab-info">
-                <div class="gh-tab-title">${tab.label}</div>
-                <div class="gh-tab-desc">${tab.desc}</div>
-            </div>
-        `;
-        tabContainer.appendChild(el);
-    });
-
-    container.appendChild(tabContainer);
-}
-
-function switchGameHubTab(id) {
-    activeGamesTabId = id;
-    renderGamesTabs(); // Re-render tabs for active state
-    renderGamesContent(); // Re-render content
-}
-
 function renderGamesContent() {
     const container = document.getElementById('availableGamesContainer');
     if (!container) return;
-    container.innerHTML = ''; // Clear old
+    container.innerHTML = ''; 
 
     const currentTab = gamesHubStructure.find(t => t.id === activeGamesTabId);
     if (!currentTab) return;
@@ -354,7 +346,7 @@ function renderGamesContent() {
         subSection.className = 'gh-sub-section';
 
         // Sub Header
-        subSection.innerHTML = `<div class="gh-sub-header"><i class="fas fa-circle"></i> ${sub.title}</div>`;
+        subSection.innerHTML = `<div class="gh-sub-header"><i class="fas fa-layer-group"></i> ${sub.title}</div>`;
 
         // Grid
         const grid = document.createElement('div');
@@ -363,27 +355,111 @@ function renderGamesContent() {
         sub.games.forEach(game => {
             const card = document.createElement('div');
             card.className = 'gh-card';
-            card.onclick = () => alert(`Uruchamianie gry: ${game.name}\nTryb: ${game.tags.join(', ')}`);
+            // Symulacja kliknięcia
+            card.onclick = () => alert(`Uruchamianie: ${game.name}\nLiczba wariantów do wyboru: ${game.variants}`);
 
-            // Icon Color Logic
-            const iconStyle = `color: ${game.color}; border-color: ${game.color}33; background: ${game.color}11;`;
-
-            // Tags HTML
-            const tagsHtml = game.tags.map(t => `<span class="gh-tag">${t}</span>`).join('');
+            // Kolor tła ikony i gradientu
+            const glowColor = game.color; 
+            
+            // Logika wyświetlania wariantów (jeśli > 1)
+            let variantsHtml = '';
+            if(game.variants > 1) {
+                variantsHtml = `<div class="gh-variants-badge"><i class="fas fa-th-large"></i> ${game.variants} Trybów</div>`;
+            } else {
+                 variantsHtml = `<div class="gh-variants-badge single">Unikat</div>`;
+            }
 
             card.innerHTML = `
-                <div class="gh-card-top">
-                    <div class="gh-icon-box" style="${iconStyle}">
+                <div class="gh-card-bg-glow" style="background: ${glowColor};"></div>
+                
+                <div class="gh-card-header">
+                    <div class="gh-icon-large" style="color: ${glowColor}; text-shadow: 0 0 15px ${glowColor}66;">
                         <i class="fas ${game.icon}"></i>
                     </div>
-                    <div class="gh-players"><i class="fas fa-user"></i> ${game.players}</div>
+                    <div class="gh-card-meta">
+                        ${variantsHtml}
+                        <div class="gh-players-badge"><i class="fas fa-users"></i> ${game.players}</div>
+                    </div>
                 </div>
-                <div class="gh-card-main">
-                    <h4>${game.name}</h4>
-                    <div class="gh-card-desc">${game.desc}</div>
+
+                <div class="gh-card-body">
+                    <h4 class="gh-game-title">${game.name}</h4>
+                    <p class="gh-game-desc">${game.desc}</p>
                 </div>
-                <div class="gh-tags">
-                    ${tagsHtml}
+
+                <div class="gh-card-footer">
+                    <button class="gh-play-btn" style="background: ${glowColor}; box-shadow: 0 4px 15px ${glowColor}40;">
+                        <i class="fas fa-play"></i> ZAGRAJ
+                    </button>
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        subSection.appendChild(grid);
+        wrapper.appendChild(subSection);
+    });
+
+    container.appendChild(wrapper);
+}
+TREŚĆ:
+function renderGamesContent() {
+    const container = document.getElementById('availableGamesContainer');
+    if (!container) return;
+    container.innerHTML = ''; 
+
+    const currentTab = gamesHubStructure.find(t => t.id === activeGamesTabId);
+    if (!currentTab) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'gh-content-area';
+
+    currentTab.subcategories.forEach(sub => {
+        const subSection = document.createElement('div');
+        subSection.className = 'gh-sub-section';
+
+        subSection.innerHTML = `<div class="gh-sub-header"><i class="fas fa-layer-group"></i> ${sub.title}</div>`;
+
+        const grid = document.createElement('div');
+        grid.className = 'gh-grid';
+
+        sub.games.forEach(game => {
+            const card = document.createElement('div');
+            card.className = 'gh-card';
+            
+            // Interaction
+            card.onclick = () => alert(`Uruchamianie: ${game.name}\nTryb: ${game.variants > 1 ? 'Wybór wariantu' : 'Standard'}\nOnline: ${game.onlineCount}`);
+            
+            // Dynamic Color styles
+            const glowColor = game.color;
+            const variantsText = game.variants > 1 ? `${game.variants} WARIACJE` : 'CLASSIC';
+
+            card.innerHTML = `
+                <!-- Background Glow -->
+                <div class="gh-card-bg-glow" style="background: ${glowColor};"></div>
+                
+                <!-- Hover Play Overlay -->
+                <div class="gh-play-overlay">
+                    <div class="gh-play-icon-container">
+                        <i class="fas fa-play"></i>
+                    </div>
+                </div>
+
+                <div class="gh-card-header">
+                    <div class="gh-icon-large" style="color: ${glowColor}; text-shadow: 0 0 20px ${glowColor}40;">
+                        <i class="fas ${game.icon}"></i>
+                    </div>
+                    <div class="gh-card-meta">
+                        <div class="gh-online-badge">
+                            <div class="gh-online-dot"></div> ${game.onlineCount.toLocaleString()}
+                        </div>
+                        <div class="gh-variants-badge">${variantsText}</div>
+                    </div>
+                </div>
+
+                <div class="gh-card-body">
+                    <h4 class="gh-game-title">${game.name}</h4>
+                    <p class="gh-game-desc">${game.desc}</p>
                 </div>
             `;
             grid.appendChild(card);
@@ -396,28 +472,181 @@ function renderGamesContent() {
     container.appendChild(wrapper);
 }
 
-KROK 4:
-PLIK: "index.html"
+KROK 3:
+PLIK: "data.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-                <div class="games-column">
-                    <div class="section-header-row">
-                        <h3>Dostępne Gry</h3>
-                        <div class="filter-pills">
-                            <span class="pill active">Wszystkie</span>
-                            <span class="pill">Karciane</span>
-                            <span class="pill">Sloty</span>
-                            <span class="pill">Live</span>
-                        </div>
-                    </div>
-                    <div class="games-grid-list" id="availableGamesContainer">
-                        </div>
-                </div>
+const gamesHubStructure = [
+    {
+        id: 'tables',
+        label: 'Tables & Cards',
+        icon: 'fa-diamond', // Bardziej "prestiżowa" ikona
+        desc: 'Klasyczne kasyno, strategia i elegancja.',
+        color: '#10b981', // Emerald Green (jak sukno stołu)
+        subcategories: [
+            {
+                title: 'Karty (Card Games)',
+                games: [
+                    { name: 'Poker: Texas Hold’em', variants: 4, players: '2-10', icon: 'fa-playing-card', color: '#10b981', desc: 'Najpopularniejsza gra umiejętności. Blefuj, licytuj i zgarniaj pule w Cash Games lub turniejach.' },
+                    { name: 'Blackjack', variants: 5, players: '1-7', icon: 'fa-suit-spade', color: '#ef4444', desc: 'Klasyka gatunku. Pokonaj krupiera zbliżając się do 21. Decyduj: Hit czy Stand?' },
+                    { name: 'Baccarat', variants: 4, players: '1-14', icon: 'fa-gem', color: '#3b82f6', desc: 'Gra arystokratów. Obstawiaj Bankiera lub Gracza w tej szybkiej grze losowej.' },
+                    { name: 'Casino Poker', variants: 4, players: '1-5', icon: 'fa-hand-holding-usd', color: '#8b5cf6', desc: 'Pojedynki 1 na 1 z krupierem. Caribbean Stud, Three Card i inne wariacje.' }
+                ]
+            },
+            {
+                title: 'Stoły (Table Games)',
+                games: [
+                    { name: 'Ruletka', variants: 5, players: '∞', icon: 'fa-circle-notch', color: '#ef4444', desc: 'Królowa kasyna. Obstawiaj liczby lub kolory i czekaj, aż kulka wskaże wygraną.' },
+                    { name: 'Kości / Craps', variants: 3, players: '1-16', icon: 'fa-dice', color: '#f59e0b', desc: 'Emocjonujące rzuty kośćmi. Obstawiaj sumy oczek w Sic Bo lub Lightning Dice.' }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'arcade',
+        label: 'Arcade',
+        icon: 'fa-rocket',
+        desc: 'Automaty, Crash i Szybka Dopamina.',
+        color: '#ec4899', // Neon Pink/Purple
+        subcategories: [
+            {
+                title: 'Automaty (Slots)',
+                games: [
+                    { name: 'Automaty / Sloty', variants: 6, players: '1', icon: 'fa-star', color: '#ec4899', desc: 'Jackpoty, Megaways i Bonus Buy. Zakręć bębnami i traf życiową wygraną.' },
+                    { name: 'Slot Wars PvP', variants: 2, players: 'Ranking', icon: 'fa-trophy', color: '#f59e0b', desc: 'Turnieje slotowe. Rywalizuj z innymi graczami o to, kto wygra więcej.' }
+                ]
+            },
+            {
+                title: 'Gry Instant & Crypto',
+                games: [
+                    { name: 'Crash', variants: 5, players: '1000+', icon: 'fa-plane-departure', color: '#f59e0b', desc: 'Gra na chciwość. Wypłać mnożnik zanim rakieta wybuchnie!' },
+                    { name: 'Plinko', variants: 2, players: '1', icon: 'fa-bowling-ball', color: '#3b82f6', desc: 'Zrzucaj kulki po piramidzie prosto do mnożników x1000.' },
+                    { name: 'Mines', variants: 2, players: '1', icon: 'fa-bomb', color: '#ef4444', desc: 'Saper na pieniądze. Odkrywaj pola, unikaj bomb i mnóż stawkę.' },
+                    { name: 'Hi-Lo', variants: 1, players: '1', icon: 'fa-arrows-alt-v', color: '#10b981', desc: 'Prosta decyzja: czy kolejna karta będzie wyższa czy niższa?' }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'originals',
+        label: 'Oryginały',
+        icon: 'fa-chess-knight',
+        desc: 'Ekskluzywne gry Skill & PvP.',
+        color: '#f59e0b',
+        subcategories: [
+            {
+                title: 'Ekskluzywne Gry PvP',
+                games: [
+                    { name: 'Gambling Chess', variants: 1, players: '2', icon: 'fa-chess', color: '#fff', desc: 'Szachy z licytacją ruchu. Wygrana partii = Pula.' },
+                    { name: 'Age of Gambling', variants: 1, players: '2', icon: 'fa-shield-alt', color: '#ef4444', desc: 'RTS na pieniądze. Kupuj jednostki, niszcz bazę wroga.' },
+                    { name: 'Gambling Mystery', variants: 1, players: '4+', icon: 'fa-user-secret', color: '#8b5cf6', desc: 'Mafia/Among Us na prawdziwe stawki. Kłam, by wygrać.' },
+                    { name: 'Logic Race Bet', variants: 1, players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', desc: 'Wyścig intelektualny. Kto pierwszy rozwiąże zagadkę, zgarnia wszystko.' },
+                    { name: 'Aim Duel Bet', variants: 1, players: '2', icon: 'fa-crosshairs', color: '#ec4899', desc: 'Test refleksu FPS. Kliknij cel szybciej niż przeciwnik.' }
+                ]
+            }
+        ]
+    }
+];
 TREŚĆ:
-                <div class="games-column">
-                    <!-- New Header Container for Tabs -->
-                    <div id="gamesHubHeader"></div>
+const gamesHubStructure = [
+    {
+        id: 'casino',
+        label: 'Kasyno',
+        icon: 'fa-gem',
+        desc: 'Elegancja, strategia, ryzyko.',
+        color: '#10b981', // Emerald
+        subcategories: [
+            {
+                title: 'Karty (Card Games)',
+                games: [
+                    // Kolor 1: Emerald (Klasyczny Stół)
+                    { name: 'Poker: Texas Hold’em', variants: 4, onlineCount: 4520, players: '2-10 PvP', icon: 'fa-heart', color: '#10b981', desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.' },
+                    // Kolor 2: Indigo (Strategia/Chłód)
+                    { name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1-7 PvE', icon: 'fa-spade', color: '#4f46e5', desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.' },
+                    // Kolor 3: Crimson (Ryzyko/Azja)
+                    { name: 'Baccarat', variants: 4, onlineCount: 1240, players: '1-14', icon: 'fa-dragon', color: '#e11d48', desc: 'Gracz czy Bankier? Czysta intuicja w królewskim stylu.' },
+                    // Kolor 4: Violet (Prestiż)
+                    { name: 'Casino Poker', variants: 4, onlineCount: 890, players: '1-5 PvE', icon: 'fa-crown', color: '#7c3aed', desc: 'Pokerowe układy w pojedynku 1 na 1 z kasynem.' }
+                ]
+            },
+            {
+                title: 'Stoły (Table Games)',
+                games: [
+                    // Kolor 5: Amber/Gold (Koło/Bogactwo)
+                    { name: 'Ruletka', variants: 5, onlineCount: 5600, players: '∞', icon: 'fa-circle-notch', color: '#f59e0b', desc: 'Obstaw liczbę i zaufaj fizyce. Symbol hazardu.' },
+                    // Kolor 6: Cyan (Szybkość/Kości)
+                    { name: 'Kości / Craps', variants: 3, onlineCount: 950, players: '1-16', icon: 'fa-dice', color: '#06b6d4', desc: 'Rzuć kośćmi. Emocje tłumu i skomplikowane zakłady.' }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'arcade',
+        label: 'Arcade',
+        icon: 'fa-gamepad',
+        desc: 'Refleks, algorytm, dopamina.',
+        color: '#d946ef', // Fuchsia
+        subcategories: [
+            {
+                title: 'Automaty (Slots)',
+                games: [
+                    // Kolor 1: Fuchsia (Neon/Vegas)
+                    { name: 'Automaty', variants: 6, onlineCount: 12400, players: '1', icon: 'fa-star', color: '#d946ef', desc: 'Pociągnij wajchę. Jackpoty, Megaways i czysty los.' },
+                    // Kolor 2: Orange (Ogień/Rywalizacja)
+                    { name: 'Slot Wars', variants: 2, onlineCount: 320, players: 'Ranking', icon: 'fa-trophy', color: '#f97316', desc: 'Turniej spinów. Kto wykręci więcej w 5 minut?' }
+                ]
+            },
+            {
+                title: 'Gry Instant (Fast Paced)',
+                games: [
+                    // Kolor 3: Red (Danger/Crash)
+                    { name: 'Crash', variants: 5, onlineCount: 8500, players: '∞', icon: 'fa-chart-line', color: '#ef4444', desc: 'Chciwość vs strach. Wypłać zanim rakieta wybuchnie.' },
+                    // Kolor 4: Light Blue (Physics)
+                    { name: 'Plinko', variants: 2, onlineCount: 4100, players: '1', icon: 'fa-bowling-ball', color: '#38bdf8', desc: 'Grawitacja decyduje. Kulka spada prosto do mnożnika.' },
+                    // Kolor 5: Purple/Grey (Mines/Mystery)
+                    { name: 'Mines', variants: 2, onlineCount: 2200, players: '1', icon: 'fa-bomb', color: '#8b5cf6', desc: 'Saper na sterydach. Każdy krok to zysk lub koniec.' },
+                    // Kolor 6: Green (High/Low)
+                    { name: 'Hi-Lo', variants: 1, onlineCount: 1800, players: '1', icon: 'fa-arrows-alt-v', color: '#22c55e', desc: 'Wyższa czy niższa? Prosta matematyka kart.' }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'originals',
+        label: 'Oryginały',
+        icon: 'fa-fingerprint',
+        desc: 'Ekskluzywne gry PvP & Skill.',
+        color: '#f59e0b',
+        subcategories: [
+            {
+                title: 'Ekskluzywne Gry PvP',
+                games: [
+                    // 1. Silver (Chess)
+                    { name: 'Gambling Chess', variants: 1, onlineCount: 140, players: '2', icon: 'fa-chess', color: '#94a3b8', desc: 'Szachy. Licytuj każdy ruch i obstawiaj życie pionków.' },
+                    // 2. Dark Red (War)
+                    { name: 'Age of Gambling', variants: 1, onlineCount: 85, players: '2', icon: 'fa-shield-alt', color: '#b91c1c', desc: 'RTS. Kupuj nuklearne czołgi za $$ i zniszcz bazę.' },
+                    // 3. Deep Purple (Mystery)
+                    { name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4+', icon: 'fa-user-secret', color: '#6d28d9', desc: 'Mafia na pieniądze. Kłam, manipuluj, zgarnij pulę.' },
+                    
+                    // --- NOWA GRA ---
+                    // 4. Lime Green (Toxic/Worms)
+                    { 
+                        name: 'Degenerate Worms', 
+                        variants: 1, 
+                        onlineCount: 450, 
+                        players: '2+ Turowa', 
+                        icon: 'fa-skull-crossbones', // lub fa-bacteria / fa-biohazard
+                        color: '#84cc16', 
+                        desc: 'Artyleria 2D. Dokup "Święty Granat" w trakcie tury za realny hajs i zniszcz mapę.' 
+                    },
+                    // ----------------
 
-                    <!-- This container previously held the simple grid, now holds the dynamic subcategories -->
-                    <div id="availableGamesContainer"></div>
-                </div>
+                    // 5. Blue (Logic)
+                    { name: 'Logic Race Bet', variants: 1, onlineCount: 60, players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', desc: 'Wyścig IQ. Kto pierwszy rozwiąże zagadkę, bierze wszystko.' },
+                    // 6. Pink/Rose (Reflex)
+                    { name: 'Aim Duel Bet', variants: 1, onlineCount: 320, players: '2', icon: 'fa-crosshairs', color: '#f43f5e', desc: 'FPS 1v1. Czysty refleks. Kto kliknie szybciej, wygrywa.' }
+                ]
+            }
+        ]
+    }
+];
