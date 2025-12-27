@@ -2549,8 +2549,8 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .pd-formation {
     position: relative;
-    width: 350px;
-    height: 470px; /* Scaled 3x4 */
+    width: 600px; /* Zwiększono szerokość dla układu 5-kolumnowego */
+    height: 480px;
 }
 
 .pd-silhouette {
@@ -2558,14 +2558,13 @@ input:checked + .slider:before { transform: translateX(16px); }
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%);
-    font-size: 400px; /* Zmniejszona sylwetka dla 110px */
+    font-size: 400px;
     color: rgba(0,0,0,0.3);
     filter: drop-shadow(0 0 50px rgba(0,0,0,0.8));
     z-index: 0;
     pointer-events: none;
 }
 
-/* UNIVERSAL SLOT SIZE FORCE (Redundant but kept for overrides) */
 .pd-slot {
     position: absolute;
     width: 110px !important;
@@ -2574,29 +2573,30 @@ input:checked + .slider:before { transform: translateX(16px); }
     box-shadow: inset 0 0 30px rgba(0,0,0,0.8);
     background: rgba(0,0,0,0.6);
 }
-.pd-slot .placeholder { font-size: 40px; opacity: 0.3; } /* Mniejszy placeholder */
+.pd-slot .placeholder { font-size: 40px; opacity: 0.3; }
 
-/* --- GRID POSITIONS 3x4 (Recalculated for 110px + 10px gap) --- */
+/* --- NEW CROSS/DIAMOND LAYOUT (Based on Sketch) --- */
+/* Center X is 240px (Column 3) */
 
-/* ROW 1 (Y=0) */
-.slot-glasses   { top: 0; left: 0; }
-.slot-neck      { top: 0; left: 120px; z-index: 5; }
-.slot-earpiece  { top: 0; left: 240px; }
+/* ROW 1 (Top Center) */
+.slot-glasses   { top: 0; left: 240px; }
 
-/* ROW 2 (Y=120) */
-.slot-watch     { top: 120px; left: 0; }
-.slot-suit      { top: 120px; left: 120px; z-index: 4; }
-.slot-cufflink  { top: 120px; left: 240px; }
+/* ROW 2 (Upper Row: Watch - Suit - Neck) */
+.slot-watch     { top: 120px; left: 120px; }
+.slot-suit      { top: 120px; left: 240px; z-index: 4; }
+.slot-neck      { top: 120px; left: 360px; z-index: 5; }
 
-/* ROW 3 (Y=240) */
-.slot-ring      { top: 240px; left: 0; }
-.slot-belt      { top: 240px; left: 120px; z-index: 3; }
+/* ROW 3 (Middle Row: Ring - Vehicle - Pants - Belt - Ring) */
+.slot-cufflink  { top: 240px; left: 0; }
+.slot-vehicle   { top: 240px; left: 120px; }
 .slot-pants     { top: 240px; left: 240px; }
+.slot-belt      { top: 240px; left: 360px; z-index: 3; }
+.slot-ring      { top: 240px; left: 480px; }
 
-/* ROW 4 (Y=360) */
-.slot-vehicle   { top: 360px; left: 0; border-color: rgba(59, 130, 246, 0.4); }
-.slot-shoes     { top: 360px; left: 120px; z-index: 2; }
-.slot-hand      { top: 360px; left: 240px; border-color: rgba(16, 185, 129, 0.4); }
+/* ROW 4 (Bottom Row: Gadget - Shoes - Gadget) */
+.slot-earpiece  { top: 360px; left: 120px; }
+.slot-shoes     { top: 360px; left: 240px; z-index: 2; }
+.slot-hand      { top: 360px; left: 360px; }
 
 /* Modal tweaks */
 .full-height-logs { max-height: 500px; }
