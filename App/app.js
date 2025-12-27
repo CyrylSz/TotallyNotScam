@@ -2124,7 +2124,7 @@ function openGameDetailsModal(game) {
     // 2. Populate Loadout Select (Mock from inventory categories)
     const loadoutSelect = document.getElementById('gmLoadoutSelect');
     loadoutSelect.innerHTML = '';
-    const loadouts = ["Poker Face Set", "High Roller Suit", "Lucky Casual", "Friday Night Degen"];
+    const loadouts = ["Poker Face Outfit", "High Roller Suit", "Lucky Casual", "Friday Night Degen"];
     loadouts.forEach(l => {
         const opt = document.createElement('option');
         opt.value = l;
