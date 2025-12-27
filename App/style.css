@@ -2715,3 +2715,38 @@ input:checked + .slider:before { transform: translateX(16px); }
 .full-height-logs { max-height: 500px; }
 .hidden { display: none !important; }
 
+/* --- MARKET PAGINATION --- */
+.market-pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 15px;
+    padding: 15px 0;
+    margin-top: auto;
+    border-top: 1px solid rgba(255,255,255,0.05);
+}
+
+.market-pagination button {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+    width: 32px;
+    height: 32px;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.market-pagination button:hover:not(:disabled) {
+    background: var(--accent-purple);
+    border-color: var(--accent-purple);
+}
+
+.market-pagination span {
+    font-size: 12px;
+    color: var(--text-muted);
+    font-weight: 600;
+}

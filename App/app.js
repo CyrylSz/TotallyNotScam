@@ -21,24 +21,27 @@ let invFilterState = { item: true, case: true };
 // --- RENDER FUNCTIONS ---
 // --- MARKET SYSTEM START ---
 let marketState = {
-    mode: 'auction', // 'auction' or 'instant' (REPLACES 'tab')
-    searchItem: '',  // Renamed from search to be specific
-    searchPlayer: '', // NEW
-    onlyMine: false,  // NEW
+    mode: 'auction', 
+    searchItem: '',  
+    searchPlayer: '', 
+    onlyMine: false, 
     types: { item: true, case: true }, 
     slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], 
     priceMin: null,
     priceMax: null,
     rarities: ['Peasant', 'Rare', 'Epic', 'Relic', 'Divine'],
     sort: 'best_deal',
-    listings: [] 
+    listings: [],
+    // Paginacja - ZMIANA NA 32
+    currentPage: 1,
+    itemsPerPage: 32 
 };
 
 function initMarketData() {
     marketState.listings = [];
     
-    // Helper do tworzenia ofert
-    const addListing = (itemTemplateId, sellerName, basePrice, isMine = false) => {
+    // Helper generatora
+    const addListing = (itemTemplateId, sellerName, overridePrice = null, isMine = false, forceType = null) => {
         const template = allTreasures.find(t => t.id === itemTemplateId);
         if(!template) return;
 
@@ -48,44 +51,47 @@ function initMarketData() {
             if (myItem) {
                 finalUid = myItem.uid;
                 myItem.isOnSale = true; 
-            } else {
-                return; 
-            }
+            } else return;
         }
 
-        // Pobieramy zdjęcie
         let sellerImg = `https://i.pravatar.cc/150?u=${sellerName}`;
         const dbPlayer = typeof playersDB !== 'undefined' ? playersDB.find(p => p.username === sellerName) : null;
         if(dbPlayer && dbPlayer.pfp) sellerImg = dbPlayer.pfp;
 
-        // NOWE: Decyzja czy to Aukcja czy Instant Buy (chyba że wymuszone)
-        // Dla demo losujemy 50/50
-        const listingType = Math.random() > 0.5 ? 'auction' : 'instant';
+        const listingType = forceType ? forceType : (Math.random() > 0.5 ? 'auction' : 'instant');
         
-        // Logika cenowa
-        let price = basePrice;
+        // Zabezpieczenie: Minimalna wartość bazy to 100$, nawet dla śmieci, żeby uniknąć błędów mnożenia przez 0
+        let rawVal = template.rawPrice > 0 ? template.rawPrice : 100;
+        let baseValue = overridePrice || rawVal * (0.8 + Math.random() * 0.4); 
+        
+        let price = 0;
         let currentBid = 0;
         let bidCount = 0;
         let endTime = 0;
 
         if (listingType === 'auction') {
-            // Aukcja zaczyna się niżej niż wartość
-            price = Math.floor(basePrice * 0.4); 
-            // Symulacja, że ktoś już licytował
+            // Cena startowa: 40-60% wartości (nigdy mniej niż 10$)
+            price = Math.max(10, Math.floor(baseValue * (0.4 + Math.random() * 0.2))); 
+            
+            // Losujemy czy są już oferty (70% szans)
             if(Math.random() > 0.3) {
-                currentBid = Math.floor(price * (1 + Math.random() * 0.5));
-                bidCount = Math.floor(Math.random() * 15) + 1;
+                bidCount = Math.floor(Math.random() * 25) + 1; // 1-25 ofert
+                // CurrentBid to cena startowa + (liczba ofert * ~5% podbicia)
+                // GWARANCJA: CurrentBid > Price
+                currentBid = Math.floor(price * (1 + (bidCount * 0.05)));
             } else {
-                currentBid = price; // Cena startowa
                 bidCount = 0;
+                currentBid = 0; // 0 oznacza brak ofert, UI wyświetli Price jako start
             }
-            // Czas do końca (od 10 min do 24h)
-            endTime = Date.now() + Math.floor(Math.random() * 86400000); 
+            endTime = Date.now() + Math.floor(Math.random() * 86400000 * 2); 
+        } else {
+            // Instant Buy = Pełna cena
+            price = Math.max(10, Math.floor(baseValue));
         }
 
-        // Generowanie historii (tylko wizualne)
+        // Generowanie historii
         const history = [];
-        let cur = basePrice;
+        let cur = baseValue;
         for(let j=0; j<10; j++) {
             cur = cur * (1 + ((Math.random() * 0.1) - 0.05));
             history.push(cur);
@@ -96,20 +102,16 @@ function initMarketData() {
             templateId: template.id,
             seller: sellerName,
             sellerImg: sellerImg,
-            listingType: listingType, // 'auction' or 'instant'
-            
-            // Ceny
-            price: listingType === 'instant' ? basePrice : price, // Dla Instant to cena kupna, dla Aukcji to cena startowa
-            currentBid: currentBid,
+            listingType: listingType, 
+            price: price, // Cena Kup Teraz LUB Cena Startowa Aukcji
+            currentBid: currentBid, // Aktualna najwyższa oferta
             bidCount: bidCount,
             endTime: endTime,
-
             change: ((Math.random() * 20) - 10).toFixed(1),
             history: history,
             isMine: isMine,
             date: Date.now() - Math.floor(Math.random() * 86400000 * 3),
             
-            // Props
             name: template.name,
             rarity: template.rarity,
             type: template.type,
@@ -120,22 +122,19 @@ function initMarketData() {
     };
 
     // 1. OFERTY MR GAMBLERA
-    addListing(5, "MrGambler", 1250000, true); 
-    addListing(16, "MrGambler", 2400000, true); 
-    addListing(15, "MrGambler", 45000, true); 
+    addListing(5, "MrGambler", 1250000, true, 'auction'); 
+    addListing(16, "MrGambler", 2400000, true, 'instant'); 
+    addListing(15, "MrGambler", 45000, true, 'instant'); 
 
-    // 2. OFERTY INNYCH
-    const players = ["Whale_Killer", "LuckyLuke", "CryptoBro", "Bot_Network_01", "Anon_99", "WatchMaster"];
-    const items = [27, 13, 4, 7, 12, 3, 30, 8, 26, 1, 25, 19, 2, 15, 22, 33];
-    
-    // Generujemy dużo ofert dla testu filtrów
-    for(let i=0; i<40; i++) {
+    // 2. MASS GENERATION (300 items total -> ~150 per mode)
+    const players = ["Whale_Killer", "LuckyLuke", "CryptoBro", "Bot_Network_01", "Anon_99", "WatchMaster", "HighRoller", "PokerFace"];
+    const itemIds = allTreasures.map(t => t.id);
+
+    for(let i=0; i<300; i++) {
         const rndPlayer = players[Math.floor(Math.random() * players.length)];
-        const rndItem = items[Math.floor(Math.random() * items.length)];
-        // Losowa cena bazowa +/- 20%
-        const template = allTreasures.find(t=>t.id===rndItem);
-        const base = template.rawPrice * (0.8 + Math.random() * 0.4);
-        addListing(rndItem, rndPlayer, Math.floor(base));
+        const rndItem = itemIds[Math.floor(Math.random() * itemIds.length)];
+        const type = i % 2 === 0 ? 'auction' : 'instant';
+        addListing(rndItem, rndPlayer, null, false, type);
     }
 }
 
@@ -146,12 +145,17 @@ function renderMarketView() {
 
 function switchMarketMode(mode) {
     marketState.mode = mode;
+    marketState.currentPage = 1; // Reset strony przy zmianie trybu
     
-    // UI Update
     document.getElementById('tabAuctionMode').classList.toggle('active', mode === 'auction');
     document.getElementById('tabInstantBuy').classList.toggle('active', mode === 'instant');
     
     filterMarket();
+}
+
+function changePage(delta) {
+    marketState.currentPage += delta;
+    filterMarket(); // Re-render z nową stroną
 }
 
 function toggleMarketType(type, btnElement) {
@@ -182,54 +186,36 @@ function filterMarket() {
     if(!grid) return;
     grid.innerHTML = '';
     
-    // Pobierz wartości z DOM
+    // Inputs
     marketState.searchItem = document.getElementById('marketSearchInput').value.toLowerCase();
-    marketState.searchPlayer = document.getElementById('marketSearchPlayer').value.toLowerCase(); // NOWE
-    marketState.onlyMine = document.getElementById('chkOnlyMine').checked; // NOWE
-    
+    marketState.searchPlayer = document.getElementById('marketSearchPlayer').value.toLowerCase();
+    marketState.onlyMine = document.getElementById('chkOnlyMine').checked;
     marketState.priceMin = document.getElementById('priceMin').value;
     marketState.priceMax = document.getElementById('priceMax').value;
     marketState.sort = document.getElementById('marketSortSelect').value;
-    
     const checkedRarities = Array.from(document.querySelectorAll('.ms-check-row input:checked')).map(cb => cb.value);
 
-    // LOGIKA FILTROWANIA
+    // FILTERING
     let results = marketState.listings.filter(item => {
-        // 1. Tryb (Auction vs Instant)
         if (item.listingType !== marketState.mode) return false;
-
-        // 2. Tylko moje oferty
         if (marketState.onlyMine && !item.isMine) return false;
-
-        // 3. Wyszukiwanie po graczu
         if (marketState.searchPlayer && !item.seller.toLowerCase().includes(marketState.searchPlayer)) return false;
-
-        // 4. Wyszukiwanie po przedmiocie
         if (marketState.searchItem && !item.name.toLowerCase().includes(marketState.searchItem)) return false;
-        
-        // 5. Typ (Item / Case)
         if(item.isChest && !marketState.types.case) return false;
         if(!item.isChest && !marketState.types.item) return false;
 
-        // 6. Cena (Dla aukcji sprawdzamy Current Bid, dla Instant cenę)
         const priceCheck = item.listingType === 'auction' ? (item.currentBid > 0 ? item.currentBid : item.price) : item.price;
         if(marketState.priceMin && priceCheck < marketState.priceMin) return false;
         if(marketState.priceMax && priceCheck > marketState.priceMax) return false;
         
-        // 7. Sloty
-        if(!item.isChest) {
-            if(!marketState.slots.includes(item.type)) return false;
-        }
-        
-        // 8. Rzadkość
+        if(!item.isChest && !marketState.slots.includes(item.type)) return false;
         if(!checkedRarities.includes(item.rarity)) return false;
         
         return true;
     });
     
-    // Sortowanie
+    // SORTING
     results.sort((a, b) => {
-        // Cena do sortowania
         const pA = a.listingType === 'auction' ? (a.currentBid || a.price) : a.price;
         const pB = b.listingType === 'auction' ? (b.currentBid || b.price) : b.price;
 
@@ -247,16 +233,36 @@ function filterMarket() {
             default: return 0;
         }
     });
+
+    // PAGINATION LOGIC
+    const totalItems = results.length;
+    const totalPages = Math.ceil(totalItems / marketState.itemsPerPage) || 1;
     
-    // Render Results
-    results.forEach(item => {
+    // Zabezpieczenie bounds
+    if (marketState.currentPage < 1) marketState.currentPage = 1;
+    if (marketState.currentPage > totalPages) marketState.currentPage = totalPages;
+
+    const startIndex = (marketState.currentPage - 1) * marketState.itemsPerPage;
+    const endIndex = startIndex + marketState.itemsPerPage;
+    const pageItems = results.slice(startIndex, endIndex);
+
+    // RENDER ITEMS
+    pageItems.forEach(item => {
         const card = createMarketCard(item);
         grid.appendChild(card);
     });
     
+    // EMPTY STATE
     if(results.length === 0) {
         grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#666;">Brak ofert spełniających kryteria.</div>';
     }
+
+    // UPDATE PAGINATION UI
+    document.getElementById('pageIndicator').textContent = `Strona ${marketState.currentPage} z ${totalPages} (${totalItems} ofert)`;
+    document.getElementById('btnPrevPage').disabled = marketState.currentPage === 1;
+    document.getElementById('btnNextPage').disabled = marketState.currentPage === totalPages;
+    document.getElementById('btnPrevPage').style.opacity = marketState.currentPage === 1 ? '0.3' : '1';
+    document.getElementById('btnNextPage').style.opacity = marketState.currentPage === totalPages ? '0.3' : '1';
 }
 
 function createMarketCard(item) {
@@ -288,7 +294,10 @@ function createMarketCard(item) {
     } else {
         // AUCTION LAYOUT
         const timeLeft = calculateTimeLeft(item.endTime);
-        const bidDisplay = item.currentBid > 0 ? item.currentBid.toLocaleString() + ' $' : item.price.toLocaleString() + ' $ (Start)';
+        
+        const priceToDisplay = item.currentBid > 0 ? item.currentBid : item.price;
+        const bidDisplay = priceToDisplay.toLocaleString() + ' $';
+        
         const bidCountDisplay = item.bidCount > 0 ? `${item.bidCount} ofert` : 'Brak ofert';
         
         footerHtml = `
@@ -335,33 +344,53 @@ function openMarketItemModal(item) {
     const modal = document.getElementById('marketModal');
     if(!modal) return;
     
-    // Basic Data Populate
+    // 1. Podstawowe Dane
     document.getElementById('mmIcon').innerHTML = item.icon;
     document.getElementById('mmIcon').className = ''; 
     document.getElementById('mmCard').style.color = item.color;
+    
+    // --- FIX: NAPRAWA ZDJĘCIA SPRZEDAWCY ---
     document.getElementById('mmSellerName').textContent = item.seller;
+    // Ustawiamy styl inline background-image. Ważne są backticki ` ` 
     document.getElementById('mmSellerAvatar').style.backgroundImage = `url('${item.sellerImg}')`;
+    document.getElementById('mmSellerAvatar').style.backgroundSize = 'cover';
+    document.getElementById('mmSellerAvatar').style.backgroundPosition = 'center';
+    // ---------------------------------------
+
     document.getElementById('mmItemName').textContent = item.name;
     
-    // Render Tags
+    // Renderowanie Tagów (Rzadkość + Slot)
     const tags = document.getElementById('mmTags');
     const badgeClass = `badge-${item.rarity.toLowerCase()}`;
     tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
     if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
     else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
     
-    // Description
+    // Opis
     const template = allTreasures.find(t => t.id === item.templateId);
     let desc = template ? (template.desc + ' ' + template.bonus) : '';
     document.getElementById('mmDesc').textContent = desc;
 
-    // --- DYNAMIC PRICE & BUTTONS ---
+    // Warning o randze
+    const warning = document.getElementById('mmReqWarning');
+    let reqRankName = '';
+    let isLocked = false;
+    if(item.rarity === 'Divine' && currentRankId > 2) { isLocked = true; reqRankName = "RNG God"; }
+    
+    if(isLocked) {
+        warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: ${reqRankName} (do założenia)`;
+        warning.classList.remove('hidden');
+    } else {
+        warning.classList.add('hidden');
+    }
+
+    // --- DYNAMICZNE CENY I PRZYCISKI (Zależne od trybu) ---
     const priceEl = document.getElementById('mmCurrentPrice');
     const btnRow = document.querySelector('.mm-btn-row');
     const lastPriceEl = document.getElementById('mmLastPrice');
     const changeEl = document.getElementById('mmChange');
 
-    // Reset layout
+    // Reset przycisków
     btnRow.innerHTML = ''; 
 
     if (item.listingType === 'instant') {
@@ -370,10 +399,14 @@ function openMarketItemModal(item) {
         priceEl.textContent = item.price.toLocaleString() + ' $';
         priceEl.style.color = "var(--accent-green)";
         
-        // Stats
+        // Statystyki dla Instant
         lastPriceEl.parentElement.querySelector('.mm-lbl').textContent = "Ostatnia cena";
         lastPriceEl.textContent = (item.price * 1.1).toFixed(0) + ' $'; // Fake stat
+        changeEl.parentElement.querySelector('.mm-lbl').textContent = "Zmienna 24h";
         changeEl.textContent = item.change + '%';
+        
+        // Kolorowanie zmiennej
+        changeEl.className = 'mm-v ' + (parseFloat(item.change) >= 0 ? 'val-up' : 'val-down');
 
         if (item.isMine) {
             // Mój przedmiot -> Usuń
@@ -395,21 +428,22 @@ function openMarketItemModal(item) {
     } else {
         // --- TRYB AUCTION ---
         document.getElementById('marketModalTitle').textContent = "LICYTACJA";
+        // Wyświetlamy najwyższą ofertę LUB cenę startową
         const currentPrice = item.currentBid > 0 ? item.currentBid : item.price;
         priceEl.textContent = currentPrice.toLocaleString() + ' $';
         priceEl.style.color = "var(--accent-orange)";
 
-        // Stats Adjustment for Auction
+        // Statystyki dla Aukcji
         lastPriceEl.parentElement.querySelector('.mm-lbl').textContent = "Czas do końca";
         lastPriceEl.textContent = calculateTimeLeft(item.endTime);
         lastPriceEl.style.color = "#fff";
         
         changeEl.parentElement.querySelector('.mm-lbl').textContent = "Liczba ofert";
         changeEl.textContent = item.bidCount;
-        changeEl.className = "mm-v"; // Reset color class
+        changeEl.className = "mm-v"; // Reset koloru (biały)
 
         if (item.isMine) {
-            // Moja aukcja -> Zarządzaj (lub tylko podgląd)
+            // Moja aukcja -> Zarządzaj
             const btnManage = document.createElement('button');
             btnManage.className = 'action-btn-large outline';
             btnManage.textContent = 'ZAKOŃCZ WCZEŚNIEJ';
@@ -417,11 +451,13 @@ function openMarketItemModal(item) {
             btnRow.appendChild(btnManage);
         } else {
             // Cudza aukcja -> Licytuj
+            
             // 1. Input
             const bidInput = document.createElement('input');
             bidInput.type = 'number';
             bidInput.className = 'bid-input-modal';
             bidInput.placeholder = 'Kwota...';
+            // Minimalne przebicie: 5% więcej
             const minBid = Math.floor(currentPrice * 1.05);
             bidInput.value = minBid;
             
@@ -439,7 +475,7 @@ function openMarketItemModal(item) {
                 }
             };
             
-            // Wrap input and button styling
+            // Kontener na input i przycisk
             const bidContainer = document.createElement('div');
             bidContainer.style.display = 'flex';
             bidContainer.style.gap = '10px';
