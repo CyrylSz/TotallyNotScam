@@ -1242,6 +1242,28 @@ input:checked + .slider:before { transform: translateX(16px); }
     margin: 15px 0;
 }
 
+/* --- STACK COUNTER (NOWY STYL) --- */
+.item-stack-count {
+    position: absolute;
+    top: 6px;
+    left: 6px;
+    z-index: 15; /* Powyżej ikony i tła */
+    
+    font-size: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 700;
+    color: #ffffff;
+    
+    background: rgba(0, 0, 0, 0.7);
+    border: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 1px 5px;
+    border-radius: 4px;
+    
+    box-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    pointer-events: none; /* Kliknięcie przenika do slotu */
+    user-select: none;
+}
+
 /* Daily Hub (Right Panel) */
 .daily-hub-card {
     min-height: 400px;

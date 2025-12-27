@@ -1073,24 +1073,57 @@ function renderInventoryView() {
     // Inicjalizacja slotów loadoutu (dodanie listenerów)
     setupLoadoutSlots();
 
-    // Filtrowanie i Sortowanie
+    // 1. Wstępne filtrowanie (według typu Item/Case)
     let filteredInv = myInventory.filter(item => {
-        const isCase = item.type === 'chest'; // ID 1-5 (skrzynki) mają typ 'chest'
+        const isCase = item.type === 'chest'; 
         if(isCase && !invFilterState.case) return false;
         if(!isCase && !invFilterState.item) return false;
         return true;
     });
 
-    const sortedInv = filteredInv.sort((a, b) => b.rawPrice - a.rawPrice);
+    // 2. LOGIKA STAKOWANIA
+    // Tworzymy nową listę do wyświetlenia
+    let displayList = [];
+    let stackMap = {}; // Mapa: templateId -> referencja do obiektu w displayList
+
+    filteredInv.forEach(item => {
+        // Sprawdzamy stan unikalny
+        const isEquipped = Object.values(myLoadout).includes(item.uid);
+        const isOnSale = item.isOnSale === true;
+
+        // Jeśli przedmiot jest "zajęty" (założony lub na rynku), nie stakujemy go
+        if (isEquipped || isOnSale) {
+            displayList.push({ 
+                ...item, 
+                stackCount: 1, // Pojedyncza sztuka
+                forceUnique: true // Flaga pomocnicza
+            });
+        } else {
+            // Przedmiot jest "wolny" w magazynie - próbujemy stakować
+            if (stackMap[item.id]) {
+                // Już mamy taki przedmiot w displayList, inkrementujemy licznik
+                stackMap[item.id].stackCount++;
+            } else {
+                // Pierwszy raz widzimy ten przedmiot (wolny), dodajemy do listy
+                // Tworzymy kopię obiektu, żeby nie modyfikować oryginału w myInventory
+                const stackItem = { ...item, stackCount: 1, forceUnique: false };
+                stackMap[item.id] = stackItem;
+                displayList.push(stackItem);
+            }
+        }
+    });
+
+    // 3. Sortowanie listy wyświetlania (od najdroższego)
+    const sortedInv = displayList.sort((a, b) => b.rawPrice - a.rawPrice);
     
-    // Render Grid
+    // 4. Render Grid
     sortedInv.forEach(item => {
         const slot = document.createElement('div');
         slot.className = 'inv-grid-slot';
         
-        // Sprawdź czy przedmiot jest założony
+        // Sprawdź czy przedmiot jest założony (ponowne sprawdzenie na obiekcie display)
+        // Musimy użyć oryginalnego myLoadout check, bo item.uid w stacku to UID "reprezentanta"
         const isEquipped = Object.values(myLoadout).includes(item.uid);
-        // Sprawdź czy jest na Rynku (dodana flaga w initMarketData)
         const isOnSale = item.isOnSale === true;
 
         if (isEquipped) slot.classList.add('is-equipped');
@@ -1111,12 +1144,19 @@ function renderInventoryView() {
             slot.style.borderColor = 'var(--accent-orange)';
         }
 
-        // Badges
+        // Badges & Counters
         let badgeHtml = '';
-        if (isEquipped) badgeHtml = `<div class="equipped-badge">EQ</div>`;
-        else if (isOnSale) badgeHtml = `<div class="on-sale-badge">NA RYNKU</div>`;
+        
+        // --- STACK COUNTER ---
+        // Dodajemy licznik tylko jeśli jest więcej niż 1 sztuka
+        if (item.stackCount > 1) {
+            badgeHtml += `<div class="item-stack-count">x${item.stackCount}</div>`;
+        }
 
-        // Rank Lock Logic (Divine req Rank <= 2)
+        if (isEquipped) badgeHtml += `<div class="equipped-badge">EQ</div>`;
+        else if (isOnSale) badgeHtml += `<div class="on-sale-badge">NA RYNKU</div>`;
+
+        // Rank Lock Logic
         if (item.rarity === 'Divine' && currentRankId > 2) {
             badgeHtml += `<div class="inv-lock-overlay"><i class="fas fa-lock"></i></div>`;
             slot.classList.add('is-rank-locked');
@@ -1128,13 +1168,15 @@ function renderInventoryView() {
             ${badgeHtml}
         `;
         
-        // Rozbudowany tooltip
-        slot.title = `${item.name} (${item.rarity})\nTyp: ${item.type}\nBonus: ${item.bonus}\nCena: ${item.price}`;
+        // Tooltip
+        let tooltipText = `${item.name} (${item.rarity})\nTyp: ${item.type}\nBonus: ${item.bonus}\nCena: ${item.price}`;
+        if(item.stackCount > 1) tooltipText += `\nIlość w magazynie: ${item.stackCount}`;
+        slot.title = tooltipText;
         
         container.appendChild(slot);
     });
 
-    // Puste sloty
+    // Puste sloty (Wypełniacz)
     const minSlots = 63;
     for(let i = sortedInv.length; i < minSlots; i++) {
         const emptySlot = document.createElement('div');
