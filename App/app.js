@@ -1841,47 +1841,104 @@ initDashboard();
 
 // --- GAMES HUB LOGIC ---
 
+let activeGamesTabId = 'casino';
+
+// Main function to initialize the Games View
 function renderGamesHub() {
-    renderAvailableGames();
-    renderGlobalLeaderboard();
+    renderGamesTabs();
+    renderGamesContent();
+    renderGlobalLeaderboard(); // Keep existing leaderboard
 }
 
-function renderAvailableGames() {
-    const container = document.getElementById('availableGamesContainer');
+function renderGamesTabs() {
+    const container = document.getElementById('gamesHubHeader'); // We will create this in HTML
+    if (!container) return;
     container.innerHTML = '';
-    const sortedGames = [...availableGamesDB].sort((a, b) => b.players - a.players);
 
-    sortedGames.forEach(game => {
-        const div = document.createElement('div');
-        div.className = 'game-card';
-        let hotBadge = game.isHot ? `<span class="gc-badge hot">HOT</span>` : '';
-        let bgStyle = `background: linear-gradient(135deg, ${game.imgColor} 0%, #151a2d 100%);`;
+    const tabContainer = document.createElement('div');
+    tabContainer.className = 'gh-tabs-container';
 
-        // ZMIANA: Wstawiamy ${game.icon} w sekcji icony (dolny lewy róg nagłówka)
-        div.innerHTML = `
-            <div class="gc-header" style="${bgStyle}">
-                <div class="gc-overlay"></div>
-                <div class="gc-badges">
-                    ${hotBadge}
-                    <span class="gc-badge">${game.type}</span>
-                </div>
-                <div style="position:absolute; bottom:10px; left:12px;">
-                    <i class="fas ${game.icon}" style="font-size:24px; color:rgba(255,255,255,0.8);"></i>
-                </div>
-            </div>
-            <div class="gc-body">
-                <div class="gc-title">${game.name}</div>
-                <div class="gc-pop"><i class="fas fa-user"></i> ${game.players.toLocaleString()} online</div>
-                
-                <div class="gc-actions">
-                    <button class="gc-btn play">GRAJ TERAZ</button>
-                    <button class="gc-btn lobby">Lobby</button>
-                    <button class="gc-btn offline">Offline</button>
-                </div>
+    gamesHubStructure.forEach(tab => {
+        const el = document.createElement('div');
+        el.className = `gh-tab ${tab.id === activeGamesTabId ? 'active' : ''}`;
+        el.style.color = tab.id === activeGamesTabId ? tab.color : '#8b92a5';
+        el.onclick = () => switchGameHubTab(tab.id);
+
+        el.innerHTML = `
+            <i class="fas ${tab.icon} gh-tab-icon"></i>
+            <div class="gh-tab-info">
+                <div class="gh-tab-title">${tab.label}</div>
+                <div class="gh-tab-desc">${tab.desc}</div>
             </div>
         `;
-        container.appendChild(div);
+        tabContainer.appendChild(el);
     });
+
+    container.appendChild(tabContainer);
+}
+
+function switchGameHubTab(id) {
+    activeGamesTabId = id;
+    renderGamesTabs(); // Re-render tabs for active state
+    renderGamesContent(); // Re-render content
+}
+
+function renderGamesContent() {
+    const container = document.getElementById('availableGamesContainer');
+    if (!container) return;
+    container.innerHTML = ''; // Clear old
+
+    const currentTab = gamesHubStructure.find(t => t.id === activeGamesTabId);
+    if (!currentTab) return;
+
+    const wrapper = document.createElement('div');
+    wrapper.className = 'gh-content-area';
+
+    currentTab.subcategories.forEach(sub => {
+        const subSection = document.createElement('div');
+        subSection.className = 'gh-sub-section';
+
+        // Sub Header
+        subSection.innerHTML = `<div class="gh-sub-header"><i class="fas fa-circle"></i> ${sub.title}</div>`;
+
+        // Grid
+        const grid = document.createElement('div');
+        grid.className = 'gh-grid';
+
+        sub.games.forEach(game => {
+            const card = document.createElement('div');
+            card.className = 'gh-card';
+            card.onclick = () => alert(`Uruchamianie gry: ${game.name}\nTryb: ${game.tags.join(', ')}`);
+
+            // Icon Color Logic
+            const iconStyle = `color: ${game.color}; border-color: ${game.color}33; background: ${game.color}11;`;
+
+            // Tags HTML
+            const tagsHtml = game.tags.map(t => `<span class="gh-tag">${t}</span>`).join('');
+
+            card.innerHTML = `
+                <div class="gh-card-top">
+                    <div class="gh-icon-box" style="${iconStyle}">
+                        <i class="fas ${game.icon}"></i>
+                    </div>
+                    <div class="gh-players"><i class="fas fa-user"></i> ${game.players}</div>
+                </div>
+                <div class="gh-card-main">
+                    <h4>${game.name}</h4>
+                    <div class="gh-card-desc">${game.desc}</div>
+                </div>
+                <div class="gh-tags">
+                    ${tagsHtml}
+                </div>
+            `;
+            grid.appendChild(card);
+        });
+
+        subSection.appendChild(grid);
+        wrapper.appendChild(subSection);
+    });
+
+    container.appendChild(wrapper);
 }
 
 function renderGlobalLeaderboard() {

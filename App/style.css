@@ -2750,3 +2750,151 @@ input:checked + .slider:before { transform: translateX(16px); }
     color: var(--text-muted);
     font-weight: 600;
 }
+
+/* --- GAMES HUB 2.0 STYLES --- */
+
+/* Tabs Container */
+.gh-tabs-container {
+    display: flex;
+    gap: 15px;
+    margin-bottom: 25px;
+    background: rgba(0,0,0,0.2);
+    padding: 5px;
+    border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.gh-tab {
+    flex: 1;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
+    padding: 15px;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    background: transparent;
+    border: 1px solid transparent;
+    position: relative;
+    overflow: hidden;
+}
+
+.gh-tab:hover {
+    background: rgba(255,255,255,0.03);
+}
+
+.gh-tab.active {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
+
+/* Active Indicator Line */
+.gh-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 20%;
+    right: 20%;
+    height: 3px;
+    background: currentColor; /* Uses the inline color style */
+    border-radius: 3px 3px 0 0;
+    box-shadow: 0 -2px 10px currentColor;
+}
+
+.gh-tab-icon { font-size: 20px; transition: 0.3s; }
+.gh-tab.active .gh-tab-icon { transform: scale(1.2); }
+
+.gh-tab-info { display: flex; flex-direction: column; }
+.gh-tab-title { font-size: 14px; font-weight: 700; color: white; letter-spacing: 0.5px; }
+.gh-tab-desc { font-size: 10px; color: var(--text-muted); }
+
+/* Content Area */
+.gh-content-area {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    animation: fadeIn 0.4s ease;
+}
+
+.gh-sub-section {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.gh-sub-header {
+    font-size: 11px;
+    text-transform: uppercase;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 5px;
+    margin-left: 5px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+.gh-sub-header i { color: var(--accent-blue); font-size: 8px; }
+
+/* New Game Card Grid */
+.gh-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+    gap: 15px;
+}
+
+/* Enhanced Game Card */
+.gh-card {
+    background: linear-gradient(145deg, #1e2538, #151a2d);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 10px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    transition: 0.2s;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+}
+
+.gh-card:hover {
+    transform: translateY(-3px);
+    border-color: rgba(255,255,255,0.2);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+}
+
+.gh-card-top { display: flex; align-items: flex-start; justify-content: space-between; }
+.gh-icon-box {
+    width: 36px; height: 36px;
+    border-radius: 8px;
+    background: rgba(255,255,255,0.05);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 16px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+
+.gh-players {
+    font-size: 10px;
+    color: #888;
+    background: rgba(0,0,0,0.3);
+    padding: 2px 6px;
+    border-radius: 4px;
+    display: flex; align-items: center; gap: 4px;
+}
+
+.gh-card-main h4 { font-size: 13px; font-weight: 700; color: white; margin-bottom: 4px; }
+.gh-card-desc { font-size: 10px; color: #8b92a5; line-height: 1.4; }
+
+.gh-tags { display: flex; gap: 4px; margin-top: auto; flex-wrap: wrap; }
+.gh-tag {
+    font-size: 9px;
+    padding: 2px 6px;
+    border-radius: 3px;
+    background: rgba(255,255,255,0.05);
+    color: #ccc;
+    font-weight: 500;
+}

@@ -1,5 +1,86 @@
 // --- DATA SETS ---
 
+// REPLACING/AUGMENTING EXISTING GAME DATA
+const gamesHubStructure = [
+    {
+        id: 'casino',
+        label: 'Kasyno',
+        icon: 'fa-dice',
+        desc: 'Sloty, Ruletka & Klasyki',
+        color: 'var(--accent-purple)',
+        subcategories: [
+            {
+                title: 'A. Automaty i Sloty',
+                games: [
+                    { name: 'Automaty / Sloty', tags: ['RNG', 'Jackpot'], players: '1', icon: 'fa-slot-machine', color: '#ec4899', desc: 'Classic 3-Reel, Video Slots, Megaways' },
+                    { name: 'Slot Wars PvP', tags: ['Tournament', 'PvP'], players: '2+', icon: 'fa-trophy', color: '#f59e0b', desc: 'Rywalizacja o najwyższą wygraną' }
+                ]
+            },
+            {
+                title: 'B. Poker i Gry Karciane',
+                games: [
+                    { name: 'Texas Hold’em', tags: ['PvP', 'Skill'], players: '2-10', icon: 'fa-playing-card', color: '#10b981', desc: 'Cash Games, Turnieje SIT&GO' },
+                    { name: 'Blackjack', tags: ['PvE', 'Strategy'], players: '1-7', icon: 'fa-heart', color: '#ef4444', desc: 'Pokonaj krupiera, nie przekrocz 21' },
+                    { name: 'Baccarat', tags: ['Chance', 'Fast'], players: '1-14', icon: 'fa-gem', color: '#3b82f6', desc: 'Punto Banco, Dragon Tiger' },
+                    { name: 'Casino Poker', tags: ['PvE'], players: '1-5', icon: 'fa-spade', color: '#8b5cf6', desc: 'Caribbean Stud, Three Card Poker' }
+                ]
+            },
+            {
+                title: 'C. Ruletka i Gry Stołowe',
+                games: [
+                    { name: 'Ruletka', tags: ['Live', 'Classic'], players: '∞', icon: 'fa-circle-notch', color: '#ef4444', desc: 'European, American, Lightning' },
+                    { name: 'Kości / Craps', tags: ['Dice'], players: '1-16', icon: 'fa-dice-d6', color: '#fff', desc: 'Sic Bo, Lightning Dice' }
+                ]
+            },
+            {
+                title: 'D. Gry Szybkie (Instant & Crypto)',
+                games: [
+                    { name: 'Crash', tags: ['Multi', 'Risk'], players: '1000+', icon: 'fa-plane-departure', color: '#f59e0b', desc: 'Aviator, JetX. Cash out before crash.' },
+                    { name: 'Plinko', tags: ['RNG'], players: '1', icon: 'fa-bowling-ball', color: '#ec4899', desc: 'Spribe Plinko, kulka i piramida.' },
+                    { name: 'Mines', tags: ['Logic'], players: '1', icon: 'fa-bomb', color: '#ef4444', desc: 'Unikaj bomb, zbieraj mnożniki.' },
+                    { name: 'Hi-Lo', tags: ['Card'], players: '1', icon: 'fa-arrows-alt-v', color: '#3b82f6', desc: 'Wyższa czy niższa?' }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'betting',
+        label: 'Zakłady',
+        icon: 'fa-futbol',
+        desc: 'Sport & E-Sport',
+        color: 'var(--accent-green)',
+        subcategories: [
+            {
+                title: 'A. Bukmacherka (Sportsbook)',
+                games: [
+                    { name: 'Zakłady Sportowe', tags: ['Live', 'Prematch'], players: '∞', icon: 'fa-futbol', color: '#10b981', desc: 'Piłka nożna, Koszykówka, Tenis. AKO/Solo.' },
+                    { name: 'eSports Betting', tags: ['Gaming'], players: '∞', icon: 'fa-headset', color: '#8b5cf6', desc: 'CS:GO, LoL, Dota 2, Valorant.' },
+                    { name: 'Zakłady Specjalne', tags: ['Fun'], players: '∞', icon: 'fa-newspaper', color: '#f59e0b', desc: 'Polityka, Oscary, Finanse.' }
+                ]
+            }
+        ]
+    },
+    {
+        id: 'originals',
+        label: 'Oryginały',
+        icon: 'fa-chess-knight',
+        desc: 'Skill & PvP Exclusive',
+        color: '#f59e0b', // Gold/Orange
+        subcategories: [
+            {
+                title: 'Ekskluzywne Gry PvP',
+                games: [
+                    { name: 'Gambling Chess', tags: ['Skill', 'PvP'], players: '2', icon: 'fa-chess', color: '#fff', desc: 'Szachy z licytacją ruchu. Wygrana partii = Pula.' },
+                    { name: 'Age of Gambling', tags: ['Strategy', 'RTS'], players: '2', icon: 'fa-shield-alt', color: '#ef4444', desc: 'Kupuj jednostki za $$, niszcz bazę wroga.' },
+                    { name: 'Gambling Mystery', tags: ['Social', 'Bluff'], players: '4+', icon: 'fa-user-secret', color: '#8b5cf6', desc: 'Mafia/Among Us na pieniądze.' },
+                    { name: 'Logic Race Bet', tags: ['IQ', 'Speed'], players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', desc: 'Kto pierwszy rozwiąże zagadkę, zgarnia pulę.' },
+                    { name: 'Aim Duel Bet', tags: ['FPS', 'Reflex'], players: '2', icon: 'fa-crosshairs', color: '#ec4899', desc: 'Kliknij cel szybciej. Czysty skill.' }
+                ]
+            }
+        ]
+    }
+];
+
 // BUSINESS / GAMBLING THEMED ITEMS
 // Types: head, neck, suit, watch, belt, pants, shoes, ring, vehicle, gadget
 
