@@ -11,22 +11,16 @@ const gamesHubStructure = [
             {
                 title: 'Karty (Card Games)',
                 games: [
-                    // Kolor 1: Emerald (Klasyczny Stół)
-                    { name: 'Poker Klasyczny', variants: 4, onlineCount: 4520, players: '2–10', icon: 'fa-heart', color: '#10b981', desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.' },
-                    // Kolor 2: Indigo (Strategia/Chłód)
-                    { name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1–7', icon: 'fa-spade', color: '#4f46e5', desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.' },
-                    // Kolor 3: Crimson (Ryzyko/Azja)
+                    { name: 'Klasyczny Poker', variants: 4, onlineCount: 4520, players: '2–10', icon: 'fa-heart', color: '#10b981', desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.' },
+                    { name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1–7', icon: 'fa-layer-group', color: '#4f46e5', desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.' },
                     { name: 'Baccarat', variants: 4, onlineCount: 1240, players: '1–14', icon: 'fa-dragon', color: '#e11d48', desc: 'Gracz czy Bankier? Czysta intuicja w królewskim stylu.' },
-                    // Kolor 4: Violet (Prestiż)
                     { name: 'Casino Poker', variants: 4, onlineCount: 890, players: '1–7', icon: 'fa-crown', color: '#7c3aed', desc: 'Pokerowe układy w pojedynku 1 na 1 z kasynem.' }
                 ]
             },
             {
                 title: 'Stoły (Table Games)',
                 games: [
-                    // Kolor 5: Amber/Gold (Koło/Bogactwo)
                     { name: 'Ruletka', variants: 5, onlineCount: 5600, players: '2+', icon: 'fa-circle-notch', color: '#f59e0b', desc: 'Obstaw liczbę i zaufaj fizyce. Symbol hazardu.' },
-                    // Kolor 6: Cyan (Szybkość/Kości)
                     { name: 'Kości', variants: 3, onlineCount: 950, players: '1+', icon: 'fa-dice', color: '#06b6d4', desc: 'Rzuć kośćmi. Emocje tłumu i skomplikowane zakłady.' }
                 ]
             }
