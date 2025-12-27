@@ -112,32 +112,32 @@ const gamesHubStructure = [
                     { 
                         id: 'g_chess', name: 'Gambling Chess', variants: 1, onlineCount: 140, players: '2', icon: 'fa-chess', color: '#94a3b8', 
                         desc: 'Szachy. Licytuj każdy ruch i obstawiaj życie pionków.',
-                        modes: ['Standard Match Betting']
+                        modes: ['Gambling Chess']
                     },
                     { 
                         id: 'g_war', name: 'Age of Gambling', variants: 1, onlineCount: 85, players: '2', icon: 'fa-shield-alt', color: '#b91c1c', 
                         desc: 'RTS. Kupuj nuklearne czołgi za $$ i zniszcz bazę.',
-                        modes: ['Base Destruction']
+                        modes: ['Age of Gambling']
                     },
                     { 
                         id: 'g_mystery', name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4-15', icon: 'fa-user-secret', color: '#6d28d9', 
                         desc: 'Mafia na pieniądze. Kłam, manipuluj, zgarnij pulę.',
-                        modes: ['Role Reveal Bet']
+                        modes: ['Gambling Mystery']
                     },
                     { 
                         id: 'g_worms', name: 'Degenerate Worms', variants: 1, onlineCount: 450, players: '2-8', icon: 'fa-skull-crossbones', color: '#84cc16', 
                         desc: 'Artyleria 2D. Dokup "Święty Granat" w trakcie tury za realny hajs.',
-                        modes: ['Deathmatch Pay-to-Win']
+                        modes: ['Degenerate Worms']
                     },
                     { 
                         id: 'g_logic', name: 'Logic Race Bet', variants: 1, onlineCount: 60, players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', 
                         desc: 'Wyścig IQ. Kto pierwszy rozwiąże zagadkę, bierze wszystko.',
-                        modes: ['Speed Puzzle']
+                        modes: ['Logic Race Bet']
                     },
                     { 
                         id: 'g_aim', name: 'Aim Duel Bet', variants: 1, onlineCount: 320, players: '2', icon: 'fa-crosshairs', color: '#f43f5e', 
                         desc: 'FPS 1v1. Czysty refleks. Kto kliknie szybciej, wygrywa.',
-                        modes: ['Reflex Showdown']
+                        modes: ['Aim Duel Bet']
                     }
                 ]
             }

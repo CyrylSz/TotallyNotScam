@@ -2146,22 +2146,26 @@ function openGameDetailsModal(game) {
 
         const card = document.createElement('div');
         card.className = 'mode-card';
-        // Kliknięcie w kartę = Start gry (symulacja)
-        card.onclick = (e) => {
-            if(e.target.classList.contains('mc-star')) return; // Nie uruchamiaj, jeśli kliknięto gwiazdkę
+        
+        // GŁÓWNA AKCJA: Kliknięcie w kartę uruchamia grę
+        card.onclick = () => {
             alert(`Uruchamianie trybu: ${modeName} (${game.name})\nLoadout: ${loadoutSelect.value}`);
             closeGameModal();
         };
 
         const starClass = isFav ? 'fas fa-star mc-star active' : 'far fa-star mc-star';
 
+        // UWAGA: Dodajemy event.stopPropagation() do on click gwiazdki!
         card.innerHTML = `
             <div class="mc-top">
                 <div class="mc-icon" style="background:${game.color}40; color:${game.color};">
                     <i class="fas ${game.icon}"></i>
                 </div>
-                <i class="${starClass}" onclick="toggleFavoriteMode('${modeId}', '${game.id}', '${modeName}', '${game.icon}', '${game.color}', ${playerCount}, this)"></i>
+                <i class="${starClass}" 
+                   onclick="event.stopPropagation(); toggleFavoriteMode('${modeId}', '${game.id}', '${modeName}', '${game.icon}', '${game.color}', ${playerCount}, this)">
+                </i>
             </div>
+            
             <div class="mc-title">${modeName}</div>
             <div class="mc-players"><i class="fas fa-user"></i> ${playerCount.toLocaleString()}</div>
             
