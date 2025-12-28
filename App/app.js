@@ -1935,6 +1935,52 @@ function changeUserPage(delta) {
     adminUsersPage += delta;
     renderUsersView();
 }
+/* --- ADMIN PANEL ACTIONS --- */
+
+function toggleAdminAction(action) {
+    let msg = "";
+    switch(action) {
+        case 'maintenance': msg = "Tryb konserwacji został zmieniony."; break;
+        case 'block_withdrawals': msg = "Blokada wypłat została zmieniona."; break;
+        case 'gate_blik': msg = "Status bramki BLIK został zmieniony."; break;
+        case 'gate_crypto': msg = "Status bramki Crypto został zmieniony."; break;
+    }
+    // Symulacja requestu do API
+    console.log(`[ADMIN] Action: ${action}`);
+    // Toast notification simulation
+    alert(`[SYSTEM] ${msg}`); 
+}
+
+function adminLogoutAll() {
+    if(confirm("Czy na pewno chcesz wylogować WSZYSTKICH użytkowników? To przerwie aktywne gry.")) {
+        alert("[SYSTEM] Wysłano polecenie: Force Logout All Sessions.");
+    }
+}
+
+function sendAdminPush() {
+    const msg = document.getElementById('pushMsgInput').value;
+    if(msg) {
+        alert(`[PUSH SENT] Do 14,203 online: "${msg}"`);
+        document.getElementById('pushMsgInput').value = '';
+    }
+}
+
+function updateTickerAdmin() {
+    const msg = document.getElementById('tickerMsgInput').value;
+    if(msg) {
+        alert(`[TICKER UPDATED] Nowa treść: "${msg}"`);
+        document.getElementById('tickerMsgInput').value = '';
+    }
+}
+
+function adminImpersonate() {
+    const target = document.getElementById('godModeInput').value;
+    if(target) {
+        alert(`[GOD MODE] Przełączanie widoku na gracza: ${target}...\n\n(To tylko demo UI - nic się nie zmieni, ale w produkcji przeładowałoby to kontekst aplikacji).`);
+    } else {
+        alert("Podaj ID lub Login gracza.");
+    }
+}
 
 function renderLogsView() {
     const container = document.getElementById('logsContainer');

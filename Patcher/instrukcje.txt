@@ -1,15 +1,287 @@
 KROK 1:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
+PLIK: "style.css"
+OPERACJA: [WSTAW_PO]
 SZUKAJ:
-                <div class="card" style="grid-column: 1 / -1; max-width: 1000px; margin: 0 auto; width: 100%;">
-                    <div class="card-header">
-                        <div class="card-title"><i class="fas fa-calendar-alt"></i> Mapa Aktywności Graczy (Global)</div>
-                        <div style="font-size:10px; color:#666; margin-right: 15px;">Ostatni Rok</div>
-                    </div>
+.gh-legend-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255,255,255,0.05);
+}
 TREŚĆ:
-                <div class="card" style="grid-column: 1 / -1; max-width: 850px; margin: 0 auto; width: 100%;">
-                    <div class="card-header" style="justify-content: space-between;">
-                        <div class="card-title"><i class="fas fa-calendar-alt"></i> Mapa Aktywności Graczy (Global)</div>
-                        <div style="font-size:10px; color:#666;">Ostatni Rok</div>
+/* --- ADMIN ACTION PANELS --- */
+.admin-panels-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 850px;
+    margin: 20px auto 0 auto;
+    grid-column: 1 / -1;
+}
+
+.ap-card {
+    background: #12141e;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ap-header {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Specific Panel Colors */
+.ap-critical { border-top: 3px solid var(--accent-red); }
+.ap-finance { border-top: 3px solid var(--accent-green); }
+.ap-comm { border-top: 3px solid var(--accent-purple); }
+.ap-god { border-top: 3px solid #f59e0b; }
+
+.ap-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #ccc;
+}
+
+.ap-input-group {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+.ap-input {
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: white;
+    font-size: 11px;
+    outline: none;
+}
+.ap-select {
+    background: #0b0e14;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 10px;
+    outline: none;
+}
+
+.ap-btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+    color: white;
+}
+.ap-btn-red { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
+.ap-btn-red:hover { background: var(--accent-red); color: white; }
+
+.ap-btn-green { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7; }
+.ap-btn-green:hover { background: var(--accent-green); color: white; }
+
+.ap-btn-blue { background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; }
+.ap-btn-blue:hover { background: var(--accent-blue); color: white; }
+
+.finance-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.fin-item {
+    background: rgba(255,255,255,0.03);
+    padding: 8px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+KROK 2:
+PLIK: "index.html"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+                        <span style="font-size:10px; color:#666; margin-left: 5px;">Więcej</span>
                     </div>
+                </div>
+TREŚĆ:
+                <div class="admin-panels-wrapper">
+                    
+                    <div class="ap-card ap-critical">
+                        <div class="ap-header" style="color: var(--accent-red);">
+                            <i class="fas fa-exclamation-triangle"></i> Akcje Krytyczne
+                        </div>
+                        <div class="ap-row">
+                            <span>Maintenance Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('maintenance')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Zablokuj Wypłaty (Global)</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('block_withdrawals')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row" style="margin-top: 10px;">
+                            <button class="ap-btn ap-btn-red full-width" onclick="adminLogoutAll()">
+                                <i class="fas fa-power-off"></i> WYLOGUJ WSZYSTKIE SESJE
+                            </button>
+                        </div>
+                    </div>
+
+                    <div class="ap-card ap-finance">
+                        <div class="ap-header" style="color: var(--accent-green);">
+                            <i class="fas fa-money-bill-wave"></i> Szybkie Finanse
+                        </div>
+                        
+                        <div style="font-size:10px; color:#666; margin-bottom:-5px;">PENDING (małe kwoty)</div>
+                        <div class="finance-list">
+                            <div class="fin-item">
+                                <div>
+                                    <div style="font-weight:700;">User_22</div>
+                                    <div style="font-size:9px; color:#888;">250 PLN (BLIK)</div>
+                                </div>
+                                <div style="display:flex; gap:5px;">
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px;" onclick="alert('Zatwierdzono')"><i class="fas fa-check"></i></button>
+                                    <select class="ap-select" onchange="if(this.value) alert('Odrzucono: '+this.value)">
+                                        <option value="">Odrzuć...</option>
+                                        <option value="Brak obrotu">Brak obrotu</option>
+                                        <option value="Multi-konto">Multi-konto</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+                            <span>Bramka BLIK</span>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="toggleAdminAction('gate_blik')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Bramka Crypto</span>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="toggleAdminAction('gate_crypto')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="ap-card ap-comm">
+                        <div class="ap-header" style="color: var(--accent-purple);">
+                            <i class="fas fa-bullhorn"></i> Komunikacja
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+                            <div style="font-size:10px; color:#aaa;">Global Push / Toast</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. Turniej za 5 min!">
+                                <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-top:5px;">
+                            <div style="font-size:10px; color:#aaa;">Edycja Tickera (Pasek Live)</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="tickerMsgInput" placeholder="Nowa wiadomość...">
+                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i class="fas fa-edit"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ap-card ap-god">
+                        <div class="ap-header" style="color: #f59e0b;">
+                            <i class="fas fa-eye"></i> God Mode
+                        </div>
+                        <div style="padding: 15px; background: rgba(245, 158, 11, 0.05); border-radius: 6px; text-align: center;">
+                            <i class="fas fa-user-secret" style="font-size: 24px; color: #f59e0b; margin-bottom: 10px;"></i>
+                            <div style="font-size:11px; margin-bottom:10px; color:#ccc;">Zobacz świat oczami gracza (bez hasła).</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" placeholder="ID Gracza lub Login" id="godModeInput">
+                                <button class="ap-btn" style="background:#f59e0b; color:black; font-weight:800;" onclick="adminImpersonate()">
+                                    IMPERSONATE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
+
+KROK 3:
+PLIK: "app.js"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+function changeUserPage(delta) {
+    adminUsersPage += delta;
+    renderUsersView();
+}
+TREŚĆ:
+/* --- ADMIN PANEL ACTIONS --- */
+
+function toggleAdminAction(action) {
+    let msg = "";
+    switch(action) {
+        case 'maintenance': msg = "Tryb konserwacji został zmieniony."; break;
+        case 'block_withdrawals': msg = "Blokada wypłat została zmieniona."; break;
+        case 'gate_blik': msg = "Status bramki BLIK został zmieniony."; break;
+        case 'gate_crypto': msg = "Status bramki Crypto został zmieniony."; break;
+    }
+    // Symulacja requestu do API
+    console.log(`[ADMIN] Action: ${action}`);
+    // Toast notification simulation
+    alert(`[SYSTEM] ${msg}`); 
+}
+
+function adminLogoutAll() {
+    if(confirm("Czy na pewno chcesz wylogować WSZYSTKICH użytkowników? To przerwie aktywne gry.")) {
+        alert("[SYSTEM] Wysłano polecenie: Force Logout All Sessions.");
+    }
+}
+
+function sendAdminPush() {
+    const msg = document.getElementById('pushMsgInput').value;
+    if(msg) {
+        alert(`[PUSH SENT] Do 14,203 online: "${msg}"`);
+        document.getElementById('pushMsgInput').value = '';
+    }
+}
+
+function updateTickerAdmin() {
+    const msg = document.getElementById('tickerMsgInput').value;
+    if(msg) {
+        alert(`[TICKER UPDATED] Nowa treść: "${msg}"`);
+        document.getElementById('tickerMsgInput').value = '';
+    }
+}
+
+function adminImpersonate() {
+    const target = document.getElementById('godModeInput').value;
+    if(target) {
+        alert(`[GOD MODE] Przełączanie widoku na gracza: ${target}...\n\n(To tylko demo UI - nic się nie zmieni, ale w produkcji przeładowałoby to kontekst aplikacji).`);
+    } else {
+        alert("Podaj ID lub Login gracza.");
+    }
+}
