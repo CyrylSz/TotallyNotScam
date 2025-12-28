@@ -2,9 +2,166 @@ KROK 1:
 PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-                            <div class="card-header"><div class="card-title"><i class="fas fa-tags"></i> Twoje Oferty</div></div>
+        <div class="view-container" id="viewLogs">
+            <div class="card" style="height: 500px; font-family: monospace;">
+                <div class="card-header"><div class="card-title">Pełne Logi Serwera</div></div>
+                <div class="list-container" id="logsContainer" style="color: #ccc; font-size: 11px;">
+                      </div>
+            </div>
+        </div>
 TREŚĆ:
-                            <div class="card-header">
-                                <div class="card-title"><i class="fas fa-tags"></i> Twoje Oferty</div>
-                                <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('market')" title="Przejdź do Rynku"></i>
-                            </div>
+        <div class="view-container" id="viewLogs">
+            <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                <div class="card-header" style="justify-content: space-between;">
+                    <div class="card-title"><i class="fas fa-terminal"></i> Pełne Logi Serwera</div>
+                    <div class="logs-controls" style="display: flex; gap: 10px;">
+                        <input type="text" placeholder="Szukaj ID / User..." style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; outline: none;">
+                        <button class="gc-btn lobby" onclick="renderLogsView()"><i class="fas fa-sync-alt"></i></button>
+                        <button class="gc-btn lobby"><i class="fas fa-download"></i> .LOG</button>
+                    </div>
+                </div>
+                <div class="logs-terminal-window" id="logsContainer">
+                    </div>
+            </div>
+        </div>
+
+KROK 2:
+PLIK: "style.css"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+.gh-legend-row {
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+    gap: 4px;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255,255,255,0.05);
+}
+TREŚĆ:
+/* --- ADVANCED LOGS STYLES --- */
+.logs-terminal-window {
+    flex: 1;
+    background: #0f111a;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 10px;
+    overflow-y: auto;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.log-line {
+    display: flex;
+    gap: 10px;
+    padding: 2px 5px;
+    border-radius: 2px;
+    color: #a0a0a0;
+    white-space: nowrap;
+}
+.log-line:hover {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+}
+
+.ll-time { color: #555; min-width: 60px; }
+.ll-level { font-weight: 700; min-width: 50px; text-transform: uppercase; }
+.ll-source { color: #3b82f6; min-width: 70px; }
+.ll-msg { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+
+/* Log Levels Colors */
+.lvl-info { color: #3b82f6; }
+.lvl-warn { color: #f59e0b; }
+.lvl-err { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+.lvl-crit { color: #ff0000; font-weight: 800; text-shadow: 0 0 5px red; }
+.lvl-success { color: #10b981; }
+.lvl-auth { color: #d946ef; }
+
+KROK 3:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+function renderLogsView() {
+    const container = document.getElementById('logsContainer');
+    container.innerHTML = '';
+    const logs = [
+        "[SYSTEM] Server started at 00:00:01",
+        "[AUTH] Admin logged in from 127.0.0.1",
+        "[GAME] User_99 won 5000 in Roulette",
+        "[RISK] High bet detected: User_99 (Risk: Low)",
+        "[ERROR] Payment Gateway Timeout (Retrying...)",
+        "[SYSTEM] Daily rewards distributed"
+    ];
+    logs.forEach(l => {
+        const div = document.createElement('div');
+        div.style.padding = "4px 0";
+        div.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
+        div.textContent = `> ${l}`;
+        container.appendChild(div);
+    });
+}
+TREŚĆ:
+function renderLogsView() {
+    const container = document.getElementById('logsContainer');
+    if(!container) return;
+    container.innerHTML = '';
+
+    const logTypes = ['INFO', 'WARN', 'ERR', 'AUTH', 'SUCCESS', 'CRIT'];
+    const sources = ['SYSTEM', 'GAME_ENG', 'PAYMENT', 'USER_DB', 'RISK_AI', 'NETWORK'];
+    const messages = [
+        "Connection established with node #421",
+        "User_992 placed bet: 50,000$ (Blackjack)",
+        "Database latency spike detected (120ms)",
+        "Payment gateway timeout - Retrying...",
+        "User_Admin logged in from 192.168.1.1",
+        "RNG Seed updated: 0x992384AA",
+        "Suspicious activity detected: Bot_Net_01",
+        "Daily rewards distributed to 1540 users",
+        "Asset 'Dragon Egg' transferred to User_Whale",
+        "WebSocket heartbeat missed - Reconnecting",
+        "Cache cleared successfully",
+        "New listing created on Market: ID #9921",
+        "Transaction #TX992 verified on blockchain",
+        "Critical Error: Logic Gate failure in Slot Engine",
+        "User_LuckyLuke claimed Battle Pass Lvl 20",
+        "API Rate limit approaching (85%)",
+        "Server CPU load at 45%",
+        "Backup process started...",
+        "Backup process completed (2.4GB)",
+        "User_Banned banned for 'Scripting'"
+    ];
+
+    // Generowanie 200 logów
+    for(let i=0; i<200; i++) {
+        const date = new Date();
+        date.setSeconds(date.getSeconds() - i * (Math.random() * 10));
+        const timeStr = date.toTimeString().split(' ')[0];
+        
+        let type = 'INFO';
+        const rand = Math.random();
+        if (rand > 0.98) type = 'CRIT';
+        else if (rand > 0.90) type = 'ERR';
+        else if (rand > 0.80) type = 'WARN';
+        else if (rand > 0.70) type = 'AUTH';
+        else if (rand > 0.60) type = 'SUCCESS';
+
+        const source = sources[Math.floor(Math.random() * sources.length)];
+        const msg = messages[Math.floor(Math.random() * messages.length)] + (Math.random() > 0.5 ? ` [ID:${Math.floor(Math.random()*9999)}]` : '');
+
+        const div = document.createElement('div');
+        div.className = `log-line`;
+        if(type === 'ERR' || type === 'CRIT') div.style.background = 'rgba(239, 68, 68, 0.05)';
+
+        div.innerHTML = `
+            <span class="ll-time">${timeStr}</span>
+            <span class="ll-level lvl-${type.toLowerCase()}">${type}</span>
+            <span class="ll-source">[${source}]</span>
+            <span class="ll-msg">${msg}</span>
+        `;
+        container.appendChild(div);
+    }
+}

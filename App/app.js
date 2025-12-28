@@ -642,7 +642,7 @@ const navMap = {
     'inventory': { title: "Ekwipunek", navId: "navInventory", viewId: "viewInventory", init: renderInventoryView },
     'market': { title: "Rynek", navId: "navMarket", viewId: "viewMarket", init: renderMarketView },
     'wallet': { title: "Portfel", navId: "navWallet", viewId: "viewWallet", init: renderWalletView },
-    'adminDash': { title: "Dashboard Admina", navId: "navAdminDash", viewId: "viewAdminDash" },
+    'adminDash': { title: "Dashboard Admina", navId: "navAdminDash", viewId: "viewAdminDash", init: renderAdminHeatmap },
     'users': { title: "Użytkownicy", navId: "navUsers", viewId: "viewUsers", init: renderUsersView },
     'logs': { title: "Logi", navId: "navLogs", viewId: "viewLogs", init: renderLogsView }
 };
@@ -1819,6 +1819,29 @@ function copyCrypto() {
     }, 2000);
 }
 
+function renderAdminHeatmap() {
+    const grid = document.getElementById('adminHeatmapGrid');
+    if(!grid || grid.children.length > 0) return;
+
+    // 53 kolumny (tygodnie) x 7 wierszy (dni)
+    const totalCells = 53 * 7;
+    
+    for(let i = 0; i < totalCells; i++) {
+        const div = document.createElement('div');
+        const rand = Math.random();
+        let level = 'l0';
+        
+        // Symulacja rozkładu aktywności
+        if (rand > 0.75) level = 'l1';
+        if (rand > 0.88) level = 'l2';
+        if (rand > 0.95) level = 'l3';
+        if (rand > 0.98) level = 'l4';
+
+        div.className = `gh-cell ${level}`;
+        div.title = `Aktywność: ${level.toUpperCase()}`;
+        grid.appendChild(div);
+    }
+}
 function renderUsersView() {
     const container = document.getElementById('usersContainer');
     container.innerHTML = '';
@@ -1845,22 +1868,63 @@ function renderUsersView() {
 
 function renderLogsView() {
     const container = document.getElementById('logsContainer');
+    if(!container) return;
     container.innerHTML = '';
-    const logs = [
-        "[SYSTEM] Server started at 00:00:01",
-        "[AUTH] Admin logged in from 127.0.0.1",
-        "[GAME] User_99 won 5000 in Roulette",
-        "[RISK] High bet detected: User_99 (Risk: Low)",
-        "[ERROR] Payment Gateway Timeout (Retrying...)",
-        "[SYSTEM] Daily rewards distributed"
+
+    const logTypes = ['INFO', 'WARN', 'ERR', 'AUTH', 'SUCCESS', 'CRIT'];
+    const sources = ['SYSTEM', 'GAME_ENG', 'PAYMENT', 'USER_DB', 'RISK_AI', 'NETWORK'];
+    const messages = [
+        "Connection established with node #421",
+        "User_992 placed bet: 50,000$ (Blackjack)",
+        "Database latency spike detected (120ms)",
+        "Payment gateway timeout - Retrying...",
+        "User_Admin logged in from 192.168.1.1",
+        "RNG Seed updated: 0x992384AA",
+        "Suspicious activity detected: Bot_Net_01",
+        "Daily rewards distributed to 1540 users",
+        "Asset 'Dragon Egg' transferred to User_Whale",
+        "WebSocket heartbeat missed - Reconnecting",
+        "Cache cleared successfully",
+        "New listing created on Market: ID #9921",
+        "Transaction #TX992 verified on blockchain",
+        "Critical Error: Logic Gate failure in Slot Engine",
+        "User_LuckyLuke claimed Battle Pass Lvl 20",
+        "API Rate limit approaching (85%)",
+        "Server CPU load at 45%",
+        "Backup process started...",
+        "Backup process completed (2.4GB)",
+        "User_Banned banned for 'Scripting'"
     ];
-    logs.forEach(l => {
+
+    // Generowanie 200 logów
+    for(let i=0; i<200; i++) {
+        const date = new Date();
+        date.setSeconds(date.getSeconds() - i * (Math.random() * 10));
+        const timeStr = date.toTimeString().split(' ')[0];
+        
+        let type = 'INFO';
+        const rand = Math.random();
+        if (rand > 0.98) type = 'CRIT';
+        else if (rand > 0.90) type = 'ERR';
+        else if (rand > 0.80) type = 'WARN';
+        else if (rand > 0.70) type = 'AUTH';
+        else if (rand > 0.60) type = 'SUCCESS';
+
+        const source = sources[Math.floor(Math.random() * sources.length)];
+        const msg = messages[Math.floor(Math.random() * messages.length)] + (Math.random() > 0.5 ? ` [ID:${Math.floor(Math.random()*9999)}]` : '');
+
         const div = document.createElement('div');
-        div.style.padding = "4px 0";
-        div.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
-        div.textContent = `> ${l}`;
+        div.className = `log-line`;
+        if(type === 'ERR' || type === 'CRIT') div.style.background = 'rgba(239, 68, 68, 0.05)';
+
+        div.innerHTML = `
+            <span class="ll-time">${timeStr}</span>
+            <span class="ll-level lvl-${type.toLowerCase()}">${type}</span>
+            <span class="ll-source">[${source}]</span>
+            <span class="ll-msg">${msg}</span>
+        `;
         container.appendChild(div);
-    });
+    }
 }
 
 

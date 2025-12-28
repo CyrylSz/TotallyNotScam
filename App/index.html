@@ -766,37 +766,29 @@
             </div>
         </div>
 
-        <div class="view-container" id="viewAdminDash">
+                <div class="view-container" id="viewAdminDash">
              <div class="admin-row">
-                <div class="card span-3">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-map-marked-alt"></i> Dark Patterns - Mapa Cieplna</div></div>
-                    <div class="heatmap-grid">
-                        <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
-                        <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
-                        <div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div>
-                        <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
+                <div class="card" style="grid-column: 1 / -1;">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-calendar-alt"></i> Mapa Aktywności Graczy (Global)</div>
+                        <div style="font-size:10px; color:#666;">Ostatni Rok</div>
+                    </div>
+                    
+                    <div style="overflow-x: auto; padding: 10px 0;">
+                        <div class="gh-grid-container" id="adminHeatmapGrid">
+                            </div>
+                    </div>
+
+                    <div class="gh-legend-row">
+                        <span style="font-size:10px; color:#666; margin-right: 5px;">Mniej</span>
+                        <div class="gh-cell l0"></div>
+                        <div class="gh-cell l1"></div>
+                        <div class="gh-cell l2"></div>
+                        <div class="gh-cell l3"></div>
+                        <div class="gh-cell l4"></div>
+                        <span style="font-size:10px; color:#666; margin-left: 5px;">Więcej</span>
                     </div>
                 </div>
-                <div class="card span-1">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-brain"></i> Podatność</div></div>
-                    <div class="psych-grid" style="grid-template-columns: 1fr;">
-                        <div class="psych-stat"><div class="psych-label">Hazardzista</div><div class="psych-val">85%</div></div>
-                        <div class="psych-stat"><div class="psych-label">FOMO</div><div class="psych-val">92%</div></div>
-                    </div>
-                </div>
-                <div class="card span-2">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-cogs"></i> Skuteczność Algorytmów</div></div>
-                    <div class="metric-row-admin"><div class="mra-left"><h5>"Near Miss"</h5><div class="mra-val">12,402</div></div><div class="mra-right"><div class="mra-trend trend-up"><i class="fas fa-arrow-up"></i> +14%</div></div></div>
-                    <div class="metric-row-admin" style="border:none;"><div class="mra-left"><h5>Churn Rate</h5><div class="mra-val">1.2%</div></div><div class="mra-right"><div class="mra-trend trend-bad"><i class="fas fa-arrow-down"></i> -0.1%</div></div></div>
-                </div>
-                 <div class="card span-2">
-                     <div class="card-header"><div class="card-title">Logi systemowe</div></div>
-                     <div class="admin-log-list">
-                        <div class="admin-log-item"><div class="admin-dot"></div><div class="admin-log-time">10:42</div><div class="admin-log-content">Whale User_99 deposited 50k</div></div>
-                        <div class="admin-log-item"><div class="admin-dot"></div><div class="admin-log-time">10:41</div><div class="admin-log-content">Retention Algorithm #4 Active</div></div>
-                        <div class="admin-log-item"><div class="admin-dot"></div><div class="admin-log-time">10:30</div><div class="admin-log-content">Bot Network Sync... OK</div></div>
-                    </div>
-                 </div>
             </div>
         </div>
 
@@ -811,11 +803,18 @@
             </div>
         </div>
 
-        <div class="view-container" id="viewLogs">
-            <div class="card" style="height: 500px; font-family: monospace;">
-                <div class="card-header"><div class="card-title">Pełne Logi Serwera</div></div>
-                <div class="list-container" id="logsContainer" style="color: #ccc; font-size: 11px;">
-                     </div>
+                <div class="view-container" id="viewLogs">
+            <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                <div class="card-header" style="justify-content: space-between;">
+                    <div class="card-title"><i class="fas fa-terminal"></i> Pełne Logi Serwera</div>
+                    <div class="logs-controls" style="display: flex; gap: 10px;">
+                        <input type="text" placeholder="Szukaj ID / User..." style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; outline: none;">
+                        <button class="gc-btn lobby" onclick="renderLogsView()"><i class="fas fa-sync-alt"></i></button>
+                        <button class="gc-btn lobby"><i class="fas fa-download"></i> .LOG</button>
+                    </div>
+                </div>
+                <div class="logs-terminal-window" id="logsContainer">
+                    </div>
             </div>
         </div>
 
