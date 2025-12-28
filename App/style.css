@@ -765,6 +765,75 @@ input:checked + .slider:before { transform: translateX(16px); }
     background: rgba(255,255,255,0.05);
     color: #fff;
 }
+/* --- ADMIN USERS LIST STYLES --- */
+.user-list-toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.ul-grid-header {
+    display: grid;
+    grid-template-columns: 50px 2fr 1fr 1fr 1fr 100px 120px;
+    padding: 10px 15px;
+    background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.ul-row {
+    display: grid;
+    grid-template-columns: 50px 2fr 1fr 1fr 1fr 100px 120px;
+    padding: 10px 15px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 12px;
+    transition: 0.2s;
+}
+.ul-row:hover { background: rgba(255,255,255,0.03); }
+
+.ul-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+}
+.ul-b-online { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.2); }
+.ul-b-offline { background: rgba(255,255,255,0.05); color: #666; }
+.ul-b-banned { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.2); }
+.ul-b-suspicious { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); border: 1px solid rgba(245, 158, 11, 0.2); }
+
+.ul-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+.ul-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-muted);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+.ul-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+.ul-btn.danger:hover { background: var(--accent-red); color: white; }
+
+.users-list-scroll {
+    flex: 1;
+    overflow-y: auto;
+}
 
 .ll-time { color: #555; min-width: 60px; }
 .ll-level { font-weight: 700; min-width: 50px; text-transform: uppercase; }

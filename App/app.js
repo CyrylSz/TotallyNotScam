@@ -1842,28 +1842,95 @@ function renderAdminHeatmap() {
         grid.appendChild(div);
     }
 }
+let adminUsersDB = [];
+let adminUsersPage = 1;
+const adminUsersPerPage = 15;
+
+function initAdminUsers() {
+    if(adminUsersDB.length > 0) return;
+
+    const ranks = ["Bankrupt", "Small Fry", "Risk Taker", "Table Shark", "Casino Legend", "Alpha Whale", "RNG God"];
+    const statuses = ["Online", "Offline", "Offline", "Banned", "Suspicious"];
+    const prefixes = ["Crypto", "Super", "Mega", "Iron", "Lazy", "Lucky", "Sad", "Rich", "Poor", "Bot"];
+    const suffixes = ["Gamer", "Winner", "Loser", "Whale", "King", "Dog", "Cat", "Master", "Noob", "Pro"];
+
+    // Dodanie statycznych ważnych graczy
+    adminUsersDB.push({ id: 1, name: "Admin", rank: "King of The Gamblers", balance: 999999999, lastActive: "Now", status: "Online" });
+    adminUsersDB.push({ id: 994, name: "Whale_Killer", rank: "RNG God", balance: 12500000, lastActive: "2 min temu", status: "Online" });
+    adminUsersDB.push({ id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", balance: 0, lastActive: "5 dni temu", status: "Banned" });
+
+    // Generowanie 150 randomów
+    for(let i=0; i<150; i++) {
+        const id = 1000 + i;
+        const name = prefixes[Math.floor(Math.random()*prefixes.length)] + "_" + suffixes[Math.floor(Math.random()*suffixes.length)] + "_" + Math.floor(Math.random()*99);
+        const rank = ranks[Math.floor(Math.random() * ranks.length)];
+        const balance = Math.floor(Math.random() * 500000);
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+        const lastActive = status === 'Online' ? "Now" : Math.floor(Math.random() * 24) + "h temu";
+
+        adminUsersDB.push({ id, name, rank, balance, lastActive, status });
+    }
+}
+
 function renderUsersView() {
+    initAdminUsers();
+    
     const container = document.getElementById('usersContainer');
+    if(!container) return;
     container.innerHTML = '';
-    const users = [
-        { id: 994, name: "Whale_Killer", rank: "Alpha Whale", status: "Online" },
-        { id: 120, name: "Bot_Network_01", rank: "Small Fry", status: "Scripting" },
-        { id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", status: "Offline" },
-        { id: 1, name: "Admin", rank: "King", status: "Hidden" }
-    ];
-    users.forEach(u => {
+
+    const filterStatus = document.getElementById('userFilterStatus').value;
+    const searchVal = document.getElementById('userSearchInput').value.toLowerCase();
+
+    // Filtrowanie
+    let filtered = adminUsersDB.filter(u => {
+        if(filterStatus !== 'all' && u.status !== filterStatus) return false;
+        if(searchVal && !u.name.toLowerCase().includes(searchVal) && !u.id.toString().includes(searchVal)) return false;
+        return true;
+    });
+
+    // Paginacja
+    const totalPages = Math.ceil(filtered.length / adminUsersPerPage) || 1;
+    if(adminUsersPage < 1) adminUsersPage = 1;
+    if(adminUsersPage > totalPages) adminUsersPage = totalPages;
+
+    const start = (adminUsersPage - 1) * adminUsersPerPage;
+    const pageItems = filtered.slice(start, start + adminUsersPerPage);
+
+    pageItems.forEach(u => {
         const div = document.createElement('div');
-        div.className = 'lb-row';
-        div.style.gridTemplateColumns = "50px 1fr 150px 100px";
-        let statusColor = u.status === 'Online' ? 'var(--accent-green)' : '#666';
+        div.className = 'ul-row';
+        
+        let badgeClass = 'ul-b-offline';
+        if(u.status === 'Online') badgeClass = 'ul-b-online';
+        if(u.status === 'Banned') badgeClass = 'ul-b-banned';
+        if(u.status === 'Suspicious') badgeClass = 'ul-b-suspicious';
+
+        let rankColor = '#aaa';
+        if(u.rank.includes('Whale') || u.rank.includes('God')) rankColor = 'var(--accent-purple)';
+        if(u.rank.includes('Bankrupt')) rankColor = 'var(--text-muted)';
+
         div.innerHTML = `
-            <div style="color:#666;">#${u.id}</div>
-            <div class="lb-name">${u.name}</div>
-            <div style="font-size:11px; color:var(--accent-blue);">${u.rank}</div>
-            <div style="font-size:10px; color:${statusColor};">● ${u.status}</div>
+            <div style="font-family:monospace; color:#666;">#${u.id}</div>
+            <div style="font-weight:600; color:white;">${u.name}</div>
+            <div style="color:${rankColor};">${u.rank}</div>
+            <div style="font-family:monospace; color:${u.balance > 100000 ? 'var(--accent-green)' : '#ddd'};">${u.balance.toLocaleString()} $</div>
+            <div style="color:#888;">${u.lastActive}</div>
+            <div><span class="ul-badge ${badgeClass}">${u.status}</span></div>
+            <div class="ul-actions">
+                <button class="ul-btn" title="Edytuj"><i class="fas fa-edit"></i></button>
+                <button class="ul-btn danger" title="Zbanuj" onclick="alert('Zbanowano użytkownika ${u.name}')"><i class="fas fa-ban"></i></button>
+            </div>
         `;
         container.appendChild(div);
     });
+
+    document.getElementById('userPageIndicator').textContent = `Strona ${adminUsersPage} z ${totalPages}`;
+}
+
+function changeUserPage(delta) {
+    adminUsersPage += delta;
+    renderUsersView();
 }
 
 function renderLogsView() {

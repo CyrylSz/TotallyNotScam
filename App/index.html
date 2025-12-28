@@ -793,13 +793,41 @@
         </div>
 
         <div class="view-container" id="viewUsers">
-            <div class="card">
-                <div class="card-header"><div class="card-title">Baza Użytkowników</div></div>
-                <div class="leaderboard-header" style="grid-template-columns: 50px 1fr 150px 100px;">
-                    <span>ID</span><span>Użytkownik</span><span>Ranga</span><span>Status</span>
-                </div>
-                <div class="list-container" id="usersContainer">
+            <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                <div class="card-header" style="justify-content: space-between;">
+                    <div class="card-title"><i class="fas fa-users-cog"></i> Baza Użytkowników</div>
+                    <div class="user-list-toolbar">
+                        <select id="userFilterStatus" onchange="renderUsersView()" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px; border-radius: 6px; font-size: 11px; outline: none;">
+                            <option value="all">Wszyscy</option>
+                            <option value="Online">Online</option>
+                            <option value="Offline">Offline</option>
+                            <option value="Banned">Zbanowani</option>
+                            <option value="Suspicious">Podejrzani</option>
+                        </select>
+                        <div class="input-group small" style="margin-bottom: 0; width: 200px;">
+                            <input type="text" id="userSearchInput" placeholder="Szukaj ID / Nazwa..." onkeyup="renderUsersView()" style="border-radius: 6px;">
+                        </div>
                     </div>
+                </div>
+                
+                <div class="ul-grid-header">
+                    <span>ID</span>
+                    <span>UŻYTKOWNIK</span>
+                    <span>RANGA</span>
+                    <span>SALDO</span>
+                    <span>AKTYWNOŚĆ</span>
+                    <span>STATUS</span>
+                    <span style="text-align: right;">AKCJE</span>
+                </div>
+
+                <div class="list-container users-list-scroll" id="usersContainer">
+                    </div>
+
+                <div class="market-pagination">
+                    <button onclick="changeUserPage(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <span id="userPageIndicator">Strona 1 z 1</span>
+                    <button onclick="changeUserPage(1)"><i class="fas fa-chevron-right"></i></button>
+                </div>
             </div>
         </div>
 
