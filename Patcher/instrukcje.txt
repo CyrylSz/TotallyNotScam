@@ -1,66 +1,183 @@
 KROK 1:
-PLIK: "app.js"
+PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-function initGamesBg() {
-    const container = document.getElementById('gamesBgAnim');
-    if(!container || container.children.length > 0) return;
+                <div class="admin-panels-wrapper">
+                    
+                    <div class="ap-card ap-critical">
+                        <div class="ap-header" style="color: var(--accent-red);">
+                            <i class="fas fa-exclamation-triangle"></i> Akcje Krytyczne
+                        </div>
+                        <div class="ap-row">
+                            <span>Maintenance Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('maintenance')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Zablokuj Wypłaty (Global)</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('block_withdrawals')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row" style="margin-top: 10px;">
+                            <button class="ap-btn ap-btn-red full-width" onclick="adminLogoutAll()">
+                                <i class="fas fa-power-off"></i> WYLOGUJ WSZYSTKIE SESJE
+                            </button>
+                        </div>
+                    </div>
 
-    const colors = ['#ef4444', '#3b82f6', '#10b981', '#000'];
-    // Znacznie mniejsza ilość (mniejsza gęstość)
-    const count = 12;
+                    <div class="ap-card ap-finance">
+                        <div class="ap-header" style="color: var(--accent-green);">
+                            <i class="fas fa-money-bill-wave"></i> Szybkie Finanse
+                        </div>
+                        
+                        <div style="font-size:10px; color:#666; margin-bottom:-5px;">PENDING (małe kwoty)</div>
+                        <div class="finance-list">
+                            <div class="fin-item">
+                                <div>
+                                    <div style="font-weight:700;">User_22</div>
+                                    <div style="font-size:9px; color:#888;">250 PLN (BLIK)</div>
+                                </div>
+                                <div style="display:flex; gap:5px;">
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px;" onclick="alert('Zatwierdzono')"><i class="fas fa-check"></i></button>
+                                    <select class="ap-select" onchange="if(this.value) alert('Odrzucono: '+this.value)">
+                                        <option value="">Odrzuć...</option>
+                                        <option value="Brak obrotu">Brak obrotu</option>
+                                        <option value="Multi-konto">Multi-konto</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-    for(let i=0; i<count; i++) {
-        const el = document.createElement('div');
-        el.className = 'falling-item chip-visual';
-        
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        el.style.backgroundColor = color;
-        
-        const x = Math.random() * 100;
-        // Dłuższy czas spadania = spokojniejsza animacja
-        const duration = Math.random() * 20 + 15; 
-        const delay = Math.random() * 20;
+                        <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+                            <span>Bramka BLIK</span>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="toggleAdminAction('gate_blik')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Bramka Crypto</span>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="toggleAdminAction('gate_crypto')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
 
-        el.style.left = `${x}%`;
-        el.style.animationDuration = `${duration}s`;
-        el.style.animationDelay = `-${delay}s`;
+                    <div class="ap-card ap-comm">
+                        <div class="ap-header" style="color: var(--accent-purple);">
+                            <i class="fas fa-bullhorn"></i> Komunikacja
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+                            <div style="font-size:10px; color:#aaa;">Global Push / Toast</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. Turniej za 5 min!">
+                                <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-top:5px;">
+                            <div style="font-size:10px; color:#aaa;">Edycja Tickera (Pasek Live)</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="tickerMsgInput" placeholder="Nowa wiadomość...">
+                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i class="fas fa-edit"></i></button>
+                            </div>
+                        </div>
+                    </div>
 
-        container.appendChild(el);
-    }
-}
+                    <div class="ap-card ap-god">
 TREŚĆ:
-function initGamesBg() {
-    const container = document.getElementById('gamesBgAnim');
-    if(!container || container.children.length > 0) return;
+                <div class="admin-panels-wrapper">
+                    
+                    <div class="ap-card ap-comm">
+                        <div class="ap-header" style="color: var(--accent-purple);">
+                            <i class="fas fa-bullhorn"></i> Komunikacja
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+                            <div style="font-size:10px; color:#aaa;">Global AI Chatbot Roast</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. 'Łał, masz niższe IQ niż temp mojego CPU'">
+                                <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-top:5px;">
+                            <div style="font-size:10px; color:#aaa;">Edycja Paska Live</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="tickerMsgInput" placeholder="Nowa wiadomość...">
+                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i class="fas fa-edit"></i></button>
+                            </div>
+                            <label class="ms-check-row" style="padding: 0;">
+                                <input type="checkbox"> 
+                                <span style="font-size:10px;">Zapętl</span>
+                            </label>
+                        </div>
+                    </div>
 
-    const colors = ['#ef4444', '#3b82f6', '#10b981', '#000'];
-    // Znacznie mniejsza ilość (mniejsza gęstość)
-    const count = 12;
+                    <div class="ap-card ap-finance">
+                        <div class="ap-header" style="color: var(--accent-green);">
+                            <i class="fas fa-money-bill-wave"></i> Szybkie Finanse
+                        </div>
+                        
+                        <div style="font-size:10px; color:#666; margin-bottom:-5px;">PENDING (małe kwoty)</div>
+                        <div class="finance-list">
+                            <div class="fin-item">
+                                <div>
+                                    <div style="font-weight:700;">User_22</div>
+                                    <div style="font-size:9px; color:#888;">250 PLN (BLIK)</div>
+                                </div>
+                                <div style="display:flex; gap:5px;">
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px;" onclick="alert('Zatwierdzono')"><i class="fas fa-check"></i></button>
+                                    <select class="ap-select" onchange="if(this.value) alert('Odrzucono: '+this.value)">
+                                        <option value="">Odrzuć...</option>
+                                        <option value="Brak obrotu">Brak obrotu</option>
+                                        <option value="Multi-konto">Multi-konto</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
 
-    for(let i=0; i<count; i++) {
-        const el = document.createElement('div');
-        el.className = 'falling-item chip-visual';
-        
-        const color = colors[Math.floor(Math.random() * colors.length)];
-        el.style.backgroundColor = color;
-        
-        // Logika: tylko po bokach (0-15% lub 85-100%), aby nie zasłaniać paneli
-        let x;
-        if (Math.random() > 0.5) {
-            x = Math.random() * 15; // Lewa strona
-        } else {
-            x = 85 + Math.random() * 15; // Prawa strona
-        }
+                        <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+                            <span>Bramka BLIK</span>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="toggleAdminAction('gate_blik')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Bramka Crypto</span>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="toggleAdminAction('gate_crypto')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
 
-        // Dłuższy czas spadania = spokojniejsza animacja
-        const duration = Math.random() * 20 + 15; 
-        const delay = Math.random() * 20;
+                    <div class="ap-card ap-critical">
+                        <div class="ap-header" style="color: var(--accent-red);">
+                            <i class="fas fa-exclamation-triangle"></i> Akcje Krytyczne
+                        </div>
+                        <div class="ap-row">
+                            <span>Maintenance Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('maintenance')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Zablokuj Wypłaty (Global)</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('block_withdrawals')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row" style="margin-top: 10px;">
+                            <button class="ap-btn ap-btn-red full-width" onclick="adminLogoutAll()">
+                                <i class="fas fa-power-off"></i> WYLOGUJ WSZYSTKIE SESJE
+                            </button>
+                        </div>
+                    </div>
 
-        el.style.left = `${x}%`;
-        el.style.animationDuration = `${duration}s`;
-        el.style.animationDelay = `-${delay}s`;
-
-        container.appendChild(el);
-    }
-}
+                    <div class="ap-card ap-god">
