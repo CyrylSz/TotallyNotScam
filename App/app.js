@@ -1986,29 +1986,83 @@ function copyCrypto() {
     }, 2000);
 }
 
+let heatmapState = { players: true, admins: true };
+
 function renderAdminHeatmap() {
     const grid = document.getElementById('adminHeatmapGrid');
-    if(!grid || grid.children.length > 0) return;
+    if(!grid) return; // Allow re-render
+    grid.innerHTML = '';
 
-    
     const totalCells = 53 * 7;
     
     for(let i = 0; i < totalCells; i++) {
         const div = document.createElement('div');
+        
+        // Randomize type: 90% Player, 10% Admin logic
+        // But only applies if there is activity
         const rand = Math.random();
-        let level = 'l0';
-        
-        
-        if (rand > 0.75) level = 'l1';
-        if (rand > 0.88) level = 'l2';
-        if (rand > 0.95) level = 'l3';
-        if (rand > 0.98) level = 'l4';
+        let type = 'player';
+        if(Math.random() > 0.9) type = 'admin';
 
-        div.className = `gh-cell ${level}`;
-        div.title = `Aktywność: ${level.toUpperCase()}`;
+        let level = '0';
+        let cellClass = 'l0'; // default empty
+
+        // Generate activity
+        if (rand > 0.70) {
+            if (rand > 0.75) level = '1';
+            if (rand > 0.88) level = '2';
+            if (rand > 0.95) level = '3';
+            if (rand > 0.98) level = '4';
+            
+            if(type === 'admin') cellClass = `al${level}`;
+            else cellClass = `l${level}`;
+        } else {
+            type = 'none'; // No activity
+        }
+
+        div.className = `gh-cell ${cellClass}`;
+        div.dataset.type = type;
+        
+        // Apply initial visibility state
+        if(type === 'player' && !heatmapState.players) div.style.opacity = '0.1';
+        if(type === 'admin' && !heatmapState.admins) div.style.opacity = '0.1';
+
+        div.title = type !== 'none' ? `Aktywność: ${type.toUpperCase()} (Lvl ${level})` : 'Brak aktywności';
         grid.appendChild(div);
     }
+    updateHeatmapLegend();
 }
+
+function toggleHeatmapSource(source) {
+    heatmapState[source] = !heatmapState[source];
+    
+    // Update buttons visual state
+    const btn = document.getElementById(source === 'players' ? 'btnHmPlayers' : 'btnHmAdmins');
+    if(btn) btn.classList.toggle('active', heatmapState[source]);
+
+    // Update grid cells visibility
+    const cells = document.querySelectorAll('.gh-cell');
+    cells.forEach(cell => {
+        const type = cell.dataset.type;
+        if(type === 'none') return; // Ignore empty cells
+
+        if(type === 'player') {
+            cell.style.opacity = heatmapState.players ? '1' : '0.1';
+        } else if(type === 'admin') {
+            cell.style.opacity = heatmapState.admins ? '1' : '0.1';
+        }
+    });
+
+    updateHeatmapLegend();
+}
+
+function updateHeatmapLegend() {
+    const legP = document.getElementById('legendPlayers');
+    const legA = document.getElementById('legendAdmins');
+    if(legP) legP.style.display = heatmapState.players ? 'flex' : 'none';
+    if(legA) legA.style.display = heatmapState.admins ? 'flex' : 'none';
+}
+
 let adminUsersDB = [];
 let adminUsersPage = 1;
 const adminUsersPerPage = 15;

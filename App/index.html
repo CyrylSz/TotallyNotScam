@@ -1058,24 +1058,47 @@
                 </div>
 
                 <div class="ap-card ap-map" style="grid-column: 1 / -1; max-width: 850px; margin: 0 auto; width: 100%;">
-                    <div class="ap-header" style="justify-content: space-between; color: #3b82f6;">
-                        <span><i class="fas fa-calendar-alt"></i> Mapa Aktywności Graczy</span>
-                        <span style="font-size:10px; color:#666; font-weight:400; text-transform:none; letter-spacing:0;">Ostatni Rok</span>
+                    <div class="ap-header" style="justify-content: space-between; align-items: center; color: #3b82f6;">
+                        <div style="display: flex; align-items: center; gap: 15px;">
+                            <span><i class="fas fa-calendar-alt"></i> Mapa Aktywności</span>
+                            <div style="display: flex; gap: 5px;">
+                                <button id="btnHmPlayers" class="hm-toggle blue active" onclick="toggleHeatmapSource('players')">Graczy</button>
+                                <button id="btnHmAdmins" class="hm-toggle red active" onclick="toggleHeatmapSource('admins')">Adminów</button>
+                            </div>
+                        </div>
+
+                        <div style="display: flex; gap: 15px; align-items: center;">
+                            <div id="legendPlayers" style="display: flex; justify-content: center; align-items: center; gap: 3px;">
+                                <span style="font-size:9px; color:#666; margin-right: 3px;">Less</span>
+                                <div class="gh-cell l0"></div>
+                                <div class="gh-cell l1"></div>
+                                <div class="gh-cell l2"></div>
+                                <div class="gh-cell l3"></div>
+                                <div class="gh-cell l4"></div>
+                                <span style="font-size:9px; color:#666; margin-left: 3px;">More</span>
+                            </div>
+                            <div id="legendAdmins" style="display: flex; justify-content: center; align-items: center; gap: 3px;">
+                                <span style="font-size:9px; color:#666; margin-right: 3px;">Less</span>
+                                <div class="gh-cell l0"></div>
+                                <div class="gh-cell al1"></div>
+                                <div class="gh-cell al2"></div>
+                                <div class="gh-cell al3"></div>
+                                <div class="gh-cell al4"></div>
+                                <span style="font-size:9px; color:#666; margin-left: 3px;">More</span>
+                            </div>
+                        </div>
                     </div>
                     
-                    <div style="overflow-x: auto; padding: 10px 0; display: flex; justify-content: center;">
-                        <div class="gh-grid-container" id="adminHeatmapGrid">
-                            </div>
-                    </div>
-
-                    <div class="gh-legend-row">
-                        <span style="font-size:10px; color:#666; margin-right: 5px;">Mniej</span>
-                        <div class="gh-cell l0"></div>
-                        <div class="gh-cell l1"></div>
-                        <div class="gh-cell l2"></div>
-                        <div class="gh-cell l3"></div>
-                        <div class="gh-cell l4"></div>
-                        <span style="font-size:10px; color:#666; margin-left: 5px;">Więcej</span>
+                    <div style="display: flex; align-items: center; justify-content: center; padding: 10px 0;">
+                        <div style="overflow-x: auto;">
+                            <div class="gh-grid-container" id="adminHeatmapGrid"></div>
+                        </div>
+                        
+                        <div class="hm-years-col">
+                            <button class="hm-year-btn active">2025</button>
+                            <button class="hm-year-btn">2024</button>
+                            <button class="hm-year-btn">2023</button>
+                        </div>
                     </div>
                 </div>
             </div>
