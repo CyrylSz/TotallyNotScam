@@ -1065,6 +1065,86 @@ input:checked + .slider:before { transform: translateX(16px); }
     margin: 0 10%;
     align-items: start; /* TO NAPRAWIA ROZCIĄGANIE LEADERBOARDA */
 }
+/* --- NEW RANK & STREAK LAYOUT --- */
+
+.rank-stats-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 20px;
+    margin: 0 5%;
+    margin-bottom: 25px;
+}
+
+.rs-card {
+    background: linear-gradient(90deg, #1e2538 0%, #151a2d 100%);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 20px 25px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+}
+
+.rs-card.rank-block {
+    flex: 1;
+    max-width: 800px;
+    justify-content: space-between;
+}
+
+.rs-card.streak-block {
+    flex: 0 0 auto;
+    min-width: 200px;
+    justify-content: center;
+    gap: 15px;
+    background: linear-gradient(135deg, #1e2030 0%, #151a2d 100%);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.ws-visual {
+    width: 48px;
+    height: 48px;
+    background: rgba(239, 68, 68, 0.1);
+    border: 1px solid rgba(239, 68, 68, 0.25);
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 22px;
+    color: var(--accent-red);
+    box-shadow: 0 0 20px rgba(239, 68, 68, 0.15);
+}
+
+.ws-data {
+    display: flex;
+    flex-direction: column;
+}
+
+.ws-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.ws-val {
+    font-size: 26px;
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+}
+
+.ws-highest {
+    font-size: 9px;
+    color: #666;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
 
 /* Dodaj to do CSS */
 .rob-menu-btn {
@@ -3329,4 +3409,68 @@ input:checked + .slider:before { transform: translateX(16px); }
     background: rgba(255,255,255,0.05);
     color: #ccc;
     font-weight: 500;
+}
+.rank-stats-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 15px;
+    margin: 0 12%;
+    margin-bottom: 25px;
+}
+
+.rs-card {
+    background: linear-gradient(90deg, #1e2538 0%, #151a2d 100%);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 15px 20px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+}
+
+.rs-card.rank-block {
+    flex: 1;
+    max-width: 600px;
+    justify-content: space-between;
+}
+
+.rs-card.streak-block {
+    flex: 0 0 auto;
+    min-width: 130px;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e2030 0%, #151a2d 100%);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.ws-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ws-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.ws-val {
+    font-size: 26px;
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+}
+
+.ws-highest {
+    font-size: 9px;
+    color: #666;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }

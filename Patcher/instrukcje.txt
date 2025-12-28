@@ -1,106 +1,13 @@
 KROK 1:
-PLIK: "style.css"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-.games-hub-grid {
-    display: grid;
-    /* ZMIANA: Było 1fr 320px. Teraz dajemy 1.5fr na gry i 1fr na ranking */
-    grid-template-columns: 1fr 0.6fr; 
-    gap: 25px;
-    height: 100%;
-    margin: 0 10%;
-}
-TREŚĆ:
-.games-hub-grid {
-    display: grid;
-    grid-template-columns: 1fr 0.6fr; 
-    gap: 25px;
-    height: 100%;
-    margin: 0 10%;
-    align-items: start; /* TO NAPRAWIA ROZCIĄGANIE LEADERBOARDA */
-}
-
-KROK 2:
-PLIK: "style.css"
-OPERACJA: [WSTAW_PO]
-SZUKAJ:
-    align-items: start; /* TO NAPRAWIA ROZCIĄGANIE LEADERBOARDA */
-}
-TREŚĆ:
-
-/* Dodaj to do CSS */
-.rob-menu-btn {
-    position: absolute;
-    top: 15px;
-    right: 15px;
-    color: var(--text-muted);
-    cursor: pointer;
-    padding: 5px;
-    transition: 0.2s;
-    font-size: 14px;
-}
-.rob-menu-btn:hover { color: white; transform: scale(1.1); }
-
-.stat-group-vertical {
-    display: flex;
-    flex-direction: column;
-    align-items: flex-end;
-    gap: 2px;
-}
-.stat-highlight-val {
-    font-size: 18px;
-    font-weight: 800;
-    color: var(--accent-green);
-    text-shadow: 0 0 10px rgba(16, 185, 129, 0.3);
-}
-.stat-sub-val {
-    font-size: 10px;
-    color: #94a3b8;
-    text-transform: uppercase;
-    letter-spacing: 0.5px;
-}
-
-KROK 3:
 PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-            <div class="rank-overview-banner">
-                <div class="rob-left">
-                    <div class="rob-icon"><i class="fas fa-whale"></i></div> <div class="rob-info">
-                        <div class="rob-label">Twoja Ranga</div>
-                        <div class="rob-title">Alpha Whale</div>
-                        <div class="rob-sub">#25 na świecie (LP)</div>
-                    </div>
-                </div>
-                
-                <div class="rob-center">
-                    <div class="rob-progress-labels">
-                        <span>Obecne LP: <b style="color:var(--accent-blue);">1,469</b></span>
-                        <span>Następna ranga: <b>2,000 LP</b></span>
-                    </div>
-                    <div class="rob-progress-bar">
-                        <div class="rob-progress-fill" style="width: 72.5%;"></div> </div>
-                    <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-red);">531 LP</span> do próby awansu na <b>RNG God</b></div>
-                </div>
-
-                <div class="rob-right">
-                    <div class="stat-mini">
-                        <div class="sm-val">58%</div>
-                        <div class="sm-lbl">Win Rate</div>
-                    </div>
-                    <div class="stat-mini">
-                        <div class="sm-val text-green">+12.5%</div>
-                        <div class="sm-lbl">Net Worth 24h</div>
-                    </div>
-                </div>
-            </div>
-TREŚĆ:
             <div class="rank-overview-banner" style="position: relative;">
-                <!-- KROK 3: Ikonka Menu (3 kropki) otwierająca modal rangi -->
+                
                 <i class="fas fa-ellipsis-h rob-menu-btn" onclick="openRankModal()"></i>
 
                 <div class="rob-left">
-                    <!-- KROK 1: Ikonka Wieloryba (Emoji) zamiast FontAwesome -->
+                    
                     <div class="rob-icon" style="background: transparent; border: none; font-size: 42px; width: auto; height: auto;">
                         🐋
                     </div> 
@@ -123,7 +30,7 @@ TREŚĆ:
                 </div>
 
                 <div class="rob-right">
-                    <!-- KROK 2: Winstreak i Highest w ładnym formacie -->
+                    
                     <div class="stat-group-vertical">
                         <div class="stat-highlight-val">2 <span style="font-size:12px; color:#fff;">🔥</span></div>
                         <div class="stat-sub-val">Winstreak</div>
@@ -135,222 +42,109 @@ TREŚĆ:
                     </div>
                 </div>
             </div>
-
-KROK 4:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-                <div class="leaderboard-column">
-                    <div class="card" style="height: 100%;">
-                        <div class="card-header">
-                            <div class="card-title"><i class="fas fa-trophy" style="color:gold; margin-right:8px;"></i> Top Gamblers</div>
+TREŚĆ:
+            <div class="rank-stats-wrapper">
+                <div class="rs-card rank-block">
+                    <i class="fas fa-ellipsis-h rob-menu-btn" onclick="openRankModal()"></i>
+                    <div class="rob-left">
+                        <div class="rob-icon" style="background: transparent; border: none; font-size: 42px; width: auto; height: auto;">
+                            🐋
+                        </div> 
+                        <div class="rob-info">
+                            <div class="rob-label">Twoja Ranga</div>
+                            <div class="rob-title">Alpha Whale</div>
+                            <div class="rob-sub">#25 na świecie (LP)</div>
                         </div>
-                        <div class="leaderboard-header">
-                            <span>#</span>
-                            <span>Gracz</span>
-                            <span style="text-align:right;">LP / Net Worth</span>
+                    </div>
+                    <div class="rob-center" style="margin: 0 20px;">
+                        <div class="rob-progress-labels">
+                            <span>Obecne LP: <b style="color:var(--accent-blue);">1,469</b></span>
+                            <span>Następna ranga: <b>2,000 LP</b></span>
                         </div>
-                        <div class="leaderboard-list" id="globalLeaderboardList">
-                            </div>
-                        <button class="load-more-btn" style="margin-top:15px;">Pokaż moją pozycję</button>
+                        <div class="rob-progress-bar">
+                            <div class="rob-progress-fill" style="width: 72.5%;"></div> 
+                        </div>
+                        <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-red);">531 LP</span> do próby awansu na <b>RNG God</b></div>
                     </div>
                 </div>
-TREŚĆ:
-                <div class="leaderboard-column">
-                    <!-- Height: fit-content naprawia niezależność wertykalną (Task 9) -->
-                    <div class="card" style="height: fit-content; max-height: 80vh; display: flex; flex-direction: column;">
-                        <div class="card-header" style="justify-content: space-between; padding-right: 0;">
-                            <!-- Task 4: Zmiana nazwy -->
-                            <div class="card-title"><i class="fas fa-trophy" style="color:gold; margin-right:8px;"></i> Leaderboard</div>
-                            <!-- Task 6: Ikonka Lejka -->
-                            <i class="fas fa-filter filter-icon-abs" style="position: static;" title="Filtruj"></i>
-                        </div>
-                        
-                        <div class="leaderboard-header">
-                            <span>#</span>
-                            <span>Gracz</span>
-                            <span style="text-align:right;">Net Worth</span>
-                        </div>
-                        
-                        <!-- Task 5: Fix renderowania (id="globalLeaderboardList") -->
-                        <div class="leaderboard-list" id="globalLeaderboardList" style="overflow-y: auto; max-height: 400px; padding-right: 5px;">
-                            <!-- JS wypełni to danymi -->
-                        </div>
-
-                        <!-- Task 8: Działający przycisk -->
-                        <button class="load-more-btn" style="margin-top:15px;" onclick="scrollToMyPosition()">Pokaż moją pozycję</button>
+                <div class="rs-card streak-block">
+                    <div class="ws-data">
+                        <div class="ws-label">WIN STREAK</div>
+                        <div class="ws-val">2 <i class="fas fa-fire" style="font-size:14px; color:#ef4444; margin-left:4px;"></i></div>
+                        <div class="ws-highest">Highest: <span style="color:rgba(239, 68, 68, 0.4); font-size:11px; font-weight:700;">11</span></div>
                     </div>
                 </div>
-
-KROK 5:
-PLIK: "data.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-const globalLeaderboardDB = [
-    { rankVal: 8, rankName: "King of The Gamblers", name: "Not_Elon", lp: 9500, netWorth: 154000000 },
-    { rankVal: 7, rankName: "RNG God", name: "LuckyLuke", lp: 4200, netWorth: 25000000 },
-    { rankVal: 7, rankName: "RNG God", name: "Casino_AI", lp: 3800, netWorth: 18500000 },
-    { rankVal: 6, rankName: "Alpha Whale", name: "DiamondH", lp: 1950, netWorth: 8500000 },
-    { rankVal: 6, rankName: "Alpha Whale", name: "CryptoBro", lp: 1200, netWorth: 5200000 },
-    { rankVal: 5, rankName: "Casino Legend", name: "ZeroCool", lp: 980, netWorth: 2100000 },
-    { rankVal: 5, rankName: "Casino Legend", name: "MatrixNeo", lp: 850, netWorth: 1500000 },
-    { rankVal: 4, rankName: "Table Shark", name: "BluffMaster", lp: 550, netWorth: 800000 },
-    { rankVal: 4, rankName: "Table Shark", name: "CardCounter", lp: 420, netWorth: 450000 },
-    { rankVal: 3, rankName: "Risk Taker", name: "YOLO_Trader", lp: 250, netWorth: 150000 },
-];
-TREŚĆ:
-const globalLeaderboardDB = [
-    { rankVal: 8, rankName: "King of The Gamblers", name: "Not_Elon", lp: 9500, netWorth: 154000000 },
-    { rankVal: 7, rankName: "RNG God", name: "LuckyLuke", lp: 4200, netWorth: 25000000 },
-    { rankVal: 7, rankName: "RNG God", name: "Casino_AI", lp: 3800, netWorth: 18500000 },
-    { rankVal: 6, rankName: "Alpha Whale", name: "DiamondH", lp: 1950, netWorth: 8500000 },
-    // Dodajemy Ciebie (MrGambler) tutaj:
-    { rankVal: 6, rankName: "Alpha Whale", name: "MrGambler", lp: 1469, netWorth: 5240000, isMe: true }, 
-    { rankVal: 6, rankName: "Alpha Whale", name: "CryptoBro", lp: 1200, netWorth: 5200000 },
-    { rankVal: 5, rankName: "Casino Legend", name: "ZeroCool", lp: 980, netWorth: 2100000 },
-    { rankVal: 5, rankName: "Casino Legend", name: "MatrixNeo", lp: 850, netWorth: 1500000 },
-    { rankVal: 4, rankName: "Table Shark", name: "BluffMaster", lp: 550, netWorth: 800000 },
-    { rankVal: 4, rankName: "Table Shark", name: "CardCounter", lp: 420, netWorth: 450000 },
-    { rankVal: 3, rankName: "Risk Taker", name: "YOLO_Trader", lp: 250, netWorth: 150000 },
-];
-
-KROK 6:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-function renderGlobalLeaderboard() {
-    const list = document.getElementById('globalLeaderboardList');
-    list.innerHTML = '';
-
-    const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => {
-        if (b.rankVal !== a.rankVal) return b.rankVal - a.rankVal;
-        return b.netWorth - a.netWorth;
-    });
-
-    sortedPlayers.forEach((p, index) => {
-        const div = document.createElement('div');
-        div.className = 'lb-row';
-        const rankNum = index + 1;
-        
-        let rankClass = '';
-        if (rankNum === 1) rankClass = 'top1';
-        else if (rankNum === 2) rankClass = 'top2';
-        else if (rankNum === 3) rankClass = 'top3';
-
-        // ZMIANA: Znajdź dane o randze w ranksDB (ikonę i kolor)
-        const rankData = ranksDB.find(r => r.id === p.rankVal);
-        const rankIconHtml = rankData 
-            ? `<i class="fas ${rankData.icon}" style="color:${rankData.color}; margin-right:4px;"></i>` 
-            : '';
-
-        let nwDisplay = p.netWorth >= 1000000 
-            ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
-            : (p.netWorth / 1000).toFixed(0) + 'k $';
-
-        div.innerHTML = `
-            <div class="lb-rank ${rankClass}">${rankNum}</div>
-            <div class="lb-user">
-                <div class="lb-name">
-                   ${p.name} 
-                </div>
-                <div style="font-size:10px; color:#8b92a5;">
-                    ${rankIconHtml} ${p.rankName}
-                </div>
             </div>
-            <div class="lb-stats">
-                <div class="lb-lp">${p.lp} LP</div>
-                <div class="lb-nw">${nwDisplay}</div>
-            </div>
-        `;
-        list.appendChild(div);
-    });
+
+KROK 2:
+PLIK: "style.css"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+    color: #ccc;
+    font-weight: 500;
 }
 TREŚĆ:
-// --- LEADERBOARD LOGIC FIX ---
-
-function renderGlobalLeaderboard() {
-    const list = document.getElementById('globalLeaderboardList');
-    if(!list) return;
-    list.innerHTML = '';
-
-    // Task 7: Sortowanie domyślnie po Net Worth malejąco (Najbogatsi na górze)
-    const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
-
-    sortedPlayers.forEach((p, index) => {
-        const div = document.createElement('div');
-        // Dodajemy ID dla wiersza gracza, aby móc do niego przewinąć
-        if (p.isMe) div.id = 'lb-my-row';
-        
-        // Task 5 Fix: Lepszy styling, highlight dla gracza
-        div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
-        
-        // Inline style dla wyróżnienia gracza (jeśli nie masz klasy w CSS)
-        if(p.isMe) {
-            div.style.background = "rgba(59, 130, 246, 0.2)";
-            div.style.border = "1px solid rgba(59, 130, 246, 0.4)";
-        }
-
-        const rankNum = index + 1;
-        
-        let rankClass = '';
-        let trophyIcon = '';
-        if (rankNum === 1) { rankClass = 'top1'; trophyIcon = '🥇'; }
-        else if (rankNum === 2) { rankClass = 'top2'; trophyIcon = '🥈'; }
-        else if (rankNum === 3) { rankClass = 'top3'; trophyIcon = '🥉'; }
-        else { trophyIcon = `<span style="color:#666">#</span>`; }
-
-        const rankData = ranksDB.find(r => r.id === p.rankVal);
-        // Jeśli nie ma ikony w DB, fallback do fa-user
-        const rIcon = rankData ? rankData.icon : 'fa-user';
-        const rColor = rankData ? rankData.color : '#888';
-
-        // Formatowanie kasy (M = miliony, k = tysiące)
-        let nwDisplay = p.netWorth >= 1000000 
-            ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
-            : (p.netWorth / 1000).toFixed(0) + 'k $';
-
-        div.innerHTML = `
-            <div class="lb-rank ${rankClass}" style="display:flex; justify-content:center; align-items:center;">
-                ${rankNum <= 3 ? trophyIcon : rankNum}
-            </div>
-            <div class="lb-user">
-                <div class="lb-name" style="${p.isMe ? 'color:var(--accent-blue); font-weight:800;' : ''}">
-                   ${p.name} ${p.isMe ? '(Ty)' : ''}
-                </div>
-                <div style="font-size:10px; color:#8b92a5; display:flex; align-items:center; gap:4px;">
-                    <i class="fas ${rIcon}" style="color:${rColor}; font-size:9px;"></i> ${p.rankName}
-                </div>
-            </div>
-            <div class="lb-stats" style="justify-content:center;">
-                <div class="lb-nw" style="font-size:12px; color:var(--accent-green); font-weight:700;">${nwDisplay}</div>
-            </div>
-        `;
-        list.appendChild(div);
-    });
+.rank-stats-wrapper {
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    gap: 15px;
+    margin: 0 12%;
+    margin-bottom: 25px;
 }
 
-// Task 8: Funkcja scrollowania do pozycji
-function scrollToMyPosition() {
-    const myRow = document.getElementById('lb-my-row');
-    const container = document.getElementById('globalLeaderboardList');
-    
-    if (myRow && container) {
-        // Obliczamy pozycję
-        const topPos = myRow.offsetTop - container.offsetTop;
-        
-        container.scrollTo({
-            top: topPos - 50, // -50px marginesu żeby było widać kontekst
-            behavior: 'smooth'
-        });
-        
-        // Efekt wizualny (mrugnięcie)
-        myRow.style.transition = "background 0.3s";
-        const oldBg = myRow.style.background;
-        myRow.style.background = "rgba(59, 130, 246, 0.6)";
-        setTimeout(() => {
-            myRow.style.background = oldBg;
-        }, 1000);
-    } else {
-        alert("Nie znaleziono Twojej pozycji w rankingu (możesz być poza TOP listą).");
-    }
+.rs-card {
+    background: linear-gradient(90deg, #1e2538 0%, #151a2d 100%);
+    border: 1px solid rgba(59, 130, 246, 0.3);
+    border-radius: 12px;
+    padding: 15px 20px;
+    position: relative;
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+    display: flex;
+    align-items: center;
+}
+
+.rs-card.rank-block {
+    flex: 1;
+    max-width: 600px;
+    justify-content: space-between;
+}
+
+.rs-card.streak-block {
+    flex: 0 0 auto;
+    min-width: 130px;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e2030 0%, #151a2d 100%);
+    border-color: rgba(239, 68, 68, 0.2);
+}
+
+.ws-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.ws-label {
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+    margin-bottom: 2px;
+}
+
+.ws-val {
+    font-size: 26px;
+    font-weight: 800;
+    color: white;
+    line-height: 1;
+    margin-bottom: 3px;
+    display: flex;
+    align-items: center;
+}
+
+.ws-highest {
+    font-size: 9px;
+    color: #666;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
