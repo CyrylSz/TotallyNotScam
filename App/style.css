@@ -833,6 +833,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .users-list-scroll {
     flex: 1;
     overflow-y: auto;
+    max-height: none; /* Nadpisuje limit 350px z klasy .list-container */
 }
 
 .ll-time { color: #555; min-width: 60px; }

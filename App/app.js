@@ -1855,7 +1855,7 @@ function initAdminUsers() {
     const suffixes = ["Gamer", "Winner", "Loser", "Whale", "King", "Dog", "Cat", "Master", "Noob", "Pro"];
 
     // Dodanie statycznych ważnych graczy
-    adminUsersDB.push({ id: 1, name: "Admin", rank: "King of The Gamblers", balance: 999999999, lastActive: "Now", status: "Online" });
+    adminUsersDB.push({ id: 1, name: "MrGambler", rank: "Alpha Whale", balance: 5240000, lastActive: "Now", status: "Online", isAdmin: true });
     adminUsersDB.push({ id: 994, name: "Whale_Killer", rank: "RNG God", balance: 12500000, lastActive: "2 min temu", status: "Online" });
     adminUsersDB.push({ id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", balance: 0, lastActive: "5 dni temu", status: "Banned" });
 
@@ -1910,9 +1910,12 @@ function renderUsersView() {
         if(u.rank.includes('Whale') || u.rank.includes('God')) rankColor = 'var(--accent-purple)';
         if(u.rank.includes('Bankrupt')) rankColor = 'var(--text-muted)';
 
+        let nameHtml = u.name;
+        if(u.isAdmin) nameHtml += ' <span style="background:var(--accent-purple); color:white; font-size:9px; padding:2px 5px; border-radius:3px; margin-left:5px;">ADMIN</span>';
+
         div.innerHTML = `
             <div style="font-family:monospace; color:#666;">#${u.id}</div>
-            <div style="font-weight:600; color:white;">${u.name}</div>
+            <div style="font-weight:600; color:white;">${nameHtml}</div>
             <div style="color:${rankColor};">${u.rank}</div>
             <div style="font-family:monospace; color:${u.balance > 100000 ? 'var(--accent-green)' : '#ddd'};">${u.balance.toLocaleString()} $</div>
             <div style="color:#888;">${u.lastActive}</div>

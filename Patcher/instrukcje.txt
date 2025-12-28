@@ -1,228 +1,19 @@
 KROK 1:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-        <div class="view-container" id="viewUsers">
-            <div class="card">
-                <div class="card-header"><div class="card-title">Baza Użytkowników</div></div>
-                <div class="leaderboard-header" style="grid-template-columns: 50px 1fr 150px 100px;">
-                    <span>ID</span><span>Użytkownik</span><span>Ranga</span><span>Status</span>
-                </div>
-                <div class="list-container" id="usersContainer">
-                    </div>
-            </div>
-        </div>
-TREŚĆ:
-        <div class="view-container" id="viewUsers">
-            <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column;">
-                <div class="card-header" style="justify-content: space-between;">
-                    <div class="card-title"><i class="fas fa-users-cog"></i> Baza Użytkowników</div>
-                    <div class="user-list-toolbar">
-                        <select id="userFilterStatus" onchange="renderUsersView()" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px; border-radius: 6px; font-size: 11px; outline: none;">
-                            <option value="all">Wszyscy</option>
-                            <option value="Online">Online</option>
-                            <option value="Offline">Offline</option>
-                            <option value="Banned">Zbanowani</option>
-                            <option value="Suspicious">Podejrzani</option>
-                        </select>
-                        <div class="input-group small" style="margin-bottom: 0; width: 200px;">
-                            <input type="text" id="userSearchInput" placeholder="Szukaj ID / Nazwa..." onkeyup="renderUsersView()" style="border-radius: 6px;">
-                        </div>
-                    </div>
-                </div>
-                
-                <div class="ul-grid-header">
-                    <span>ID</span>
-                    <span>UŻYTKOWNIK</span>
-                    <span>RANGA</span>
-                    <span>SALDO</span>
-                    <span>AKTYWNOŚĆ</span>
-                    <span>STATUS</span>
-                    <span style="text-align: right;">AKCJE</span>
-                </div>
-
-                <div class="list-container users-list-scroll" id="usersContainer">
-                    </div>
-
-                <div class="market-pagination">
-                    <button onclick="changeUserPage(-1)"><i class="fas fa-chevron-left"></i></button>
-                    <span id="userPageIndicator">Strona 1 z 1</span>
-                    <button onclick="changeUserPage(1)"><i class="fas fa-chevron-right"></i></button>
-                </div>
-            </div>
-        </div>
-
-KROK 2:
-PLIK: "style.css"
-OPERACJA: [WSTAW_PO]
-SZUKAJ:
-.log-line:hover {
-    background: rgba(255,255,255,0.05);
-    color: #fff;
-}
-TREŚĆ:
-/* --- ADMIN USERS LIST STYLES --- */
-.user-list-toolbar {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-}
-
-.ul-grid-header {
-    display: grid;
-    grid-template-columns: 50px 2fr 1fr 1fr 1fr 100px 120px;
-    padding: 10px 15px;
-    background: rgba(0,0,0,0.2);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
-    font-size: 10px;
-    color: var(--text-muted);
-    font-weight: 700;
-    letter-spacing: 1px;
-}
-
-.ul-row {
-    display: grid;
-    grid-template-columns: 50px 2fr 1fr 1fr 1fr 100px 120px;
-    padding: 10px 15px;
-    align-items: center;
-    border-bottom: 1px solid rgba(255,255,255,0.03);
-    font-size: 12px;
-    transition: 0.2s;
-}
-.ul-row:hover { background: rgba(255,255,255,0.03); }
-
-.ul-badge {
-    padding: 2px 8px;
-    border-radius: 4px;
-    font-size: 10px;
-    font-weight: 700;
-    text-transform: uppercase;
-    display: inline-block;
-    text-align: center;
-}
-.ul-b-online { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.2); }
-.ul-b-offline { background: rgba(255,255,255,0.05); color: #666; }
-.ul-b-banned { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.2); }
-.ul-b-suspicious { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); border: 1px solid rgba(245, 158, 11, 0.2); }
-
-.ul-actions {
-    display: flex;
-    justify-content: flex-end;
-    gap: 5px;
-}
-.ul-btn {
-    width: 24px;
-    height: 24px;
-    border-radius: 4px;
-    background: rgba(255,255,255,0.05);
-    color: var(--text-muted);
-    border: none;
-    cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    transition: 0.2s;
-}
-.ul-btn:hover { background: rgba(255,255,255,0.1); color: white; }
-.ul-btn.danger:hover { background: var(--accent-red); color: white; }
-
-.users-list-scroll {
-    flex: 1;
-    overflow-y: auto;
-}
-
-KROK 3:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-function renderUsersView() {
-    const container = document.getElementById('usersContainer');
-    container.innerHTML = '';
-    const users = [
-        { id: 994, name: "Whale_Killer", rank: "Alpha Whale", status: "Online" },
-        { id: 120, name: "Bot_Network_01", rank: "Small Fry", status: "Scripting" },
-        { id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", status: "Offline" },
-        { id: 1, name: "Admin", rank: "King", status: "Hidden" }
-    ];
-    users.forEach(u => {
-        const div = document.createElement('div');
-        div.className = 'lb-row';
-        div.style.gridTemplateColumns = "50px 1fr 150px 100px";
-        let statusColor = u.status === 'Online' ? 'var(--accent-green)' : '#666';
-        div.innerHTML = `
-            <div style="color:#666;">#${u.id}</div>
-            <div class="lb-name">${u.name}</div>
-            <div style="font-size:11px; color:var(--accent-blue);">${u.rank}</div>
-            <div style="font-size:10px; color:${statusColor};">● ${u.status}</div>
-        `;
-        container.appendChild(div);
-    });
-}
-TREŚĆ:
-let adminUsersDB = [];
-let adminUsersPage = 1;
-const adminUsersPerPage = 15;
-
-function initAdminUsers() {
-    if(adminUsersDB.length > 0) return;
-
-    const ranks = ["Bankrupt", "Small Fry", "Risk Taker", "Table Shark", "Casino Legend", "Alpha Whale", "RNG God"];
-    const statuses = ["Online", "Offline", "Offline", "Banned", "Suspicious"];
-    const prefixes = ["Crypto", "Super", "Mega", "Iron", "Lazy", "Lucky", "Sad", "Rich", "Poor", "Bot"];
-    const suffixes = ["Gamer", "Winner", "Loser", "Whale", "King", "Dog", "Cat", "Master", "Noob", "Pro"];
-
     // Dodanie statycznych ważnych graczy
     adminUsersDB.push({ id: 1, name: "Admin", rank: "King of The Gamblers", balance: 999999999, lastActive: "Now", status: "Online" });
     adminUsersDB.push({ id: 994, name: "Whale_Killer", rank: "RNG God", balance: 12500000, lastActive: "2 min temu", status: "Online" });
-    adminUsersDB.push({ id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", balance: 0, lastActive: "5 dni temu", status: "Banned" });
+TREŚĆ:
+    // Dodanie statycznych ważnych graczy
+    adminUsersDB.push({ id: 1, name: "MrGambler", rank: "Alpha Whale", balance: 5240000, lastActive: "Now", status: "Online", isAdmin: true });
+    adminUsersDB.push({ id: 994, name: "Whale_Killer", rank: "RNG God", balance: 12500000, lastActive: "2 min temu", status: "Online" });
 
-    // Generowanie 150 randomów
-    for(let i=0; i<150; i++) {
-        const id = 1000 + i;
-        const name = prefixes[Math.floor(Math.random()*prefixes.length)] + "_" + suffixes[Math.floor(Math.random()*suffixes.length)] + "_" + Math.floor(Math.random()*99);
-        const rank = ranks[Math.floor(Math.random() * ranks.length)];
-        const balance = Math.floor(Math.random() * 500000);
-        const status = statuses[Math.floor(Math.random() * statuses.length)];
-        const lastActive = status === 'Online' ? "Now" : Math.floor(Math.random() * 24) + "h temu";
-
-        adminUsersDB.push({ id, name, rank, balance, lastActive, status });
-    }
-}
-
-function renderUsersView() {
-    initAdminUsers();
-    
-    const container = document.getElementById('usersContainer');
-    if(!container) return;
-    container.innerHTML = '';
-
-    const filterStatus = document.getElementById('userFilterStatus').value;
-    const searchVal = document.getElementById('userSearchInput').value.toLowerCase();
-
-    // Filtrowanie
-    let filtered = adminUsersDB.filter(u => {
-        if(filterStatus !== 'all' && u.status !== filterStatus) return false;
-        if(searchVal && !u.name.toLowerCase().includes(searchVal) && !u.id.toString().includes(searchVal)) return false;
-        return true;
-    });
-
-    // Paginacja
-    const totalPages = Math.ceil(filtered.length / adminUsersPerPage) || 1;
-    if(adminUsersPage < 1) adminUsersPage = 1;
-    if(adminUsersPage > totalPages) adminUsersPage = totalPages;
-
-    const start = (adminUsersPage - 1) * adminUsersPerPage;
-    const pageItems = filtered.slice(start, start + adminUsersPerPage);
-
-    pageItems.forEach(u => {
-        const div = document.createElement('div');
-        div.className = 'ul-row';
-        
-        let badgeClass = 'ul-b-offline';
-        if(u.status === 'Online') badgeClass = 'ul-b-online';
-        if(u.status === 'Banned') badgeClass = 'ul-b-banned';
-        if(u.status === 'Suspicious') badgeClass = 'ul-b-suspicious';
-
+KROK 2:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
         let rankColor = '#aaa';
         if(u.rank.includes('Whale') || u.rank.includes('God')) rankColor = 'var(--accent-purple)';
         if(u.rank.includes('Bankrupt')) rankColor = 'var(--text-muted)';
@@ -231,21 +22,15 @@ function renderUsersView() {
             <div style="font-family:monospace; color:#666;">#${u.id}</div>
             <div style="font-weight:600; color:white;">${u.name}</div>
             <div style="color:${rankColor};">${u.rank}</div>
-            <div style="font-family:monospace; color:${u.balance > 100000 ? 'var(--accent-green)' : '#ddd'};">${u.balance.toLocaleString()} $</div>
-            <div style="color:#888;">${u.lastActive}</div>
-            <div><span class="ul-badge ${badgeClass}">${u.status}</span></div>
-            <div class="ul-actions">
-                <button class="ul-btn" title="Edytuj"><i class="fas fa-edit"></i></button>
-                <button class="ul-btn danger" title="Zbanuj" onclick="alert('Zbanowano użytkownika ${u.name}')"><i class="fas fa-ban"></i></button>
-            </div>
-        `;
-        container.appendChild(div);
-    });
+TREŚĆ:
+        let rankColor = '#aaa';
+        if(u.rank.includes('Whale') || u.rank.includes('God')) rankColor = 'var(--accent-purple)';
+        if(u.rank.includes('Bankrupt')) rankColor = 'var(--text-muted)';
 
-    document.getElementById('userPageIndicator').textContent = `Strona ${adminUsersPage} z ${totalPages}`;
-}
+        let nameHtml = u.name;
+        if(u.isAdmin) nameHtml += ' <span style="background:var(--accent-purple); color:white; font-size:9px; padding:2px 5px; border-radius:3px; margin-left:5px;">ADMIN</span>';
 
-function changeUserPage(delta) {
-    adminUsersPage += delta;
-    renderUsersView();
-}
+        div.innerHTML = `
+            <div style="font-family:monospace; color:#666;">#${u.id}</div>
+            <div style="font-weight:600; color:white;">${nameHtml}</div>
+            <div style="color:${rankColor};">${u.rank}</div>
