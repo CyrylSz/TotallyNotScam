@@ -578,8 +578,6 @@ function initInventorySystem() {
                 } else {
                     item.usesLeft = template.maxUses;
                 }
-                
-                item.name = `${item.name} (${item.usesLeft}/${template.maxUses})`;
             }
 
             if (!item.change) {
