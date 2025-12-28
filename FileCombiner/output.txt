@@ -546,7 +546,10 @@ function closeMarketModal() {
 
 function initDashboard() {
     initInventorySystem(); 
-    initMarketData();      
+    initMarketData();
+    initWalletBg();
+    initGamesBg();
+    initProfileStars();      
     
     
     renderDashInventory(); 
@@ -558,6 +561,99 @@ function initDashboard() {
     
     
     renderInventoryView();
+}
+
+function initProfileStars() {
+    const container = document.getElementById('profileStarsBg');
+    if(!container || container.children.length > 0) return;
+
+    // Generujemy rzadkie gwiazdy (zwiększony zakres, mała ilość)
+    const starCount = 70;
+
+    for(let i=0; i<starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star-real';
+        
+        // Używamy % względem kontenera (który jest już wypozycjonowany za sidebarem)
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        
+        const size = Math.random() * 2 + 1;
+        const opacity = Math.random() * 0.4 + 0.1; 
+
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.opacity = opacity;
+        
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.style.animationDuration = `${4 + Math.random() * 6}s`;
+
+        container.appendChild(star);
+    }
+}
+
+function initWalletBg() {
+    const container = document.getElementById('walletBgAnim');
+    if(!container || container.children.length > 0) return;
+
+    const moneyChars = ['💵', '💸', '💰', '$'];
+    const count = 30;
+
+    for(let i=0; i<count; i++) {
+        const el = document.createElement('div');
+        el.className = 'falling-item';
+        el.textContent = moneyChars[Math.floor(Math.random() * moneyChars.length)];
+        
+        const x = Math.random() * 100;
+        const size = Math.random() * 20 + 15; // 15px - 35px
+        const duration = Math.random() * 10 + 5; // 5s - 15s
+        const delay = Math.random() * 10;
+
+        el.style.left = `${x}%`;
+        el.style.fontSize = `${size}px`;
+        el.style.opacity = Math.random() * 0.3 + 0.1;
+        el.style.animationDuration = `${duration}s`;
+        el.style.animationDelay = `-${delay}s`; // Negative delay for instant start
+
+        container.appendChild(el);
+    }
+}
+
+function initGamesBg() {
+    const container = document.getElementById('gamesBgAnim');
+    if(!container || container.children.length > 0) return;
+
+    const colors = ['#ef4444', '#3b82f6', '#10b981', '#000'];
+    // Znacznie mniejsza ilość (mniejsza gęstość)
+    const count = 12;
+
+    for(let i=0; i<count; i++) {
+        const el = document.createElement('div');
+        el.className = 'falling-item chip-visual';
+        
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        el.style.backgroundColor = color;
+        
+        // Logika: tylko po bokach (0-15% lub 85-100%), aby nie zasłaniać paneli
+        let x;
+        if (Math.random() > 0.5) {
+            x = Math.random() * 15; // Lewa strona
+        } else {
+            x = 85 + Math.random() * 15; // Prawa strona
+        }
+
+        // Dłuższy czas spadania = spokojniejsza animacja
+        const duration = Math.random() * 20 + 15; 
+        const delay = Math.random() * 20;
+
+        el.style.left = `${x}%`;
+        el.style.animationDuration = `${duration}s`;
+        el.style.animationDelay = `-${delay}s`;
+
+        container.appendChild(el);
+    }
 }
 
 
@@ -2059,6 +2155,62 @@ function renderLogsView() {
     const container = document.getElementById('logsContainer');
     if(!container) return;
     container.innerHTML = '';
+function openAdminFinancialLogs() {
+    const modal = document.getElementById('financialLogsModal');
+    if(!modal) return;
+    
+    // Otwórz modal
+    modal.classList.add('active');
+    
+    // Nadpisz tytuł na adminowy
+    const title = modal.querySelector('.sm-title');
+    if(title) title.innerHTML = '<i class="fas fa-university"></i> System: Globalne Finanse';
+
+    // Pobierz kontener listy
+    const container = document.getElementById('financialLogsList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    // Generuj dane globalne
+    const adminLogs = [
+        { id: '#SYS_9921', type: 'Wypłata (Visa)', val: '-500,000 $', date: '2 min temu', status: 'Processing', detail: 'User: Whale_Killer | Visa **** 9921' },
+        { id: '#SYS_9920', type: 'Wpłata (Crypto)', val: '+12,500 USDT', date: '5 min temu', status: 'Completed', detail: 'User: CryptoBro | Sieć: TRC20' },
+        { id: '#SYS_9919', type: 'Transfer Wewn.', val: '1,000 $', date: '12 min temu', status: 'Completed', detail: 'Od: User_A -> Do: User_B' },
+        { id: '#SYS_9918', type: 'Wypłata (BLIK)', val: '-200 PLN', date: '15 min temu', status: 'Completed', detail: 'User: Janusz_K | Gateway: PayU' },
+        { id: '#SYS_9917', type: 'Prowizja Rynkowa', val: '+250 $', date: '22 min temu', status: 'Completed', detail: 'Market Fee (5%) | Item: Divine Case' },
+        { id: '#SYS_9916', type: 'Yoink (Admin)', val: '+4,200 $', date: '30 min temu', status: 'Completed', detail: 'Przejęcie środków od Scam_Master_PL' },
+        { id: '#SYS_9915', type: 'Wpłata (Visa)', val: '+50 $', date: '45 min temu', status: 'Rejected', detail: 'User: Noob_1 | Insufficient Funds' },
+        { id: '#SYS_9914', type: 'Wypłata (Crypto)', val: '-10,000 USDT', date: '1h temu', status: 'Completed', detail: 'User: Anon_Whale | TXID: 0x992...' },
+        { id: '#SYS_9913', type: 'Korekta Salda', val: '-5,000 $', date: '2h temu', status: 'Completed', detail: 'Admin Action: Refund Bug #22' },
+        { id: '#SYS_9912', type: 'Wpłata (BLIK)', val: '+1,000 PLN', date: '3h temu', status: 'Completed', detail: 'User: Kasiasty_PL' }
+    ];
+
+    adminLogs.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'hist-row';
+        
+        let valColor = 'white';
+        if (t.val.startsWith('+')) valColor = 'var(--accent-green)';
+        if (t.val.startsWith('-')) valColor = 'var(--accent-red)';
+        
+        let statusClass = t.status.toLowerCase();
+        
+        div.innerHTML = `
+            <div class="hist-left">
+                <div class="hist-type">${t.type}</div>
+                <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
+                <div style="font-size:9px; color:#555;">${t.detail}</div>
+            </div>
+            <div class="hist-right">
+                <div class="hist-val" style="color:${valColor}">${t.val}</div>
+                <div style="display:flex; align-items:center; justify-content:flex-end; gap:5px;">
+                    <div class="hist-status st-${statusClass}">${t.status}</div>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
 
     const logTypes = ['INFO', 'WARN', 'ERR', 'AUTH', 'SUCCESS', 'CRIT'];
     const sources = ['SYSTEM', 'GAME_ENG', 'PAYMENT', 'USER_DB', 'RISK_AI', 'NETWORK'];
@@ -2753,7 +2905,7 @@ function renderFavoritesPanel() {
                     <i class="fas fa-star mc-star active" onclick="toggleFavoriteMode('${favId}', null, null, null, null, 0, this)"></i>
                 </div>
                 <div class="mc-title">${modeName}</div>
-                <div class="mc-players"><i class="fas fa-user"></i> ~${displayPlayers}</div>
+                <div class="mc-players"><i class="fas fa-user"></i> ${displayPlayers}</div>
                  <div class="mc-overlay-play">
                     <div class="play-btn-round"><i class="fas fa-play"></i></div>
                 </div>
@@ -3509,6 +3661,7 @@ index.html
         </div>
 
         <div class="view-container" id="viewGames">
+            <div id="gamesBgAnim" class="fixed-bg-anim"></div>
             
             <div class="rank-stats-wrapper">
                 <div class="rs-card daily-pl-block">
@@ -3838,6 +3991,7 @@ index.html
         </div>
 
         <div class="view-container" id="viewWallet">
+            <div id="walletBgAnim" class="fixed-bg-anim"></div>
             
             <div class="wallet-layout-centered">
                 
@@ -3984,6 +4138,7 @@ index.html
         </div>
 
         <div class="view-container" id="viewProfile">
+            <div id="profileStarsBg" class="profile-stars-container"></div>
             <div class="profile-bg-whale"></div>
             <div style="margin-bottom: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;">
                 <div class="user-avatar" style="width: 120px; height: 120px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px; position: relative; background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'); background-size: cover;">
@@ -4097,29 +4252,105 @@ index.html
 
                 <div class="view-container" id="viewAdminDash">
              <div class="admin-row">
-                <div class="card" style="grid-column: 1 / -1; max-width: 850px; margin: 0 auto; width: 100%;">
-                    <div class="card-header" style="justify-content: space-between;">
-                        <div class="card-title"><i class="fas fa-calendar-alt"></i> Mapa Aktywności Graczy (Global)</div>
-                        <div style="font-size:10px; color:#666;">Ostatni Rok</div>
-                    </div>
-                    
-                    <div style="overflow-x: auto; padding: 10px 0; display: flex; justify-content: center;">
-                        <div class="gh-grid-container" id="adminHeatmapGrid">
-                            </div>
-                    </div>
-
-                    <div class="gh-legend-row">
-                        <span style="font-size:10px; color:#666; margin-right: 5px;">Mniej</span>
-                        <div class="gh-cell l0"></div>
-                        <div class="gh-cell l1"></div>
-                        <div class="gh-cell l2"></div>
-                        <div class="gh-cell l3"></div>
-                        <div class="gh-cell l4"></div>
-                        <span style="font-size:10px; color:#666; margin-left: 5px;">Więcej</span>
-                    </div>
-                </div>
                 <div class="admin-panels-wrapper">
                     
+                    <div class="ap-card ap-comm">
+                        <div class="ap-header" style="color: var(--accent-purple);">
+                            <i class="fas fa-bullhorn"></i> Komunikacja
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+                            <div style="font-size:10px; color:#aaa;">Global AI Chatbot Roast</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. 'Łał, masz niższe IQ niż temp mojego CPU'">
+                                <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-top:5px;">
+                            <div style="font-size:10px; color:#aaa;">Edycja Paska Live</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="tickerMsgInput" placeholder="Nowa wiadomość...">
+                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i class="fas fa-edit"></i></button>
+                            </div>
+                            <label class="ms-check-row" style="padding: 0;">
+                                <input type="checkbox"> 
+                                <span style="font-size:10px;">Zapętl</span>
+                            </label>
+                        </div>
+                    </div>
+
+                    <div class="ap-card ap-finance">
+                        <div class="ap-header" style="justify-content: space-between; color: var(--accent-green);">
+                            <span><i class="fas fa-money-bill-wave"></i> Finanse</span>
+                            <i class="fas fa-history" style="cursor: pointer; opacity: 0.7; font-size: 14px;" onclick="openAdminFinancialLogs()" title="Pełna historia systemu"></i>
+                        </div>
+
+                        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 6px; margin-bottom: 15px; text-align: center;">
+                            <div style="font-size: 9px; color: var(--accent-green); letter-spacing: 1px; font-weight: 700; text-transform: uppercase;">Dostępne Środki (System Bank)</div>
+                            <div style="font-size: 18px; color: white; font-weight: 800; font-family: monospace; margin-top: 2px;">$ 42,069,420.00</div>
+                        </div>
+                        
+                        <div style="font-size:10px; color:#ccc; margin-bottom:5px; font-weight:700; display:flex; justify-content:space-between;">
+                            <span>Oczekujące Wypłaty</span>
+                            <span style="color:#666; font-weight:400;">Kolejka: 3</span>
+                        </div>
+                        <div class="finance-list" style="max-height: 130px; overflow-y: auto; padding-right: 2px;">
+                            <!-- Whale First -->
+                            <div class="fin-item" style="border-left: 2px solid #3b82f6; margin-bottom: 5px;">
+                                <div>
+                                    <div style="font-weight:700; color:#fff;">Whale_Junior</div>
+                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">500,000 $</b></div>
+                                    <div style="font-size:8px; color:#3b82f6;">Wymaga ręcznego potwierdzenia</div>
+                                </div>
+                                <div style="display:flex; gap:5px; align-items:center;">
+                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 500k from Whale_Junior!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
+                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <!-- Bot Second -->
+                            <div class="fin-item" style="border-left: 2px solid var(--accent-orange); margin-bottom: 5px;">
+                                <div>
+                                    <div style="font-weight:700; color:#fff;">Russian_Bot_99</div>
+                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">25,000 USDT</b></div>
+                                    <div style="font-size:8px; color:var(--accent-red);">Nietypowa lokalizacja (CN)</div>
+                                </div>
+                                <div style="display:flex; gap:5px; align-items:center;">
+                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 25k USDT from Bot!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Force Approve"><i class="fas fa-check"></i></button>
+                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Ban & Freeze"><i class="fas fa-gavel"></i></button>
+                                </div>
+                            </div>
+                            <!-- Scam Third -->
+                            <div class="fin-item" style="border-left: 2px solid var(--accent-red); margin-bottom: 5px;">
+                                <div>
+                                    <div style="font-weight:700; color:#fff;">Scam_Master_PL</div>
+                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">4,200 USD</b></div>
+                                    <div style="font-size:8px; color:var(--accent-red);">Multi-konto wykryte</div>
+                                </div>
+                                <div style="display:flex; gap:5px; align-items:center;">
+                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 4.2k from Scam_Master!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
+                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-gavel"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top: 5px; justify-content: space-between;">
+                            <div style="display:flex; align-items:center; gap:5px;">
+                                <span style="font-size:10px; color:#aaa;">Auto-Wypłaty</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked onchange="alert('Zmiana statusu automatycznych wypłat')">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:5px;">
+                                <span style="font-size:10px; color:#aaa;">Limit:</span>
+                                <input type="number" value="1000" style="width: 50px; background:rgba(0,0,0,0.3); border:1px solid #444; color:white; font-size:10px; padding:2px 5px; border-radius:4px;">
+                                <span style="font-size:10px;">$</span>
+                            </div>
+                        </div>
+                    </div>
+
                     <div class="ap-card ap-critical">
                         <div class="ap-header" style="color: var(--accent-red);">
                             <i class="fas fa-exclamation-triangle"></i> Akcje Krytyczne
@@ -4145,65 +4376,6 @@ index.html
                         </div>
                     </div>
 
-                    <div class="ap-card ap-finance">
-                        <div class="ap-header" style="color: var(--accent-green);">
-                            <i class="fas fa-money-bill-wave"></i> Szybkie Finanse
-                        </div>
-                        
-                        <div style="font-size:10px; color:#666; margin-bottom:-5px;">PENDING (małe kwoty)</div>
-                        <div class="finance-list">
-                            <div class="fin-item">
-                                <div>
-                                    <div style="font-weight:700;">User_22</div>
-                                    <div style="font-size:9px; color:#888;">250 PLN (BLIK)</div>
-                                </div>
-                                <div style="display:flex; gap:5px;">
-                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px;" onclick="alert('Zatwierdzono')"><i class="fas fa-check"></i></button>
-                                    <select class="ap-select" onchange="if(this.value) alert('Odrzucono: '+this.value)">
-                                        <option value="">Odrzuć...</option>
-                                        <option value="Brak obrotu">Brak obrotu</option>
-                                        <option value="Multi-konto">Multi-konto</option>
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
-                            <span>Bramka BLIK</span>
-                            <label class="switch">
-                                <input type="checkbox" checked onchange="toggleAdminAction('gate_blik')">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                        <div class="ap-row">
-                            <span>Bramka Crypto</span>
-                            <label class="switch">
-                                <input type="checkbox" checked onchange="toggleAdminAction('gate_crypto')">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-
-                    <div class="ap-card ap-comm">
-                        <div class="ap-header" style="color: var(--accent-purple);">
-                            <i class="fas fa-bullhorn"></i> Komunikacja
-                        </div>
-                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px;">
-                            <div style="font-size:10px; color:#aaa;">Global Push / Toast</div>
-                            <div class="ap-input-group">
-                                <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. Turniej za 5 min!">
-                                <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i class="fas fa-paper-plane"></i></button>
-                            </div>
-                        </div>
-                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-top:5px;">
-                            <div style="font-size:10px; color:#aaa;">Edycja Tickera (Pasek Live)</div>
-                            <div class="ap-input-group">
-                                <input type="text" class="ap-input" id="tickerMsgInput" placeholder="Nowa wiadomość...">
-                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i class="fas fa-edit"></i></button>
-                            </div>
-                        </div>
-                    </div>
-
                     <div class="ap-card ap-god">
                         <div class="ap-header" style="color: #f59e0b;">
                             <i class="fas fa-eye"></i> God Mode
@@ -4220,6 +4392,28 @@ index.html
                         </div>
                     </div>
 
+                </div>
+
+                <div class="ap-card ap-map" style="grid-column: 1 / -1; max-width: 850px; margin: 0 auto; width: 100%;">
+                    <div class="ap-header" style="justify-content: space-between; color: #3b82f6;">
+                        <span><i class="fas fa-calendar-alt"></i> Mapa Aktywności Graczy</span>
+                        <span style="font-size:10px; color:#666; font-weight:400; text-transform:none; letter-spacing:0;">Ostatni Rok</span>
+                    </div>
+                    
+                    <div style="overflow-x: auto; padding: 10px 0; display: flex; justify-content: center;">
+                        <div class="gh-grid-container" id="adminHeatmapGrid">
+                            </div>
+                    </div>
+
+                    <div class="gh-legend-row">
+                        <span style="font-size:10px; color:#666; margin-right: 5px;">Mniej</span>
+                        <div class="gh-cell l0"></div>
+                        <div class="gh-cell l1"></div>
+                        <div class="gh-cell l2"></div>
+                        <div class="gh-cell l3"></div>
+                        <div class="gh-cell l4"></div>
+                        <span style="font-size:10px; color:#666; margin-left: 5px;">Więcej</span>
+                    </div>
                 </div>
             </div>
         </div>
@@ -4960,7 +5154,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .view-container { display: none; flex-direction: column; gap: 30px; padding-bottom: 80px; animation: fadeIn 0.3s ease; }
 .view-container.active { display: flex; }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 
 .top-stats-row {
@@ -5460,10 +5654,10 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 .gh-cell:hover { transform: scale(1.3); z-index: 2; border: 1px solid rgba(255,255,255,0.5); }
 
-.gh-cell.l1 { background: #450a0a; } 
-.gh-cell.l2 { background: #991b1b; } 
-.gh-cell.l3 { background: #ef4444; } 
-.gh-cell.l4 { background: #ff0000; box-shadow: 0 0 6px #ff0000; } 
+.gh-cell.l1 { background: #172554; } 
+.gh-cell.l2 { background: #1e40af; } 
+.gh-cell.l3 { background: #3b82f6; } 
+.gh-cell.l4 { background: #60a5fa; box-shadow: 0 0 6px #60a5fa; } 
 
 .gh-legend-row {
     display: flex;
@@ -5512,6 +5706,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .ap-finance { border-top: 3px solid var(--accent-green); }
 .ap-comm { border-top: 3px solid var(--accent-purple); }
 .ap-god { border-top: 3px solid #f59e0b; }
+.ap-map { border-top: 3px solid #3b82f6; }
 
 .ap-row {
     display: flex;
@@ -6138,15 +6333,15 @@ input:checked + .slider:before { transform: translateX(16px); }
     z-index: 1;
 }
 
-#viewProfile > div:not(.profile-bg-whale) {
+#viewProfile > div:not(.profile-bg-whale):not(.profile-stars-container) {
     position: relative;
     z-index: 2;
 }
 
 .profile-bg-whale {
-    position: absolute;
-    top: 0px; 
-    right: 0%; 
+    position: fixed;
+    top: 10%;    
+    right: 0%;    
     width: 65%;
     height: 85%;
     background-image: url('https://img-v3.deepdreamgenerator.com/2436355/z6qdyc_64f342e80213336fd546cecf2d2713e33ca5c609.jpg');
@@ -6161,11 +6356,80 @@ input:checked + .slider:before { transform: translateX(16px); }
     mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
     -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
     
-    pointer-events: none; 
+    pointer-events: none;    
     z-index: 0;
     
     
     mix-blend-mode: screen;
+}
+
+.profile-stars-container {
+    position: fixed;
+    top: 0;
+    left: 260px; 
+    width: calc(100% - 260px); 
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.fixed-bg-anim {
+    position: fixed;
+    top: 0;
+    left: 260px;
+    width: calc(100% - 260px);
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+#viewWallet > *:not(.fixed-bg-anim), 
+#viewGames > *:not(.fixed-bg-anim) {
+    position: relative;
+    z-index: 2;
+}
+
+.falling-item {
+    position: absolute;
+    top: -100px;
+    user-select: none;
+    animation: fallDown linear infinite;
+}
+
+.chip-visual {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px dashed rgba(255,255,255,0.7);
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 700;
+}
+
+@keyframes fallDown {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
+.star-real {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+    animation: star-twinkle 5s infinite ease-in-out;
+}
+
+@keyframes star-twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.2); }
 }
 
 

@@ -165,14 +165,14 @@
                                     </div>
                                     <div class="pi-row">
                                         <span class="pi-label">LUCK ↔ SKILL:</span>
-                                        <span class="pi-val">35% / 65%</span>
+                                        <span class="pi-val">35% ↔ 65%</span>
                                     </div>
                                     <div class="pi-row">
                                         <span class="pi-label">RNG DEPENDENCY:</span>
                                         <span class="pi-val medium">Medium</span>
                                     </div>
                                     <div class="pi-row">
-                                        <span class="pi-label">RECOMMENDED MODES:</span>
+                                        <span class="pi-label">RECOMMENDED GAMES:</span>
                                         <span class="pi-val mode-list">Poker, Crash, Degenerate Worms</span>
                                     </div>
                                 </div>
@@ -464,14 +464,14 @@
                             </div>
                             <div class="pi-row">
                                 <span class="pi-label">LUCK ↔ SKILL:</span>
-                                <span class="pi-val">35% / 65%</span>
+                                <span class="pi-val">35% ↔ 65%</span>
                             </div>
                             <div class="pi-row">
                                 <span class="pi-label">RNG DEPENDENCY:</span>
                                 <span class="pi-val medium">Medium</span>
                             </div>
                             <div class="pi-row">
-                                <span class="pi-label">RECOMMENDED MODES:</span>
+                                <span class="pi-label">RECOMMENDED GAMES:</span>
                                 <span class="pi-val mode-list">Poker, Crash, Degenerate Worms</span>
                             </div>
                         </div>
@@ -905,12 +905,15 @@
                         </div>
 
                         <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 6px; margin-bottom: 15px; text-align: center;">
-                            <div style="font-size: 9px; color: var(--accent-green); letter-spacing: 1px; font-weight: 700; text-transform: uppercase;">Dostępne Środki (System Bank)</div>
+                            <div style="font-size: 9px; color: var(--accent-green); letter-spacing: 1px; font-weight: 700; text-transform: uppercase;">Dostępne Środki Systemu</div>
                             <div style="font-size: 18px; color: white; font-weight: 800; font-family: monospace; margin-top: 2px;">$ 42,069,420.00</div>
                         </div>
                         
-                        <div style="font-size:10px; color:#ccc; margin-bottom:5px; font-weight:700; display:flex; justify-content:space-between;">
-                            <span>Oczekujące Wypłaty</span>
+                        <div style="font-size:10px; color:#ccc; margin-bottom:5px; font-weight:700; display:flex; justify-content:space-between; align-items:center;">
+                            <div style="display:flex; align-items:center; gap:8px;">
+                                <span>Oczekujące Wypłaty</span>
+                                <button class="ap-btn" style="padding:2px 8px; font-size:9px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked all!')"><i class="fas fa-hand-holding-usd"></i> Yoink!</button>
+                            </div>
                             <span style="color:#666; font-weight:400;">Kolejka: 3</span>
                         </div>
                         <div class="finance-list" style="max-height: 130px; overflow-y: auto; padding-right: 2px;">
@@ -922,7 +925,7 @@
                                     <div style="font-size:8px; color:#3b82f6;">Wymaga ręcznego potwierdzenia</div>
                                 </div>
                                 <div style="display:flex; gap:5px; align-items:center;">
-                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 500k from Whale_Junior!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 500k from Whale_Junior!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i></button>
                                     <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
                                     <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-times"></i></button>
                                 </div>
@@ -935,7 +938,7 @@
                                     <div style="font-size:8px; color:var(--accent-red);">Nietypowa lokalizacja (CN)</div>
                                 </div>
                                 <div style="display:flex; gap:5px; align-items:center;">
-                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 25k USDT from Bot!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 25k USDT from Bot!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i></button>
                                     <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Force Approve"><i class="fas fa-check"></i></button>
                                     <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Ban & Freeze"><i class="fas fa-gavel"></i></button>
                                 </div>
@@ -948,7 +951,7 @@
                                     <div style="font-size:8px; color:var(--accent-red);">Multi-konto wykryte</div>
                                 </div>
                                 <div style="display:flex; gap:5px; align-items:center;">
-                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 4.2k from Scam_Master!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 4.2k from Scam_Master!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i></button>
                                     <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
                                     <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-gavel"></i></button>
                                 </div>
@@ -958,7 +961,7 @@
                         <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top: 5px; justify-content: space-between;">
                             <div style="display:flex; align-items:center; gap:5px;">
                                 <span style="font-size:10px; color:#aaa;">Auto-Wypłaty</span>
-                                <label class="switch">
+                                <label class="switch switch-green">
                                     <input type="checkbox" checked onchange="alert('Zmiana statusu automatycznych wypłat')">
                                     <span class="slider"></span>
                                 </label>

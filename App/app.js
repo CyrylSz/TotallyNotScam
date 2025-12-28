@@ -2149,10 +2149,7 @@ function adminImpersonate() {
     }
 }
 
-function renderLogsView() {
-    const container = document.getElementById('logsContainer');
-    if(!container) return;
-    container.innerHTML = '';
+
 function openAdminFinancialLogs() {
     const modal = document.getElementById('financialLogsModal');
     if(!modal) return;
@@ -2209,6 +2206,11 @@ function openAdminFinancialLogs() {
         container.appendChild(div);
     });
 }
+
+function renderLogsView() {
+    const container = document.getElementById('logsContainer');
+    if(!container) return;
+    container.innerHTML = '';
 
     const logTypes = ['INFO', 'WARN', 'ERR', 'AUTH', 'SUCCESS', 'CRIT'];
     const sources = ['SYSTEM', 'GAME_ENG', 'PAYMENT', 'USER_DB', 'RISK_AI', 'NETWORK'];
