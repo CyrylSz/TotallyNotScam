@@ -1,15 +1,10 @@
 KROK 1:
-PLIK: "style.css"
+PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-.favorites-panel {
-    background: linear-gradient(135deg, #1a1a2e, #16213e);
-    border: 1px solid rgba(255, 215, 0, 0.1);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
+                            <div class="card-header"><div class="card-title"><i class="fas fa-tags"></i> Twoje Oferty</div></div>
 TREŚĆ:
-.favorites-panel {
-    background: linear-gradient(135deg, #1a1a2e, #16213e);
-    border: 1px solid rgba(16, 185, 129, 0.3);
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-}
+                            <div class="card-header">
+                                <div class="card-title"><i class="fas fa-tags"></i> Twoje Oferty</div>
+                                <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('market')" title="Przejdź do Rynku"></i>
+                            </div>

@@ -124,24 +124,12 @@
                 <div class="d3-col">
                     <div class="card dash-card combined-panel">
                         <div class="cp-section">
-                            <div class="card-header"><div class="card-title"><i class="fas fa-chart-line"></i> Market Watch</div></div>
-                             <div class="market-watch-list">
-                                <div class="mw-item">
-                                    <div class="mw-icon" style="color:#a855f7;"><i class="fas fa-dragon"></i></div>
-                                    <div class="mw-info"><h5>Smocze Jajo</h5><span class="val-up">+12% <i class="fas fa-caret-up"></i></span></div>
-                                     <div class="mini-spark"><div class="spark-bar" style="height:40%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar active" style="height:80%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
-                                </div>
-                                 <div class="mw-item">
-                                    <div class="mw-icon" style="color:gold;"><i class="fas fa-clock"></i></div>
-                                    <div class="mw-info"><h5>Złoty Zegarek</h5><span class="val-down">-5% <i class="fas fa-caret-down"></i></span></div>
-                                     <div class="mini-spark"><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar active" style="height:30%; background:var(--accent-red); box-shadow:0 0 4px var(--accent-red);"></div></div>
-                                </div>
-                                <div class="mw-item">
-                                    <div class="mw-icon" style="color:var(--accent-blue);"><i class="fas fa-car"></i></div>
-                                     <div class="mw-info"><h5>Kluczyki Lambo</h5><span class="val-up">+2% <i class="fas fa-caret-up"></i></span></div>
-                                     <div class="mini-spark"><div class="spark-bar" style="height:20%"></div><div class="spark-bar" style="height:30%"></div><div class="spark-bar" style="height:25%"></div><div class="spark-bar active" style="height:40%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
-                                </div>
+                            <div class="card-header">
+                                <div class="card-title"><i class="fas fa-tags"></i> Twoje Oferty</div>
+                                <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('market')" title="Przejdź do Rynku"></i>
                             </div>
+                            <div class="market-watch-list" id="dashActiveListings" style="gap: 5px;">
+                                </div>
                         </div>
 
                         <div class="cp-divider"></div>

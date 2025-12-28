@@ -2087,6 +2087,61 @@ function initDashboardExtras() {
     initBannerCarousel();
     renderFavoritesPanel();
     renderPopularModes();
+    renderDashActiveListings();
+}
+
+function renderDashActiveListings() {
+    const container = document.getElementById('dashActiveListings');
+    if(!container) return;
+    container.innerHTML = '';
+
+    // Pobieramy oferty gracza (MrGambler)
+    const myListings = marketState.listings.filter(l => l.isMine);
+
+    if(myListings.length === 0) {
+        container.innerHTML = '<div style="padding:20px; color:#666; font-size:11px; text-align:center;">Brak aktywnych ofert na rynku.</div>';
+        return;
+    }
+
+    myListings.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'mw-item';
+        el.style.cursor = 'pointer';
+        el.style.transition = 'background 0.2s';
+        
+        // Kliknięcie otwiera ten sam modal co na Rynku
+        el.onclick = () => openMarketItemModal(item);
+
+        const priceDisplay = (item.listingType === 'auction' ? (item.currentBid || item.price) : item.price).toLocaleString();
+        
+        // Status: Instant lub Licytacja (z czasem)
+        let statusHtml = '';
+        if(item.listingType === 'instant') {
+            statusHtml = `<span style="color:var(--accent-green); font-size:9px; font-weight:700;">INSTANT</span>`;
+        } else {
+            statusHtml = `<span style="color:var(--accent-orange); font-size:9px; font-weight:700;">${item.bidCount} OFERT</span>`;
+        }
+
+        el.innerHTML = `
+            <div class="mw-icon" style="color:${item.color}; font-size: 24px; background: rgba(255,255,255,0.02); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:6px;">
+                ${item.icon}
+            </div>
+            <div class="mw-info" style="margin-left: 10px;">
+                <h5 style="color:${item.color}; font-size:12px; margin-bottom:3px;">${item.name}</h5>
+                <div style="font-size:11px; font-weight:700; color:#fff;">${priceDisplay} $</div>
+            </div>
+            <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; justify-content:center;">
+                ${statusHtml}
+                <div style="font-size:9px; color:#666; margin-top:2px;">${item.type.toUpperCase()}</div>
+            </div>
+        `;
+        
+        // Dodajemy hover effect w JS inline dla prostoty
+        el.onmouseenter = () => el.style.background = 'rgba(255,255,255,0.08)';
+        el.onmouseleave = () => el.style.background = 'rgba(255,255,255,0.03)';
+
+        container.appendChild(el);
+    });
 }
 
 function renderPopularModes() {
