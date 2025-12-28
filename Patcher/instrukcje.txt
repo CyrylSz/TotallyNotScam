@@ -1,56 +1,85 @@
 KROK 1:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-function renderLogsView() {
-    const container = document.getElementById('logsContainer');
-    if(!container) return;
-    container.innerHTML = '';
-function openAdminFinancialLogs() {
-TREŚĆ:
-function openAdminFinancialLogs() {
-
-KROK 2:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-        container.appendChild(div);
-    });
-}
-
-    const logTypes = ['INFO', 'WARN', 'ERR', 'AUTH', 'SUCCESS', 'CRIT'];
-TREŚĆ:
-        container.appendChild(div);
-    });
-}
-
-function renderLogsView() {
-    const container = document.getElementById('logsContainer');
-    if(!container) return;
-    container.innerHTML = '';
-
-    const logTypes = ['INFO', 'WARN', 'ERR', 'AUTH', 'SUCCESS', 'CRIT'];
-
-KROK 3:
 PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-<button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 500k from Whale_Junior!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
-TREŚĆ:
-<button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 500k from Whale_Junior!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i></button>
+                    <div class="ap-card ap-critical">
+                        <div class="ap-header" style="color: var(--accent-red);">
+                            <i class="fas fa-exclamation-triangle"></i> Akcje Krytyczne
+                        </div>
+                        <div class="ap-row">
+                            <span>Maintenance Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('maintenance')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Zablokuj Wypłaty (Global)</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('block_withdrawals')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row" style="margin-top: 10px;">
+                            <button class="ap-btn ap-btn-red full-width" onclick="adminLogoutAll()">
+                                <i class="fas fa-power-off"></i> WYLOGUJ WSZYSTKIE SESJE
+                            </button>
+                        </div>
+                    </div>
 
-KROK 4:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-<button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 25k USDT from Bot!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                    <div class="ap-card ap-god">
+                        <div class="ap-header" style="color: #f59e0b;">
+                            <i class="fas fa-eye"></i> God Mode
+                        </div>
+                        <div style="padding: 15px; background: rgba(245, 158, 11, 0.05); border-radius: 6px; text-align: center;">
+                            <i class="fas fa-user-secret" style="font-size: 24px; color: #f59e0b; margin-bottom: 10px;"></i>
+                            <div style="font-size:11px; margin-bottom:10px; color:#ccc;">Zobacz świat oczami gracza (bez hasła).</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" placeholder="ID Gracza lub Login" id="godModeInput">
+                                <button class="ap-btn" style="background:#f59e0b; color:black; font-weight:800;" onclick="adminImpersonate()">
+                                    IMPERSONATE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 TREŚĆ:
-<button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 25k USDT from Bot!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i></button>
+                    <div class="ap-card ap-god">
+                        <div class="ap-header" style="color: #f59e0b;">
+                            <i class="fas fa-eye"></i> God Mode
+                        </div>
+                        <div style="padding: 15px; background: rgba(245, 158, 11, 0.05); border-radius: 6px; text-align: center;">
+                            <i class="fas fa-user-secret" style="font-size: 24px; color: #f59e0b; margin-bottom: 10px;"></i>
+                            <div style="font-size:11px; margin-bottom:10px; color:#ccc;">Zobacz świat oczami gracza (bez hasła).</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" placeholder="ID Gracza lub Login" id="godModeInput">
+                                <button class="ap-btn" style="background:#f59e0b; color:black; font-weight:800;" onclick="adminImpersonate()">
+                                    IMPERSONATE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
 
-KROK 5:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-<button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 4.2k from Scam_Master!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
-TREŚĆ:
-<button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 4.2k from Scam_Master!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i></button>
+                    <div class="ap-card ap-critical">
+                        <div class="ap-header" style="color: var(--accent-red);">
+                            <i class="fas fa-exclamation-triangle"></i> Akcje Krytyczne
+                        </div>
+                        <div class="ap-row">
+                            <span>Maintenance Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('maintenance')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Zablokuj Wypłaty (Global)</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('block_withdrawals')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row" style="margin-top: 10px;">
+                            <button class="ap-btn ap-btn-red full-width" onclick="adminLogoutAll()">
+                                <i class="fas fa-power-off"></i> WYLOGUJ WSZYSTKIE SESJE
+                            </button>
+                        </div>
+                    </div>
