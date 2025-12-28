@@ -1,36 +1,15 @@
 KROK 1:
-PLIK: "app.js"
+PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    // Dodanie statycznych ważnych graczy
-    adminUsersDB.push({ id: 1, name: "Admin", rank: "King of The Gamblers", balance: 999999999, lastActive: "Now", status: "Online" });
-    adminUsersDB.push({ id: 994, name: "Whale_Killer", rank: "RNG God", balance: 12500000, lastActive: "2 min temu", status: "Online" });
+                <div class="card" style="grid-column: 1 / -1; max-width: 1000px; margin: 0 auto; width: 100%;">
+                    <div class="card-header">
+                        <div class="card-title"><i class="fas fa-calendar-alt"></i> Mapa Aktywności Graczy (Global)</div>
+                        <div style="font-size:10px; color:#666; margin-right: 15px;">Ostatni Rok</div>
+                    </div>
 TREŚĆ:
-    // Dodanie statycznych ważnych graczy
-    adminUsersDB.push({ id: 1, name: "MrGambler", rank: "Alpha Whale", balance: 5240000, lastActive: "Now", status: "Online", isAdmin: true });
-    adminUsersDB.push({ id: 994, name: "Whale_Killer", rank: "RNG God", balance: 12500000, lastActive: "2 min temu", status: "Online" });
-
-KROK 2:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-        let rankColor = '#aaa';
-        if(u.rank.includes('Whale') || u.rank.includes('God')) rankColor = 'var(--accent-purple)';
-        if(u.rank.includes('Bankrupt')) rankColor = 'var(--text-muted)';
-
-        div.innerHTML = `
-            <div style="font-family:monospace; color:#666;">#${u.id}</div>
-            <div style="font-weight:600; color:white;">${u.name}</div>
-            <div style="color:${rankColor};">${u.rank}</div>
-TREŚĆ:
-        let rankColor = '#aaa';
-        if(u.rank.includes('Whale') || u.rank.includes('God')) rankColor = 'var(--accent-purple)';
-        if(u.rank.includes('Bankrupt')) rankColor = 'var(--text-muted)';
-
-        let nameHtml = u.name;
-        if(u.isAdmin) nameHtml += ' <span style="background:var(--accent-purple); color:white; font-size:9px; padding:2px 5px; border-radius:3px; margin-left:5px;">ADMIN</span>';
-
-        div.innerHTML = `
-            <div style="font-family:monospace; color:#666;">#${u.id}</div>
-            <div style="font-weight:600; color:white;">${nameHtml}</div>
-            <div style="color:${rankColor};">${u.rank}</div>
+                <div class="card" style="grid-column: 1 / -1; max-width: 850px; margin: 0 auto; width: 100%;">
+                    <div class="card-header" style="justify-content: space-between;">
+                        <div class="card-title"><i class="fas fa-calendar-alt"></i> Mapa Aktywności Graczy (Global)</div>
+                        <div style="font-size:10px; color:#666;">Ostatni Rok</div>
+                    </div>
