@@ -185,10 +185,32 @@ let allTreasures = [
 ];
 
 
+const titlesDB = [
+    // Ranks as Titles
+    { id: "t_r1", text: "King of The Gamblers", rarity: "Divine" },
+    { id: "t_r2", text: "RNG God", rarity: "Divine" },
+    { id: "t_r3", text: "Alpha Whale", rarity: "Relic" },
+    { id: "t_r4", text: "Casino Legend", rarity: "Relic" },
+    { id: "t_r5", text: "Table Shark", rarity: "Epic" },
+    { id: "t_r6", text: "Risk Taker", rarity: "Rare" },
+    { id: "t_r7", text: "Small Fry", rarity: "Peasant" },
+    { id: "t_r8", text: "Bankrupt", rarity: "Peasant" },
+    
+    // Achievement Titles
+    { id: "t_a1", text: "The Novice", rarity: "Peasant" },
+    { id: "t_a5", text: "Blackjack Master", rarity: "Rare" },
+    { id: "t_a7", text: "Wolf of Wall St", rarity: "Epic" },
+    { id: "t_a10", text: "Sniper", rarity: "Epic" },
+    { id: "t_a15", text: "The Collector", rarity: "Relic" },
+    { id: "t_a18", text: "Millionaire", rarity: "Divine" },
+    { id: "t_a22", text: "Legendary Finder", rarity: "Divine" },
+    { id: "t_a25", text: "Glitch Hunter", rarity: "Divine" }
+];
 const playersDB = [
     {
         username: "MrGambler",
         rank: "Alpha Whale",
+        activeTitle: "The Collector",
         pfp: "https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false", 
         inventory: [
             
@@ -406,37 +428,37 @@ const availableGamesDB = [
 ];
 
 const globalLeaderboardDB = [
-    { rankVal: 1, rankName: "King of The Gamblers", name: "Not_Elon", lp: 9500, netWorth: 154000000 },
-    { rankVal: 2, rankName: "RNG God", name: "LuckyLuke", lp: 4200, netWorth: 25000000 },
-    { rankVal: 2, rankName: "RNG God", name: "Casino_AI", lp: 3800, netWorth: 18500000 },
-    { rankVal: 3, rankName: "Alpha Whale", name: "DiamondH", lp: 1950, netWorth: 8500000 },
+    { rankVal: 1, rankName: "King of The Gamblers", title: "King of The Gamblers", name: "Not_Elon", lp: 9500, netWorth: 154000000 },
+    { rankVal: 2, rankName: "RNG God", title: "Dice Master", name: "LuckyLuke", lp: 4200, netWorth: 25000000 },
+    { rankVal: 2, rankName: "RNG God", title: "Bot Network Admin", name: "Casino_AI", lp: 3800, netWorth: 18500000 },
+    { rankVal: 3, rankName: "Alpha Whale", title: "Legendary Finder", name: "DiamondH", lp: 1950, netWorth: 8500000 },
     
-    { rankVal: 3, rankName: "Alpha Whale", name: "MrGambler", lp: 1469, netWorth: 5240000, isMe: true }, 
-    { rankVal: 3, rankName: "Alpha Whale", name: "CryptoBro", lp: 1200, netWorth: 5200000 },
-    { rankVal: 4, rankName: "Casino Legend", name: "ZeroCool", lp: 980, netWorth: 2100000 },
-    { rankVal: 4, rankName: "Casino Legend", name: "MatrixNeo", lp: 850, netWorth: 1500000 },
-    { rankVal: 5, rankName: "Table Shark", name: "BluffMaster", lp: 550, netWorth: 800000 },
-    { rankVal: 5, rankName: "Table Shark", name: "CardCounter", lp: 420, netWorth: 450000 },
-    { rankVal: 6, rankName: "Risk Taker", name: "YOLO_Trader", lp: 250, netWorth: 150000 },
-    { rankVal: 6, rankName: "Risk Taker", name: "DogeCoin_Fan", lp: 210, netWorth: 120000 },
-    { rankVal: 6, rankName: "Risk Taker", name: "WallStreetBet", lp: 190, netWorth: 110000 },
-    { rankVal: 7, rankName: "Small Fry", name: "NoobMaster69", lp: 90, netWorth: 80000 },
-    { rankVal: 7, rankName: "Small Fry", name: "JustLooking", lp: 50, netWorth: 50000 },
-    { rankVal: 7, rankName: "Small Fry", name: "Anon_User", lp: 45, netWorth: 45000 },
-    { rankVal: 7, rankName: "Small Fry", name: "Bot_221", lp: 30, netWorth: 30000 },
-    { rankVal: 7, rankName: "Small Fry", name: "Guest_99", lp: 10, netWorth: 15000 },
-    { rankVal: 8, rankName: "Bankrupt", name: "NeedLoanPls", lp: -50, netWorth: 5000 },
-    { rankVal: 8, rankName: "Bankrupt", name: "Rekt_City", lp: -120, netWorth: 500 },
-    { rankVal: 8, rankName: "Bankrupt", name: "LostItAll", lp: -200, netWorth: 100 },
-    { rankVal: 8, rankName: "Bankrupt", name: "SadPepe", lp: -500, netWorth: 0 },
-    { rankVal: 7, rankName: "Small Fry", name: "Newbie_01", lp: 88, netWorth: 75000 },
-    { rankVal: 7, rankName: "Small Fry", name: "GlitchHunter", lp: 60, netWorth: 60000 },
-    { rankVal: 6, rankName: "Risk Taker", name: "HighStakeJ", lp: 280, netWorth: 180000 },
-    { rankVal: 5, rankName: "Table Shark", name: "PokerFace", lp: 480, netWorth: 600000 },
-    { rankVal: 4, rankName: "Casino Legend", name: "SlotMachineGoBrr", lp: 700, netWorth: 1200000 },
-    { rankVal: 8, rankName: "Bankrupt", name: "HelpMe", lp: -50, netWorth: 2000 },
-    { rankVal: 7, rankName: "Small Fry", name: "Learning", lp: 20, netWorth: 25000 },
-    { rankVal: 6, rankName: "Risk Taker", name: "CryptoDad", lp: 150, netWorth: 135000 }
+    { rankVal: 3, rankName: "Alpha Whale", title: "The Collector", name: "MrGambler", lp: 1469, netWorth: 5240000, isMe: true }, 
+    { rankVal: 3, rankName: "Alpha Whale", title: "Crypto Whale", name: "CryptoBro", lp: 1200, netWorth: 5200000 },
+    { rankVal: 4, rankName: "Casino Legend", title: "Casino Legend", name: "ZeroCool", lp: 980, netWorth: 2100000 },
+    { rankVal: 4, rankName: "Casino Legend", title: "Glitch Hunter", name: "MatrixNeo", lp: 850, netWorth: 1500000 },
+    { rankVal: 5, rankName: "Table Shark", title: "Table Shark", name: "BluffMaster", lp: 550, netWorth: 800000 },
+    { rankVal: 5, rankName: "Table Shark", title: "Blackjack Master", name: "CardCounter", lp: 420, netWorth: 450000 },
+    { rankVal: 6, rankName: "Risk Taker", title: "YOLO King", name: "YOLO_Trader", lp: 250, netWorth: 150000 },
+    { rankVal: 6, rankName: "Risk Taker", title: "Doge Fan", name: "DogeCoin_Fan", lp: 210, netWorth: 120000 },
+    { rankVal: 6, rankName: "Risk Taker", title: "Risk Taker", name: "WallStreetBet", lp: 190, netWorth: 110000 },
+    { rankVal: 7, rankName: "Small Fry", title: "The Novice", name: "NoobMaster69", lp: 90, netWorth: 80000 },
+    { rankVal: 7, rankName: "Small Fry", title: "JustLooking", name: "JustLooking", lp: 50, netWorth: 50000 },
+    { rankVal: 7, rankName: "Small Fry", title: "Anon", name: "Anon_User", lp: 45, netWorth: 45000 },
+    { rankVal: 7, rankName: "Small Fry", title: "Bot_221", name: "Bot_221", lp: 30, netWorth: 30000 },
+    { rankVal: 7, rankName: "Small Fry", title: "Guest", name: "Guest_99", lp: 10, netWorth: 15000 },
+    { rankVal: 8, rankName: "Bankrupt", title: "Need Loan", name: "NeedLoanPls", lp: -50, netWorth: 5000 },
+    { rankVal: 8, rankName: "Bankrupt", title: "Rekt", name: "Rekt_City", lp: -120, netWorth: 500 },
+    { rankVal: 8, rankName: "Bankrupt", title: "Lost It All", name: "LostItAll", lp: -200, netWorth: 100 },
+    { rankVal: 8, rankName: "Bankrupt", title: "Sad Pepe", name: "SadPepe", lp: -500, netWorth: 0 },
+    { rankVal: 7, rankName: "Small Fry", title: "Newbie", name: "Newbie_01", lp: 88, netWorth: 75000 },
+    { rankVal: 7, rankName: "Small Fry", title: "Glitch Hunter", name: "GlitchHunter", lp: 60, netWorth: 60000 },
+    { rankVal: 6, rankName: "Risk Taker", title: "High Stake", name: "HighStakeJ", lp: 280, netWorth: 180000 },
+    { rankVal: 5, rankName: "Table Shark", title: "Poker Face", name: "PokerFace", lp: 480, netWorth: 600000 },
+    { rankVal: 4, rankName: "Casino Legend", title: "Slot Machine Go Brr", name: "SlotMachineGoBrr", lp: 700, netWorth: 1200000 },
+    { rankVal: 8, rankName: "Bankrupt", title: "Help Me", name: "HelpMe", lp: -50, netWorth: 2000 },
+    { rankVal: 7, rankName: "Small Fry", title: "Learning", name: "Learning", lp: 20, netWorth: 25000 },
+    { rankVal: 6, rankName: "Risk Taker", title: "Crypto Dad", name: "CryptoDad", lp: 150, netWorth: 135000 }
 ];
 
 const walletLogsDB = [

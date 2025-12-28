@@ -2504,7 +2504,7 @@ function renderGlobalLeaderboard() {
                     ${rankIconHtml}
                 </div>
                 <div style="${titleStyle}">
-                    ${p.rankName}
+                    ${p.title}
                 </div>
             </div>
             <div class="lb-stats" style="justify-content:center;">
