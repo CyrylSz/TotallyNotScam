@@ -1932,7 +1932,7 @@ function renderGamesContent() {
             card.onclick = () => openGameDetailsModal(game);
             
             const glowColor = game.color;
-            const variantsText = game.variants > 1 ? `${game.variants} MODES` : 'CLASSIC';
+            const variantsText = game.variants > 1 ? `${game.variants} MODES` : '';
             
             
             const tagHtml = game.tag 
@@ -1957,16 +1957,16 @@ function renderGamesContent() {
                         <div class="gh-online-badge">
                             <i class="fas fa-user-group gh-online-icon"></i> ${game.onlineCount.toLocaleString()}
                         </div>
-                        <div class="gh-variants-badge">${variantsText}</div>
+                        <div class="gh-capacity-badge" title="Wymagani gracze / Miejsca">
+                            <i class="fas fa-user"></i> ${game.players}
+                        </div>
                     </div>
                 </div>
 
                 <div class="gh-card-body">
-                    <div class="gh-title-row">
+                    <div class="gh-title-row" style="justify-content: flex-start; gap: 8px;">
                         <h4 class="gh-game-title">${game.name}</h4>
-                        <div class="gh-capacity-badge" title="Wymagani gracze / Miejsca">
-                            <i class="fas fa-user"></i> ${game.players}
-                        </div>
+                        <div class="gh-variants-badge">${variantsText}</div>
                     </div>
                     <p class="gh-game-desc">${game.desc}</p>
                 </div>

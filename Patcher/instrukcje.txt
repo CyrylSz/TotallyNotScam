@@ -1,136 +1,47 @@
-KROK 3:
+KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-function renderGlobalLeaderboard() {
-    const list = document.getElementById('globalLeaderboardList');
-    if(!list) return;
-    list.innerHTML = '';
-
-    
-    const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
-
-    sortedPlayers.forEach((p, index) => {
-        const div = document.createElement('div');
-        
-        if (p.isMe) div.id = 'lb-my-row';
-        
-        
-        div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
-        
-        
-        if(p.isMe) {
-            div.style.background = "rgba(59, 130, 246, 0.2)";
-            div.style.border = "1px solid rgba(59, 130, 246, 0.4)";
-        }
-
-        const rankNum = index + 1;
-        
-        let rankClass = '';
-        let trophyIcon = '';
-        if (rankNum === 1) { rankClass = 'top1'; trophyIcon = '🥇'; }
-        else if (rankNum === 2) { rankClass = 'top2'; trophyIcon = '🥈'; }
-        else if (rankNum === 3) { rankClass = 'top3'; trophyIcon = '🥉'; }
-        else { trophyIcon = `<span style="color:#666">#</span>`; }
-
-        const rankData = ranksDB.find(r => r.id === p.rankVal);
-        
-        const rIcon = rankData ? rankData.icon : 'fa-user';
-        const rColor = rankData ? rankData.color : '#888';
-
-        
-        let nwDisplay = p.netWorth >= 1000000 
-            ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
-            : (p.netWorth / 1000).toFixed(0) + 'k $';
-
-        div.innerHTML = `
-            <div class="lb-rank ${rankClass}" style="display:flex; justify-content:center; align-items:center;">
-                ${rankNum <= 3 ? trophyIcon : rankNum}
-            </div>
-            <div class="lb-user">
-                <div class="lb-name" style="${p.isMe ? 'color:var(--accent-blue); font-weight:800;' : ''}">
-                   ${p.name} ${p.isMe ? '(Ty)' : ''}
+                <div class="gh-card-header">
+                    <div class="gh-icon-large" style="color: ${glowColor}; text-shadow: 0 0 20px ${glowColor}40;">
+                        <i class="fas ${game.icon}"></i>
+                    </div>
+                    <div class="gh-card-meta">
+                        <div class="gh-online-badge">
+                            <i class="fas fa-user-group gh-online-icon"></i> ${game.onlineCount.toLocaleString()}
+                        </div>
+                        <div class="gh-variants-badge">${variantsText}</div>
+                    </div>
                 </div>
-                <div style="font-size:10px; color:#8b92a5; display:flex; align-items:center; gap:4px;">
-                    <i class="fas ${rIcon}" style="color:${rColor}; font-size:9px;"></i> ${p.rankName}
+
+                <div class="gh-card-body">
+                    <div class="gh-title-row">
+                        <h4 class="gh-game-title">${game.name}</h4>
+                        <div class="gh-capacity-badge" title="Wymagani gracze / Miejsca">
+                            <i class="fas fa-user"></i> ${game.players}
+                        </div>
+                    </div>
+                    <p class="gh-game-desc">${game.desc}</p>
                 </div>
-            </div>
-            <div class="lb-stats" style="justify-content:center;">
-                <div class="lb-nw" style="font-size:12px; color:var(--accent-green); font-weight:700;">${nwDisplay}</div>
-            </div>
-        `;
-        list.appendChild(div);
-    });
-}
 TREŚĆ:
-function renderGlobalLeaderboard() {
-    const list = document.getElementById('globalLeaderboardList');
-    if(!list) return;
-    list.innerHTML = '';
-
-    const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
-
-    sortedPlayers.forEach((p, index) => {
-        const div = document.createElement('div');
-        if (p.isMe) div.id = 'lb-my-row';
-        div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
-        
-        if(p.isMe) {
-            div.style.background = "rgba(59, 130, 246, 0.2)";
-            div.style.border = "1px solid rgba(59, 130, 246, 0.4)";
-        }
-
-        const rankNum = index + 1;
-        let rankClass = '';
-        let trophyIcon = '';
-        if (rankNum === 1) { rankClass = 'top1'; trophyIcon = '🥇'; }
-        else if (rankNum === 2) { rankClass = 'top2'; trophyIcon = '🥈'; }
-        else if (rankNum === 3) { rankClass = 'top3'; trophyIcon = '🥉'; }
-        else { trophyIcon = `<span style="color:#666">#</span>`; }
-
-        const rankData = ranksDB.find(r => r.id === p.rankVal);
-        let rankIconHtml = '';
-        let rColor = '#888';
-
-        if(rankData) {
-            rColor = rankData.color;
-            // Sprawdź czy jest emoji w definicji rangi (np. dla Alpha Whale)
-            if(rankData.emoji) {
-                rankIconHtml = `<span style="margin-left:6px; font-size:14px; line-height:1;">${rankData.emoji}</span>`;
-            } else {
-                rankIconHtml = `<i class="fas ${rankData.icon}" style="margin-left:6px; color:${rColor}; font-size:12px;"></i>`;
-            }
-        }
-
-        // Tytuł podświetlony na złoto dla Kinga
-        let titleStyle = 'font-size:10px; color:#8b92a5; margin-top:2px;';
-        if (p.rankName === 'King of The Gamblers') {
-            titleStyle = 'font-size:10px; color:#FFD700; font-weight:700; text-shadow: 0 0 5px rgba(255,215,0,0.3); margin-top:2px;';
-        }
-        
-        let nwDisplay = p.netWorth >= 1000000 
-            ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
-            : (p.netWorth / 1000).toFixed(0) + 'k $';
-
-        div.innerHTML = `
-            <div class="lb-rank ${rankClass}" style="display:flex; justify-content:center; align-items:center;">
-                ${rankNum <= 3 ? trophyIcon : rankNum}
-            </div>
-            <div class="lb-user">
-                <div style="display:flex; align-items:center;">
-                    <span class="lb-name" style="${p.isMe ? 'color:var(--accent-blue); font-weight:800;' : ''}">
-                        ${p.name} ${p.isMe ? '(Ty)' : ''}
-                    </span>
-                    ${rankIconHtml}
+                <div class="gh-card-header">
+                    <div class="gh-icon-large" style="color: ${glowColor}; text-shadow: 0 0 20px ${glowColor}40;">
+                        <i class="fas ${game.icon}"></i>
+                    </div>
+                    <div class="gh-card-meta">
+                        <div class="gh-online-badge">
+                            <i class="fas fa-user-group gh-online-icon"></i> ${game.onlineCount.toLocaleString()}
+                        </div>
+                        <div class="gh-capacity-badge" title="Wymagani gracze / Miejsca">
+                            <i class="fas fa-user"></i> ${game.players}
+                        </div>
+                    </div>
                 </div>
-                <div style="${titleStyle}">
-                    ${p.rankName}
+
+                <div class="gh-card-body">
+                    <div class="gh-title-row" style="justify-content: flex-start; gap: 8px;">
+                        <h4 class="gh-game-title">${game.name}</h4>
+                        <div class="gh-variants-badge">${variantsText}</div>
+                    </div>
+                    <p class="gh-game-desc">${game.desc}</p>
                 </div>
-            </div>
-            <div class="lb-stats" style="justify-content:center;">
-                <div class="lb-nw" style="font-size:12px; color:var(--accent-green); font-weight:700;">${nwDisplay}</div>
-            </div>
-        `;
-        list.appendChild(div);
-    });
-}
