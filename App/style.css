@@ -3160,23 +3160,24 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .gh-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); 
-    gap: 20px;
+    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); 
+    gap: 15px;
+    justify-content: center;
 }
 
 .gh-card {
     background: #151a2d;
     border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 16px;
-    padding: 20px;
+    border-radius: 12px;
+    padding: 15px;
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 10px;
     transition: all 0.4s cubic-bezier(0.25, 0.8, 0.25, 1);
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    min-height: 200px;
+    min-height: 150px;
 }
 
 
@@ -3255,7 +3256,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 
 .gh-icon-large {
-    font-size: 36px;
+    font-size: 28px;
     transition: 0.3s;
 }
 
@@ -3337,7 +3338,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 
 .gh-game-title {
-    font-size: 18px;
+    font-size: 15px;
     font-weight: 700;
     color: white;
     margin-bottom: 0; 

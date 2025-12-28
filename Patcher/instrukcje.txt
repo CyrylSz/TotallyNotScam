@@ -1,150 +1,136 @@
-KROK 1:
-PLIK: "index.html"
+KROK 3:
+PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-            <div class="rank-overview-banner" style="position: relative;">
-                
-                <i class="fas fa-ellipsis-h rob-menu-btn" onclick="openRankModal()"></i>
+function renderGlobalLeaderboard() {
+    const list = document.getElementById('globalLeaderboardList');
+    if(!list) return;
+    list.innerHTML = '';
 
-                <div class="rob-left">
-                    
-                    <div class="rob-icon" style="background: transparent; border: none; font-size: 42px; width: auto; height: auto;">
-                        🐋
-                    </div> 
-                    <div class="rob-info">
-                        <div class="rob-label">Twoja Ranga</div>
-                        <div class="rob-title">Alpha Whale</div>
-                        <div class="rob-sub">#25 na świecie (LP)</div>
-                    </div>
-                </div>
-                
-                <div class="rob-center">
-                    <div class="rob-progress-labels">
-                        <span>Obecne LP: <b style="color:var(--accent-blue);">1,469</b></span>
-                        <span>Następna ranga: <b>2,000 LP</b></span>
-                    </div>
-                    <div class="rob-progress-bar">
-                        <div class="rob-progress-fill" style="width: 72.5%;"></div> 
-                    </div>
-                    <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-red);">531 LP</span> do próby awansu na <b>RNG God</b></div>
-                </div>
+    
+    const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
 
-                <div class="rob-right">
-                    
-                    <div class="stat-group-vertical">
-                        <div class="stat-highlight-val">2 <span style="font-size:12px; color:#fff;">🔥</span></div>
-                        <div class="stat-sub-val">Winstreak</div>
-                    </div>
-                    <div style="width: 1px; height: 30px; background: rgba(255,255,255,0.1); margin: 0 15px;"></div>
-                    <div class="stat-group-vertical">
-                        <div class="stat-highlight-val" style="color: var(--accent-orange);">11</div>
-                        <div class="stat-sub-val">Highest</div>
-                    </div>
+    sortedPlayers.forEach((p, index) => {
+        const div = document.createElement('div');
+        
+        if (p.isMe) div.id = 'lb-my-row';
+        
+        
+        div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
+        
+        
+        if(p.isMe) {
+            div.style.background = "rgba(59, 130, 246, 0.2)";
+            div.style.border = "1px solid rgba(59, 130, 246, 0.4)";
+        }
+
+        const rankNum = index + 1;
+        
+        let rankClass = '';
+        let trophyIcon = '';
+        if (rankNum === 1) { rankClass = 'top1'; trophyIcon = '🥇'; }
+        else if (rankNum === 2) { rankClass = 'top2'; trophyIcon = '🥈'; }
+        else if (rankNum === 3) { rankClass = 'top3'; trophyIcon = '🥉'; }
+        else { trophyIcon = `<span style="color:#666">#</span>`; }
+
+        const rankData = ranksDB.find(r => r.id === p.rankVal);
+        
+        const rIcon = rankData ? rankData.icon : 'fa-user';
+        const rColor = rankData ? rankData.color : '#888';
+
+        
+        let nwDisplay = p.netWorth >= 1000000 
+            ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
+            : (p.netWorth / 1000).toFixed(0) + 'k $';
+
+        div.innerHTML = `
+            <div class="lb-rank ${rankClass}" style="display:flex; justify-content:center; align-items:center;">
+                ${rankNum <= 3 ? trophyIcon : rankNum}
+            </div>
+            <div class="lb-user">
+                <div class="lb-name" style="${p.isMe ? 'color:var(--accent-blue); font-weight:800;' : ''}">
+                   ${p.name} ${p.isMe ? '(Ty)' : ''}
+                </div>
+                <div style="font-size:10px; color:#8b92a5; display:flex; align-items:center; gap:4px;">
+                    <i class="fas ${rIcon}" style="color:${rColor}; font-size:9px;"></i> ${p.rankName}
                 </div>
             </div>
+            <div class="lb-stats" style="justify-content:center;">
+                <div class="lb-nw" style="font-size:12px; color:var(--accent-green); font-weight:700;">${nwDisplay}</div>
+            </div>
+        `;
+        list.appendChild(div);
+    });
+}
 TREŚĆ:
-            <div class="rank-stats-wrapper">
-                <div class="rs-card rank-block">
-                    <i class="fas fa-ellipsis-h rob-menu-btn" onclick="openRankModal()"></i>
-                    <div class="rob-left">
-                        <div class="rob-icon" style="background: transparent; border: none; font-size: 42px; width: auto; height: auto;">
-                            🐋
-                        </div> 
-                        <div class="rob-info">
-                            <div class="rob-label">Twoja Ranga</div>
-                            <div class="rob-title">Alpha Whale</div>
-                            <div class="rob-sub">#25 na świecie (LP)</div>
-                        </div>
-                    </div>
-                    <div class="rob-center" style="margin: 0 20px;">
-                        <div class="rob-progress-labels">
-                            <span>Obecne LP: <b style="color:var(--accent-blue);">1,469</b></span>
-                            <span>Następna ranga: <b>2,000 LP</b></span>
-                        </div>
-                        <div class="rob-progress-bar">
-                            <div class="rob-progress-fill" style="width: 72.5%;"></div> 
-                        </div>
-                        <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-red);">531 LP</span> do próby awansu na <b>RNG God</b></div>
-                    </div>
+function renderGlobalLeaderboard() {
+    const list = document.getElementById('globalLeaderboardList');
+    if(!list) return;
+    list.innerHTML = '';
+
+    const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
+
+    sortedPlayers.forEach((p, index) => {
+        const div = document.createElement('div');
+        if (p.isMe) div.id = 'lb-my-row';
+        div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
+        
+        if(p.isMe) {
+            div.style.background = "rgba(59, 130, 246, 0.2)";
+            div.style.border = "1px solid rgba(59, 130, 246, 0.4)";
+        }
+
+        const rankNum = index + 1;
+        let rankClass = '';
+        let trophyIcon = '';
+        if (rankNum === 1) { rankClass = 'top1'; trophyIcon = '🥇'; }
+        else if (rankNum === 2) { rankClass = 'top2'; trophyIcon = '🥈'; }
+        else if (rankNum === 3) { rankClass = 'top3'; trophyIcon = '🥉'; }
+        else { trophyIcon = `<span style="color:#666">#</span>`; }
+
+        const rankData = ranksDB.find(r => r.id === p.rankVal);
+        let rankIconHtml = '';
+        let rColor = '#888';
+
+        if(rankData) {
+            rColor = rankData.color;
+            // Sprawdź czy jest emoji w definicji rangi (np. dla Alpha Whale)
+            if(rankData.emoji) {
+                rankIconHtml = `<span style="margin-left:6px; font-size:14px; line-height:1;">${rankData.emoji}</span>`;
+            } else {
+                rankIconHtml = `<i class="fas ${rankData.icon}" style="margin-left:6px; color:${rColor}; font-size:12px;"></i>`;
+            }
+        }
+
+        // Tytuł podświetlony na złoto dla Kinga
+        let titleStyle = 'font-size:10px; color:#8b92a5; margin-top:2px;';
+        if (p.rankName === 'King of The Gamblers') {
+            titleStyle = 'font-size:10px; color:#FFD700; font-weight:700; text-shadow: 0 0 5px rgba(255,215,0,0.3); margin-top:2px;';
+        }
+        
+        let nwDisplay = p.netWorth >= 1000000 
+            ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
+            : (p.netWorth / 1000).toFixed(0) + 'k $';
+
+        div.innerHTML = `
+            <div class="lb-rank ${rankClass}" style="display:flex; justify-content:center; align-items:center;">
+                ${rankNum <= 3 ? trophyIcon : rankNum}
+            </div>
+            <div class="lb-user">
+                <div style="display:flex; align-items:center;">
+                    <span class="lb-name" style="${p.isMe ? 'color:var(--accent-blue); font-weight:800;' : ''}">
+                        ${p.name} ${p.isMe ? '(Ty)' : ''}
+                    </span>
+                    ${rankIconHtml}
                 </div>
-                <div class="rs-card streak-block">
-                    <div class="ws-data">
-                        <div class="ws-label">WIN STREAK</div>
-                        <div class="ws-val">2 <i class="fas fa-fire" style="font-size:14px; color:#ef4444; margin-left:4px;"></i></div>
-                        <div class="ws-highest">Highest: <span style="color:rgba(239, 68, 68, 0.4); font-size:11px; font-weight:700;">11</span></div>
-                    </div>
+                <div style="${titleStyle}">
+                    ${p.rankName}
                 </div>
             </div>
-
-KROK 2:
-PLIK: "style.css"
-OPERACJA: [WSTAW_PO]
-SZUKAJ:
-    color: #ccc;
-    font-weight: 500;
-}
-TREŚĆ:
-.rank-stats-wrapper {
-    display: flex;
-    justify-content: center;
-    align-items: stretch;
-    gap: 15px;
-    margin: 0 12%;
-    margin-bottom: 25px;
-}
-
-.rs-card {
-    background: linear-gradient(90deg, #1e2538 0%, #151a2d 100%);
-    border: 1px solid rgba(59, 130, 246, 0.3);
-    border-radius: 12px;
-    padding: 15px 20px;
-    position: relative;
-    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
-    display: flex;
-    align-items: center;
-}
-
-.rs-card.rank-block {
-    flex: 1;
-    max-width: 600px;
-    justify-content: space-between;
-}
-
-.rs-card.streak-block {
-    flex: 0 0 auto;
-    min-width: 130px;
-    justify-content: center;
-    background: linear-gradient(135deg, #1e2030 0%, #151a2d 100%);
-    border-color: rgba(239, 68, 68, 0.2);
-}
-
-.ws-data {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-}
-
-.ws-label {
-    font-size: 10px;
-    color: var(--text-muted);
-    font-weight: 700;
-    letter-spacing: 1px;
-    margin-bottom: 2px;
-}
-
-.ws-val {
-    font-size: 26px;
-    font-weight: 800;
-    color: white;
-    line-height: 1;
-    margin-bottom: 3px;
-    display: flex;
-    align-items: center;
-}
-
-.ws-highest {
-    font-size: 9px;
-    color: #666;
-    font-weight: 500;
-    letter-spacing: 0.5px;
+            <div class="lb-stats" style="justify-content:center;">
+                <div class="lb-nw" style="font-size:12px; color:var(--accent-green); font-weight:700;">${nwDisplay}</div>
+            </div>
+        `;
+        list.appendChild(div);
+    });
 }

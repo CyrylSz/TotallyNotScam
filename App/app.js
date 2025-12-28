@@ -1922,31 +1922,27 @@ function renderGamesContent() {
     const wrapper = document.createElement('div');
     wrapper.className = 'gh-content-area';
 
-    currentTab.subcategories.forEach(sub => {
-        const subSection = document.createElement('div');
-        subSection.className = 'gh-sub-section';
+    const grid = document.createElement('div');
+    grid.className = 'gh-grid';
 
-        subSection.innerHTML = `<div class="gh-sub-header"><i class="fas fa-layer-group"></i> ${sub.title}</div>`;
-
-        const grid = document.createElement('div');
-        grid.className = 'gh-grid';
-
-        sub.games.forEach(game => {
+    if (currentTab.games) {
+        currentTab.games.forEach(game => {
             const card = document.createElement('div');
             card.className = 'gh-card';
-            
-            
             card.onclick = () => openGameDetailsModal(game);
-            
             
             const glowColor = game.color;
             const variantsText = game.variants > 1 ? `${game.variants} MODES` : 'CLASSIC';
+            
+            
+            const tagHtml = game.tag 
+                ? `<div class="gh-game-tag" style="position:absolute; top:12px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,0.15); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:2px; pointer-events:none;">${game.tag}</div>` 
+                : '';
 
             card.innerHTML = `
-                <!-- Background Glow -->
                 <div class="gh-card-bg-glow" style="background: ${glowColor};"></div>
+                ${tagHtml}
                 
-                <!-- Hover Play Overlay -->
                 <div class="gh-play-overlay">
                     <div class="gh-play-icon-container">
                         <i class="fas fa-play"></i>
@@ -1958,7 +1954,6 @@ function renderGamesContent() {
                         <i class="fas ${game.icon}"></i>
                     </div>
                     <div class="gh-card-meta">
-                        <!-- Tylko Online Count i Variants zostają tutaj -->
                         <div class="gh-online-badge">
                             <i class="fas fa-user-group gh-online-icon"></i> ${game.onlineCount.toLocaleString()}
                         </div>
@@ -1967,24 +1962,20 @@ function renderGamesContent() {
                 </div>
 
                 <div class="gh-card-body">
-                    <!-- NOWA SEKCJA TYTUŁOWA -->
                     <div class="gh-title-row">
                         <h4 class="gh-game-title">${game.name}</h4>
                         <div class="gh-capacity-badge" title="Wymagani gracze / Miejsca">
                             <i class="fas fa-user"></i> ${game.players}
                         </div>
                     </div>
-                    
                     <p class="gh-game-desc">${game.desc}</p>
                 </div>
             `;
             grid.appendChild(card);
         });
+    }
 
-        subSection.appendChild(grid);
-        wrapper.appendChild(subSection);
-    });
-
+    wrapper.appendChild(grid);
     container.appendChild(wrapper);
 }
 
@@ -1995,17 +1986,12 @@ function renderGlobalLeaderboard() {
     if(!list) return;
     list.innerHTML = '';
 
-    
     const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
 
     sortedPlayers.forEach((p, index) => {
         const div = document.createElement('div');
-        
         if (p.isMe) div.id = 'lb-my-row';
-        
-        
         div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
-        
         
         if(p.isMe) {
             div.style.background = "rgba(59, 130, 246, 0.2)";
@@ -2013,7 +1999,6 @@ function renderGlobalLeaderboard() {
         }
 
         const rankNum = index + 1;
-        
         let rankClass = '';
         let trophyIcon = '';
         if (rankNum === 1) { rankClass = 'top1'; trophyIcon = '🥇'; }
@@ -2022,10 +2007,24 @@ function renderGlobalLeaderboard() {
         else { trophyIcon = `<span style="color:#666">#</span>`; }
 
         const rankData = ranksDB.find(r => r.id === p.rankVal);
-        
-        const rIcon = rankData ? rankData.icon : 'fa-user';
-        const rColor = rankData ? rankData.color : '#888';
+        let rankIconHtml = '';
+        let rColor = '#888';
 
+        if(rankData) {
+            rColor = rankData.color;
+            
+            if(rankData.emoji) {
+                rankIconHtml = `<span style="margin-left:6px; font-size:14px; line-height:1;">${rankData.emoji}</span>`;
+            } else {
+                rankIconHtml = `<i class="fas ${rankData.icon}" style="margin-left:6px; color:${rColor}; font-size:12px;"></i>`;
+            }
+        }
+
+        
+        let titleStyle = 'font-size:10px; color:#8b92a5; margin-top:2px;';
+        if (p.rankName === 'King of The Gamblers') {
+            titleStyle = 'font-size:10px; color:#FFD700; font-weight:700; text-shadow: 0 0 5px rgba(255,215,0,0.3); margin-top:2px;';
+        }
         
         let nwDisplay = p.netWorth >= 1000000 
             ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
@@ -2036,11 +2035,14 @@ function renderGlobalLeaderboard() {
                 ${rankNum <= 3 ? trophyIcon : rankNum}
             </div>
             <div class="lb-user">
-                <div class="lb-name" style="${p.isMe ? 'color:var(--accent-blue); font-weight:800;' : ''}">
-                   ${p.name} ${p.isMe ? '(Ty)' : ''}
+                <div style="display:flex; align-items:center;">
+                    <span class="lb-name" style="${p.isMe ? 'color:var(--accent-blue); font-weight:800;' : ''}">
+                        ${p.name} ${p.isMe ? '(Ty)' : ''}
+                    </span>
+                    ${rankIconHtml}
                 </div>
-                <div style="font-size:10px; color:#8b92a5; display:flex; align-items:center; gap:4px;">
-                    <i class="fas ${rIcon}" style="color:${rColor}; font-size:9px;"></i> ${p.rankName}
+                <div style="${titleStyle}">
+                    ${p.rankName}
                 </div>
             </div>
             <div class="lb-stats" style="justify-content:center;">
