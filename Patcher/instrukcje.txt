@@ -1,99 +1,15 @@
 KROK 1:
-PLIK: "data.js"
+PLIK: "style.css"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    { 
-        id: 6, 
-        name: "Risk Taker", 
-        desc: "Stawiasz wszystko na jedną kartę.", 
-        req: "100 - 300 LP • ≥ 4h w grach", 
-        icon: "fa-fire", 
-        color: "#f59e0b", 
-        cardClass: "", 
-        align: "left", 
-        margin: "" 
-    },
-    { 
-        id: 5, 
-        name: "Table Shark", 
-        desc: "Może i matematyka nie jest po twojej stronie, ale czujesz krew.", 
-        req: "300 - 600 LP • Win Rate ≥ 55% (20 gier)", 
-        icon: "fa-skull-crossbones", 
-        color: "#ef4444", 
-        cardClass: "", 
-        align: "right", 
-        margin: "" 
-    },
-    { 
-        id: 4, 
-        name: "Casino Legend", 
-        desc: "Krupierzy szepczą twoje imię, gdy wchodzisz na salę.", 
-        req: "600 - 1000 LP • Net Worth ≥ 1M", 
-        icon: "fa-gem", 
-        color: "#3b82f6", 
-        cardClass: "", 
-        align: "left", 
-        margin: "margin-top: -60px;" 
-    },
+.favorites-panel {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 1px solid rgba(255, 215, 0, 0.1);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}
 TREŚĆ:
-    { 
-        id: 6, 
-        name: "Risk Taker", 
-        desc: "Stawiasz wszystko na jedną kartę.", 
-        req: "100 - 300 LP • ≥ 4h w grach<br><span style='color:#3b82f6; font-size:9px;'>Wymagane dla: RARE</span>", 
-        icon: "fa-fire", 
-        color: "#f59e0b", 
-        cardClass: "", 
-        align: "left", 
-        margin: "" 
-    },
-    { 
-        id: 5, 
-        name: "Table Shark", 
-        desc: "Może i matematyka nie jest po twojej stronie, ale czujesz krew.", 
-        req: "300 - 600 LP • Win Rate ≥ 55%<br><span style='color:#8b5cf6; font-size:9px;'>Wymagane dla: EPIC</span>", 
-        icon: "fa-skull-crossbones", 
-        color: "#ef4444", 
-        cardClass: "", 
-        align: "right", 
-        margin: "" 
-    },
-    { 
-        id: 4, 
-        name: "Casino Legend", 
-        desc: "Krupierzy szepczą twoje imię, gdy wchodzisz na salę.", 
-        req: "600 - 1000 LP • Net Worth ≥ 1M<br><span style='color:#ef4444; font-size:9px;'>Wymagane dla: RELIC</span>", 
-        icon: "fa-gem", 
-        color: "#3b82f6", 
-        cardClass: "", 
-        align: "left", 
-        margin: "margin-top: -60px;" 
-    },
-
-KROK 2:
-PLIK: "data.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-    { 
-        id: 2, 
-        name: "RNG God", 
-        desc: "Nie grasz w kości. Ty mówisz kościom, jak mają upaść.", 
-        req: "2000 - 5000 LP • Win streak ≥ 5 gier", 
-        icon: "fa-bahai", 
-        color: "#00e5ff", 
-        cardClass: "card-god future-rank", 
-        align: "center", 
-        margin: "margin-top: 20px;" 
-    },
-TREŚĆ:
-    { 
-        id: 2, 
-        name: "RNG God", 
-        desc: "Nie grasz w kości. Ty mówisz kościom, jak mają upaść.", 
-        req: "2000 - 5000 LP • Streak ≥ 5<br><span style='color:#ffd700; font-size:9px;'>Wymagane dla: DIVINE</span>", 
-        icon: "fa-bahai", 
-        color: "#00e5ff", 
-        cardClass: "card-god future-rank", 
-        align: "center", 
-        margin: "margin-top: 20px;" 
-    },
+.favorites-panel {
+    background: linear-gradient(135deg, #1a1a2e, #16213e);
+    border: 1px solid rgba(16, 185, 129, 0.3);
+    box-shadow: 0 4px 20px rgba(0,0,0,0.2);
+}

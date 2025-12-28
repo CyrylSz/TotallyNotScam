@@ -2086,6 +2086,62 @@ function initDashboardExtras() {
     renderDashInventory();
     initBannerCarousel();
     renderFavoritesPanel();
+    renderPopularModes();
+}
+
+function renderPopularModes() {
+    const grid = document.getElementById('popularModesGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    let allModes = [];
+
+    // Spłaszczanie struktury i przypisywanie graczy
+    gamesHubStructure.forEach(category => {
+        if(category.games) {
+            category.games.forEach(game => {
+                const distrib = distributePlayers(game.onlineCount, game.modes.length);
+                game.modes.forEach((modeName, idx) => {
+                    allModes.push({
+                        modeName: modeName,
+                        gameName: game.name,
+                        players: distrib[idx],
+                        icon: game.icon,
+                        color: game.color,
+                        gameId: game.id
+                    });
+                });
+            });
+        }
+    });
+
+    // Sortowanie malejąco po liczbie graczy
+    allModes.sort((a, b) => b.players - a.players);
+
+    // Pobranie TOP 6
+    const topModes = allModes.slice(0, 6);
+
+    topModes.forEach((m, index) => {
+        const card = document.createElement('div');
+        card.className = 'mode-card';
+        card.onclick = () => alert(`Szybki start: ${m.modeName} (${m.gameName})`);
+
+        card.innerHTML = `
+            <div class="mc-top">
+                <div class="mc-icon" style="background:${m.color}40; color:${m.color};">
+                    <i class="fas ${m.icon}"></i>
+                </div>
+                <div style="font-size:10px; color:#aaa; font-weight:700;">#${index + 1}</div>
+            </div>
+            <div class="mc-title">${m.modeName}</div>
+            <div class="mc-sub" style="margin-bottom:2px; font-size:9px; opacity:0.7;">${m.gameName}</div>
+            <div class="mc-players"><i class="fas fa-user"></i> ${m.players.toLocaleString()}</div>
+             <div class="mc-overlay-play">
+                <div class="play-btn-round"><i class="fas fa-play"></i></div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
 }
 
 

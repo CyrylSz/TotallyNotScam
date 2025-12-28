@@ -2467,17 +2467,16 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* Favorites Panel on Dashboard */
 .favorites-panel {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
-    border: 1px solid rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 .favorites-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     padding-top: 10px;
-    max-height: 200px;
-    overflow-y: auto;
+    min-height: 240px;
 }
 
 .fav-placeholder {
