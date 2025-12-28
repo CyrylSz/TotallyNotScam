@@ -136,10 +136,47 @@
 
                         <div class="cp-section">
                              <div class="card-header">
-                                <div class="card-title"><i class="fas fa-suitcase"></i> Twój Ekwipunek</div>
+                                <div class="card-title"><i class="fas fa-user-astronaut"></i> Loadout</div>
                                 <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('inventory')" title="Pełny ekwipunek"></i>
                             </div>
-                            <div class="list-container" id="dashInventoryList" style="flex-grow: 1;"></div>
+                            
+                            <div style="padding: 0 5px; display: flex; flex-direction: column; gap: 15px; flex-grow: 1; justify-content: center;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                    <div class="inv-value-display" style="border: none; margin: 0; padding: 0; height: auto; align-items: flex-start;">
+                                        <div class="iv-label">GEAR POWER</div>
+                                        <div class="iv-val" style="font-size: 28px; color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">145</div>
+                                    </div>
+                                    <div class="loadout-select-box" style="height: auto; align-items: flex-end;">
+                                        <div class="iv-label">ACTIVE LOADOUT</div>
+                                        <select class="minimal-select" style="text-align: right; width: 100%;">
+                                            <option selected>Poker Face Outfit</option>
+                                            <option>High Roller Set</option>
+                                            <option>Lucky Charm</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);"></div>
+
+                                <div class="pd-insights-content">
+                                    <div class="pi-row">
+                                        <span class="pi-label">BUILD TYPE:</span>
+                                        <span class="pi-val high-risk">High Risk / Skill-Biased</span>
+                                    </div>
+                                    <div class="pi-row">
+                                        <span class="pi-label">LUCK ↔ SKILL:</span>
+                                        <span class="pi-val">35% / 65%</span>
+                                    </div>
+                                    <div class="pi-row">
+                                        <span class="pi-label">RNG DEPENDENCY:</span>
+                                        <span class="pi-val medium">Medium</span>
+                                    </div>
+                                    <div class="pi-row">
+                                        <span class="pi-label">RECOMMENDED MODES:</span>
+                                        <span class="pi-val mode-list">Poker, Crash, Degenerate Worms</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -345,8 +382,8 @@
                         <div class="inv-stats">
                             <div class="inv-value-display">
                                 <div class="iv-label" style="display: flex; align-items: center; gap: 6px;">
-                                    GEAR SCORE
-                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Score to suma punktów twoich założonych przedmiotów.')"></i>
+                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Power to suma punktów twoich założonych przedmiotów.')"></i>
+                                    GEAR POWER
                                 </div>
                                 <div class="iv-val" style="color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">145</div>
                             </div>

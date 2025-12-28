@@ -1,33 +1,13 @@
 KROK 1:
-PLIK: "style.css"
+PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-.pd-insights-wrapper {
-    padding: 15px 25px;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 12px;
-    margin-top: auto; 
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 90%;
-    max-width: 380px; /* Constrain width */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-}
+                                <div class="iv-label" style="display: flex; align-items: center; gap: 6px;">
+                                    GEAR SCORE
+                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Score to suma punktów twoich założonych przedmiotów.')"></i>
+                                </div>
 TREŚĆ:
-.pd-insights-wrapper {
-    padding: 15px 25px;
-    background: rgba(0,0,0,0.3);
-    border: 1px solid rgba(255,255,255,0.05);
-    border-radius: 12px;
-    margin-top: auto; 
-    margin-bottom: 20px;
-    margin-left: auto;
-    margin-right: auto;
-    width: 90%;
-    max-width: 380px; /* Constrain width */
-    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
-    position: relative;
-    top: -30px;
-}
+                                <div class="iv-label" style="display: flex; align-items: center; gap: 6px;">
+                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Score to suma punktów twoich założonych przedmiotów.')"></i>
+                                    GEAR SCORE
+                                </div>
