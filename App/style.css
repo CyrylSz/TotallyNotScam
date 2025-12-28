@@ -1444,6 +1444,51 @@ input:checked + .slider:before { transform: translateX(16px); }
     overflow: hidden;
 }
 
+.fixed-bg-anim {
+    position: fixed;
+    top: 0;
+    left: 260px;
+    width: calc(100% - 260px);
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+#viewWallet > *:not(.fixed-bg-anim), 
+#viewGames > *:not(.fixed-bg-anim) {
+    position: relative;
+    z-index: 2;
+}
+
+.falling-item {
+    position: absolute;
+    top: -100px;
+    user-select: none;
+    animation: fallDown linear infinite;
+}
+
+.chip-visual {
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    border: 2px dashed rgba(255,255,255,0.7);
+    box-shadow: 0 0 5px rgba(0,0,0,0.5);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    color: rgba(255,255,255,0.8);
+    font-weight: 700;
+}
+
+@keyframes fallDown {
+    0% { transform: translateY(-10vh) rotate(0deg); opacity: 0; }
+    10% { opacity: 0.6; }
+    90% { opacity: 0.6; }
+    100% { transform: translateY(110vh) rotate(360deg); opacity: 0; }
+}
+
 .star-real {
     position: absolute;
     background: #fff;

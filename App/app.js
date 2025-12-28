@@ -545,6 +545,8 @@ function closeMarketModal() {
 function initDashboard() {
     initInventorySystem(); 
     initMarketData();
+    initWalletBg();
+    initGamesBg();
     initProfileStars();      
     
     
@@ -587,6 +589,68 @@ function initProfileStars() {
         star.style.animationDuration = `${4 + Math.random() * 6}s`;
 
         container.appendChild(star);
+    }
+}
+
+function initWalletBg() {
+    const container = document.getElementById('walletBgAnim');
+    if(!container || container.children.length > 0) return;
+
+    const moneyChars = ['💵', '💸', '💰', '$'];
+    const count = 30;
+
+    for(let i=0; i<count; i++) {
+        const el = document.createElement('div');
+        el.className = 'falling-item';
+        el.textContent = moneyChars[Math.floor(Math.random() * moneyChars.length)];
+        
+        const x = Math.random() * 100;
+        const size = Math.random() * 20 + 15; // 15px - 35px
+        const duration = Math.random() * 10 + 5; // 5s - 15s
+        const delay = Math.random() * 10;
+
+        el.style.left = `${x}%`;
+        el.style.fontSize = `${size}px`;
+        el.style.opacity = Math.random() * 0.3 + 0.1;
+        el.style.animationDuration = `${duration}s`;
+        el.style.animationDelay = `-${delay}s`; // Negative delay for instant start
+
+        container.appendChild(el);
+    }
+}
+
+function initGamesBg() {
+    const container = document.getElementById('gamesBgAnim');
+    if(!container || container.children.length > 0) return;
+
+    const colors = ['#ef4444', '#3b82f6', '#10b981', '#000'];
+    // Znacznie mniejsza ilość (mniejsza gęstość)
+    const count = 12;
+
+    for(let i=0; i<count; i++) {
+        const el = document.createElement('div');
+        el.className = 'falling-item chip-visual';
+        
+        const color = colors[Math.floor(Math.random() * colors.length)];
+        el.style.backgroundColor = color;
+        
+        // Logika: tylko po bokach (0-15% lub 85-100%), aby nie zasłaniać paneli
+        let x;
+        if (Math.random() > 0.5) {
+            x = Math.random() * 15; // Lewa strona
+        } else {
+            x = 85 + Math.random() * 15; // Prawa strona
+        }
+
+        // Dłuższy czas spadania = spokojniejsza animacja
+        const duration = Math.random() * 20 + 15; 
+        const delay = Math.random() * 20;
+
+        el.style.left = `${x}%`;
+        el.style.animationDuration = `${duration}s`;
+        el.style.animationDelay = `-${delay}s`;
+
+        container.appendChild(el);
     }
 }
 
