@@ -1396,6 +1396,43 @@ input:checked + .slider:before { transform: translateX(16px); }
     letter-spacing: 0.5px;
 }
 
+/* --- Whale Background for Profile --- */
+#viewProfile {
+    position: relative;
+    /* Ensure child elements (panels) stay above the background */
+    z-index: 1;
+}
+
+#viewProfile > div:not(.profile-bg-whale) {
+    position: relative;
+    z-index: 2;
+}
+
+.profile-bg-whale {
+    position: absolute;
+    top: 50px; /* Below header */
+    right: -5%; /* Slightly off-screen to anchor it */
+    width: 65%;
+    height: 85%;
+    background-image: url('https://img-v3.deepdreamgenerator.com/2436355/z6qdyc_64f342e80213336fd546cecf2d2713e33ca5c609.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center right;
+    
+    /* Półprzezroczystość całości */
+    opacity: 0.25;
+    
+    /* Płynne zanikanie krawędzi (maska radialna) */
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+    
+    pointer-events: none; /* Click-through */
+    z-index: 0;
+    
+    /* Optional: Blend mode for better integration with dark bg */
+    mix-blend-mode: screen;
+}
+
 
 .rob-menu-btn {
     position: absolute;

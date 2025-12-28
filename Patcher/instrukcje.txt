@@ -1,44 +1,56 @@
 KROK 1:
-PLIK: "style.css"
-OPERACJA: [ZASTĄP]
+PLIK: "index.html"
+OPERACJA: [WSTAW_PO]
 SZUKAJ:
-/* HEADER: Sticky + Centered Currency Parent */
-.header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
-    padding-top: 25px;
-    padding-bottom: 25px;
-    margin-bottom: 10px;
-    
-    position: sticky; 
-    top: 0;
-    /* Zwiększony Z-Index, aby był nad tłem wieloryba */
-    z-index: 1000; 
-    
-    background-color: var(--bg-dark);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+        <div class="view-container" id="viewProfile">
+TREŚĆ:
+            <div class="profile-bg-whale"></div>
+
+KROK 2:
+PLIK: "style.css"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+.ws-highest {
+    font-size: 9px;
+    color: #666;
+    font-weight: 500;
+    letter-spacing: 0.5px;
 }
 TREŚĆ:
-/* HEADER: Sticky + Centered Currency Parent */
-.header { 
-    display: flex; 
-    justify-content: space-between; 
-    align-items: center; 
+
+/* --- Whale Background for Profile --- */
+#viewProfile {
+    position: relative;
+    /* Ensure child elements (panels) stay above the background */
+    z-index: 1;
+}
+
+#viewProfile > div:not(.profile-bg-whale) {
+    position: relative;
+    z-index: 2;
+}
+
+.profile-bg-whale {
+    position: absolute;
+    top: 50px; /* Below header */
+    right: -5%; /* Slightly off-screen to anchor it */
+    width: 65%;
+    height: 85%;
+    background-image: url('https://img-v3.deepdreamgenerator.com/2436355/z6qdyc_64f342e80213336fd546cecf2d2713e33ca5c609.jpg');
+    background-size: contain;
+    background-repeat: no-repeat;
+    background-position: center right;
     
-    /* FIX: Ujemne marginesy niwelują padding kontenera (.main-content ma 30px paddingu) */
-    margin-left: -30px;
-    margin-right: -30px;
+    /* Półprzezroczystość całości */
+    opacity: 0.25;
     
-    /* FIX: Dodajemy padding wewnątrz, aby elementy wróciły na swoją pozycję wizualną */
-    padding: 25px 30px;
+    /* Płynne zanikanie krawędzi (maska radialna) */
+    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
+    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
     
-    margin-bottom: 10px;
+    pointer-events: none; /* Click-through */
+    z-index: 0;
     
-    position: sticky; 
-    top: 0;
-    z-index: 1000; 
-    
-    background-color: var(--bg-dark);
-    border-bottom: 1px solid rgba(255,255,255,0.05);
+    /* Optional: Blend mode for better integration with dark bg */
+    mix-blend-mode: screen;
 }
