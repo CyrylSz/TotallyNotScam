@@ -1,0 +1,129 @@
+KROK 1:
+PLIK: "style.css"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+.rs-card.daily-pl-block {
+    flex: 0 0 auto;
+    min-width: 130px;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e2030 0%, #151a2d 100%);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+TREŚĆ:
+.pl-history-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.pl-history-icon:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border-color: rgba(255,255,255,0.3);
+}
+
+.pl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 13px;
+}
+.pl-row:last-child { border-bottom: none; }
+.pl-date { color: var(--text-muted); }
+.pl-val { font-weight: 700; font-family: 'Inter', sans-serif; }
+
+KROK 2:
+PLIK: "index.html"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+                <div class="rs-card daily-pl-block">
+                    <div class="ws-data">
+                        <div class="ws-label">DAILY P/L</div>
+                        <div class="ws-val" style="color: var(--accent-green);">+2,450 $</div>
+                        <div class="ws-highest" style="color: #8b92a5; font-size: 9px; margin-top: 2px;">Reset: 14h 22m</div>
+                    </div>
+                </div>
+TREŚĆ:
+                <div class="rs-card daily-pl-block">
+                    <div class="pl-history-icon" onclick="openDailyPLModal()" title="Historia P/L"><i class="fas fa-history"></i></div>
+                    <div class="ws-data">
+                        <div class="ws-label">DAILY P/L</div>
+                        <div class="ws-val" style="color: var(--accent-green);">+2,450 $</div>
+                        <div class="ws-highest" style="color: #8b92a5; font-size: 9px; margin-top: 2px;">Reset: 14h 22m</div>
+                    </div>
+                </div>
+
+KROK 3:
+PLIK: "index.html"
+OPERACJA: [WSTAW_PRZED]
+SZUKAJ:
+    <script src="data.js"></script>
+TREŚĆ:
+    <div class="modal-overlay" id="dailyPLModal">
+        <div class="steam-modal" style="width: 400px;">
+            <div class="sm-header">
+                <div class="sm-title"><i class="fas fa-calendar-alt"></i> Historia Dziennego P/L</div>
+                <div class="sm-close" onclick="closeDailyPLModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-content" id="dailyPLContent" style="padding: 0;">
+                </div>
+        </div>
+    </div>
+
+KROK 4:
+PLIK: "app.js"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+function closeLoadoutEffectsModal() {
+    document.getElementById('loadoutEffectsModal').classList.remove('active');
+}
+TREŚĆ:
+const dailyHistoryDB = [
+    { date: "Wczoraj", val: "-1,200 $", type: "loss" },
+    { date: "26 Dec", val: "+5,400 $", type: "profit" },
+    { date: "25 Dec", val: "+12,050 $", type: "profit" },
+    { date: "24 Dec", val: "-3,200 $", type: "loss" },
+    { date: "23 Dec", val: "+800 $", type: "profit" },
+    { date: "22 Dec", val: "-50 $", type: "loss" },
+    { date: "21 Dec", val: "+2,100 $", type: "profit" },
+];
+
+function openDailyPLModal() {
+    const modal = document.getElementById('dailyPLModal');
+    const container = document.getElementById('dailyPLContent');
+    if(!modal || !container) return;
+
+    container.innerHTML = '';
+
+    dailyHistoryDB.forEach(day => {
+        const div = document.createElement('div');
+        div.className = 'pl-row';
+        
+        const color = day.type === 'profit' ? 'var(--accent-green)' : 'var(--accent-red)';
+        
+        div.innerHTML = `
+            <div class="pl-date">${day.date}</div>
+            <div class="pl-val" style="color: ${color};">${day.val}</div>
+        `;
+        container.appendChild(div);
+    });
+
+    modal.classList.add('active');
+}
+
+function closeDailyPLModal() {
+    document.getElementById('dailyPLModal').classList.remove('active');
+}

@@ -3848,6 +3848,47 @@ input:checked + .slider:before { transform: translateX(16px); }
     justify-content: space-between;
 }
 
+.rs-card.daily-pl-block {
+    flex: 0 0 auto;
+    min-width: 130px;
+    justify-content: center;
+    background: linear-gradient(135deg, #1e2030 0%, #151a2d 100%);
+    border-color: rgba(16, 185, 129, 0.2);
+}
+.pl-history-icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    width: 24px;
+    height: 24px;
+    border-radius: 50%;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: var(--text-muted);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-size: 10px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.pl-history-icon:hover {
+    background: rgba(255,255,255,0.1);
+    color: white;
+    border-color: rgba(255,255,255,0.3);
+}
+
+.pl-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px 15px;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 13px;
+}
+.pl-row:last-child { border-bottom: none; }
+.pl-date { color: var(--text-muted); }
+.pl-val { font-weight: 700; font-family: 'Inter', sans-serif; }
 .rs-card.streak-block {
     flex: 0 0 auto;
     min-width: 130px;

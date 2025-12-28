@@ -2644,6 +2644,42 @@ function openLoadoutEffectsModal() {
 function closeLoadoutEffectsModal() {
     document.getElementById('loadoutEffectsModal').classList.remove('active');
 }
+const dailyHistoryDB = [
+    { date: "Wczoraj", val: "-1,200 $", type: "loss" },
+    { date: "26 Dec", val: "+5,400 $", type: "profit" },
+    { date: "25 Dec", val: "+12,050 $", type: "profit" },
+    { date: "24 Dec", val: "-3,200 $", type: "loss" },
+    { date: "23 Dec", val: "+800 $", type: "profit" },
+    { date: "22 Dec", val: "-50 $", type: "loss" },
+    { date: "21 Dec", val: "+2,100 $", type: "profit" },
+];
+
+function openDailyPLModal() {
+    const modal = document.getElementById('dailyPLModal');
+    const container = document.getElementById('dailyPLContent');
+    if(!modal || !container) return;
+
+    container.innerHTML = '';
+
+    dailyHistoryDB.forEach(day => {
+        const div = document.createElement('div');
+        div.className = 'pl-row';
+        
+        const color = day.type === 'profit' ? 'var(--accent-green)' : 'var(--accent-red)';
+        
+        div.innerHTML = `
+            <div class="pl-date">${day.date}</div>
+            <div class="pl-val" style="color: ${color};">${day.val}</div>
+        `;
+        container.appendChild(div);
+    });
+
+    modal.classList.add('active');
+}
+
+function closeDailyPLModal() {
+    document.getElementById('dailyPLModal').classList.remove('active');
+}
 
 function renderFavoritesPanel() {
     const grid = document.getElementById('favoritesGrid');
