@@ -28,6 +28,7 @@ let marketState = {
     searchPlayer: '', 
     onlyMine: false, 
     types: { item: true, case: true }, 
+    durability: { consumable: true, durable: true },
     slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], 
     priceMin: null,
     priceMax: null,
@@ -176,6 +177,11 @@ function toggleMarketType(type, btnElement) {
     
     filterMarket();
 }
+function toggleDurabilityFilter(type, btnElement) {
+    marketState.durability[type] = !marketState.durability[type];
+    btnElement.classList.toggle('active', marketState.durability[type]);
+    filterMarket();
+}
 
 function toggleSlotFilter(slot, btnElement) {
     const idx = marketState.slots.indexOf(slot);
@@ -211,6 +217,8 @@ function filterMarket() {
         if (marketState.searchItem && !item.name.toLowerCase().includes(marketState.searchItem)) return false;
         if(item.isChest && !marketState.types.case) return false;
         if(!item.isChest && !marketState.types.item) return false;
+        if(item.isConsumable && !marketState.durability.consumable) return false;
+        if(!item.isConsumable && !marketState.durability.durable) return false;
 
         const priceCheck = item.listingType === 'auction' ? (item.currentBid > 0 ? item.currentBid : item.price) : item.price;
         if(marketState.priceMin && priceCheck < marketState.priceMin) return false;

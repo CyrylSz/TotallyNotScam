@@ -2,15 +2,60 @@ KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    let conditionHtml = '';
-    if (!isLocked && item.isConsumable && item.maxUses && item.usesLeft < item.maxUses) {
-        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
-        conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
-    }
+    onlyMine: false, 
+    types: { item: true, case: true }, 
+    slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], 
 TREŚĆ:
-    let conditionHtml = '';
+    onlyMine: false, 
+    types: { item: true, case: true }, 
+    durability: { consumable: true, durable: true },
+    slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], 
+
+KROK 2:
+PLIK: "app.js"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+function toggleMarketType(type, btnElement) {
+    marketState.types[type] = !marketState.types[type];
+    btnElement.classList.toggle('active', marketState.types[type]);
     
-    if (!isLocked && item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
-        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
-        conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
-    }
+    const slotSection = document.getElementById('slotFilterSection');
+    if(marketState.types['item']) slotSection.classList.remove('hidden');
+    else slotSection.classList.add('hidden');
+    
+    filterMarket();
+}
+TREŚĆ:
+function toggleDurabilityFilter(type, btnElement) {
+    marketState.durability[type] = !marketState.durability[type];
+    btnElement.classList.toggle('active', marketState.durability[type]);
+    filterMarket();
+}
+
+KROK 3:
+PLIK: "app.js"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+        if(item.isChest && !marketState.types.case) return false;
+        if(!item.isChest && !marketState.types.item) return false;
+TREŚĆ:
+        if(item.isConsumable && !marketState.durability.consumable) return false;
+        if(!item.isConsumable && !marketState.durability.durable) return false;
+
+KROK 4:
+PLIK: "index.html"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+                        <label class="ms-check-row" style="padding-left: 2px;">
+                            <input type="checkbox" id="chkOnlyMine" onchange="filterMarket()"> 
+                            <span style="font-size: 11px; color: var(--accent-blue); font-weight: 600;">Tylko moje oferty</span>
+                        </label>
+                    </div>
+TREŚĆ:
+                    <div class="ms-section">
+                        <div class="ms-label">Trwałość</div>
+                        <div class="ms-toggle-row">
+                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('consumable', this)"><i class="fas fa-apple-alt"></i> Zużywalne</button>
+                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('durable', this)"><i class="fas fa-shield-alt"></i> Trwałe</button>
+                        </div>
+                    </div>
