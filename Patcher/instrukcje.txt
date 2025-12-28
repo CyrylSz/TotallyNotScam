@@ -1,38 +1,11 @@
 KROK 1:
-PLIK: "app.js"
+PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    favoriteModes.forEach(favId => {
-        const [gameId, modeIndexStr] = favId.split('_g_'); 
-        
-        const lastUnderscore = favId.lastIndexOf('_');
-        const gId = favId.substring(0, lastUnderscore);
-        const mIdx = parseInt(favId.substring(lastUnderscore + 1));
-
-        
-        let foundGame = null;
-        gamesHubStructure.forEach(cat => {
-            cat.subcategories.forEach(sub => {
-                const g = sub.games.find(x => x.id === gId);
-                if(g) foundGame = g;
-            });
-        });
-
-        if (foundGame) {
+                    <button class="qp-btn-small primary" style="font-size: 9px; padding: 4px 8px; width: fit-content; min-width: 0;">
+                        <i class="fas fa-crown"></i> PREMIUM
+                    </button>
 TREŚĆ:
-    favoriteModes.forEach(favId => {
-        const lastUnderscore = favId.lastIndexOf('_');
-        const gId = favId.substring(0, lastUnderscore);
-        const mIdx = parseInt(favId.substring(lastUnderscore + 1));
-
-        let foundGame = null;
-        
-        // Poprawiona logika szukania gry (bez subkategorii)
-        gamesHubStructure.forEach(cat => {
-            if (cat.games) {
-                const g = cat.games.find(x => x.id === gId);
-                if (g) foundGame = g;
-            }
-        });
-
-        if (foundGame) {
+                    <button class="qp-btn-small primary" style="font-size: 9px; padding: 5px 10px; width: auto; min-width: 0; flex: 0 0 auto;">
+                        <i class="fas fa-crown"></i> ODBLOKUJ PREMIUM
+                    </button>

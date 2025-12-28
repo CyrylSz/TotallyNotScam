@@ -256,8 +256,16 @@
                                 <div style="font-size: 10px; color: var(--accent-purple); font-weight:700;">BATTLE PASS</div>
                                 <div style="font-size: 14px; font-weight: 700;">Level 17 <span style="font-size:10px; color:var(--text-muted); font-weight:400;">/ 100</span></div>
                             </div>
-                            <div class="bp-mini-dots" onclick="openBattlePassModal()">
-                                <i class="fas fa-ellipsis-h"></i>
+                            
+                            <div class="bp-mini-next-reward">
+                                <span style="font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Następna nagroda</span>
+                                <div style="display: flex; align-items: center; gap: 6px; color: white; font-weight: 600; font-size: 11px;">
+                                    <i class="fas fa-gift" style="color: var(--accent-purple);"></i> Mystery Box
+                                </div>
+                            </div>
+
+                            <div class="bp-mini-dots" onclick="openBattlePassModal()" title="Otwórz Battle Pass">
+                                <i class="fas fa-expand-alt"></i>
                             </div>
                          </div>
 
@@ -1088,7 +1096,7 @@
                         <div style="font-size: 32px; font-weight: 800; color: white; margin: 5px 0;">LEVEL 17</div>
                         <div style="font-size: 14px; color: #ccc;">Zdobądź <span style="color: #fff; font-weight: 700;">120 XP</span> by odblokować kolejny poziom.</div>
                     </div>
-                    <button class="qp-btn-small primary" style="font-size: 14px; padding: 10px 25px;">
+                    <button class="qp-btn-small primary" style="font-size: 9px; padding: 5px 10px; width: auto; min-width: 0; flex: 0 0 auto;">
                         <i class="fas fa-crown"></i> ODBLOKUJ PREMIUM
                     </button>
                 </div>
@@ -1099,50 +1107,54 @@
                         <div class="bp-track-line-fill"></div>
 
                         <div class="bp-level-node claimed">
-                            <div class="bp-node-circle">15</div>
-                            <div class="bp-reward-box"><i class="fas fa-gem" style="color: #00e5ff; font-size: 18px;"></i></div>
-                            <div class="bp-label-free">100 Gems</div>
+                            <div class="bp-node-circle"><i class="fas fa-check"></i></div>
+                            <div class="bp-reward-box"><i class="fas fa-dollar-sign" style="color: var(--accent-green);"></i></div>
+                            <div class="bp-label-free">5,000 $</div>
                         </div>
 
                         <div class="bp-level-node claimed">
-                            <div class="bp-node-circle">16</div>
-                            <div class="bp-reward-box"><i class="fas fa-coins" style="color: #ffd700; font-size: 18px;"></i></div>
-                            <div class="bp-label-free">500 Gold</div>
+                            <div class="bp-node-circle"><i class="fas fa-check"></i></div>
+                            <div class="bp-reward-box"><i class="fas fa-star" style="color: var(--accent-blue);"></i></div>
+                            <div class="bp-label-free">200 LP</div>
                         </div>
 
                         <div class="bp-level-node active">
                             <div class="bp-node-circle">17</div>
-                            <div class="bp-reward-box"><i class="fas fa-gift" style="color: var(--accent-purple);"></i></div>
+                            <div class="bp-reward-box">
+                                <i class="fas fa-briefcase" style="color: #3b82f6; font-size: 28px; filter: drop-shadow(0 0 5px #3b82f6);"></i>
+                            </div>
                             <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
-                            <div class="bp-label-free">Mystery Box</div>
+                            <div class="bp-label-free" style="color: #00e5ff;">Rare Case</div>
                         </div>
 
                         <div class="bp-level-node">
                             <div class="bp-node-circle">18</div>
-                            <div class="bp-reward-box"><i class="fas fa-ticket-alt" style="color: #ff9f43; font-size: 18px;"></i></div>
+                            <div class="bp-reward-box"><i class="fas fa-key" style="color: #f59e0b;"></i></div>
                             <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
-                            <div class="bp-label-free">Raffle</div>
+                            <div class="bp-label-free">Crypto Key</div>
                         </div>
 
                         <div class="bp-level-node">
                             <div class="bp-node-circle">19</div>
-                            <div class="bp-reward-box"><i class="fas fa-user-astronaut" style="color: #ff6b6b; font-size: 18px;"></i></div>
+                            <div class="bp-reward-box"><i class="fas fa-mask" style="color: #e2e8f0;"></i></div>
                              <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
-                             <div class="bp-label-free">Avatar</div>
+                             <div class="bp-label-free">Hacker Mask</div>
                         </div>
 
                         <div class="bp-level-node">
-                             <div class="bp-node-circle" style="border-color: gold; color: gold;">20</div>
-                             <div class="bp-reward-box" style="border-color: gold; box-shadow: 0 0 10px rgba(255, 215, 0, 0.1);"><i class="fas fa-crown" style="color: gold;"></i></div>
+                             <div class="bp-node-circle" style="border-color: var(--accent-red); color: var(--accent-red); box-shadow: 0 0 10px rgba(239, 68, 68, 0.2);">20</div>
+                             <div class="bp-reward-box" style="border-color: var(--accent-red); background: linear-gradient(135deg, rgba(239, 68, 68, 0.1), rgba(0,0,0,0.5));">
+                                <i class="fas fa-khanda" style="color: var(--accent-red); font-size: 28px; filter: drop-shadow(0 0 5px red);"></i>
+                             </div>
                              <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
-                             <div class="bp-label-free" style="color: gold;">LEGENDARY</div>
+                             <div class="bp-label-free" style="color: var(--accent-red);">Cyber Katana</div>
                         </div>
 
                          <div class="bp-level-node">
                             <div class="bp-node-circle">21</div>
-                            <div class="bp-reward-box"><i class="fas fa-box" style="color: #ccc; font-size: 18px;"></i></div>
+                            <div class="bp-reward-box"><i class="fas fa-box-open" style="color: #64748b;"></i></div>
                              <div class="bp-lock-icon"><i class="fas fa-lock"></i></div>
-                             <div class="bp-label-free">Common</div>
+                             <div class="bp-label-free">Glitch Case</div>
                         </div>
                     </div>
                 </div>

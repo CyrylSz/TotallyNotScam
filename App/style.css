@@ -1638,14 +1638,15 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 
 .bp-mini-status {
-    display: flex;
+    display: grid;
+    grid-template-columns: 1fr auto auto;
     align-items: center;
-    justify-content: space-between;
-    background: linear-gradient(90deg, rgba(139, 92, 246, 0.1), rgba(21, 26, 45, 0));
-    padding: 10px 12px;
+    gap: 15px;
+    background: linear-gradient(90deg, rgba(139, 92, 246, 0.15), rgba(21, 26, 45, 0.3));
+    padding: 12px 15px;
     border-radius: 8px;
     border-left: 3px solid var(--accent-purple);
-    margin-bottom: 15px;
+    margin-top: 15px;
 }
 
 .bp-mini-info {
@@ -1653,142 +1654,188 @@ input:checked + .slider:before { transform: translateX(16px); }
     flex-direction: column;
 }
 
+/* Nowy element w dashboardzie (środek) */
+.bp-mini-next-reward {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    margin-right: 10px;
+    padding-right: 10px;
+    border-right: 1px solid rgba(255,255,255,0.1);
+}
+
 .bp-mini-dots {
     color: var(--text-muted);
     cursor: pointer;
-    padding: 5px;
+    padding: 8px;
+    background: rgba(255,255,255,0.05);
+    border-radius: 6px;
     transition: 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
 }
-.bp-mini-dots:hover { color: white; transform: scale(1.1); }
+.bp-mini-dots:hover { color: white; background: rgba(255,255,255,0.1); }
 
 
+/* --- FIXED MODAL STYLES --- */
 .bp-modal-track-container {
     overflow-x: auto;
-    padding: 40px 20px;
-    background: rgba(0,0,0,0.2);
+    padding: 60px 40px;
+    background: #0f111a;
     border-radius: 12px;
     border: 1px solid rgba(255,255,255,0.05);
-    margin-top: 20px;
+    margin-top: 0;
+    box-shadow: inset 0 0 30px rgba(0,0,0,0.5);
     
     scrollbar-width: thin;
-    scrollbar-color: var(--accent-purple) var(--bg-dark);
+    scrollbar-color: var(--accent-purple) #0f111a;
 }
 
 .bp-track-flex {
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* Alignment fix */
     min-width: max-content;
-    padding: 0 50px;
+    padding: 0 20px;
     position: relative;
+    height: 140px; /* Wysokość dla węzłów */
 }
 
-
+/* Linia w tle */
 .bp-track-line-bg {
     position: absolute;
     left: 0;
     right: 0;
-    top: 50%;
-    height: 4px;
-    background: rgba(255,255,255,0.1);
-    z-index: 1;
-    transform: translateY(-50%);
+    top: 35px; /* Alignment z kółkami */
+    height: 6px;
+    background: #1e293b;
+    z-index: 0;
+    border-radius: 3px;
 }
 
 .bp-track-line-fill {
     position: absolute;
     left: 0;
-    width: 35%; 
-    top: 50%;
-    height: 4px;
+    width: 32%; 
+    top: 35px;
+    height: 6px;
     background: linear-gradient(90deg, var(--accent-purple), #00e5ff);
-    z-index: 1;
-    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
-    transform: translateY(-50%);
+    z-index: 0;
+    box-shadow: 0 0 15px rgba(139, 92, 246, 0.6);
+    border-radius: 3px;
 }
 
 .bp-level-node {
     position: relative;
     z-index: 2;
-    margin: 0 35px;
+    margin: 0 30px;
     display: flex;
     flex-direction: column;
     align-items: center;
-    width: 80px;
+    width: 90px;
+    flex-shrink: 0;
 }
 
 .bp-node-circle {
     width: 40px;
     height: 40px;
-    background: var(--bg-dark);
-    border: 2px solid #555;
+    background: #0f111a;
+    border: 3px solid #334155;
     border-radius: 50%;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-weight: 700;
+    font-weight: 800;
     font-size: 14px;
-    color: #777;
-    margin-bottom: 10px;
+    color: #64748b;
+    margin-top: 15px; /* Odsunięcie od góry kontenera */
+    margin-bottom: 15px;
     transition: 0.3s;
     position: relative;
+    z-index: 2;
 }
 
-.bp-level-node.active .bp-node-circle {
-    border-color: #00e5ff;
-    color: white;
-    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
-    background: #1a2340;
-    transform: scale(1.1);
-}
-
+/* Styling dla odebranych */
 .bp-level-node.claimed .bp-node-circle {
     border-color: var(--accent-purple);
     background: var(--accent-purple);
     color: white;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.4);
 }
 
+/* Styling dla aktywnego */
+.bp-level-node.active .bp-node-circle {
+    border-color: #00e5ff;
+    background: #00e5ff;
+    color: black;
+    transform: scale(1.2);
+    box-shadow: 0 0 20px #00e5ff;
+    z-index: 3;
+}
+
+/* Box z nagrodą (poniżej linii) */
 .bp-reward-box {
     width: 70px;
     height: 70px;
-    background: linear-gradient(135deg, rgba(255,255,255,0.05), rgba(0,0,0,0.2));
+    background: linear-gradient(145deg, rgba(255,255,255,0.07), rgba(0,0,0,0.4));
     border: 1px solid rgba(255,255,255,0.1);
-    border-radius: 8px;
+    border-radius: 12px;
     display: flex;
     align-items: center;
     justify-content: center;
     font-size: 24px;
-    color: #ccc;
+    color: #94a3b8;
     position: relative;
     transition: 0.3s;
 }
 
 .bp-level-node.active .bp-reward-box {
-    border-color: #00e5ff;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
+    border-color: rgba(0, 229, 255, 0.5);
+    background: linear-gradient(145deg, rgba(0, 229, 255, 0.1), rgba(0,0,0,0.6));
+    box-shadow: 0 5px 20px rgba(0,0,0,0.5);
+    color: white;
+}
+
+.bp-level-node.claimed .bp-reward-box {
+    opacity: 0.5;
+    filter: grayscale(0.5);
 }
 
 .bp-level-node:hover .bp-reward-box {
-    transform: translateY(-5px);
+    transform: translateY(5px);
+    background: rgba(255,255,255,0.1);
 }
 
 .bp-label-free {
-    font-size: 9px;
+    font-size: 10px;
     font-weight: 700;
-    letter-spacing: 1px;
+    letter-spacing: 0.5px;
     color: var(--text-muted);
     margin-top: 8px;
     text-transform: uppercase;
+    text-align: center;
 }
 
 .bp-lock-icon {
     position: absolute;
     top: -10px;
-    right: -5px;
-    font-size: 12px;
-    color: #555;
-    background: var(--bg-dark);
+    right: -8px;
+    font-size: 10px;
+    color: #94a3b8; /* Szary kolor ikony */
+    background: #334155; /* Ciemnoszary background */
     border-radius: 50%;
-    padding: 2px;
+    width: 20px;
+    height: 20px;
+    display: flex; 
+    align-items: center; 
+    justify-content: center;
+    border: 2px solid #0f111a;
+}
+
+/* Nadpisanie active, aby kłódka pozostała szara */
+.bp-level-node.active .bp-lock-icon {
+    background: #334155;
+    color: #94a3b8;
 }
 
 
