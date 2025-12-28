@@ -518,13 +518,24 @@ function initInventorySystem() {
     if (!player) return;
 
     myInventory = [];
-    player.inventory.forEach((itemId, index) => {
+    player.inventory.forEach((invEntry, index) => {
+        const itemId = typeof invEntry === 'object' ? invEntry.id : invEntry;
         const template = allTreasures.find(t => t.id === itemId);
         if (template) {
             
             const item = { ...template, uid: `item_${itemId}_${index}` };
             
             
+            if (template.isConsumable) {
+                if (typeof invEntry === 'object' && invEntry.usesLeft !== undefined) {
+                    item.usesLeft = invEntry.usesLeft;
+                } else {
+                    item.usesLeft = template.maxUses;
+                }
+                
+                item.name = `${item.name} (${item.usesLeft}/${template.maxUses})`;
+            }
+
             if (!item.change) {
                 const changeVal = (Math.random() * 10 - 5).toFixed(1);
                 item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
