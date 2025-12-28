@@ -2232,14 +2232,17 @@ function renderGamesContent() {
 
 
 
+let lbShownCount = 15;
+
 function renderGlobalLeaderboard() {
     const list = document.getElementById('globalLeaderboardList');
     if(!list) return;
     list.innerHTML = '';
 
     const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
+    const visiblePlayers = sortedPlayers.slice(0, lbShownCount);
 
-    sortedPlayers.forEach((p, index) => {
+    visiblePlayers.forEach((p, index) => {
         const div = document.createElement('div');
         if (p.isMe) div.id = 'lb-my-row';
         div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
@@ -2305,19 +2308,34 @@ function renderGlobalLeaderboard() {
 }
 
 
+function expandLeaderboard() {
+    lbShownCount += 10;
+    renderGlobalLeaderboard();
+}
+
 function scrollToMyPosition() {
-    const myRow = document.getElementById('lb-my-row');
     const container = document.getElementById('globalLeaderboardList');
+    let myRow = document.getElementById('lb-my-row');
+
+    // Jeśli nie ma wiersza, spróbuj znaleźć indeks w danych i rozszerzyć listę
+    if (!myRow) {
+        const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
+        const myIndex = sortedPlayers.findIndex(p => p.isMe);
+        
+        if (myIndex !== -1) {
+            // Rozszerzamy listę, aby objęła użytkownika
+            lbShownCount = myIndex + 5;
+            renderGlobalLeaderboard();
+            myRow = document.getElementById('lb-my-row');
+        }
+    }
     
     if (myRow && container) {
-        
         const topPos = myRow.offsetTop - container.offsetTop;
-        
         container.scrollTo({
             top: topPos - 50, 
             behavior: 'smooth'
         });
-        
         
         myRow.style.transition = "background 0.3s";
         const oldBg = myRow.style.background;

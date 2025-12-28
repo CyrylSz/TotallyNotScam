@@ -418,6 +418,25 @@ const globalLeaderboardDB = [
     { rankVal: 5, rankName: "Table Shark", name: "BluffMaster", lp: 550, netWorth: 800000 },
     { rankVal: 5, rankName: "Table Shark", name: "CardCounter", lp: 420, netWorth: 450000 },
     { rankVal: 6, rankName: "Risk Taker", name: "YOLO_Trader", lp: 250, netWorth: 150000 },
+    { rankVal: 6, rankName: "Risk Taker", name: "DogeCoin_Fan", lp: 210, netWorth: 120000 },
+    { rankVal: 6, rankName: "Risk Taker", name: "WallStreetBet", lp: 190, netWorth: 110000 },
+    { rankVal: 7, rankName: "Small Fry", name: "NoobMaster69", lp: 90, netWorth: 80000 },
+    { rankVal: 7, rankName: "Small Fry", name: "JustLooking", lp: 50, netWorth: 50000 },
+    { rankVal: 7, rankName: "Small Fry", name: "Anon_User", lp: 45, netWorth: 45000 },
+    { rankVal: 7, rankName: "Small Fry", name: "Bot_221", lp: 30, netWorth: 30000 },
+    { rankVal: 7, rankName: "Small Fry", name: "Guest_99", lp: 10, netWorth: 15000 },
+    { rankVal: 8, rankName: "Bankrupt", name: "NeedLoanPls", lp: -50, netWorth: 5000 },
+    { rankVal: 8, rankName: "Bankrupt", name: "Rekt_City", lp: -120, netWorth: 500 },
+    { rankVal: 8, rankName: "Bankrupt", name: "LostItAll", lp: -200, netWorth: 100 },
+    { rankVal: 8, rankName: "Bankrupt", name: "SadPepe", lp: -500, netWorth: 0 },
+    { rankVal: 7, rankName: "Small Fry", name: "Newbie_01", lp: 88, netWorth: 75000 },
+    { rankVal: 7, rankName: "Small Fry", name: "GlitchHunter", lp: 60, netWorth: 60000 },
+    { rankVal: 6, rankName: "Risk Taker", name: "HighStakeJ", lp: 280, netWorth: 180000 },
+    { rankVal: 5, rankName: "Table Shark", name: "PokerFace", lp: 480, netWorth: 600000 },
+    { rankVal: 4, rankName: "Casino Legend", name: "SlotMachineGoBrr", lp: 700, netWorth: 1200000 },
+    { rankVal: 8, rankName: "Bankrupt", name: "HelpMe", lp: -50, netWorth: 2000 },
+    { rankVal: 7, rankName: "Small Fry", name: "Learning", lp: 20, netWorth: 25000 },
+    { rankVal: 6, rankName: "Risk Taker", name: "CryptoDad", lp: 150, netWorth: 135000 }
 ];
 
 const walletLogsDB = [

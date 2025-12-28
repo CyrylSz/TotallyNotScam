@@ -1307,11 +1307,11 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* 2. Games Hub Layout */
 .games-hub-grid {
     display: grid;
-    grid-template-columns: 1fr 0.6fr; 
+    grid-template-columns: 1fr 0.8fr; 
     gap: 25px;
     height: 100%;
     margin: 0 10%;
-    align-items: start; /* TO NAPRAWIA ROZCIĄGANIE LEADERBOARDA */
+    align-items: stretch;
 }
 /* --- NEW RANK & STREAK LAYOUT --- */
 
@@ -3571,8 +3571,8 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .gh-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(210px, 1fr)); 
-    gap: 15px;
+    grid-template-columns: repeat(2, 1fr); /* Wymuszenie 2 kolumn */
+    gap: 20px;
     justify-content: center;
 }
 
@@ -3580,7 +3580,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     background: #151a2d;
     border: 1px solid rgba(255,255,255,0.05);
     border-radius: 12px;
-    padding: 15px;
+    padding: 20px; /* Nieco większy padding dla skali */
     display: flex;
     flex-direction: column;
     gap: 10px;
@@ -3588,7 +3588,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     cursor: pointer;
     position: relative;
     overflow: hidden;
-    min-height: 150px;
+    min-height: 190px; /* Zwiększona wysokość dla zachowania proporcji */
 }
 
 
