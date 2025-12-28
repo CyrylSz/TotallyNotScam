@@ -2,60 +2,57 @@ KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    onlyMine: false, 
-    types: { item: true, case: true }, 
-    slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], 
+    document.getElementById('mmIcon').innerHTML = item.icon;
+    document.getElementById('mmIcon').className = ''; 
+    document.getElementById('mmCard').style.color = item.color;
+    
+    
+    document.getElementById('mmSellerName').textContent = item.seller;
 TREŚĆ:
-    onlyMine: false, 
-    types: { item: true, case: true }, 
-    durability: { consumable: true, durable: true },
-    slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], 
+    document.getElementById('mmIcon').innerHTML = item.icon;
+    document.getElementById('mmIcon').className = ''; 
+    
+    const mmCard = document.getElementById('mmCard');
+    mmCard.style.color = item.color;
+
+    // Cleanup visual pie form previous opens
+    const oldPie = mmCard.querySelector('.mc-condition-pie');
+    if(oldPie) oldPie.remove();
+
+    if (item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
+        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+        const pie = document.createElement('div');
+        pie.className = 'mc-condition-pie';
+        pie.style.background = `conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%)`;
+        pie.style.width = '24px';
+        pie.style.height = '24px';
+        pie.style.top = '15px';
+        pie.style.right = '15px';
+        pie.title = `Stan: ${item.usesLeft}/${item.maxUses}`;
+        mmCard.appendChild(pie);
+    }
+    
+    
+    document.getElementById('mmSellerName').textContent = item.seller;
 
 KROK 2:
 PLIK: "app.js"
-OPERACJA: [WSTAW_PO]
+OPERACJA: [ZASTĄP]
 SZUKAJ:
-function toggleMarketType(type, btnElement) {
-    marketState.types[type] = !marketState.types[type];
-    btnElement.classList.toggle('active', marketState.types[type]);
-    
-    const slotSection = document.getElementById('slotFilterSection');
-    if(marketState.types['item']) slotSection.classList.remove('hidden');
-    else slotSection.classList.add('hidden');
-    
-    filterMarket();
-}
+    const tags = document.getElementById('mmTags');
+    const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+    tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
+    if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
+    else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
 TREŚĆ:
-function toggleDurabilityFilter(type, btnElement) {
-    marketState.durability[type] = !marketState.durability[type];
-    btnElement.classList.toggle('active', marketState.durability[type]);
-    filterMarket();
-}
+    const tags = document.getElementById('mmTags');
+    const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+    tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
+    if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
+    else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
 
-KROK 3:
-PLIK: "app.js"
-OPERACJA: [WSTAW_PO]
-SZUKAJ:
-        if(item.isChest && !marketState.types.case) return false;
-        if(!item.isChest && !marketState.types.item) return false;
-TREŚĆ:
-        if(item.isConsumable && !marketState.durability.consumable) return false;
-        if(!item.isConsumable && !marketState.durability.durable) return false;
-
-KROK 4:
-PLIK: "index.html"
-OPERACJA: [WSTAW_PO]
-SZUKAJ:
-                        <label class="ms-check-row" style="padding-left: 2px;">
-                            <input type="checkbox" id="chkOnlyMine" onchange="filterMarket()"> 
-                            <span style="font-size: 11px; color: var(--accent-blue); font-weight: 600;">Tylko moje oferty</span>
-                        </label>
-                    </div>
-TREŚĆ:
-                    <div class="ms-section">
-                        <div class="ms-label">Trwałość</div>
-                        <div class="ms-toggle-row">
-                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('consumable', this)"><i class="fas fa-apple-alt"></i> Zużywalne</button>
-                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('durable', this)"><i class="fas fa-shield-alt"></i> Trwałe</button>
-                        </div>
-                    </div>
+    if (item.isConsumable && item.maxUses) {
+         tags.innerHTML += `<span class="badge-slot" style="color:var(--accent-green); border:1px solid var(--accent-green);">STAN: ${item.usesLeft}/${item.maxUses}</span>`;
+    } else {
+         tags.innerHTML += `<span class="badge-slot" style="opacity:0.7;">TRWAŁY</span>`;
+    }

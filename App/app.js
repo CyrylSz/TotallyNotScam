@@ -370,7 +370,26 @@ function openMarketItemModal(item) {
     
     document.getElementById('mmIcon').innerHTML = item.icon;
     document.getElementById('mmIcon').className = ''; 
-    document.getElementById('mmCard').style.color = item.color;
+    
+    const mmCard = document.getElementById('mmCard');
+    mmCard.style.color = item.color;
+
+    // Cleanup visual pie form previous opens
+    const oldPie = mmCard.querySelector('.mc-condition-pie');
+    if(oldPie) oldPie.remove();
+
+    if (item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
+        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+        const pie = document.createElement('div');
+        pie.className = 'mc-condition-pie';
+        pie.style.background = `conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%)`;
+        pie.style.width = '24px';
+        pie.style.height = '24px';
+        pie.style.top = '15px';
+        pie.style.right = '15px';
+        pie.title = `Stan: ${item.usesLeft}/${item.maxUses}`;
+        mmCard.appendChild(pie);
+    }
     
     
     document.getElementById('mmSellerName').textContent = item.seller;
@@ -388,6 +407,12 @@ function openMarketItemModal(item) {
     tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
     if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
     else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
+
+    if (item.isConsumable && item.maxUses) {
+         tags.innerHTML += `<span class="badge-slot" style="color:var(--accent-green); border:1px solid var(--accent-green);">STAN: ${item.usesLeft}/${item.maxUses}</span>`;
+    } else {
+         tags.innerHTML += `<span class="badge-slot" style="opacity:0.7;">TRWAŁY</span>`;
+    }
     
     
     const template = allTreasures.find(t => t.id === item.templateId);
@@ -1297,15 +1322,23 @@ function renderInventoryView() {
         else if (isOnSale) badgeHtml += `<div class="on-sale-badge">NA RYNKU</div>`;
 
         
-        if (item.rarity === 'Divine' && currentRankId > 2) {
+        const isRankLocked = item.rarity === 'Divine' && currentRankId > 2;
+        if (isRankLocked) {
             badgeHtml += `<div class="inv-lock-overlay"><i class="fas fa-lock"></i></div>`;
             slot.classList.add('is-rank-locked');
+        }
+
+        let conditionHtml = '';
+        if (!isRankLocked && item.isConsumable && item.maxUses && (item.id < 1 || item.id > 5)) {
+            const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+            conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
         }
 
         slot.innerHTML = `
             <div class="inv-item-icon" style="font-style: normal; color: initial;">${item.icon}</div>
             <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
             ${badgeHtml}
+            ${conditionHtml}
         `;
         
         
@@ -1422,10 +1455,18 @@ function renderItemInSlot(slotElement, item) {
     
     let rarityColor = getRarityColor(item.rarity);
     
-    
+    let conditionHtml = '';
+    const isRankLocked = item.rarity === 'Divine' && currentRankId > 2;
+
+    if (!isRankLocked && item.isConsumable && item.maxUses && (item.id < 1 || item.id > 5)) {
+        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+        conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
+    }
+
     slotElement.innerHTML = `
         <div style="font-size: 50px; font-style: normal; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${item.icon}</div>
         <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
+        ${conditionHtml}
     `;
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
