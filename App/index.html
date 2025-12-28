@@ -382,6 +382,30 @@
                             <div class="pd-slot slot-hand" data-type="gadget" title="GADGET"><i class="fas fa-mobile-alt placeholder"></i></div>
                         </div>
                     </div>
+                    <div class="pd-insights-wrapper">
+                        <div class="pd-insights-header">
+                            <div class="pd-insights-title">KEY INSIGHTS</div>
+                            <i class="fas fa-ellipsis-h pd-more-btn" onclick="openLoadoutEffectsModal()" title="Pokaż efekty zestawu"></i>
+                        </div>
+                        <div class="pd-insights-content">
+                            <div class="pi-row">
+                                <span class="pi-label">BUILD TYPE:</span>
+                                <span class="pi-val high-risk">High Risk / Skill-Biased</span>
+                            </div>
+                            <div class="pi-row">
+                                <span class="pi-label">LUCK ↔ SKILL:</span>
+                                <span class="pi-val">35% / 65%</span>
+                            </div>
+                            <div class="pi-row">
+                                <span class="pi-label">RNG DEPENDENCY:</span>
+                                <span class="pi-val medium">Medium</span>
+                            </div>
+                            <div class="pi-row">
+                                <span class="pi-label">RECOMMENDED MODES:</span>
+                                <span class="pi-val mode-list">Poker, Crash, Degenerate Worms</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -1379,6 +1403,16 @@
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="loadoutEffectsModal">
+        <div class="steam-modal" style="width: 500px;">
+            <div class="sm-header">
+                <div class="sm-title">AKTYWNE EFEKTY (LOADOUT)</div>
+                <div class="sm-close" onclick="closeLoadoutEffectsModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-content" id="loadoutEffectsContent" style="padding: 20px;">
+                </div>
         </div>
     </div>
     <script src="data.js"></script>

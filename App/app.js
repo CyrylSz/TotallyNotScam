@@ -2594,6 +2594,49 @@ function toggleFavoriteMode(modeId, gameId, modeName, icon, color, players, star
     const idx = favoriteModes.indexOf(modeId);
     
     if (idx === -1) {
+function openLoadoutEffectsModal() {
+    const modal = document.getElementById('loadoutEffectsModal');
+    const container = document.getElementById('loadoutEffectsContent');
+    if(!modal || !container) return;
+
+    container.innerHTML = '';
+    
+    const equippedUids = Object.values(myLoadout);
+    
+    if(equippedUids.length === 0) {
+        container.innerHTML = '<div class="le-empty">Brak założonych przedmiotów.</div>';
+    } else {
+        equippedUids.forEach(uid => {
+            const item = myInventory.find(i => i.uid === uid);
+            if(item) {
+                const row = document.createElement('div');
+                row.className = 'le-row';
+                
+                let bonusText = item.bonus;
+                
+                // Jeśli przedmiot zużywalny, dodaj info o stanie w bonusie
+                if (item.isConsumable && item.maxUses) {
+                    bonusText += ` <span style="color:#666; font-size:10px;">(Stan: ${item.usesLeft}/${item.maxUses})</span>`;
+                }
+
+                row.innerHTML = `
+                    <div class="le-icon">${item.icon}</div>
+                    <div class="le-info">
+                        <h5 style="color:${item.color}">${item.name}</h5>
+                        <p>${bonusText}</p>
+                    </div>
+                `;
+                container.appendChild(row);
+            }
+        });
+    }
+
+    modal.classList.add('active');
+}
+
+function closeLoadoutEffectsModal() {
+    document.getElementById('loadoutEffectsModal').classList.remove('active');
+}
         
         favoriteModes.push(modeId);
         starElement.className = 'fas fa-star mc-star active';

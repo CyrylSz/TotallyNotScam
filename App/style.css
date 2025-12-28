@@ -2419,7 +2419,109 @@ input:checked + .slider:before { transform: translateX(16px); }
     flex-direction: column;
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    overflow: hidden; /* Ważne dla scrollowania wewnątrz panelu */
 }
+
+/* Umożliwia scrollowanie całego prawego panelu jeśli jest za niski ekran */
+.inv-panel.right-panel {
+    overflow-y: auto;
+}
+
+/* KEY INSIGHTS STYLES */
+.pd-insights-wrapper {
+    padding: 15px 25px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    margin-top: auto; 
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    max-width: 380px; /* Constrain width */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+    top: -30px;
+}
+
+.pd-insights-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.pd-insights-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.pd-more-btn {
+    position: absolute;
+    right: 0;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+.pd-more-btn:hover { color: white; transform: scale(1.1); }
+
+.pd-insights-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.pi-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed rgba(255,255,255,0.05);
+    padding-bottom: 4px;
+}
+.pi-row:last-child { border-bottom: none; }
+
+.pi-label {
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.pi-val {
+    color: white;
+    font-weight: 500;
+    text-align: right;
+}
+.pi-val.high-risk { color: var(--accent-red); font-weight: 700; }
+.pi-val.medium { color: var(--accent-orange); }
+.pi-val.mode-list { font-size: 10px; color: #ccc; max-width: 180px; }
+
+/* Effects Modal Styles */
+.le-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.le-icon { font-size: 18px; width: 30px; text-align: center; }
+.le-info h5 { font-size: 13px; color: white; margin-bottom: 2px; }
+.le-info p { font-size: 11px; color: var(--accent-green); }
+.le-empty { text-align: center; color: var(--text-muted); padding: 20px; font-size: 12px; }
 
 .inv-header {
     padding: 15px 20px;
@@ -2591,15 +2693,17 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 /* Right Paper Doll - TOP ALIGNED WITH SCROLL */
 .paper-doll-container {
-    flex: 1;
+    /* Zmiana na fixed shrink, aby sloty się nie przesuwały po dodaniu insights */
+    flex: 0 0 520px; 
     position: relative;
     background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
-    overflow-y: auto; /* Dodano scroll */
+    /* overflow-y wyłączony tutaj, scrolluje cały panel */
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Przeniesiono do góry */
-    padding-top: 30px; /* Odstęp od góry */
-    padding-bottom: 30px;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: flex-start;
+    align-items: center; /* Center elements horizontally */
+    padding-top: 30px; 
+    padding-bottom: 10px;
 }
 /* DRAG AND DROP STYLES */
 .inv-grid-slot.is-equipped {
