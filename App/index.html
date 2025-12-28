@@ -878,14 +878,30 @@
                         <div class="ap-header" style="color: var(--accent-purple);">
                             <i class="fas fa-bullhorn"></i> Komunikacja
                         </div>
-                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+
+                        <!-- Chapter 1 -->
+                        <div style="font-size: 10px; font-weight: 700; color: var(--accent-purple); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">1. Chatbot AI</div>
+
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 4px;">
+                            <div style="font-size:10px; color:#aaa;">Impersonate AI (Direct Message)</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" placeholder="Szukaj gracza (ID/Login)...">
+                                <button class="ap-btn ap-btn-blue" title="Dodaj do sesji AI" onclick="alert('Gracz dodany do aktywnej sesji AI Chatbota.')"><i class="fas fa-robot"></i> +</button>
+                            </div>
+                        </div>
+
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 8px;">
                             <div style="font-size:10px; color:#aaa;">Global AI Chatbot Roast</div>
                             <div class="ap-input-group">
                                 <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. 'Łał, masz niższe IQ niż temp mojego CPU'">
                                 <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i class="fas fa-paper-plane"></i></button>
                             </div>
                         </div>
-                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-top:5px;">
+
+                        <!-- Chapter 2 -->
+                        <div style="font-size: 10px; font-weight: 700; color: var(--accent-purple); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">2. Dashboard</div>
+
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 4px;">
                             <div style="font-size:10px; color:#aaa;">Edycja Paska Live</div>
                             <div class="ap-input-group">
                                 <input type="text" class="ap-input" id="tickerMsgInput" placeholder="Nowa wiadomość...">
@@ -895,6 +911,30 @@
                                 <input type="checkbox"> 
                                 <span style="font-size:10px;">Zapętl</span>
                             </label>
+                        </div>
+
+                        <!-- Banner Management -->
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 8px; margin-top: auto;">
+                             <div style="width:100%;">
+                                <div style="font-size:10px; color:#aaa; margin-bottom: 5px;">Baner Dashboardu</div>
+                            </div>
+                            <div style="display: flex; gap: 6px; width: 100%; align-items: center;">
+                                <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;" title="Slide 1">
+                                    Slajd 1
+                                    <div style="position:absolute; top:-3px; right:-3px; background:var(--accent-red); color:white; width:10px; height:10px; border-radius:50%; font-size:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="alert('Usunięto slajd 1')">&times;</div>
+                                </div>
+                                <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;" title="Slide 2">
+                                     Slajd 2
+                                     <div style="position:absolute; top:-3px; right:-3px; background:var(--accent-red); color:white; width:10px; height:10px; border-radius:50%; font-size:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="alert('Usunięto slajd 2')">&times;</div>
+                                </div>
+                                <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;" title="Slide 3">
+                                     Slajd 3
+                                     <div style="position:absolute; top:-3px; right:-3px; background:var(--accent-red); color:white; width:10px; height:10px; border-radius:50%; font-size:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="alert('Usunięto slajd 3')">&times;</div>
+                                </div>
+                                <div style="width: 25px; height: 25px; border: 1px dashed #555; border-radius: 3px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:10px; color:#555;" onclick="alert('Dodawanie nowego slajdu...')">
+                                    <i class="fas fa-plus"></i>
+                                </div>
+                            </div>
                         </div>
                     </div>
 
