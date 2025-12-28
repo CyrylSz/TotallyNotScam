@@ -1929,6 +1929,8 @@ input:checked + .slider:before { transform: translateX(16px); }
     max-width: 900px;
     margin: 0 auto;
     width: 100%;
+    transform: scale(0.85);
+    transform-origin: top center;
 }
 
 /* Networth Card - WIDERSZY PANEL */
