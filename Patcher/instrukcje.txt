@@ -7,75 +7,6 @@ SZUKAJ:
                             <i class="fas fa-money-bill-wave"></i> Finanse
                         </div>
 
-                        <div class="ap-row" style="margin-bottom: 10px;">
-                            <button class="ap-btn full-width" style="background: #14532d; color: #4ade80; border: 1px solid #22c55e; font-weight: 800; letter-spacing: 1px;" onclick="alert('💸 YOINK! Wszystkie wiszące wypłaty zostały przetransferowane na Twój prywatny portfel (Cayman Islands).')">
-                                <i class="fas fa-hand-holding-usd"></i> YOINK THE MONEY
-                            </button>
-                        </div>
-                        
-                        <div style="font-size:10px; color:#ef4444; margin-bottom:5px; font-weight:700; display:flex; justify-content:space-between;">
-                            <span>FLAGGED BY AI (Wstrzymane)</span>
-                            <span style="color:#666; font-weight:400;">Kolejka: 3</span>
-                        </div>
-                        <div class="finance-list" style="max-height: 130px; overflow-y: auto; padding-right: 2px;">
-                            <!-- Item 1 -->
-                            <div class="fin-item" style="border-left: 2px solid var(--accent-orange); margin-bottom: 5px;">
-                                <div>
-                                    <div style="font-weight:700; color:#fff;">Russian_Bot_99</div>
-                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">25,000 USDT</b></div>
-                                    <div style="font-size:8px; color:var(--accent-red);">Nietypowa lokalizacja (CN)</div>
-                                </div>
-                                <div style="display:flex; gap:5px; align-items:center;">
-                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Force Approve"><i class="fas fa-check"></i></button>
-                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Ban & Freeze"><i class="fas fa-gavel"></i></button>
-                                </div>
-                            </div>
-                            <!-- Item 2 -->
-                            <div class="fin-item" style="border-left: 2px solid var(--accent-red); margin-bottom: 5px;">
-                                <div>
-                                    <div style="font-weight:700; color:#fff;">Scam_Master_PL</div>
-                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">4,200 USD</b></div>
-                                    <div style="font-size:8px; color:var(--accent-red);">Multi-konto wykryte</div>
-                                </div>
-                                <div style="display:flex; gap:5px; align-items:center;">
-                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
-                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-gavel"></i></button>
-                                </div>
-                            </div>
-                            <!-- Item 3 -->
-                            <div class="fin-item" style="border-left: 2px solid #3b82f6; margin-bottom: 5px;">
-                                <div>
-                                    <div style="font-weight:700; color:#fff;">Whale_Junior</div>
-                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">500,000 $</b></div>
-                                    <div style="font-size:8px; color:#3b82f6;">Wymaga ręcznego potwierdzenia</div>
-                                </div>
-                                <div style="display:flex; gap:5px; align-items:center;">
-                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
-                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-times"></i></button>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top: 5px;">
-                            <div style="display:flex; flex-direction:column; gap:2px;">
-                                <span>Auto-Wypłaty Limit</span>
-                                <div style="display:flex; align-items:center; gap:5px;">
-                                    <input type="number" value="1000" style="width: 60px; background:rgba(0,0,0,0.3); border:1px solid #444; color:white; font-size:10px; padding:2px 5px; border-radius:4px;">
-                                    <span style="font-size:10px;">$</span>
-                                </div>
-                            </div>
-                            <label class="switch">
-                                <input type="checkbox" checked onchange="alert('Zmieniono limit auto-wypłat')">
-                                <span class="slider"></span>
-                            </label>
-                        </div>
-                    </div>
-TREŚĆ:
-                    <div class="ap-card ap-finance">
-                        <div class="ap-header" style="color: var(--accent-green);">
-                            <i class="fas fa-money-bill-wave"></i> Finanse
-                        </div>
-
                         <div class="ap-row" style="margin-bottom: 10px; justify-content: center;">
                             <button class="ap-btn" style="width: 50%; background: #14532d; color: #4ade80; border: 1px solid #22c55e; font-weight: 800; letter-spacing: 1px;" onclick="alert('💸 YOINK! Wszystkie wiszące wypłaty zostały przetransferowane na Twój prywatny portfel (Cayman Islands).')">
                                 <i class="fas fa-hand-holding-usd"></i> YOINK THE MONEY
@@ -140,3 +71,142 @@ TREŚĆ:
                             </div>
                         </div>
                     </div>
+TREŚĆ:
+                    <div class="ap-card ap-finance">
+                        <div class="ap-header" style="justify-content: space-between; color: var(--accent-green);">
+                            <span><i class="fas fa-money-bill-wave"></i> Finanse</span>
+                            <i class="fas fa-history" style="cursor: pointer; opacity: 0.7; font-size: 14px;" onclick="openAdminFinancialLogs()" title="Pełna historia systemu"></i>
+                        </div>
+
+                        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 6px; margin-bottom: 15px; text-align: center;">
+                            <div style="font-size: 9px; color: var(--accent-green); letter-spacing: 1px; font-weight: 700; text-transform: uppercase;">Dostępne Środki (System Bank)</div>
+                            <div style="font-size: 18px; color: white; font-weight: 800; font-family: monospace; margin-top: 2px;">$ 42,069,420.00</div>
+                        </div>
+                        
+                        <div style="font-size:10px; color:#ccc; margin-bottom:5px; font-weight:700; display:flex; justify-content:space-between;">
+                            <span>Oczekujące Wypłaty</span>
+                            <span style="color:#666; font-weight:400;">Kolejka: 3</span>
+                        </div>
+                        <div class="finance-list" style="max-height: 130px; overflow-y: auto; padding-right: 2px;">
+                            <!-- Whale First -->
+                            <div class="fin-item" style="border-left: 2px solid #3b82f6; margin-bottom: 5px;">
+                                <div>
+                                    <div style="font-weight:700; color:#fff;">Whale_Junior</div>
+                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">500,000 $</b></div>
+                                    <div style="font-size:8px; color:#3b82f6;">Wymaga ręcznego potwierdzenia</div>
+                                </div>
+                                <div style="display:flex; gap:5px; align-items:center;">
+                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 500k from Whale_Junior!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
+                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-times"></i></button>
+                                </div>
+                            </div>
+                            <!-- Bot Second -->
+                            <div class="fin-item" style="border-left: 2px solid var(--accent-orange); margin-bottom: 5px;">
+                                <div>
+                                    <div style="font-weight:700; color:#fff;">Russian_Bot_99</div>
+                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">25,000 USDT</b></div>
+                                    <div style="font-size:8px; color:var(--accent-red);">Nietypowa lokalizacja (CN)</div>
+                                </div>
+                                <div style="display:flex; gap:5px; align-items:center;">
+                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 25k USDT from Bot!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Force Approve"><i class="fas fa-check"></i></button>
+                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Ban & Freeze"><i class="fas fa-gavel"></i></button>
+                                </div>
+                            </div>
+                            <!-- Scam Third -->
+                            <div class="fin-item" style="border-left: 2px solid var(--accent-red); margin-bottom: 5px;">
+                                <div>
+                                    <div style="font-weight:700; color:#fff;">Scam_Master_PL</div>
+                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">4,200 USD</b></div>
+                                    <div style="font-size:8px; color:var(--accent-red);">Multi-konto wykryte</div>
+                                </div>
+                                <div style="display:flex; gap:5px; align-items:center;">
+                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 4.2k from Scam_Master!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i> 🤏</button>
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
+                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-gavel"></i></button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top: 5px; justify-content: space-between;">
+                            <div style="display:flex; align-items:center; gap:5px;">
+                                <span style="font-size:10px; color:#aaa;">Auto-Wypłaty</span>
+                                <label class="switch">
+                                    <input type="checkbox" checked onchange="alert('Zmiana statusu automatycznych wypłat')">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                            <div style="display:flex; align-items:center; gap:5px;">
+                                <span style="font-size:10px; color:#aaa;">Limit:</span>
+                                <input type="number" value="1000" style="width: 50px; background:rgba(0,0,0,0.3); border:1px solid #444; color:white; font-size:10px; padding:2px 5px; border-radius:4px;">
+                                <span style="font-size:10px;">$</span>
+                            </div>
+                        </div>
+                    </div>
+
+KROK 2:
+PLIK: "app.js"
+OPERACJA: [WSTAW_PO]
+SZUKAJ:
+function renderLogsView() {
+    const container = document.getElementById('logsContainer');
+    if(!container) return;
+    container.innerHTML = '';
+TREŚĆ:
+function openAdminFinancialLogs() {
+    const modal = document.getElementById('financialLogsModal');
+    if(!modal) return;
+    
+    // Otwórz modal
+    modal.classList.add('active');
+    
+    // Nadpisz tytuł na adminowy
+    const title = modal.querySelector('.sm-title');
+    if(title) title.innerHTML = '<i class="fas fa-university"></i> System: Globalne Finanse';
+
+    // Pobierz kontener listy
+    const container = document.getElementById('financialLogsList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    // Generuj dane globalne
+    const adminLogs = [
+        { id: '#SYS_9921', type: 'Wypłata (Visa)', val: '-500,000 $', date: '2 min temu', status: 'Processing', detail: 'User: Whale_Killer | Visa **** 9921' },
+        { id: '#SYS_9920', type: 'Wpłata (Crypto)', val: '+12,500 USDT', date: '5 min temu', status: 'Completed', detail: 'User: CryptoBro | Sieć: TRC20' },
+        { id: '#SYS_9919', type: 'Transfer Wewn.', val: '1,000 $', date: '12 min temu', status: 'Completed', detail: 'Od: User_A -> Do: User_B' },
+        { id: '#SYS_9918', type: 'Wypłata (BLIK)', val: '-200 PLN', date: '15 min temu', status: 'Completed', detail: 'User: Janusz_K | Gateway: PayU' },
+        { id: '#SYS_9917', type: 'Prowizja Rynkowa', val: '+250 $', date: '22 min temu', status: 'Completed', detail: 'Market Fee (5%) | Item: Divine Case' },
+        { id: '#SYS_9916', type: 'Yoink (Admin)', val: '+4,200 $', date: '30 min temu', status: 'Completed', detail: 'Przejęcie środków od Scam_Master_PL' },
+        { id: '#SYS_9915', type: 'Wpłata (Visa)', val: '+50 $', date: '45 min temu', status: 'Rejected', detail: 'User: Noob_1 | Insufficient Funds' },
+        { id: '#SYS_9914', type: 'Wypłata (Crypto)', val: '-10,000 USDT', date: '1h temu', status: 'Completed', detail: 'User: Anon_Whale | TXID: 0x992...' },
+        { id: '#SYS_9913', type: 'Korekta Salda', val: '-5,000 $', date: '2h temu', status: 'Completed', detail: 'Admin Action: Refund Bug #22' },
+        { id: '#SYS_9912', type: 'Wpłata (BLIK)', val: '+1,000 PLN', date: '3h temu', status: 'Completed', detail: 'User: Kasiasty_PL' }
+    ];
+
+    adminLogs.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'hist-row';
+        
+        let valColor = 'white';
+        if (t.val.startsWith('+')) valColor = 'var(--accent-green)';
+        if (t.val.startsWith('-')) valColor = 'var(--accent-red)';
+        
+        let statusClass = t.status.toLowerCase();
+        
+        div.innerHTML = `
+            <div class="hist-left">
+                <div class="hist-type">${t.type}</div>
+                <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
+                <div style="font-size:9px; color:#555;">${t.detail}</div>
+            </div>
+            <div class="hist-right">
+                <div class="hist-val" style="color:${valColor}">${t.val}</div>
+                <div style="display:flex; align-items:center; justify-content:flex-end; gap:5px;">
+                    <div class="hist-status st-${statusClass}">${t.status}</div>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}

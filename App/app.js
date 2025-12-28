@@ -2153,6 +2153,62 @@ function renderLogsView() {
     const container = document.getElementById('logsContainer');
     if(!container) return;
     container.innerHTML = '';
+function openAdminFinancialLogs() {
+    const modal = document.getElementById('financialLogsModal');
+    if(!modal) return;
+    
+    // Otwórz modal
+    modal.classList.add('active');
+    
+    // Nadpisz tytuł na adminowy
+    const title = modal.querySelector('.sm-title');
+    if(title) title.innerHTML = '<i class="fas fa-university"></i> System: Globalne Finanse';
+
+    // Pobierz kontener listy
+    const container = document.getElementById('financialLogsList');
+    if (!container) return;
+    container.innerHTML = '';
+
+    // Generuj dane globalne
+    const adminLogs = [
+        { id: '#SYS_9921', type: 'Wypłata (Visa)', val: '-500,000 $', date: '2 min temu', status: 'Processing', detail: 'User: Whale_Killer | Visa **** 9921' },
+        { id: '#SYS_9920', type: 'Wpłata (Crypto)', val: '+12,500 USDT', date: '5 min temu', status: 'Completed', detail: 'User: CryptoBro | Sieć: TRC20' },
+        { id: '#SYS_9919', type: 'Transfer Wewn.', val: '1,000 $', date: '12 min temu', status: 'Completed', detail: 'Od: User_A -> Do: User_B' },
+        { id: '#SYS_9918', type: 'Wypłata (BLIK)', val: '-200 PLN', date: '15 min temu', status: 'Completed', detail: 'User: Janusz_K | Gateway: PayU' },
+        { id: '#SYS_9917', type: 'Prowizja Rynkowa', val: '+250 $', date: '22 min temu', status: 'Completed', detail: 'Market Fee (5%) | Item: Divine Case' },
+        { id: '#SYS_9916', type: 'Yoink (Admin)', val: '+4,200 $', date: '30 min temu', status: 'Completed', detail: 'Przejęcie środków od Scam_Master_PL' },
+        { id: '#SYS_9915', type: 'Wpłata (Visa)', val: '+50 $', date: '45 min temu', status: 'Rejected', detail: 'User: Noob_1 | Insufficient Funds' },
+        { id: '#SYS_9914', type: 'Wypłata (Crypto)', val: '-10,000 USDT', date: '1h temu', status: 'Completed', detail: 'User: Anon_Whale | TXID: 0x992...' },
+        { id: '#SYS_9913', type: 'Korekta Salda', val: '-5,000 $', date: '2h temu', status: 'Completed', detail: 'Admin Action: Refund Bug #22' },
+        { id: '#SYS_9912', type: 'Wpłata (BLIK)', val: '+1,000 PLN', date: '3h temu', status: 'Completed', detail: 'User: Kasiasty_PL' }
+    ];
+
+    adminLogs.forEach(t => {
+        const div = document.createElement('div');
+        div.className = 'hist-row';
+        
+        let valColor = 'white';
+        if (t.val.startsWith('+')) valColor = 'var(--accent-green)';
+        if (t.val.startsWith('-')) valColor = 'var(--accent-red)';
+        
+        let statusClass = t.status.toLowerCase();
+        
+        div.innerHTML = `
+            <div class="hist-left">
+                <div class="hist-type">${t.type}</div>
+                <div class="hist-meta">${t.date} • <span class="hist-id">${t.id}</span></div>
+                <div style="font-size:9px; color:#555;">${t.detail}</div>
+            </div>
+            <div class="hist-right">
+                <div class="hist-val" style="color:${valColor}">${t.val}</div>
+                <div style="display:flex; align-items:center; justify-content:flex-end; gap:5px;">
+                    <div class="hist-status st-${statusClass}">${t.status}</div>
+                </div>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+}
 
     const logTypes = ['INFO', 'WARN', 'ERR', 'AUTH', 'SUCCESS', 'CRIT'];
     const sources = ['SYSTEM', 'GAME_ENG', 'PAYMENT', 'USER_DB', 'RISK_AI', 'NETWORK'];
