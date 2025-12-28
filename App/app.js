@@ -2662,19 +2662,18 @@ function renderFavoritesPanel() {
     
     
     favoriteModes.forEach(favId => {
-        const [gameId, modeIndexStr] = favId.split('_g_'); 
-        
         const lastUnderscore = favId.lastIndexOf('_');
         const gId = favId.substring(0, lastUnderscore);
         const mIdx = parseInt(favId.substring(lastUnderscore + 1));
 
-        
         let foundGame = null;
+        
+        // Poprawiona logika szukania gry (bez subkategorii)
         gamesHubStructure.forEach(cat => {
-            cat.subcategories.forEach(sub => {
-                const g = sub.games.find(x => x.id === gId);
-                if(g) foundGame = g;
-            });
+            if (cat.games) {
+                const g = cat.games.find(x => x.id === gId);
+                if (g) foundGame = g;
+            }
         });
 
         if (foundGame) {
