@@ -225,7 +225,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .view-container { display: none; flex-direction: column; gap: 30px; padding-bottom: 80px; animation: fadeIn 0.3s ease; }
 .view-container.active { display: flex; }
 
-@keyframes fadeIn { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+@keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
 
 
 .top-stats-row {
@@ -1396,22 +1396,22 @@ input:checked + .slider:before { transform: translateX(16px); }
     letter-spacing: 0.5px;
 }
 
-/* --- Whale Background for Profile --- */
+
 #viewProfile {
     position: relative;
-    /* Ensure child elements (panels) stay above the background */
+    
     z-index: 1;
 }
 
-#viewProfile > div:not(.profile-bg-whale) {
+#viewProfile > div:not(.profile-bg-whale):not(.profile-stars-container) {
     position: relative;
     z-index: 2;
 }
 
 .profile-bg-whale {
-    position: absolute;
-    top: 50px; /* Below header */
-    right: -5%; /* Slightly off-screen to anchor it */
+    position: fixed;
+    top: 10%;    
+    right: 0%;    
     width: 65%;
     height: 85%;
     background-image: url('https://img-v3.deepdreamgenerator.com/2436355/z6qdyc_64f342e80213336fd546cecf2d2713e33ca5c609.jpg');
@@ -1419,18 +1419,42 @@ input:checked + .slider:before { transform: translateX(16px); }
     background-repeat: no-repeat;
     background-position: center right;
     
-    /* Półprzezroczystość całości */
+    
     opacity: 0.25;
     
-    /* Płynne zanikanie krawędzi (maska radialna) */
+    
     mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
     -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
     
-    pointer-events: none; /* Click-through */
+    pointer-events: none;    
     z-index: 0;
     
-    /* Optional: Blend mode for better integration with dark bg */
+    
     mix-blend-mode: screen;
+}
+
+.profile-stars-container {
+    position: fixed;
+    top: 0;
+    left: 260px; 
+    width: calc(100% - 260px); 
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+.star-real {
+    position: absolute;
+    background: #fff;
+    border-radius: 50%;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.4);
+    animation: star-twinkle 5s infinite ease-in-out;
+}
+
+@keyframes star-twinkle {
+    0%, 100% { opacity: 0.3; transform: scale(1); }
+    50% { opacity: 0.8; transform: scale(1.2); }
 }
 
 

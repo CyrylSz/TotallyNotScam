@@ -544,7 +544,8 @@ function closeMarketModal() {
 
 function initDashboard() {
     initInventorySystem(); 
-    initMarketData();      
+    initMarketData();
+    initProfileStars();      
     
     
     renderDashInventory(); 
@@ -556,6 +557,37 @@ function initDashboard() {
     
     
     renderInventoryView();
+}
+
+function initProfileStars() {
+    const container = document.getElementById('profileStarsBg');
+    if(!container || container.children.length > 0) return;
+
+    // Generujemy rzadkie gwiazdy (zwiększony zakres, mała ilość)
+    const starCount = 70;
+
+    for(let i=0; i<starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star-real';
+        
+        // Używamy % względem kontenera (który jest już wypozycjonowany za sidebarem)
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        
+        const size = Math.random() * 2 + 1;
+        const opacity = Math.random() * 0.4 + 0.1; 
+
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.opacity = opacity;
+        
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.style.animationDuration = `${4 + Math.random() * 6}s`;
+
+        container.appendChild(star);
+    }
 }
 
 
@@ -2751,7 +2783,7 @@ function renderFavoritesPanel() {
                     <i class="fas fa-star mc-star active" onclick="toggleFavoriteMode('${favId}', null, null, null, null, 0, this)"></i>
                 </div>
                 <div class="mc-title">${modeName}</div>
-                <div class="mc-players"><i class="fas fa-user"></i> ~${displayPlayers}</div>
+                <div class="mc-players"><i class="fas fa-user"></i> ${displayPlayers}</div>
                  <div class="mc-overlay-play">
                     <div class="play-btn-round"><i class="fas fa-play"></i></div>
                 </div>

@@ -1,56 +1,92 @@
 KROK 1:
-PLIK: "index.html"
-OPERACJA: [WSTAW_PO]
-SZUKAJ:
-        <div class="view-container" id="viewProfile">
-TREŚĆ:
-            <div class="profile-bg-whale"></div>
-
-KROK 2:
 PLIK: "style.css"
-OPERACJA: [WSTAW_PO]
+OPERACJA: [ZASTĄP]
 SZUKAJ:
-.ws-highest {
-    font-size: 9px;
-    color: #666;
-    font-weight: 500;
-    letter-spacing: 0.5px;
-}
-TREŚĆ:
-
-/* --- Whale Background for Profile --- */
-#viewProfile {
-    position: relative;
-    /* Ensure child elements (panels) stay above the background */
-    z-index: 1;
-}
-
 #viewProfile > div:not(.profile-bg-whale) {
     position: relative;
     z-index: 2;
 }
-
-.profile-bg-whale {
-    position: absolute;
-    top: 50px; /* Below header */
-    right: -5%; /* Slightly off-screen to anchor it */
-    width: 65%;
-    height: 85%;
-    background-image: url('https://img-v3.deepdreamgenerator.com/2436355/z6qdyc_64f342e80213336fd546cecf2d2713e33ca5c609.jpg');
-    background-size: contain;
-    background-repeat: no-repeat;
-    background-position: center right;
-    
-    /* Półprzezroczystość całości */
-    opacity: 0.25;
-    
-    /* Płynne zanikanie krawędzi (maska radialna) */
-    mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-    -webkit-mask-image: radial-gradient(ellipse at center, black 30%, transparent 70%);
-    
-    pointer-events: none; /* Click-through */
-    z-index: 0;
-    
-    /* Optional: Blend mode for better integration with dark bg */
-    mix-blend-mode: screen;
+TREŚĆ:
+#viewProfile > div:not(.profile-bg-whale):not(.profile-stars-container) {
+    position: relative;
+    z-index: 2;
 }
+
+KROK 2:
+PLIK: "style.css"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+.profile-stars-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+TREŚĆ:
+.profile-stars-container {
+    position: fixed;
+    top: 0;
+    left: 260px; /* Szerokość sidebara */
+    width: calc(100% - 260px); /* Reszta ekranu */
+    height: 100vh;
+    pointer-events: none;
+    z-index: 0;
+    overflow: hidden;
+}
+
+KROK 3:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+    for(let i=0; i<starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star-real';
+        
+        // Losowa pozycja (vw/vh zapewnia pokrycie ekranu niezależnie od rodzica)
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        
+        // Bardzo małe, realistyczne gwiazdy
+        const size = Math.random() * 2 + 1;
+        
+        // Półprzezroczystość dla efektu tła
+        const opacity = Math.random() * 0.4 + 0.1; 
+
+        star.style.left = `${x}vw`;
+        star.style.top = `${y}vh`;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.opacity = opacity;
+        
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.style.animationDuration = `${4 + Math.random() * 6}s`;
+
+        container.appendChild(star);
+    }
+TREŚĆ:
+    for(let i=0; i<starCount; i++) {
+        const star = document.createElement('div');
+        star.className = 'star-real';
+        
+        // Używamy % względem kontenera (który jest już wypozycjonowany za sidebarem)
+        const x = Math.random() * 100;
+        const y = Math.random() * 100;
+        
+        const size = Math.random() * 2 + 1;
+        const opacity = Math.random() * 0.4 + 0.1; 
+
+        star.style.left = `${x}%`;
+        star.style.top = `${y}%`;
+        star.style.width = `${size}px`;
+        star.style.height = `${size}px`;
+        star.style.opacity = opacity;
+        
+        star.style.animationDelay = `${Math.random() * 5}s`;
+        star.style.animationDuration = `${4 + Math.random() * 6}s`;
+
+        container.appendChild(star);
+    }
