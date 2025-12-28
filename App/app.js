@@ -2592,6 +2592,15 @@ function toggleFavoriteMode(modeId, gameId, modeName, icon, color, players, star
     const idx = favoriteModes.indexOf(modeId);
     
     if (idx === -1) {
+        favoriteModes.push(modeId);
+        starElement.className = 'fas fa-star mc-star active';
+    } else {
+        favoriteModes.splice(idx, 1);
+        starElement.className = 'far fa-star mc-star';
+    }
+    renderFavoritesPanel();
+}
+
 function openLoadoutEffectsModal() {
     const modal = document.getElementById('loadoutEffectsModal');
     const container = document.getElementById('loadoutEffectsContent');
@@ -2634,20 +2643,6 @@ function openLoadoutEffectsModal() {
 
 function closeLoadoutEffectsModal() {
     document.getElementById('loadoutEffectsModal').classList.remove('active');
-}
-        
-        favoriteModes.push(modeId);
-        starElement.className = 'fas fa-star mc-star active';
-        
-        
-    } else {
-        
-        favoriteModes.splice(idx, 1);
-        starElement.className = 'far fa-star mc-star';
-    }
-    
-    
-    renderFavoritesPanel();
 }
 
 function renderFavoritesPanel() {

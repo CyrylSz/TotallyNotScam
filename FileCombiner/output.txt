@@ -30,6 +30,7 @@ let marketState = {
     searchPlayer: '', 
     onlyMine: false, 
     types: { item: true, case: true }, 
+    durability: { consumable: true, durable: true },
     slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], 
     priceMin: null,
     priceMax: null,
@@ -50,10 +51,13 @@ function initMarketData() {
         if(!template) return;
 
         let finalUid = `mkt_${Date.now()}_${Math.random()}`;
+        let specificUses = null;
+
         if (isMine) {
             const myItem = myInventory.find(i => i.id === itemTemplateId && !i.isOnSale);
             if (myItem) {
                 finalUid = myItem.uid;
+                specificUses = myItem.usesLeft;
                 myItem.isOnSale = true; 
             } else return;
         }
@@ -121,6 +125,9 @@ function initMarketData() {
             type: template.type,
             icon: template.icon,
             color: template.color,
+            isConsumable: template.isConsumable,
+            maxUses: template.maxUses,
+            usesLeft: specificUses !== null ? specificUses : (template.isConsumable ? Math.ceil(Math.random() * template.maxUses) : null),
             isChest: template.type === 'chest'
         });
     };
@@ -172,6 +179,11 @@ function toggleMarketType(type, btnElement) {
     
     filterMarket();
 }
+function toggleDurabilityFilter(type, btnElement) {
+    marketState.durability[type] = !marketState.durability[type];
+    btnElement.classList.toggle('active', marketState.durability[type]);
+    filterMarket();
+}
 
 function toggleSlotFilter(slot, btnElement) {
     const idx = marketState.slots.indexOf(slot);
@@ -207,6 +219,8 @@ function filterMarket() {
         if (marketState.searchItem && !item.name.toLowerCase().includes(marketState.searchItem)) return false;
         if(item.isChest && !marketState.types.case) return false;
         if(!item.isChest && !marketState.types.item) return false;
+        if(item.isConsumable && !marketState.durability.consumable) return false;
+        if(!item.isConsumable && !marketState.durability.durable) return false;
 
         const priceCheck = item.listingType === 'auction' ? (item.currentBid > 0 ? item.currentBid : item.price) : item.price;
         if(marketState.priceMin && priceCheck < marketState.priceMin) return false;
@@ -279,6 +293,13 @@ function createMarketCard(item) {
     let isLocked = false;
     if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
     const lockHtml = isLocked ? `<div class="mc-lock-overlay"><i class="fas fa-lock"></i></div>` : '';
+    
+    let conditionHtml = '';
+    
+    if (!isLocked && item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
+        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+        conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
+    }
 
     
     let footerHtml = '';
@@ -323,7 +344,7 @@ function createMarketCard(item) {
                 <div class="mc-seller-avatar" style="background-image: url('${item.sellerImg}');"></div>
                 <div class="mc-seller-name">${item.seller}</div>
             </div>
-            ${lockHtml}
+            ${lockHtml}${conditionHtml}
         </div>
         <div class="mc-body">
             <div class="mc-title" style="color:${item.color}; font-size: 12px; margin-bottom: 8px;">${item.name}</div>
@@ -351,7 +372,26 @@ function openMarketItemModal(item) {
     
     document.getElementById('mmIcon').innerHTML = item.icon;
     document.getElementById('mmIcon').className = ''; 
-    document.getElementById('mmCard').style.color = item.color;
+    
+    const mmCard = document.getElementById('mmCard');
+    mmCard.style.color = item.color;
+
+    // Cleanup visual pie form previous opens
+    const oldPie = mmCard.querySelector('.mc-condition-pie');
+    if(oldPie) oldPie.remove();
+
+    if (item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
+        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+        const pie = document.createElement('div');
+        pie.className = 'mc-condition-pie';
+        pie.style.background = `conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%)`;
+        pie.style.width = '24px';
+        pie.style.height = '24px';
+        pie.style.top = '15px';
+        pie.style.right = '15px';
+        pie.title = `Stan: ${item.usesLeft}/${item.maxUses}`;
+        mmCard.appendChild(pie);
+    }
     
     
     document.getElementById('mmSellerName').textContent = item.seller;
@@ -369,6 +409,12 @@ function openMarketItemModal(item) {
     tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
     if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
     else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
+
+    if (item.isConsumable && item.maxUses) {
+         tags.innerHTML += `<span class="badge-slot" style="color:var(--accent-green); border:1px solid var(--accent-green);">STAN: ${item.usesLeft}/${item.maxUses}</span>`;
+    } else {
+         tags.innerHTML += `<span class="badge-slot" style="opacity:0.7;">TRWAŁY</span>`;
+    }
     
     
     const template = allTreasures.find(t => t.id === item.templateId);
@@ -520,13 +566,22 @@ function initInventorySystem() {
     if (!player) return;
 
     myInventory = [];
-    player.inventory.forEach((itemId, index) => {
+    player.inventory.forEach((invEntry, index) => {
+        const itemId = typeof invEntry === 'object' ? invEntry.id : invEntry;
         const template = allTreasures.find(t => t.id === itemId);
         if (template) {
             
             const item = { ...template, uid: `item_${itemId}_${index}` };
             
             
+            if (template.isConsumable) {
+                if (typeof invEntry === 'object' && invEntry.usesLeft !== undefined) {
+                    item.usesLeft = invEntry.usesLeft;
+                } else {
+                    item.usesLeft = template.maxUses;
+                }
+            }
+
             if (!item.change) {
                 const changeVal = (Math.random() * 10 - 5).toFixed(1);
                 item.change = (changeVal > 0 ? "+" : "") + changeVal + "%";
@@ -644,7 +699,7 @@ const navMap = {
     'inventory': { title: "Ekwipunek", navId: "navInventory", viewId: "viewInventory", init: renderInventoryView },
     'market': { title: "Rynek", navId: "navMarket", viewId: "viewMarket", init: renderMarketView },
     'wallet': { title: "Portfel", navId: "navWallet", viewId: "viewWallet", init: renderWalletView },
-    'adminDash': { title: "Dashboard Admina", navId: "navAdminDash", viewId: "viewAdminDash" },
+    'adminDash': { title: "Dashboard Admina", navId: "navAdminDash", viewId: "viewAdminDash", init: renderAdminHeatmap },
     'users': { title: "Użytkownicy", navId: "navUsers", viewId: "viewUsers", init: renderUsersView },
     'logs': { title: "Logi", navId: "navLogs", viewId: "viewLogs", init: renderLogsView }
 };
@@ -1267,15 +1322,23 @@ function renderInventoryView() {
         else if (isOnSale) badgeHtml += `<div class="on-sale-badge">NA RYNKU</div>`;
 
         
-        if (item.rarity === 'Divine' && currentRankId > 2) {
+        const isRankLocked = item.rarity === 'Divine' && currentRankId > 2;
+        if (isRankLocked) {
             badgeHtml += `<div class="inv-lock-overlay"><i class="fas fa-lock"></i></div>`;
             slot.classList.add('is-rank-locked');
+        }
+
+        let conditionHtml = '';
+        if (!isRankLocked && !isEquipped && item.isConsumable && item.maxUses && (item.id < 1 || item.id > 5)) {
+            const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+            conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
         }
 
         slot.innerHTML = `
             <div class="inv-item-icon" style="font-style: normal; color: initial;">${item.icon}</div>
             <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
             ${badgeHtml}
+            ${conditionHtml}
         `;
         
         
@@ -1392,10 +1455,18 @@ function renderItemInSlot(slotElement, item) {
     
     let rarityColor = getRarityColor(item.rarity);
     
-    
+    let conditionHtml = '';
+    const isRankLocked = item.rarity === 'Divine' && currentRankId > 2;
+
+    if (!isRankLocked && item.isConsumable && item.maxUses && (item.id < 1 || item.id > 5)) {
+        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+        conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
+    }
+
     slotElement.innerHTML = `
         <div style="font-size: 50px; font-style: normal; line-height: 1; filter: drop-shadow(0 2px 4px rgba(0,0,0,0.5));">${item.icon}</div>
         <div class="inv-item-name" style="color: ${item.color};">${item.name}</div>
+        ${conditionHtml}
     `;
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
@@ -1821,48 +1892,228 @@ function copyCrypto() {
     }, 2000);
 }
 
-function renderUsersView() {
-    const container = document.getElementById('usersContainer');
-    container.innerHTML = '';
-    const users = [
-        { id: 994, name: "Whale_Killer", rank: "Alpha Whale", status: "Online" },
-        { id: 120, name: "Bot_Network_01", rank: "Small Fry", status: "Scripting" },
-        { id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", status: "Offline" },
-        { id: 1, name: "Admin", rank: "King", status: "Hidden" }
-    ];
-    users.forEach(u => {
+function renderAdminHeatmap() {
+    const grid = document.getElementById('adminHeatmapGrid');
+    if(!grid || grid.children.length > 0) return;
+
+    // 53 kolumny (tygodnie) x 7 wierszy (dni)
+    const totalCells = 53 * 7;
+    
+    for(let i = 0; i < totalCells; i++) {
         const div = document.createElement('div');
-        div.className = 'lb-row';
-        div.style.gridTemplateColumns = "50px 1fr 150px 100px";
-        let statusColor = u.status === 'Online' ? 'var(--accent-green)' : '#666';
+        const rand = Math.random();
+        let level = 'l0';
+        
+        // Symulacja rozkładu aktywności
+        if (rand > 0.75) level = 'l1';
+        if (rand > 0.88) level = 'l2';
+        if (rand > 0.95) level = 'l3';
+        if (rand > 0.98) level = 'l4';
+
+        div.className = `gh-cell ${level}`;
+        div.title = `Aktywność: ${level.toUpperCase()}`;
+        grid.appendChild(div);
+    }
+}
+let adminUsersDB = [];
+let adminUsersPage = 1;
+const adminUsersPerPage = 15;
+
+function initAdminUsers() {
+    if(adminUsersDB.length > 0) return;
+
+    const ranks = ["Bankrupt", "Small Fry", "Risk Taker", "Table Shark", "Casino Legend", "Alpha Whale", "RNG God"];
+    const statuses = ["Online", "Offline", "Offline", "Banned", "Suspicious"];
+    const prefixes = ["Crypto", "Super", "Mega", "Iron", "Lazy", "Lucky", "Sad", "Rich", "Poor", "Bot"];
+    const suffixes = ["Gamer", "Winner", "Loser", "Whale", "King", "Dog", "Cat", "Master", "Noob", "Pro"];
+
+    // Dodanie statycznych ważnych graczy
+    adminUsersDB.push({ id: 1, name: "MrGambler", rank: "Alpha Whale", balance: 5240000, lastActive: "Now", status: "Online", isAdmin: true });
+    adminUsersDB.push({ id: 994, name: "Whale_Killer", rank: "RNG God", balance: 12500000, lastActive: "2 min temu", status: "Online" });
+    adminUsersDB.push({ id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", balance: 0, lastActive: "5 dni temu", status: "Banned" });
+
+    // Generowanie 150 randomów
+    for(let i=0; i<150; i++) {
+        const id = 1000 + i;
+        const name = prefixes[Math.floor(Math.random()*prefixes.length)] + "_" + suffixes[Math.floor(Math.random()*suffixes.length)] + "_" + Math.floor(Math.random()*99);
+        const rank = ranks[Math.floor(Math.random() * ranks.length)];
+        const balance = Math.floor(Math.random() * 500000);
+        const status = statuses[Math.floor(Math.random() * statuses.length)];
+        const lastActive = status === 'Online' ? "Now" : Math.floor(Math.random() * 24) + "h temu";
+
+        adminUsersDB.push({ id, name, rank, balance, lastActive, status });
+    }
+}
+
+function renderUsersView() {
+    initAdminUsers();
+    
+    const container = document.getElementById('usersContainer');
+    if(!container) return;
+    container.innerHTML = '';
+
+    const filterStatus = document.getElementById('userFilterStatus').value;
+    const searchVal = document.getElementById('userSearchInput').value.toLowerCase();
+
+    // Filtrowanie
+    let filtered = adminUsersDB.filter(u => {
+        if(filterStatus !== 'all' && u.status !== filterStatus) return false;
+        if(searchVal && !u.name.toLowerCase().includes(searchVal) && !u.id.toString().includes(searchVal)) return false;
+        return true;
+    });
+
+    // Paginacja
+    const totalPages = Math.ceil(filtered.length / adminUsersPerPage) || 1;
+    if(adminUsersPage < 1) adminUsersPage = 1;
+    if(adminUsersPage > totalPages) adminUsersPage = totalPages;
+
+    const start = (adminUsersPage - 1) * adminUsersPerPage;
+    const pageItems = filtered.slice(start, start + adminUsersPerPage);
+
+    pageItems.forEach(u => {
+        const div = document.createElement('div');
+        div.className = 'ul-row';
+        
+        let badgeClass = 'ul-b-offline';
+        if(u.status === 'Online') badgeClass = 'ul-b-online';
+        if(u.status === 'Banned') badgeClass = 'ul-b-banned';
+        if(u.status === 'Suspicious') badgeClass = 'ul-b-suspicious';
+
+        let rankColor = '#aaa';
+        if(u.rank.includes('Whale') || u.rank.includes('God')) rankColor = 'var(--accent-purple)';
+        if(u.rank.includes('Bankrupt')) rankColor = 'var(--text-muted)';
+
+        let nameHtml = u.name;
+        if(u.isAdmin) nameHtml += ' <span style="background:var(--accent-purple); color:white; font-size:9px; padding:2px 5px; border-radius:3px; margin-left:5px;">ADMIN</span>';
+
         div.innerHTML = `
-            <div style="color:#666;">#${u.id}</div>
-            <div class="lb-name">${u.name}</div>
-            <div style="font-size:11px; color:var(--accent-blue);">${u.rank}</div>
-            <div style="font-size:10px; color:${statusColor};">● ${u.status}</div>
+            <div style="font-family:monospace; color:#666;">#${u.id}</div>
+            <div style="font-weight:600; color:white;">${nameHtml}</div>
+            <div style="color:${rankColor};">${u.rank}</div>
+            <div style="font-family:monospace; color:${u.balance > 100000 ? 'var(--accent-green)' : '#ddd'};">${u.balance.toLocaleString()} $</div>
+            <div style="color:#888;">${u.lastActive}</div>
+            <div><span class="ul-badge ${badgeClass}">${u.status}</span></div>
+            <div class="ul-actions">
+                <button class="ul-btn" title="Edytuj"><i class="fas fa-edit"></i></button>
+                <button class="ul-btn danger" title="Zbanuj" onclick="alert('Zbanowano użytkownika ${u.name}')"><i class="fas fa-ban"></i></button>
+            </div>
         `;
         container.appendChild(div);
     });
+
+    document.getElementById('userPageIndicator').textContent = `Strona ${adminUsersPage} z ${totalPages}`;
+}
+
+function changeUserPage(delta) {
+    adminUsersPage += delta;
+    renderUsersView();
+}
+/* --- ADMIN PANEL ACTIONS --- */
+
+function toggleAdminAction(action) {
+    let msg = "";
+    switch(action) {
+        case 'maintenance': msg = "Tryb konserwacji został zmieniony."; break;
+        case 'block_withdrawals': msg = "Blokada wypłat została zmieniona."; break;
+        case 'gate_blik': msg = "Status bramki BLIK został zmieniony."; break;
+        case 'gate_crypto': msg = "Status bramki Crypto został zmieniony."; break;
+    }
+    // Symulacja requestu do API
+    console.log(`[ADMIN] Action: ${action}`);
+    // Toast notification simulation
+    alert(`[SYSTEM] ${msg}`); 
+}
+
+function adminLogoutAll() {
+    if(confirm("Czy na pewno chcesz wylogować WSZYSTKICH użytkowników? To przerwie aktywne gry.")) {
+        alert("[SYSTEM] Wysłano polecenie: Force Logout All Sessions.");
+    }
+}
+
+function sendAdminPush() {
+    const msg = document.getElementById('pushMsgInput').value;
+    if(msg) {
+        alert(`[PUSH SENT] Do 14,203 online: "${msg}"`);
+        document.getElementById('pushMsgInput').value = '';
+    }
+}
+
+function updateTickerAdmin() {
+    const msg = document.getElementById('tickerMsgInput').value;
+    if(msg) {
+        alert(`[TICKER UPDATED] Nowa treść: "${msg}"`);
+        document.getElementById('tickerMsgInput').value = '';
+    }
+}
+
+function adminImpersonate() {
+    const target = document.getElementById('godModeInput').value;
+    if(target) {
+        alert(`[GOD MODE] Przełączanie widoku na gracza: ${target}...\n\n(To tylko demo UI - nic się nie zmieni, ale w produkcji przeładowałoby to kontekst aplikacji).`);
+    } else {
+        alert("Podaj ID lub Login gracza.");
+    }
 }
 
 function renderLogsView() {
     const container = document.getElementById('logsContainer');
+    if(!container) return;
     container.innerHTML = '';
-    const logs = [
-        "[SYSTEM] Server started at 00:00:01",
-        "[AUTH] Admin logged in from 127.0.0.1",
-        "[GAME] User_99 won 5000 in Roulette",
-        "[RISK] High bet detected: User_99 (Risk: Low)",
-        "[ERROR] Payment Gateway Timeout (Retrying...)",
-        "[SYSTEM] Daily rewards distributed"
+
+    const logTypes = ['INFO', 'WARN', 'ERR', 'AUTH', 'SUCCESS', 'CRIT'];
+    const sources = ['SYSTEM', 'GAME_ENG', 'PAYMENT', 'USER_DB', 'RISK_AI', 'NETWORK'];
+    const messages = [
+        "Connection established with node #421",
+        "User_992 placed bet: 50,000$ (Blackjack)",
+        "Database latency spike detected (120ms)",
+        "Payment gateway timeout - Retrying...",
+        "User_Admin logged in from 192.168.1.1",
+        "RNG Seed updated: 0x992384AA",
+        "Suspicious activity detected: Bot_Net_01",
+        "Daily rewards distributed to 1540 users",
+        "Asset 'Dragon Egg' transferred to User_Whale",
+        "WebSocket heartbeat missed - Reconnecting",
+        "Cache cleared successfully",
+        "New listing created on Market: ID #9921",
+        "Transaction #TX992 verified on blockchain",
+        "Critical Error: Logic Gate failure in Slot Engine",
+        "User_LuckyLuke claimed Battle Pass Lvl 20",
+        "API Rate limit approaching (85%)",
+        "Server CPU load at 45%",
+        "Backup process started...",
+        "Backup process completed (2.4GB)",
+        "User_Banned banned for 'Scripting'"
     ];
-    logs.forEach(l => {
+
+    // Generowanie 200 logów
+    for(let i=0; i<200; i++) {
+        const date = new Date();
+        date.setSeconds(date.getSeconds() - i * (Math.random() * 10));
+        const timeStr = date.toTimeString().split(' ')[0];
+        
+        let type = 'INFO';
+        const rand = Math.random();
+        if (rand > 0.98) type = 'CRIT';
+        else if (rand > 0.90) type = 'ERR';
+        else if (rand > 0.80) type = 'WARN';
+        else if (rand > 0.70) type = 'AUTH';
+        else if (rand > 0.60) type = 'SUCCESS';
+
+        const source = sources[Math.floor(Math.random() * sources.length)];
+        const msg = messages[Math.floor(Math.random() * messages.length)] + (Math.random() > 0.5 ? ` [ID:${Math.floor(Math.random()*9999)}]` : '');
+
         const div = document.createElement('div');
-        div.style.padding = "4px 0";
-        div.style.borderBottom = "1px solid rgba(255,255,255,0.05)";
-        div.textContent = `> ${l}`;
+        div.className = `log-line`;
+        if(type === 'ERR' || type === 'CRIT') div.style.background = 'rgba(239, 68, 68, 0.05)';
+
+        div.innerHTML = `
+            <span class="ll-time">${timeStr}</span>
+            <span class="ll-level lvl-${type.toLowerCase()}">${type}</span>
+            <span class="ll-source">[${source}]</span>
+            <span class="ll-msg">${msg}</span>
+        `;
         container.appendChild(div);
-    });
+    }
 }
 
 
@@ -2088,6 +2339,117 @@ function initDashboardExtras() {
     renderDashInventory();
     initBannerCarousel();
     renderFavoritesPanel();
+    renderPopularModes();
+    renderDashActiveListings();
+}
+
+function renderDashActiveListings() {
+    const container = document.getElementById('dashActiveListings');
+    if(!container) return;
+    container.innerHTML = '';
+
+    // Pobieramy oferty gracza (MrGambler)
+    const myListings = marketState.listings.filter(l => l.isMine);
+
+    if(myListings.length === 0) {
+        container.innerHTML = '<div style="padding:20px; color:#666; font-size:11px; text-align:center;">Brak aktywnych ofert na rynku.</div>';
+        return;
+    }
+
+    myListings.forEach(item => {
+        const el = document.createElement('div');
+        el.className = 'mw-item';
+        el.style.cursor = 'pointer';
+        el.style.transition = 'background 0.2s';
+        
+        // Kliknięcie otwiera ten sam modal co na Rynku
+        el.onclick = () => openMarketItemModal(item);
+
+        const priceDisplay = (item.listingType === 'auction' ? (item.currentBid || item.price) : item.price).toLocaleString();
+        
+        // Status: Instant lub Licytacja (z czasem)
+        let statusHtml = '';
+        if(item.listingType === 'instant') {
+            statusHtml = `<span style="color:var(--accent-green); font-size:9px; font-weight:700;">INSTANT</span>`;
+        } else {
+            statusHtml = `<span style="color:var(--accent-orange); font-size:9px; font-weight:700;">${item.bidCount} OFERT</span>`;
+        }
+
+        el.innerHTML = `
+            <div class="mw-icon" style="color:${item.color}; font-size: 24px; background: rgba(255,255,255,0.02); width:40px; height:40px; display:flex; align-items:center; justify-content:center; border-radius:6px;">
+                ${item.icon}
+            </div>
+            <div class="mw-info" style="margin-left: 10px;">
+                <h5 style="color:${item.color}; font-size:12px; margin-bottom:3px;">${item.name}</h5>
+                <div style="font-size:11px; font-weight:700; color:#fff;">${priceDisplay} $</div>
+            </div>
+            <div style="text-align:right; display:flex; flex-direction:column; align-items:flex-end; justify-content:center;">
+                ${statusHtml}
+                <div style="font-size:9px; color:#666; margin-top:2px;">${item.type.toUpperCase()}</div>
+            </div>
+        `;
+        
+        // Dodajemy hover effect w JS inline dla prostoty
+        el.onmouseenter = () => el.style.background = 'rgba(255,255,255,0.08)';
+        el.onmouseleave = () => el.style.background = 'rgba(255,255,255,0.03)';
+
+        container.appendChild(el);
+    });
+}
+
+function renderPopularModes() {
+    const grid = document.getElementById('popularModesGrid');
+    if (!grid) return;
+    grid.innerHTML = '';
+
+    let allModes = [];
+
+    // Spłaszczanie struktury i przypisywanie graczy
+    gamesHubStructure.forEach(category => {
+        if(category.games) {
+            category.games.forEach(game => {
+                const distrib = distributePlayers(game.onlineCount, game.modes.length);
+                game.modes.forEach((modeName, idx) => {
+                    allModes.push({
+                        modeName: modeName,
+                        gameName: game.name,
+                        players: distrib[idx],
+                        icon: game.icon,
+                        color: game.color,
+                        gameId: game.id
+                    });
+                });
+            });
+        }
+    });
+
+    // Sortowanie malejąco po liczbie graczy
+    allModes.sort((a, b) => b.players - a.players);
+
+    // Pobranie TOP 6
+    const topModes = allModes.slice(0, 6);
+
+    topModes.forEach((m, index) => {
+        const card = document.createElement('div');
+        card.className = 'mode-card';
+        card.onclick = () => alert(`Szybki start: ${m.modeName} (${m.gameName})`);
+
+        card.innerHTML = `
+            <div class="mc-top">
+                <div class="mc-icon" style="background:${m.color}40; color:${m.color};">
+                    <i class="fas ${m.icon}"></i>
+                </div>
+                <div style="font-size:10px; color:#aaa; font-weight:700;">#${index + 1}</div>
+            </div>
+            <div class="mc-title">${m.modeName}</div>
+            <div class="mc-sub" style="margin-bottom:2px; font-size:9px; opacity:0.7;">${m.gameName}</div>
+            <div class="mc-players"><i class="fas fa-user"></i> ${m.players.toLocaleString()}</div>
+             <div class="mc-overlay-play">
+                <div class="play-btn-round"><i class="fas fa-play"></i></div>
+            </div>
+        `;
+        grid.appendChild(card);
+    });
 }
 
 
@@ -2232,6 +2594,49 @@ function toggleFavoriteMode(modeId, gameId, modeName, icon, color, players, star
     const idx = favoriteModes.indexOf(modeId);
     
     if (idx === -1) {
+function openLoadoutEffectsModal() {
+    const modal = document.getElementById('loadoutEffectsModal');
+    const container = document.getElementById('loadoutEffectsContent');
+    if(!modal || !container) return;
+
+    container.innerHTML = '';
+    
+    const equippedUids = Object.values(myLoadout);
+    
+    if(equippedUids.length === 0) {
+        container.innerHTML = '<div class="le-empty">Brak założonych przedmiotów.</div>';
+    } else {
+        equippedUids.forEach(uid => {
+            const item = myInventory.find(i => i.uid === uid);
+            if(item) {
+                const row = document.createElement('div');
+                row.className = 'le-row';
+                
+                let bonusText = item.bonus;
+                
+                // Jeśli przedmiot zużywalny, dodaj info o stanie w bonusie
+                if (item.isConsumable && item.maxUses) {
+                    bonusText += ` <span style="color:#666; font-size:10px;">(Stan: ${item.usesLeft}/${item.maxUses})</span>`;
+                }
+
+                row.innerHTML = `
+                    <div class="le-icon">${item.icon}</div>
+                    <div class="le-info">
+                        <h5 style="color:${item.color}">${item.name}</h5>
+                        <p>${bonusText}</p>
+                    </div>
+                `;
+                container.appendChild(row);
+            }
+        });
+    }
+
+    modal.classList.add('active');
+}
+
+function closeLoadoutEffectsModal() {
+    document.getElementById('loadoutEffectsModal').classList.remove('active');
+}
         
         favoriteModes.push(modeId);
         starElement.className = 'fas fa-star mc-star active';
@@ -2441,63 +2846,63 @@ const gamesHubStructure = [
 
 let allTreasures = [
     
-    { id: 1, name: "Peasant Case", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💼", rarity: "Peasant", desc: "Stara, skórzana teczka.", bonus: "Może zawierać kanapki." },
-    { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "💼", rarity: "Rare", desc: "Walizka z szyfrem.", bonus: "Gwarantowany gadżet." },
-    { id: 3, name: "Epic Case", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "💼", rarity: "Epic", desc: "Wzmocniona tytanem.", bonus: "Pachnie drogimi perfumami." },
-    { id: 4, name: "Relic Case", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "💼", rarity: "Relic", desc: "Używana przez mafię.", bonus: "Ryzykowna zawartość." },
-    { id: 5, name: "Divine Case", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💼", rarity: "Divine", desc: "Wykonana ze złota i diamentów.", bonus: "Tylko dla 1%." },
+    { id: 1, name: "Peasant Case", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💼", rarity: "Peasant", desc: "Stara, skórzana teczka.", bonus: "Może zawierać kanapki.", isConsumable: true, maxUses: 1 },
+    { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "💼", rarity: "Rare", desc: "Walizka z szyfrem.", bonus: "Gwarantowany gadżet.", isConsumable: true, maxUses: 1 },
+    { id: 3, name: "Epic Case", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "💼", rarity: "Epic", desc: "Wzmocniona tytanem.", bonus: "Pachnie drogimi perfumami.", isConsumable: true, maxUses: 1 },
+    { id: 4, name: "Relic Case", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "💼", rarity: "Relic", desc: "Używana przez mafię.", bonus: "Ryzykowna zawartość.", isConsumable: true, maxUses: 1 },
+    { id: 5, name: "Divine Case", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💼", rarity: "Divine", desc: "Wykonana ze złota i diamentów.", bonus: "Tylko dla 1%.", isConsumable: true, maxUses: 1 },
 
     
     
     
-    { id: 6, name: "Czapka z daszkiem", type: "head", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧢", rarity: "Peasant", desc: "Z logo stacji benzynowej.", bonus: "-5 do Stylu" },
-    { id: 7, name: "RayBan Aviator", type: "head", price: "1,500 $", rawPrice: 1500, color: "#3b82f6", icon: "🕶️", rarity: "Rare", desc: "Ukrywają poker face.", bonus: "+10 do Blefowania" },
-    { id: 8, name: "Gogle VR Pro", type: "head", price: "15,000 $", rawPrice: 15000, color: "#ef4444", icon: "🥽", rarity: "Relic", desc: "Widzisz algorytm kasyna.", bonus: "Przewidywanie Wygranej" },
+    { id: 6, name: "Czapka z daszkiem", type: "head", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧢", rarity: "Peasant", desc: "Z logo stacji benzynowej.", bonus: "-5 do Stylu", isConsumable: false, maxUses: null },
+    { id: 7, name: "RayBan Aviator", type: "head", price: "1,500 $", rawPrice: 1500, color: "#3b82f6", icon: "🕶️", rarity: "Rare", desc: "Ukrywają poker face.", bonus: "+10 do Blefowania", isConsumable: false, maxUses: null },
+    { id: 8, name: "Gogle VR Pro", type: "head", price: "15,000 $", rawPrice: 15000, color: "#ef4444", icon: "🥽", rarity: "Relic", desc: "Widzisz algorytm kasyna.", bonus: "Przewidywanie Wygranej", isConsumable: false, maxUses: null },
 
     
-    { id: 9, name: "Krawat z Poliestru", type: "neck", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "👔", rarity: "Peasant", desc: "Drapie w szyję.", bonus: "Brak" },
-    { id: 10, name: "Złoty Łańcuch", type: "neck", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "⛓️", rarity: "Epic", desc: "Waży 2kg.", bonus: "+20 do Respectu" },
+    { id: 9, name: "Krawat z Poliestru", type: "neck", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "👔", rarity: "Peasant", desc: "Drapie w szyję.", bonus: "Brak", isConsumable: false, maxUses: null },
+    { id: 10, name: "Złoty Łańcuch", type: "neck", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "⛓️", rarity: "Epic", desc: "Waży 2kg.", bonus: "+20 do Respectu", isConsumable: false, maxUses: null },
     
     
-    { id: 11, name: "Koszula Hawajska", type: "suit", price: "80 $", rawPrice: 80, color: "#9ca3af", icon: "👕", rarity: "Peasant", desc: "Idealna na wakacje, nie do kasyna.", bonus: "Luz +100" },
-    { id: 12, name: "Garnitur Hugo Boss", type: "suit", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "🤵", rarity: "Rare", desc: "Klasyczna elegancja.", bonus: "+5 do Negocjacji" },
-    { id: 13, name: "Smoking Bonda", type: "suit", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "🍸", rarity: "Divine", desc: "Wstrząśnięty, nie zmieszany.", bonus: "Kuloodporność finansowa" },
+    { id: 11, name: "Koszula Hawajska", type: "suit", price: "80 $", rawPrice: 80, color: "#9ca3af", icon: "👕", rarity: "Peasant", desc: "Idealna na wakacje, nie do kasyna.", bonus: "Luz +100", isConsumable: false, maxUses: null },
+    { id: 12, name: "Garnitur Hugo Boss", type: "suit", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "🤵", rarity: "Rare", desc: "Klasyczna elegancja.", bonus: "+5 do Negocjacji", isConsumable: false, maxUses: null },
+    { id: 13, name: "Smoking Bonda", type: "suit", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "🍸", rarity: "Divine", desc: "Wstrząśnięty, nie zmieszany.", bonus: "Kuloodporność finansowa", isConsumable: false, maxUses: null },
 
     
-    { id: 14, name: "Zegarek z Komunii", type: "watch", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "⌚", rarity: "Peasant", desc: "Pamiątka rodzinna.", bonus: "Pokazuje czas" },
-    { id: 15, name: "Rolex Submariner", type: "watch", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "⌚", rarity: "Epic", desc: "Znasz jego wartość.", bonus: "+15 do Prestiżu" },
-    { id: 16, name: "Patek Philippe", type: "watch", price: "2,500,000 $", rawPrice: 2500000, color: "#ffd700", icon: "🕰️", rarity: "Divine", desc: "Nie ty go masz, ty go przechowujesz dla pokoleń.", bonus: "Zatrzymuje czas (długów)" },
+    { id: 14, name: "Zegarek z Komunii", type: "watch", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "⌚", rarity: "Peasant", desc: "Pamiątka rodzinna.", bonus: "Pokazuje czas", isConsumable: false, maxUses: null },
+    { id: 15, name: "Rolex Submariner", type: "watch", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "⌚", rarity: "Epic", desc: "Znasz jego wartość.", bonus: "+15 do Prestiżu", isConsumable: false, maxUses: null },
+    { id: 16, name: "Patek Philippe", type: "watch", price: "2,500,000 $", rawPrice: 2500000, color: "#ffd700", icon: "🕰️", rarity: "Divine", desc: "Nie ty go masz, ty go przechowujesz dla pokoleń.", bonus: "Zatrzymuje czas (długów)", isConsumable: false, maxUses: null },
 
     
-    { id: 17, name: "Sznurek", type: "belt", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "🧶", rarity: "Peasant", desc: "Trzyma spodnie.", bonus: "Brak" },
-    { id: 18, name: "Pasek Gucci", type: "belt", price: "800 $", rawPrice: 800, color: "#3b82f6", icon: "🐍", rarity: "Rare", desc: "Wielka klamra.", bonus: "+2 do Lansu" },
+    { id: 17, name: "Sznurek", type: "belt", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "🧶", rarity: "Peasant", desc: "Trzyma spodnie.", bonus: "Brak", isConsumable: false, maxUses: null },
+    { id: 18, name: "Pasek Gucci", type: "belt", price: "800 $", rawPrice: 800, color: "#3b82f6", icon: "🐍", rarity: "Rare", desc: "Wielka klamra.", bonus: "+2 do Lansu", isConsumable: false, maxUses: null },
 
     
-    { id: 19, name: "Dżinsy z Dziurami", type: "pants", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "👖", rarity: "Peasant", desc: "Modne, ale czy w kasynie?", bonus: "Wentylacja" },
-    { id: 20, name: "Spodnie od Garnituru", type: "pants", price: "2,000 $", rawPrice: 2000, color: "#3b82f6", icon: "👖", rarity: "Rare", desc: "Dopasowane.", bonus: "Wygoda +5" },
+    { id: 19, name: "Dżinsy z Dziurami", type: "pants", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "👖", rarity: "Peasant", desc: "Modne, ale czy w kasynie?", bonus: "Wentylacja", isConsumable: false, maxUses: null },
+    { id: 20, name: "Spodnie od Garnituru", type: "pants", price: "2,000 $", rawPrice: 2000, color: "#3b82f6", icon: "👖", rarity: "Rare", desc: "Dopasowane.", bonus: "Wygoda +5", isConsumable: false, maxUses: null },
 
     
-    { id: 21, name: "Klapki Basenowe", type: "shoes", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "🩴", rarity: "Peasant", desc: "Szur szur.", bonus: "-50 do Poważania" },
-    { id: 22, name: "Mokasyny", type: "shoes", price: "3,000 $", rawPrice: 3000, color: "#8b5cf6", icon: "👞", rarity: "Epic", desc: "Włoska skóra.", bonus: "Cichy chód" },
+    { id: 21, name: "Klapki Basenowe", type: "shoes", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "🩴", rarity: "Peasant", desc: "Szur szur.", bonus: "-50 do Poważania", isConsumable: false, maxUses: null },
+    { id: 22, name: "Mokasyny", type: "shoes", price: "3,000 $", rawPrice: 3000, color: "#8b5cf6", icon: "👞", rarity: "Epic", desc: "Włoska skóra.", bonus: "Cichy chód", isConsumable: false, maxUses: null },
 
     
-    { id: 23, name: "Sygnet Rodowy", type: "ring", price: "15,000 $", rawPrice: 15000, color: "#8b5cf6", icon: "🧿", rarity: "Epic", desc: "Z herbem nieistniejącego rodu.", bonus: "+10 do Blefu" },
-    { id: 24, name: "Obrączka", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💍", rarity: "Peasant", desc: "Z grawerem.", bonus: "Wierność" },
+    { id: 23, name: "Sygnet Rodowy", type: "ring", price: "15,000 $", rawPrice: 15000, color: "#8b5cf6", icon: "🧿", rarity: "Epic", desc: "Z herbem nieistniejącego rodu.", bonus: "+10 do Blefu", isConsumable: false, maxUses: null },
+    { id: 24, name: "Obrączka", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💍", rarity: "Peasant", desc: "Z grawerem.", bonus: "Wierność", isConsumable: false, maxUses: null },
 
     
-    { id: 25, name: "Bilet Autobusowy", type: "vehicle", price: "2 $", rawPrice: 2, color: "#9ca3af", icon: "🚌", rarity: "Peasant", desc: "Ważny 20 minut.", bonus: "Transport publiczny" },
-    { id: 26, name: "Kluczyki BMW", type: "vehicle", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "🔑", rarity: "Rare", desc: "M3 w leasingu.", bonus: "Szybki dojazd" },
-    { id: 27, name: "Karta do Bugatti", type: "vehicle", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "🏎️", rarity: "Divine", desc: "Top G.", bonus: "Prędkość światła" },
+    { id: 25, name: "Bilet Autobusowy", type: "vehicle", price: "2 $", rawPrice: 2, color: "#9ca3af", icon: "🚌", rarity: "Peasant", desc: "Ważny 20 minut.", bonus: "Transport publiczny", isConsumable: true, maxUses: 1 },
+    { id: 26, name: "Kluczyki BMW", type: "vehicle", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "🔑", rarity: "Rare", desc: "M3 w leasingu.", bonus: "Szybki dojazd", isConsumable: false, maxUses: null },
+    { id: 27, name: "Karta do Bugatti", type: "vehicle", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "🏎️", rarity: "Divine", desc: "Top G.", bonus: "Prędkość światła", isConsumable: false, maxUses: null },
 
     
-    { id: 28, name: "Nokia 3310", type: "gadget", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧱", rarity: "Peasant", desc: "Niezniszczalna.", bonus: "Samoobrona" },
-    { id: 29, name: "iPhone 16 Pro Max", type: "gadget", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "📱", rarity: "Rare", desc: "Więcej aparatów niż sensu.", bonus: "+5 do Selfie" },
-    { id: 30, name: "Szyfrowany Telefon", type: "gadget", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "📡", rarity: "Relic", desc: "Nikt nie podsłucha.", bonus: "Anonimowość" },
-    { id: 31, name: "Czarne American Express", type: "gadget", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💳", rarity: "Divine", desc: "Bez limitu.", bonus: "Nieskończony debet" },
+    { id: 28, name: "Nokia 3310", type: "gadget", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧱", rarity: "Peasant", desc: "Niezniszczalna.", bonus: "Samoobrona", isConsumable: false, maxUses: null },
+    { id: 29, name: "iPhone 16 Pro Max", type: "gadget", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "📱", rarity: "Rare", desc: "Więcej aparatów niż sensu.", bonus: "+5 do Selfie", isConsumable: false, maxUses: null },
+    { id: 30, name: "Szyfrowany Telefon", type: "gadget", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "📡", rarity: "Relic", desc: "Nikt nie podsłucha.", bonus: "Anonimowość", isConsumable: false, maxUses: null },
+    { id: 31, name: "Czarne American Express", type: "gadget", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💳", rarity: "Divine", desc: "Bez limitu.", bonus: "Nieskończony debet", isConsumable: false, maxUses: null },
     
     
-    { id: 32, name: "Cygaro Kubańskie", type: "gadget", price: "500 $", rawPrice: 500, color: "#3b82f6", icon: "🚬", rarity: "Rare", desc: "Kopci jak smok.", bonus: "Relaks" },
-    { id: 33, name: "Szklanka Whisky", type: "gadget", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "🥃", rarity: "Peasant", desc: "Z lodem.", bonus: "Odwaga +5" }
+    { id: 32, name: "Cygaro Kubańskie", type: "gadget", price: "500 $", rawPrice: 500, color: "#3b82f6", icon: "🚬", rarity: "Rare", desc: "Kopci jak smok.", bonus: "Relaks", isConsumable: true, maxUses: 5 },
+    { id: 33, name: "Szklanka Whisky", type: "gadget", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "🥃", rarity: "Peasant", desc: "Z lodem.", bonus: "Odwaga +5", isConsumable: true, maxUses: 3 }
 ];
 
 
@@ -2508,36 +2913,38 @@ const playersDB = [
         pfp: "https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false", 
         inventory: [
             
-            7, 10, 12, 15, 18, 20, 22, 23, 26, 31,
+            { id: 7 }, { id: 10 }, { id: 12 }, { id: 15 }, { id: 18 }, 
+            { id: 20 }, { id: 22 }, { id: 23 }, { id: 26 }, { id: 31 },
             
-            5, 
-            16, 
-            28, 9, 33, 21, 1, 1, 2 
+            { id: 5 }, 
+            { id: 16 }, 
+            { id: 28 }, { id: 9 }, { id: 33, usesLeft: 1 }, { id: 21 }, 
+            { id: 1 }, { id: 1 }, { id: 2 } 
         ]
     },
     {
         username: "Whale_Killer",
         rank: "RNG God",
         pfp: "https://i.pravatar.cc/150?u=Whale_Killer",
-        inventory: [27, 31, 13, 16, 5, 5, 4] 
+        inventory: [{id: 27}, {id: 31}, {id: 13}, {id: 16}, {id: 5}, {id: 5}, {id: 4}] 
     },
     {
         username: "LuckyLuke",
         rank: "Table Shark",
         pfp: "https://i.pravatar.cc/150?u=LuckyLuke",
-        inventory: [7, 11, 21, 2, 3, 3] 
+        inventory: [{id: 7}, {id: 11}, {id: 21}, {id: 2}, {id: 3}, {id: 33, usesLeft: 1}] 
     },
     {
         username: "CryptoBro",
         rank: "Risk Taker",
         pfp: "https://i.pravatar.cc/150?u=CryptoBro",
-        inventory: [30, 8, 26, 2, 2] 
+        inventory: [{id: 30}, {id: 8}, {id: 26}, {id: 2}, {id: 32, usesLeft: 3}] 
     },
     {
         username: "Bot_Network_01",
         rank: "Small Fry",
         pfp: "https://i.pravatar.cc/150?u=Bot_Network_01",
-        inventory: [1, 1, 1, 1, 1, 1, 1, 1, 25, 25] 
+        inventory: [{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 25}, {id: 25}] 
     }
 ];
 
@@ -2640,7 +3047,7 @@ const ranksDB = [
         id: 6, 
         name: "Risk Taker", 
         desc: "Stawiasz wszystko na jedną kartę.", 
-        req: "100 - 300 LP • ≥ 4h w grach", 
+        req: "100 - 300 LP • ≥ 4h w grach<br><span style='color:#3b82f6; font-size:9px;'>Noszenie RARE przedmiotów</span>", 
         icon: "fa-fire", 
         color: "#f59e0b", 
         cardClass: "", 
@@ -2651,7 +3058,7 @@ const ranksDB = [
         id: 5, 
         name: "Table Shark", 
         desc: "Może i matematyka nie jest po twojej stronie, ale czujesz krew.", 
-        req: "300 - 600 LP • Win Rate ≥ 55% (20 gier)", 
+        req: "300 - 600 LP • Win Rate ≥ 55%<br><span style='color:#8b5cf6; font-size:9px;'>Noszenie EPIC przedmiotów</span>", 
         icon: "fa-skull-crossbones", 
         color: "#ef4444", 
         cardClass: "", 
@@ -2662,7 +3069,7 @@ const ranksDB = [
         id: 4, 
         name: "Casino Legend", 
         desc: "Krupierzy szepczą twoje imię, gdy wchodzisz na salę.", 
-        req: "600 - 1000 LP • Net Worth ≥ 1M", 
+        req: "600 - 1000 LP • Net Worth ≥ 1M<br><span style='color:#ef4444; font-size:9px;'>Noszenie RELIC przedmiotów</span>", 
         icon: "fa-gem", 
         color: "#3b82f6", 
         cardClass: "", 
@@ -2685,7 +3092,7 @@ const ranksDB = [
         id: 2, 
         name: "RNG God", 
         desc: "Nie grasz w kości. Ty mówisz kościom, jak mają upaść.", 
-        req: "2000 - 5000 LP • Win streak ≥ 5 gier", 
+        req: "2000 - 5000 LP • Streak ≥ 5<br><span style='color:#ffd700; font-size:9px;'>Noszenie DIVINE przedmiotów</span>", 
         icon: "fa-bahai", 
         color: "#00e5ff", 
         cardClass: "card-god future-rank", 
@@ -2878,34 +3285,59 @@ index.html
                 <div class="d3-col">
                     <div class="card dash-card combined-panel">
                         <div class="cp-section">
-                            <div class="card-header"><div class="card-title"><i class="fas fa-chart-line"></i> Market Watch</div></div>
-                             <div class="market-watch-list">
-                                <div class="mw-item">
-                                    <div class="mw-icon" style="color:#a855f7;"><i class="fas fa-dragon"></i></div>
-                                    <div class="mw-info"><h5>Smocze Jajo</h5><span class="val-up">+12% <i class="fas fa-caret-up"></i></span></div>
-                                     <div class="mini-spark"><div class="spark-bar" style="height:40%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar active" style="height:80%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
-                                </div>
-                                 <div class="mw-item">
-                                    <div class="mw-icon" style="color:gold;"><i class="fas fa-clock"></i></div>
-                                    <div class="mw-info"><h5>Złoty Zegarek</h5><span class="val-down">-5% <i class="fas fa-caret-down"></i></span></div>
-                                     <div class="mini-spark"><div class="spark-bar" style="height:70%"></div><div class="spark-bar" style="height:50%"></div><div class="spark-bar" style="height:60%"></div><div class="spark-bar active" style="height:30%; background:var(--accent-red); box-shadow:0 0 4px var(--accent-red);"></div></div>
-                                </div>
-                                <div class="mw-item">
-                                    <div class="mw-icon" style="color:var(--accent-blue);"><i class="fas fa-car"></i></div>
-                                     <div class="mw-info"><h5>Kluczyki Lambo</h5><span class="val-up">+2% <i class="fas fa-caret-up"></i></span></div>
-                                     <div class="mini-spark"><div class="spark-bar" style="height:20%"></div><div class="spark-bar" style="height:30%"></div><div class="spark-bar" style="height:25%"></div><div class="spark-bar active" style="height:40%; background:var(--accent-green); box-shadow:0 0 4px var(--accent-green);"></div></div>
-                                </div>
+                            <div class="card-header">
+                                <div class="card-title"><i class="fas fa-tags"></i> Twoje Oferty</div>
+                                <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('market')" title="Przejdź do Rynku"></i>
                             </div>
+                            <div class="market-watch-list" id="dashActiveListings" style="gap: 5px;">
+                                </div>
                         </div>
 
                         <div class="cp-divider"></div>
 
                         <div class="cp-section">
                              <div class="card-header">
-                                <div class="card-title"><i class="fas fa-suitcase"></i> Twój Ekwipunek</div>
+                                <div class="card-title"><i class="fas fa-user-astronaut"></i> Loadout</div>
                                 <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('inventory')" title="Pełny ekwipunek"></i>
                             </div>
-                            <div class="list-container" id="dashInventoryList" style="flex-grow: 1;"></div>
+                            
+                            <div style="padding: 0 5px; display: flex; flex-direction: column; gap: 15px; flex-grow: 1; justify-content: center;">
+                                <div style="display: flex; justify-content: space-between; align-items: flex-end;">
+                                    <div class="inv-value-display" style="border: none; margin: 0; padding: 0; height: auto; align-items: flex-start;">
+                                        <div class="iv-label">GEAR POWER</div>
+                                        <div class="iv-val" style="font-size: 28px; color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">145</div>
+                                    </div>
+                                    <div class="loadout-select-box" style="height: auto; align-items: flex-end;">
+                                        <div class="iv-label">ACTIVE LOADOUT</div>
+                                        <select class="minimal-select" style="text-align: right; width: 100%;">
+                                            <option selected>Poker Face Outfit</option>
+                                            <option>High Roller Set</option>
+                                            <option>Lucky Charm</option>
+                                        </select>
+                                    </div>
+                                </div>
+
+                                <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);"></div>
+
+                                <div class="pd-insights-content">
+                                    <div class="pi-row">
+                                        <span class="pi-label">BUILD TYPE:</span>
+                                        <span class="pi-val high-risk">High Risk / Skill-Biased</span>
+                                    </div>
+                                    <div class="pi-row">
+                                        <span class="pi-label">LUCK ↔ SKILL:</span>
+                                        <span class="pi-val">35% / 65%</span>
+                                    </div>
+                                    <div class="pi-row">
+                                        <span class="pi-label">RNG DEPENDENCY:</span>
+                                        <span class="pi-val medium">Medium</span>
+                                    </div>
+                                    <div class="pi-row">
+                                        <span class="pi-label">RECOMMENDED MODES:</span>
+                                        <span class="pi-val mode-list">Poker, Crash, Degenerate Worms</span>
+                                    </div>
+                                </div>
+                            </div>
                         </div>
                     </div>
                 </div>
@@ -2913,7 +3345,7 @@ index.html
                 <div class="d3-col">
                     <div class="card dash-card favorites-panel" style="width: 100%; max-width: 100%; min-height: 250px;">
                         <div class="card-header">
-                            <div class="card-title"><i class="fas fa-star" style="color:gold;"></i> Favorites</div>
+                            <div class="card-title"><i class="fas fa-star" style="color:gold;"></i> Ulubione Gry</div>
                             <i class="fas fa-filter filter-icon-abs" onclick="alert('Filtrowanie ulubionych...')" title="Filtruj"></i>
                         </div>
                         <div class="favorites-grid" id="favoritesGrid">
@@ -2925,35 +3357,19 @@ index.html
                         </div>
                     </div>
 
-                    <div class="card dash-card rng-card" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid rgba(0, 229, 255, 0.2); min-height: auto;">
-                        <div class="card-header"><div class="card-title"><i class="fas fa-bahai" style="color:#00e5ff;"></i> RNG Forecast</div></div>
-                         <div style="text-align:center; padding: 20px 0; display: flex; align-items: center; justify-content: space-around;">
-                            <div>
-                                <div style="font-size: 36px; font-weight: 800; color: #00e5ff; text-shadow: 0 0 15px rgba(0, 229, 255, 0.5);">88%</div>
-                                <div style="font-size: 10px; color: #ddd;">Szczęście: <span style="color:#00e5ff; font-weight:700;">WYSOKIE</span></div>
+                    <div class="card dash-card favorites-panel" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid rgba(245, 158, 11, 0.2); min-height: auto;">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-fire" style="color:#f59e0b;"></i> Popularne Gry</div>
+                            <i class="fas fa-filter filter-icon-abs" onclick="alert('Filtrowanie popularnych...')"></i>
+                        </div>
+                         <div class="favorites-grid" id="popularModesGrid" style="padding-top: 5px;">
                             </div>
-                            
-                            <div style="text-align: center;">
-                                <div style="height: 30px; display: flex; align-items: flex-end; justify-content: center; gap: 3px; margin-bottom: 5px; opacity: 0.7;">
-                                     <div style="width:3px; height:20%; background:#00e5ff; border-radius:2px;"></div>
-                                     <div style="width:3px; height:40%; background:#00e5ff; border-radius:2px;"></div>
-                                     <div style="width:3px; height:60%; background:#00e5ff; border-radius:2px;"></div>
-                                     <div style="width:3px; height:80%; background:#00e5ff; border-radius:2px;"></div>
-                                     <div style="width:3px; height:100%; background:#00e5ff; border-radius:2px; box-shadow: 0 0 10px #00e5ff;"></div>
-                                     <div style="width:3px; height:70%; background:#00e5ff; border-radius:2px;"></div>
-                                     <div style="width:3px; height:50%; background:#00e5ff; border-radius:2px;"></div>
-                                </div>
-                                <div style="font-size: 10px; color: var(--text-muted);">
-                                    Try: <b style="color:white;">Blackjack</b>
-                                </div>
-                            </div>
-                         </div>
                     </div>
                 </div>
 
                 <div class="d3-col">
                     <div class="card dash-card daily-hub-card">
-                         <div class="card-header"><div class="card-title"><i class="fas fa-calendar-alt"></i> Centrum Codzienne</div></div>
+                         <div class="card-header"><div class="card-title"><i class="fas fa-calendar-alt"></i> Centrum Nagród</div></div>
                         
                          <div class="dh-streak-section">
                              <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 8px; text-transform:uppercase;">Daily Streak</div>
@@ -3099,6 +3515,16 @@ index.html
                                 <div class="iv-label">TOTAL VALUE</div>
                                 <div class="iv-val">~2,790,000 $</div>
                             </div>
+
+                            <div style="display: flex; align-items: center; gap: 8px; margin-left: 15px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px; height: 30px;">
+                                <label class="switch" style="transform: scale(0.7);">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                                <div style="display:flex; flex-direction:column;">
+                                    <span style="font-size: 9px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;">SHOW PRICES</span>
+                                </div>
+                            </div>
                         </div>
                         <div class="inv-stats">
                             <div class="ms-toggle-row" style="display:inline-flex; width: 180px;">
@@ -3127,8 +3553,8 @@ index.html
                         <div class="inv-stats">
                             <div class="inv-value-display">
                                 <div class="iv-label" style="display: flex; align-items: center; gap: 6px;">
-                                    GEAR SCORE
-                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Score to suma punktów twoich założonych przedmiotów.')"></i>
+                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Power to suma punktów twoich założonych przedmiotów.')"></i>
+                                    GEAR POWER
                                 </div>
                                 <div class="iv-val" style="color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">145</div>
                             </div>
@@ -3164,6 +3590,30 @@ index.html
                             <div class="pd-slot slot-hand" data-type="gadget" title="GADGET"><i class="fas fa-mobile-alt placeholder"></i></div>
                         </div>
                     </div>
+                    <div class="pd-insights-wrapper">
+                        <div class="pd-insights-header">
+                            <div class="pd-insights-title">KEY INSIGHTS</div>
+                            <i class="fas fa-ellipsis-h pd-more-btn" onclick="openLoadoutEffectsModal()" title="Pokaż efekty zestawu"></i>
+                        </div>
+                        <div class="pd-insights-content">
+                            <div class="pi-row">
+                                <span class="pi-label">BUILD TYPE:</span>
+                                <span class="pi-val high-risk">High Risk / Skill-Biased</span>
+                            </div>
+                            <div class="pi-row">
+                                <span class="pi-label">LUCK ↔ SKILL:</span>
+                                <span class="pi-val">35% / 65%</span>
+                            </div>
+                            <div class="pi-row">
+                                <span class="pi-label">RNG DEPENDENCY:</span>
+                                <span class="pi-val medium">Medium</span>
+                            </div>
+                            <div class="pi-row">
+                                <span class="pi-label">RECOMMENDED MODES:</span>
+                                <span class="pi-val mode-list">Poker, Crash, Degenerate Worms</span>
+                            </div>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -3196,6 +3646,13 @@ index.html
                             <input type="checkbox" id="chkOnlyMine" onchange="filterMarket()"> 
                             <span style="font-size: 11px; color: var(--accent-blue); font-weight: 600;">Tylko moje oferty</span>
                         </label>
+                    </div>
+                    <div class="ms-section">
+                        <div class="ms-label">Trwałość</div>
+                        <div class="ms-toggle-row">
+                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('consumable', this)"><i class="fas fa-apple-alt"></i> Zużywalne</button>
+                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('durable', this)"><i class="fas fa-shield-alt"></i> Trwałe</button>
+                        </div>
                     </div>
 
                     <div class="ms-section">
@@ -3548,56 +4005,186 @@ index.html
             </div>
         </div>
 
-        <div class="view-container" id="viewAdminDash">
+                <div class="view-container" id="viewAdminDash">
              <div class="admin-row">
-                <div class="card span-3">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-map-marked-alt"></i> Dark Patterns - Mapa Cieplna</div></div>
-                    <div class="heatmap-grid">
-                        <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
-                        <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
-                        <div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div>
-                        <div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-low"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-max"></div><div class="heatmap-cell hm-high"></div><div class="heatmap-cell hm-med"></div><div class="heatmap-cell hm-low"></div>
+                <div class="card" style="grid-column: 1 / -1; max-width: 850px; margin: 0 auto; width: 100%;">
+                    <div class="card-header" style="justify-content: space-between;">
+                        <div class="card-title"><i class="fas fa-calendar-alt"></i> Mapa Aktywności Graczy (Global)</div>
+                        <div style="font-size:10px; color:#666;">Ostatni Rok</div>
+                    </div>
+                    
+                    <div style="overflow-x: auto; padding: 10px 0; display: flex; justify-content: center;">
+                        <div class="gh-grid-container" id="adminHeatmapGrid">
+                            </div>
+                    </div>
+
+                    <div class="gh-legend-row">
+                        <span style="font-size:10px; color:#666; margin-right: 5px;">Mniej</span>
+                        <div class="gh-cell l0"></div>
+                        <div class="gh-cell l1"></div>
+                        <div class="gh-cell l2"></div>
+                        <div class="gh-cell l3"></div>
+                        <div class="gh-cell l4"></div>
+                        <span style="font-size:10px; color:#666; margin-left: 5px;">Więcej</span>
                     </div>
                 </div>
-                <div class="card span-1">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-brain"></i> Podatność</div></div>
-                    <div class="psych-grid" style="grid-template-columns: 1fr;">
-                        <div class="psych-stat"><div class="psych-label">Hazardzista</div><div class="psych-val">85%</div></div>
-                        <div class="psych-stat"><div class="psych-label">FOMO</div><div class="psych-val">92%</div></div>
+                <div class="admin-panels-wrapper">
+                    
+                    <div class="ap-card ap-critical">
+                        <div class="ap-header" style="color: var(--accent-red);">
+                            <i class="fas fa-exclamation-triangle"></i> Akcje Krytyczne
+                        </div>
+                        <div class="ap-row">
+                            <span>Maintenance Mode</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('maintenance')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Zablokuj Wypłaty (Global)</span>
+                            <label class="switch">
+                                <input type="checkbox" onchange="toggleAdminAction('block_withdrawals')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row" style="margin-top: 10px;">
+                            <button class="ap-btn ap-btn-red full-width" onclick="adminLogoutAll()">
+                                <i class="fas fa-power-off"></i> WYLOGUJ WSZYSTKIE SESJE
+                            </button>
+                        </div>
                     </div>
-                </div>
-                <div class="card span-2">
-                    <div class="card-header"><div class="card-title"><i class="fas fa-cogs"></i> Skuteczność Algorytmów</div></div>
-                    <div class="metric-row-admin"><div class="mra-left"><h5>"Near Miss"</h5><div class="mra-val">12,402</div></div><div class="mra-right"><div class="mra-trend trend-up"><i class="fas fa-arrow-up"></i> +14%</div></div></div>
-                    <div class="metric-row-admin" style="border:none;"><div class="mra-left"><h5>Churn Rate</h5><div class="mra-val">1.2%</div></div><div class="mra-right"><div class="mra-trend trend-bad"><i class="fas fa-arrow-down"></i> -0.1%</div></div></div>
-                </div>
-                 <div class="card span-2">
-                     <div class="card-header"><div class="card-title">Logi systemowe</div></div>
-                     <div class="admin-log-list">
-                        <div class="admin-log-item"><div class="admin-dot"></div><div class="admin-log-time">10:42</div><div class="admin-log-content">Whale User_99 deposited 50k</div></div>
-                        <div class="admin-log-item"><div class="admin-dot"></div><div class="admin-log-time">10:41</div><div class="admin-log-content">Retention Algorithm #4 Active</div></div>
-                        <div class="admin-log-item"><div class="admin-dot"></div><div class="admin-log-time">10:30</div><div class="admin-log-content">Bot Network Sync... OK</div></div>
+
+                    <div class="ap-card ap-finance">
+                        <div class="ap-header" style="color: var(--accent-green);">
+                            <i class="fas fa-money-bill-wave"></i> Szybkie Finanse
+                        </div>
+                        
+                        <div style="font-size:10px; color:#666; margin-bottom:-5px;">PENDING (małe kwoty)</div>
+                        <div class="finance-list">
+                            <div class="fin-item">
+                                <div>
+                                    <div style="font-weight:700;">User_22</div>
+                                    <div style="font-size:9px; color:#888;">250 PLN (BLIK)</div>
+                                </div>
+                                <div style="display:flex; gap:5px;">
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px;" onclick="alert('Zatwierdzono')"><i class="fas fa-check"></i></button>
+                                    <select class="ap-select" onchange="if(this.value) alert('Odrzucono: '+this.value)">
+                                        <option value="">Odrzuć...</option>
+                                        <option value="Brak obrotu">Brak obrotu</option>
+                                        <option value="Multi-konto">Multi-konto</option>
+                                    </select>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px;">
+                            <span>Bramka BLIK</span>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="toggleAdminAction('gate_blik')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="ap-row">
+                            <span>Bramka Crypto</span>
+                            <label class="switch">
+                                <input type="checkbox" checked onchange="toggleAdminAction('gate_crypto')">
+                                <span class="slider"></span>
+                            </label>
+                        </div>
                     </div>
-                 </div>
+
+                    <div class="ap-card ap-comm">
+                        <div class="ap-header" style="color: var(--accent-purple);">
+                            <i class="fas fa-bullhorn"></i> Komunikacja
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px;">
+                            <div style="font-size:10px; color:#aaa;">Global Push / Toast</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. Turniej za 5 min!">
+                                <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i class="fas fa-paper-plane"></i></button>
+                            </div>
+                        </div>
+                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-top:5px;">
+                            <div style="font-size:10px; color:#aaa;">Edycja Tickera (Pasek Live)</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" id="tickerMsgInput" placeholder="Nowa wiadomość...">
+                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i class="fas fa-edit"></i></button>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="ap-card ap-god">
+                        <div class="ap-header" style="color: #f59e0b;">
+                            <i class="fas fa-eye"></i> God Mode
+                        </div>
+                        <div style="padding: 15px; background: rgba(245, 158, 11, 0.05); border-radius: 6px; text-align: center;">
+                            <i class="fas fa-user-secret" style="font-size: 24px; color: #f59e0b; margin-bottom: 10px;"></i>
+                            <div style="font-size:11px; margin-bottom:10px; color:#ccc;">Zobacz świat oczami gracza (bez hasła).</div>
+                            <div class="ap-input-group">
+                                <input type="text" class="ap-input" placeholder="ID Gracza lub Login" id="godModeInput">
+                                <button class="ap-btn" style="background:#f59e0b; color:black; font-weight:800;" onclick="adminImpersonate()">
+                                    IMPERSONATE
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+
+                </div>
             </div>
         </div>
 
         <div class="view-container" id="viewUsers">
-            <div class="card">
-                <div class="card-header"><div class="card-title">Baza Użytkowników</div></div>
-                <div class="leaderboard-header" style="grid-template-columns: 50px 1fr 150px 100px;">
-                    <span>ID</span><span>Użytkownik</span><span>Ranga</span><span>Status</span>
-                </div>
-                <div class="list-container" id="usersContainer">
+            <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                <div class="card-header" style="justify-content: space-between;">
+                    <div class="card-title"><i class="fas fa-users-cog"></i> Baza Użytkowników</div>
+                    <div class="user-list-toolbar">
+                        <select id="userFilterStatus" onchange="renderUsersView()" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px; border-radius: 6px; font-size: 11px; outline: none;">
+                            <option value="all">Wszyscy</option>
+                            <option value="Online">Online</option>
+                            <option value="Offline">Offline</option>
+                            <option value="Banned">Zbanowani</option>
+                            <option value="Suspicious">Podejrzani</option>
+                        </select>
+                        <div class="input-group small" style="margin-bottom: 0; width: 200px;">
+                            <input type="text" id="userSearchInput" placeholder="Szukaj ID / Nazwa..." onkeyup="renderUsersView()" style="border-radius: 6px;">
+                        </div>
                     </div>
+                </div>
+                
+                <div class="ul-grid-header">
+                    <span>ID</span>
+                    <span>UŻYTKOWNIK</span>
+                    <span>RANGA</span>
+                    <span>SALDO</span>
+                    <span>AKTYWNOŚĆ</span>
+                    <span>STATUS</span>
+                    <span style="text-align: right;">AKCJE</span>
+                </div>
+
+                <div class="list-container users-list-scroll" id="usersContainer">
+                    </div>
+
+                <div class="market-pagination">
+                    <button onclick="changeUserPage(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <span id="userPageIndicator">Strona 1 z 1</span>
+                    <button onclick="changeUserPage(1)"><i class="fas fa-chevron-right"></i></button>
+                </div>
             </div>
         </div>
 
-        <div class="view-container" id="viewLogs">
-            <div class="card" style="height: 500px; font-family: monospace;">
-                <div class="card-header"><div class="card-title">Pełne Logi Serwera</div></div>
-                <div class="list-container" id="logsContainer" style="color: #ccc; font-size: 11px;">
-                     </div>
+                <div class="view-container" id="viewLogs">
+            <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column;">
+                <div class="card-header" style="justify-content: space-between;">
+                    <div class="card-title"><i class="fas fa-terminal"></i> Pełne Logi Serwera</div>
+                    <div class="logs-controls" style="display: flex; gap: 10px;">
+                        <input type="text" placeholder="Szukaj ID / User..." style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; outline: none;">
+                        <button class="gc-btn lobby" onclick="renderLogsView()"><i class="fas fa-sync-alt"></i></button>
+                        <button class="gc-btn lobby"><i class="fas fa-download"></i> .LOG</button>
+                    </div>
+                </div>
+                <div class="logs-terminal-window" id="logsContainer">
+                    </div>
             </div>
         </div>
 
@@ -4024,6 +4611,16 @@ index.html
                     </div>
                 </div>
             </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="loadoutEffectsModal">
+        <div class="steam-modal" style="width: 500px;">
+            <div class="sm-header">
+                <div class="sm-title">AKTYWNE EFEKTY (LOADOUT)</div>
+                <div class="sm-close" onclick="closeLoadoutEffectsModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-content" id="loadoutEffectsContent" style="padding: 20px;">
+                </div>
         </div>
     </div>
     <script src="data.js"></script>
@@ -4742,6 +5339,254 @@ input:checked + .slider:before { transform: translateX(16px); }
 .span-3 { grid-column: span 3; }
 .span-2 { grid-column: span 2; }
 .span-1 { grid-column: span 1; }
+/* Admin Heatmap - GitHub Style */
+.gh-grid-container {
+    display: grid;
+    grid-template-rows: repeat(7, 11px); /* 7 dni w tygodniu */
+    grid-auto-flow: column; /* Układaj kolumnami (tygodniami) */
+    gap: 3px;
+    width: max-content;
+}
+
+.gh-cell {
+    width: 11px;
+    height: 11px;
+    border-radius: 2px;
+    background: rgba(255,255,255,0.05); /* l0 - puste */
+    transition: 0.2s;
+}
+.gh-cell:hover { transform: scale(1.3); z-index: 2; border: 1px solid rgba(255,255,255,0.5); }
+
+.gh-cell.l1 { background: #450a0a; } /* Very Dark Red */
+.gh-cell.l2 { background: #991b1b; } /* Dark Red */
+.gh-cell.l3 { background: #ef4444; } /* Normal Red */
+.gh-cell.l4 { background: #ff0000; box-shadow: 0 0 6px #ff0000; } /* Bright Red */
+
+.gh-legend-row {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 4px;
+    margin-top: 15px;
+    padding-top: 10px;
+    border-top: 1px dashed rgba(255,255,255,0.05);
+}
+/* --- ADMIN ACTION PANELS --- */
+.admin-panels-wrapper {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    width: 100%;
+    max-width: 850px;
+    margin: 20px auto 0 auto;
+    grid-column: 1 / -1;
+}
+
+.ap-card {
+    background: #12141e;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.ap-header {
+    font-size: 13px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    padding-bottom: 10px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+}
+
+/* Specific Panel Colors */
+.ap-critical { border-top: 3px solid var(--accent-red); }
+.ap-finance { border-top: 3px solid var(--accent-green); }
+.ap-comm { border-top: 3px solid var(--accent-purple); }
+.ap-god { border-top: 3px solid #f59e0b; }
+
+.ap-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 12px;
+    color: #ccc;
+}
+
+.ap-input-group {
+    display: flex;
+    gap: 5px;
+    width: 100%;
+}
+.ap-input {
+    flex: 1;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 6px 10px;
+    border-radius: 4px;
+    color: white;
+    font-size: 11px;
+    outline: none;
+}
+.ap-select {
+    background: #0b0e14;
+    color: white;
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 4px;
+    border-radius: 4px;
+    font-size: 10px;
+    outline: none;
+}
+
+.ap-btn {
+    padding: 6px 12px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    border: none;
+    transition: 0.2s;
+    color: white;
+}
+.ap-btn-red { background: rgba(239, 68, 68, 0.2); border: 1px solid rgba(239, 68, 68, 0.4); color: #fca5a5; }
+.ap-btn-red:hover { background: var(--accent-red); color: white; }
+
+.ap-btn-green { background: rgba(16, 185, 129, 0.2); border: 1px solid rgba(16, 185, 129, 0.4); color: #6ee7b7; }
+.ap-btn-green:hover { background: var(--accent-green); color: white; }
+
+.ap-btn-blue { background: rgba(59, 130, 246, 0.2); border: 1px solid rgba(59, 130, 246, 0.4); color: #93c5fd; }
+.ap-btn-blue:hover { background: var(--accent-blue); color: white; }
+
+.finance-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    margin-bottom: 10px;
+}
+.fin-item {
+    background: rgba(255,255,255,0.03);
+    padding: 8px;
+    border-radius: 4px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+/* --- ADVANCED LOGS STYLES --- */
+.logs-terminal-window {
+    flex: 1;
+    background: #0f111a;
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 6px;
+    padding: 10px;
+    overflow-y: auto;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 11px;
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    box-shadow: inset 0 0 20px rgba(0,0,0,0.5);
+}
+
+.log-line {
+    display: flex;
+    gap: 10px;
+    padding: 2px 5px;
+    border-radius: 2px;
+    color: #a0a0a0;
+    white-space: nowrap;
+}
+.log-line:hover {
+    background: rgba(255,255,255,0.05);
+    color: #fff;
+}
+/* --- ADMIN USERS LIST STYLES --- */
+.user-list-toolbar {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+}
+
+.ul-grid-header {
+    display: grid;
+    grid-template-columns: 50px 2fr 1fr 1fr 1fr 100px 120px;
+    padding: 10px 15px;
+    background: rgba(0,0,0,0.2);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    font-size: 10px;
+    color: var(--text-muted);
+    font-weight: 700;
+    letter-spacing: 1px;
+}
+
+.ul-row {
+    display: grid;
+    grid-template-columns: 50px 2fr 1fr 1fr 1fr 100px 120px;
+    padding: 10px 15px;
+    align-items: center;
+    border-bottom: 1px solid rgba(255,255,255,0.03);
+    font-size: 12px;
+    transition: 0.2s;
+}
+.ul-row:hover { background: rgba(255,255,255,0.03); }
+
+.ul-badge {
+    padding: 2px 8px;
+    border-radius: 4px;
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    display: inline-block;
+    text-align: center;
+}
+.ul-b-online { background: rgba(16, 185, 129, 0.1); color: var(--accent-green); border: 1px solid rgba(16, 185, 129, 0.2); }
+.ul-b-offline { background: rgba(255,255,255,0.05); color: #666; }
+.ul-b-banned { background: rgba(239, 68, 68, 0.1); color: var(--accent-red); border: 1px solid rgba(239, 68, 68, 0.2); }
+.ul-b-suspicious { background: rgba(245, 158, 11, 0.1); color: var(--accent-orange); border: 1px solid rgba(245, 158, 11, 0.2); }
+
+.ul-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 5px;
+}
+.ul-btn {
+    width: 24px;
+    height: 24px;
+    border-radius: 4px;
+    background: rgba(255,255,255,0.05);
+    color: var(--text-muted);
+    border: none;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: 0.2s;
+}
+.ul-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+.ul-btn.danger:hover { background: var(--accent-red); color: white; }
+
+.users-list-scroll {
+    flex: 1;
+    overflow-y: auto;
+    max-height: none; /* Nadpisuje limit 350px z klasy .list-container */
+}
+
+.ll-time { color: #555; min-width: 60px; }
+.ll-level { font-weight: 700; min-width: 50px; text-transform: uppercase; }
+.ll-source { color: #3b82f6; min-width: 70px; }
+.ll-msg { flex: 1; overflow: hidden; text-overflow: ellipsis; }
+
+/* Log Levels Colors */
+.lvl-info { color: #3b82f6; }
+.lvl-warn { color: #f59e0b; }
+.lvl-err { color: #ef4444; background: rgba(239, 68, 68, 0.1); }
+.lvl-crit { color: #ff0000; font-weight: 800; text-shadow: 0 0 5px red; }
+.lvl-success { color: #10b981; }
+.lvl-auth { color: #d946ef; }
 
 /* Admin Elements Styling */
 
@@ -5005,7 +5850,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .rank-icon-large { font-size: 26px; margin-bottom: 8px; }
 .rank-name { font-size: 14px; font-weight: 700; color: white; margin-bottom: 4px; }
 .rank-desc { font-size: 11px; color: var(--text-muted); line-height: 1.3; margin-bottom: 8px; flex-grow: 1; }
-.rank-reqs { font-size: 10px; color: var(--accent-purple); font-weight: 600; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 5px; width: 100%; }
+.rank-reqs { font-size: 10px; color: #a6a2a6; font-weight: 600; text-transform: uppercase; border-top: 1px solid rgba(255,255,255,0.05); padding-top: 5px; width: 100%; }
 
 /* Specific Rank Styles */
 .card-degenerate { border-color: #555; }
@@ -5966,6 +6811,8 @@ input:checked + .slider:before { transform: translateX(16px); }
     max-width: 900px;
     margin: 0 auto;
     width: 100%;
+    transform: scale(0.85);
+    transform-origin: top center;
 }
 
 /* Networth Card - WIDERSZY PANEL */
@@ -6206,7 +7053,109 @@ input:checked + .slider:before { transform: translateX(16px); }
     flex-direction: column;
     position: relative;
     box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+    overflow: hidden; /* Ważne dla scrollowania wewnątrz panelu */
 }
+
+/* Umożliwia scrollowanie całego prawego panelu jeśli jest za niski ekran */
+.inv-panel.right-panel {
+    overflow-y: auto;
+}
+
+/* KEY INSIGHTS STYLES */
+.pd-insights-wrapper {
+    padding: 15px 25px;
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    margin-top: auto; 
+    margin-bottom: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    width: 90%;
+    max-width: 380px; /* Constrain width */
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+    top: -30px;
+}
+
+.pd-insights-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    position: relative;
+    margin-bottom: 15px;
+}
+
+.pd-insights-title {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    color: var(--accent-blue);
+    text-transform: uppercase;
+    text-shadow: 0 0 10px rgba(59, 130, 246, 0.3);
+    border-bottom: 1px solid rgba(59, 130, 246, 0.3);
+    padding-bottom: 3px;
+    padding-left: 10px;
+    padding-right: 10px;
+}
+
+.pd-more-btn {
+    position: absolute;
+    right: 0;
+    color: var(--text-muted);
+    cursor: pointer;
+    padding: 5px;
+    font-size: 14px;
+    transition: 0.2s;
+}
+.pd-more-btn:hover { color: white; transform: scale(1.1); }
+
+.pd-insights-content {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    font-size: 12px;
+}
+
+.pi-row {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-bottom: 1px dashed rgba(255,255,255,0.05);
+    padding-bottom: 4px;
+}
+.pi-row:last-child { border-bottom: none; }
+
+.pi-label {
+    color: var(--text-muted);
+    font-size: 10px;
+    font-weight: 600;
+}
+
+.pi-val {
+    color: white;
+    font-weight: 500;
+    text-align: right;
+}
+.pi-val.high-risk { color: var(--accent-red); font-weight: 700; }
+.pi-val.medium { color: var(--accent-orange); }
+.pi-val.mode-list { font-size: 10px; color: #ccc; max-width: 180px; }
+
+/* Effects Modal Styles */
+.le-row {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 10px;
+    background: rgba(255,255,255,0.03);
+    border-radius: 8px;
+    margin-bottom: 8px;
+    border: 1px solid rgba(255,255,255,0.05);
+}
+.le-icon { font-size: 18px; width: 30px; text-align: center; }
+.le-info h5 { font-size: 13px; color: white; margin-bottom: 2px; }
+.le-info p { font-size: 11px; color: var(--accent-green); }
+.le-empty { text-align: center; color: var(--text-muted); padding: 20px; font-size: 12px; }
 
 .inv-header {
     padding: 15px 20px;
@@ -6378,15 +7327,17 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 /* Right Paper Doll - TOP ALIGNED WITH SCROLL */
 .paper-doll-container {
-    flex: 1;
+    /* Zmiana na fixed shrink, aby sloty się nie przesuwały po dodaniu insights */
+    flex: 0 0 520px; 
     position: relative;
     background: radial-gradient(circle at center, rgba(59, 130, 246, 0.05) 0%, transparent 60%);
-    overflow-y: auto; /* Dodano scroll */
+    /* overflow-y wyłączony tutaj, scrolluje cały panel */
     display: flex;
-    justify-content: center;
-    align-items: flex-start; /* Przeniesiono do góry */
-    padding-top: 30px; /* Odstęp od góry */
-    padding-bottom: 30px;
+    flex-direction: column; /* Stack elements vertically */
+    justify-content: flex-start;
+    align-items: center; /* Center elements horizontally */
+    padding-top: 30px; 
+    padding-bottom: 10px;
 }
 /* DRAG AND DROP STYLES */
 .inv-grid-slot.is-equipped {
@@ -6502,17 +7453,16 @@ input:checked + .slider:before { transform: translateX(16px); }
 /* Favorites Panel on Dashboard */
 .favorites-panel {
     background: linear-gradient(135deg, #1a1a2e, #16213e);
-    border: 1px solid rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(16, 185, 129, 0.3);
     box-shadow: 0 4px 20px rgba(0,0,0,0.2);
 }
 
 .favorites-grid {
     display: grid;
-    grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+    grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     padding-top: 10px;
-    max-height: 200px;
-    overflow-y: auto;
+    min-height: 240px;
 }
 
 .fav-placeholder {
@@ -6859,6 +7809,17 @@ input:checked + .slider:before { transform: translateX(16px); }
 
 .mc-lock-overlay i {
     font-size: 14px;
+}
+.mc-condition-pie {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.8);
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    z-index: 10;
 }
 
 .mc-body {

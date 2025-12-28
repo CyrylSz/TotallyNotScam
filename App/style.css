@@ -1567,7 +1567,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     display: grid;
     grid-template-columns: 1fr 1.2fr 1fr;
     gap: 20px;
-    align-items: start;
+    align-items: stretch;
 }
 
 @media (max-width: 1200px) {
@@ -2828,7 +2828,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     padding-top: 10px;
-    min-height: 240px;
+    min-height: 100px;
 }
 
 .fav-placeholder {

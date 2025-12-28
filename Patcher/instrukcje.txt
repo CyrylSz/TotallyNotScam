@@ -2,25 +2,251 @@ KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-            if (template.isConsumable) {
-                if (typeof invEntry === 'object' && invEntry.usesLeft !== undefined) {
-                    item.usesLeft = invEntry.usesLeft;
-                } else {
-                    item.usesLeft = template.maxUses;
-                }
+function toggleFavoriteMode(modeId, gameId, modeName, icon, color, players, starElement) {
+    const idx = favoriteModes.indexOf(modeId);
+    
+    if (idx === -1) {
+function openLoadoutEffectsModal() {
+    const modal = document.getElementById('loadoutEffectsModal');
+    const container = document.getElementById('loadoutEffectsContent');
+    if(!modal || !container) return;
+
+    container.innerHTML = '';
+    
+    const equippedUids = Object.values(myLoadout);
+    
+    if(equippedUids.length === 0) {
+        container.innerHTML = '<div class="le-empty">Brak założonych przedmiotów.</div>';
+    } else {
+        equippedUids.forEach(uid => {
+            const item = myInventory.find(i => i.uid === uid);
+            if(item) {
+                const row = document.createElement('div');
+                row.className = 'le-row';
                 
-                item.name = `${item.name} (${item.usesLeft}/${template.maxUses})`;
+                let bonusText = item.bonus;
+                
+                // Jeśli przedmiot zużywalny, dodaj info o stanie w bonusie
+                if (item.isConsumable && item.maxUses) {
+                    bonusText += ` <span style="color:#666; font-size:10px;">(Stan: ${item.usesLeft}/${item.maxUses})</span>`;
+                }
+
+                row.innerHTML = `
+                    <div class="le-icon">${item.icon}</div>
+                    <div class="le-info">
+                        <h5 style="color:${item.color}">${item.name}</h5>
+                        <p>${bonusText}</p>
+                    </div>
+                `;
+                container.appendChild(row);
             }
+        });
+    }
+
+    modal.classList.add('active');
+}
+
+function closeLoadoutEffectsModal() {
+    document.getElementById('loadoutEffectsModal').classList.remove('active');
+}
+        
+        favoriteModes.push(modeId);
+        starElement.className = 'fas fa-star mc-star active';
+        
+        
+    } else {
+        
+        favoriteModes.splice(idx, 1);
+        starElement.className = 'far fa-star mc-star';
+    }
+    
+    
+    renderFavoritesPanel();
+}
 TREŚĆ:
-            if (template.isConsumable) {
-                if (typeof invEntry === 'object' && invEntry.usesLeft !== undefined) {
-                    item.usesLeft = invEntry.usesLeft;
-                } else {
-                    item.usesLeft = template.maxUses;
-                }
+function toggleFavoriteMode(modeId, gameId, modeName, icon, color, players, starElement) {
+    const idx = favoriteModes.indexOf(modeId);
+    
+    if (idx === -1) {
+        favoriteModes.push(modeId);
+        starElement.className = 'fas fa-star mc-star active';
+    } else {
+        favoriteModes.splice(idx, 1);
+        starElement.className = 'far fa-star mc-star';
+    }
+    renderFavoritesPanel();
+}
+
+function openLoadoutEffectsModal() {
+    const modal = document.getElementById('loadoutEffectsModal');
+    const container = document.getElementById('loadoutEffectsContent');
+    if(!modal || !container) return;
+
+    container.innerHTML = '';
+    
+    const equippedUids = Object.values(myLoadout);
+    
+    if(equippedUids.length === 0) {
+        container.innerHTML = '<div class="le-empty">Brak założonych przedmiotów.</div>';
+    } else {
+        equippedUids.forEach(uid => {
+            const item = myInventory.find(i => i.uid === uid);
+            if(item) {
+                const row = document.createElement('div');
+                row.className = 'le-row';
                 
-                // Nie pokazuj licznika w nazwie dla skrzynek (ID 1-5)
-                if (item.id > 5) {
-                    item.name = `${item.name} (${item.usesLeft}/${template.maxUses})`;
+                let bonusText = item.bonus;
+                
+                // Jeśli przedmiot zużywalny, dodaj info o stanie w bonusie
+                if (item.isConsumable && item.maxUses) {
+                    bonusText += ` <span style="color:#666; font-size:10px;">(Stan: ${item.usesLeft}/${item.maxUses})</span>`;
                 }
+
+                row.innerHTML = `
+                    <div class="le-icon">${item.icon}</div>
+                    <div class="le-info">
+                        <h5 style="color:${item.color}">${item.name}</h5>
+                        <p>${bonusText}</p>
+                    </div>
+                `;
+                container.appendChild(row);
             }
+        });
+    }
+
+    modal.classList.add('active');
+}
+
+function closeLoadoutEffectsModal() {
+    document.getElementById('loadoutEffectsModal').classList.remove('active');
+}
+
+KROK 2:
+PLIK: "index.html"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+                    <div class="card dash-card favorites-panel" style="width: 100%; max-width: 100%; min-height: 250px;">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-star" style="color:gold;"></i> Ulubione Gry</div>
+TREŚĆ:
+                    <div class="card dash-card favorites-panel" style="width: 100%; max-width: 100%; min-height: auto;">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-star" style="color:gold;"></i> Ulubione Gry</div>
+
+KROK 3:
+PLIK: "style.css"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding-top: 10px;
+    min-height: 240px;
+}
+TREŚĆ:
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding-top: 10px;
+    min-height: 100px;
+}
+
+KROK 4:
+PLIK: "index.html"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+                         <div class="bp-mini-status">
+                            <div class="bp-mini-info">
+                                <div style="font-size: 10px; color: var(--accent-purple); font-weight:700;">BATTLE PASS</div>
+                                <div style="font-size: 14px; font-weight: 700;">Level 17 <span style="font-size:10px; color:var(--text-muted); font-weight:400;">/ 100</span></div>
+                            </div>
+                            <div class="bp-mini-dots" onclick="openBattlePassModal()">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                         </div>
+
+                         <div class="quest-list">
+                            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px; text-transform:uppercase;">Misje (Reset 24h)</div>
+                            <div class="quest-item">
+                                <div class="quest-info">
+                                    <div class="q-title">Zagraj 10 spinów</div>
+                                    <div class="q-progress-bar"><div class="q-fill" style="width: 80%;"></div></div>
+                                    <div class="q-desc">Postęp: 8/10</div>
+                                </div>
+                                <button class="gc-btn play q-btn">Odbierz</button>
+                            </div>
+                            <div class="quest-item">
+                                <div class="quest-info">
+                                    <div class="q-title">Postaw łącznie 500$</div>
+                                    <div class="q-progress-bar"><div class="q-fill" style="width: 100%; background: var(--accent-green);"></div></div>
+                                    <div class="q-desc">Postęp: 500/500</div>
+                                </div>
+                                 <button class="gc-btn play q-btn active-claim">Odbierz</button>
+                            </div>
+                             <div class="quest-item">
+                                <div class="quest-info">
+                                    <div class="q-title">Otwórz skrzynkę</div>
+                                    <div class="q-progress-bar"><div class="q-fill" style="width: 0%;"></div></div>
+                                    <div class="q-desc">Postęp: 0/1</div>
+                                </div>
+                                 <button class="gc-btn play q-btn disabled">Odbierz</button>
+                            </div>
+                        </div>
+TREŚĆ:
+                         <div class="quest-list">
+                            <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px; text-transform:uppercase;">Misje (Reset 24h)</div>
+                            <div class="quest-item">
+                                <div class="quest-info">
+                                    <div class="q-title">Zagraj 10 spinów</div>
+                                    <div class="q-progress-bar"><div class="q-fill" style="width: 80%;"></div></div>
+                                    <div class="q-desc">Postęp: 8/10</div>
+                                </div>
+                                <button class="gc-btn play q-btn">Odbierz</button>
+                            </div>
+                            <div class="quest-item">
+                                <div class="quest-info">
+                                    <div class="q-title">Postaw łącznie 500$</div>
+                                    <div class="q-progress-bar"><div class="q-fill" style="width: 100%; background: var(--accent-green);"></div></div>
+                                    <div class="q-desc">Postęp: 500/500</div>
+                                </div>
+                                 <button class="gc-btn play q-btn active-claim">Odbierz</button>
+                            </div>
+                             <div class="quest-item">
+                                <div class="quest-info">
+                                    <div class="q-title">Otwórz skrzynkę</div>
+                                    <div class="q-progress-bar"><div class="q-fill" style="width: 0%;"></div></div>
+                                    <div class="q-desc">Postęp: 0/1</div>
+                                </div>
+                                 <button class="gc-btn play q-btn disabled">Odbierz</button>
+                            </div>
+                        </div>
+
+                         <div class="bp-mini-status" style="margin-top: 15px;">
+                            <div class="bp-mini-info">
+                                <div style="font-size: 10px; color: var(--accent-purple); font-weight:700;">BATTLE PASS</div>
+                                <div style="font-size: 14px; font-weight: 700;">Level 17 <span style="font-size:10px; color:var(--text-muted); font-weight:400;">/ 100</span></div>
+                            </div>
+                            <div class="bp-mini-dots" onclick="openBattlePassModal()">
+                                <i class="fas fa-ellipsis-h"></i>
+                            </div>
+                         </div>
+
+KROK 5:
+PLIK: "style.css"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+.dash-3-col-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 20px;
+    align-items: start;
+}
+TREŚĆ:
+.dash-3-col-layout {
+    display: grid;
+    grid-template-columns: 1fr 1.2fr 1fr;
+    gap: 20px;
+    align-items: stretch;
+}
