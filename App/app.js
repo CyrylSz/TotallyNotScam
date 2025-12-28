@@ -48,10 +48,13 @@ function initMarketData() {
         if(!template) return;
 
         let finalUid = `mkt_${Date.now()}_${Math.random()}`;
+        let specificUses = null;
+
         if (isMine) {
             const myItem = myInventory.find(i => i.id === itemTemplateId && !i.isOnSale);
             if (myItem) {
                 finalUid = myItem.uid;
+                specificUses = myItem.usesLeft;
                 myItem.isOnSale = true; 
             } else return;
         }
@@ -119,6 +122,9 @@ function initMarketData() {
             type: template.type,
             icon: template.icon,
             color: template.color,
+            isConsumable: template.isConsumable,
+            maxUses: template.maxUses,
+            usesLeft: specificUses !== null ? specificUses : (template.isConsumable ? Math.ceil(Math.random() * template.maxUses) : null),
             isChest: template.type === 'chest'
         });
     };
@@ -277,6 +283,13 @@ function createMarketCard(item) {
     let isLocked = false;
     if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
     const lockHtml = isLocked ? `<div class="mc-lock-overlay"><i class="fas fa-lock"></i></div>` : '';
+    
+    let conditionHtml = '';
+    
+    if (!isLocked && item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
+        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+        conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
+    }
 
     
     let footerHtml = '';
@@ -321,7 +334,7 @@ function createMarketCard(item) {
                 <div class="mc-seller-avatar" style="background-image: url('${item.sellerImg}');"></div>
                 <div class="mc-seller-name">${item.seller}</div>
             </div>
-            ${lockHtml}
+            ${lockHtml}${conditionHtml}
         </div>
         <div class="mc-body">
             <div class="mc-title" style="color:${item.color}; font-size: 12px; margin-bottom: 8px;">${item.name}</div>

@@ -3072,6 +3072,17 @@ input:checked + .slider:before { transform: translateX(16px); }
 .mc-lock-overlay i {
     font-size: 14px;
 }
+.mc-condition-pie {
+    position: absolute;
+    top: 8px;
+    right: 8px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    border: 1px solid rgba(0,0,0,0.8);
+    box-shadow: 0 0 4px rgba(0,0,0,0.5);
+    z-index: 10;
+}
 
 .mc-body {
     padding: 8px;

@@ -1,53 +1,16 @@
 KROK 1:
-PLIK: "data.js"
+PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    {
-        username: "Whale_Killer",
-        rank: "RNG God",
-        pfp: "https://i.pravatar.cc/150?u=Whale_Killer",
-        inventory: [27, 31, 13, 16, 5, 5, 4] 
-    },
-    {
-        username: "LuckyLuke",
-        rank: "Table Shark",
-        pfp: "https://i.pravatar.cc/150?u=LuckyLuke",
-        inventory: [7, 11, 21, 2, 3, 3] 
-    },
-    {
-        username: "CryptoBro",
-        rank: "Risk Taker",
-        pfp: "https://i.pravatar.cc/150?u=CryptoBro",
-        inventory: [30, 8, 26, 2, 2] 
-    },
-    {
-        username: "Bot_Network_01",
-        rank: "Small Fry",
-        pfp: "https://i.pravatar.cc/150?u=Bot_Network_01",
-        inventory: [1, 1, 1, 1, 1, 1, 1, 1, 25, 25] 
+    let conditionHtml = '';
+    if (!isLocked && item.isConsumable && item.maxUses && item.usesLeft < item.maxUses) {
+        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+        conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
     }
 TREŚĆ:
-    {
-        username: "Whale_Killer",
-        rank: "RNG God",
-        pfp: "https://i.pravatar.cc/150?u=Whale_Killer",
-        inventory: [{id: 27}, {id: 31}, {id: 13}, {id: 16}, {id: 5}, {id: 5}, {id: 4}] 
-    },
-    {
-        username: "LuckyLuke",
-        rank: "Table Shark",
-        pfp: "https://i.pravatar.cc/150?u=LuckyLuke",
-        inventory: [{id: 7}, {id: 11}, {id: 21}, {id: 2}, {id: 3}, {id: 33, usesLeft: 1}] 
-    },
-    {
-        username: "CryptoBro",
-        rank: "Risk Taker",
-        pfp: "https://i.pravatar.cc/150?u=CryptoBro",
-        inventory: [{id: 30}, {id: 8}, {id: 26}, {id: 2}, {id: 32, usesLeft: 3}] 
-    },
-    {
-        username: "Bot_Network_01",
-        rank: "Small Fry",
-        pfp: "https://i.pravatar.cc/150?u=Bot_Network_01",
-        inventory: [{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 25}, {id: 25}] 
+    let conditionHtml = '';
+    
+    if (!isLocked && item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
+        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+        conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
     }
