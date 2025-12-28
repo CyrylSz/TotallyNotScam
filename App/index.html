@@ -57,7 +57,9 @@
         <div class="header">
             <div>
                 <h2 id="pageHeaderTitle">Dashboard</h2>
-                <button id="browseProfilesBtn" class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')" style="display: none; margin-left: 15px;">Przeglądaj Profile</button>
+                <button id="editProfileBtn" class="qp-btn-small" onclick="alert('Edycja profilu')" style="display: none; margin-left: 15px; width:auto; padding:6px 10px;"><i class="fa-solid fa-pen-to-square"></i></button>
+                <div id="headerSeparator" style="display:none; width:1px; height:20px; background:rgba(255,255,255,0.1); margin:0 10px;"></div>
+                <button id="browseProfilesBtn" class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')" style="display: none;">Przeglądaj Profile</button>
             </div>
             
             <div class="currency-display">
@@ -910,7 +912,7 @@
                             <div style="font-size:10px; color:#aaa;">Edycja Paska Live</div>
                             <div class="ap-input-group">
                                 <input type="text" class="ap-input" id="tickerMsgInput" placeholder="Nowa wiadomość...">
-                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i class="fas fa-edit"></i></button>
+                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i class="fa-solid fa-pen-to-square"></i></button>
                             </div>
                             <label class="ms-check-row" style="padding: 0;">
                                 <input type="checkbox"> 
@@ -1514,14 +1516,53 @@
     </div>
 
     <div class="chatbot-container">
+        <div id="chatRoastBubble" class="chat-bubble-popup">
+            <div class="bubble-dots">
+                <span></span><span></span><span></span>
+            </div>
+            <div class="bubble-text"></div>
+        </div>
+
+        <div class="chat-friend-panel" id="chatFriendPanel">
+            <div class="cfp-header">
+                <div class="input-group small" style="margin:0; width: 100%;">
+                    <input type="text" placeholder="Szukaj znajomych..." style="border-radius: 4px;">
+                </div>
+                <button class="cfp-add-btn"><i class="fas fa-user-plus"></i></button>
+            </div>
+            <div class="cfp-list">
+                <div class="cfp-section-title">AI Chatboty</div>
+                <div class="cfp-item active" onclick="switchChatPartner('ai', 'AI Buddy', 'Pomocnik Gracza', 'fa-robot')">
+                    <div class="cfp-avatar ai"><i class="fas fa-robot"></i></div>
+                    <div class="cfp-name">AI Buddy</div>
+                </div>
+                
+                <div class="cfp-section-title" style="margin-top:10px;">Znajomi</div>
+                <div class="cfp-item" onclick="switchChatPartner('user', 'Whale_Killer', 'RNG God', 'https://i.pravatar.cc/150?u=Whale_Killer')">
+                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=Whale_Killer');"></div>
+                    <div class="cfp-name">Whale_Killer</div>
+                </div>
+                <div class="cfp-item" onclick="switchChatPartner('user', 'LuckyLuke', 'Table Shark', 'https://i.pravatar.cc/150?u=LuckyLuke')">
+                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=LuckyLuke');"></div>
+                    <div class="cfp-name">LuckyLuke</div>
+                </div>
+                <div class="cfp-item" onclick="switchChatPartner('user', 'CryptoBro', 'Risk Taker', 'https://i.pravatar.cc/150?u=CryptoBro')">
+                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=CryptoBro');"></div>
+                    <div class="cfp-name">CryptoBro</div>
+                </div>
+            </div>
+        </div>
+
         <div class="chat-window" id="chatWindow">
             <div class="chat-header">
-                <i class="fas fa-robot" style="color: var(--accent-purple);"></i>
+                <div id="chatHeaderIcon" class="chat-header-avatar ai"><i class="fas fa-robot"></i></div>
                 <div>
-                    <h3>AI Asystent</h3>
-                    <span style="font-size: 10px; color: var(--text-muted);">Online - Pomocnik Gracza</span>
+                    <h3 id="chatHeaderName">AI Buddy</h3>
+                    <span id="chatHeaderStatus" style="font-size: 10px; color: var(--text-muted);">Pomocnik Gracza</span>
                 </div>
-                <div class="status-dot" style="margin-left: auto;"></div>
+                <div class="chat-header-actions" style="margin-left: auto; display: flex; gap: 10px;">
+                    <i class="fas fa-sort-up" onclick="toggleFriendPanel()" style="cursor: pointer; color: #fff; font-size: 16px; margin-top: 5px;"></i>
+                </div>
             </div>
             <div class="chat-messages" id="chatMessages">
                 <div class="msg bot">Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?</div>
@@ -1532,8 +1573,8 @@
             </div>
         </div>
         
-        <button class="chat-toggle" onclick="toggleChat()">
-            <i class="fas fa-robot" id="toggleIcon"></i>
+        <button class="chat-toggle" id="chatToggleBtn" onclick="toggleChat()">
+            <div id="chatToggleContent"><i class="fas fa-robot"></i></div>
         </button>
     </div>
 

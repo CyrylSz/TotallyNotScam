@@ -816,9 +816,12 @@ function showView(viewName) {
 
     
     const browseProfilesBtn = document.getElementById('browseProfilesBtn');
-    if (browseProfilesBtn) {
-        browseProfilesBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
-    }
+    const editProfileBtn = document.getElementById('editProfileBtn');
+    const headerSeparator = document.getElementById('headerSeparator');
+
+    if (browseProfilesBtn) browseProfilesBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
+    if (editProfileBtn) editProfileBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
+    if (headerSeparator) headerSeparator.style.display = viewName === 'profile' ? 'block' : 'none';
 
     
     if (viewName === 'games') renderGamesHub();
@@ -1283,26 +1286,106 @@ function closePlayerStatsModal() {
 
 
 const chatWindow = document.getElementById('chatWindow');
-const toggleIcon = document.getElementById('toggleIcon');
+const chatFriendPanel = document.getElementById('chatFriendPanel');
 const chatInput = document.getElementById('chatInput');
 const chatMessages = document.getElementById('chatMessages');
+const chatRoastBubble = document.getElementById('chatRoastBubble');
+
+let activeChatPartner = { type: 'ai', name: 'AI Buddy', status: 'Pomocnik Gracza', icon: 'fa-robot', img: null };
+
 function toggleChat() {
+    // If bubble is active, clicking ball just closes bubble first
+    if(chatRoastBubble.classList.contains('visible')) {
+        chatRoastBubble.classList.remove('visible');
+        return;
+    }
+
     const isOpen = chatWindow.classList.contains('open');
     if (isOpen) {
         chatWindow.classList.remove('open');
-        toggleIcon.className = 'fas fa-robot';
+        chatFriendPanel.classList.remove('open'); // Close friend panel if open
+        updateToggleIcon(false);
     } else {
         chatWindow.classList.add('open');
-        toggleIcon.className = 'fas fa-times';
+        updateToggleIcon(true);
     }
 }
+
+function updateToggleIcon(isOpen) {
+    const content = document.getElementById('chatToggleContent');
+    if (isOpen) {
+        content.innerHTML = '<i class="fas fa-times" style="font-size:20px;"></i>';
+        content.style.backgroundImage = 'none';
+        content.style.backgroundColor = 'transparent';
+    } else {
+        // Show active partner icon/img
+        if (activeChatPartner.type === 'ai') {
+            content.innerHTML = `<i class="fas ${activeChatPartner.icon}" style="font-size:24px;"></i>`;
+            content.style.backgroundImage = 'none';
+        } else {
+            content.innerHTML = '';
+            content.style.backgroundImage = `url('${activeChatPartner.img}')`;
+        }
+    }
+}
+
+function toggleFriendPanel() {
+    const isOpen = chatFriendPanel.classList.contains('open');
+    if (isOpen) chatFriendPanel.classList.remove('open');
+    else chatFriendPanel.classList.add('open');
+}
+
+function switchChatPartner(type, name, status, visual) {
+    // 1. Update State
+    activeChatPartner = { type, name, status };
+    if(type === 'ai') activeChatPartner.icon = visual;
+    else activeChatPartner.img = visual;
+
+    // 2. Update UI - Header
+    document.getElementById('chatHeaderName').textContent = name;
+    document.getElementById('chatHeaderStatus').textContent = status;
+    const headerIcon = document.getElementById('chatHeaderIcon');
+    if(type === 'ai') {
+        headerIcon.className = 'chat-header-avatar ai';
+        headerIcon.innerHTML = `<i class="fas ${visual}"></i>`;
+        headerIcon.style.backgroundImage = 'none';
+    } else {
+        headerIcon.className = 'chat-header-avatar';
+        headerIcon.innerHTML = '';
+        headerIcon.style.backgroundImage = `url('${visual}')`;
+    }
+
+    // 3. Clear/Load Messages (Mock)
+    chatMessages.innerHTML = '';
+    if(type === 'ai') addMessage("Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?", 'bot');
+    else addMessage(`[Historia rozmowy z ${name} wczytana...]`, 'bot');
+
+    // 4. Close upper panel
+    chatFriendPanel.classList.remove('open');
+
+    // 5. Update Ball Icon if closed (or just refresh state)
+    // If window is open, icon is "X". If closed, icon is Partner.
+    // Use animation class on Toggle Button
+    const btn = document.getElementById('chatToggleBtn');
+    btn.style.transform = "scale(0.8)";
+    setTimeout(() => {
+        if (!chatWindow.classList.contains('open')) updateToggleIcon(false);
+        btn.style.transform = "scale(1)";
+    }, 200);
+}
+
 function sendMessage() {
     const text = chatInput.value.trim();
     if (!text) return;
     addMessage(text, 'user');
     chatInput.value = '';
-    setTimeout(() => addMessage("Jestem tylko demem UI, ale dziękuję za wiadomość!", 'bot'), 1000);
+    
+    // Auto reply mock
+    if(activeChatPartner.type === 'ai') {
+        setTimeout(() => addMessage("Jestem tylko demem UI, ale dziękuję za wiadomość!", 'bot'), 1000);
+    }
 }
+
 function addMessage(text, type) {
     const div = document.createElement('div');
     div.className = `msg ${type}`;
@@ -1310,9 +1393,57 @@ function addMessage(text, type) {
     chatMessages.appendChild(div);
     chatMessages.scrollTop = chatMessages.scrollHeight;
 }
+
 chatInput.addEventListener('keypress', function (e) {
     if (e.key === 'Enter') sendMessage();
 });
+
+function triggerRoastAnimation(message) {
+    // 1. Force switch to AI Partner without opening panels
+    activeChatPartner = { type: 'ai', name: 'AI Buddy', status: 'Roast Master', icon: 'fa-robot' };
+    
+    // Close everything
+    chatWindow.classList.remove('open');
+    chatFriendPanel.classList.remove('open');
+    
+    // Update Ball Icon visually with animation
+    const btn = document.getElementById('chatToggleBtn');
+    btn.style.transition = "transform 0.3s";
+    btn.style.transform = "rotate(360deg) scale(1.2)";
+    updateToggleIcon(false); // Shows robot icon
+    
+    setTimeout(() => {
+        btn.style.transform = "scale(1)";
+        
+        // 2. Show Bubble with dots
+        chatRoastBubble.style.display = 'flex';
+        // Force reflow
+        void chatRoastBubble.offsetWidth; 
+        chatRoastBubble.classList.add('visible');
+        
+        const dots = chatRoastBubble.querySelector('.bubble-dots');
+        const txt = chatRoastBubble.querySelector('.bubble-text');
+        
+        dots.style.display = 'flex';
+        txt.style.display = 'none';
+        txt.textContent = message;
+
+        // 3. Reveal text after 1s
+        setTimeout(() => {
+            dots.style.display = 'none';
+            txt.style.display = 'block';
+            
+            // Auto hide based on length (min 3s, max 10s)
+            const duration = Math.max(3000, Math.min(10000, message.length * 100));
+            setTimeout(() => {
+                chatRoastBubble.classList.remove('visible');
+                setTimeout(() => chatRoastBubble.style.display = 'none', 300);
+            }, duration);
+            
+        }, 1000);
+        
+    }, 300);
+}
 
 
 
@@ -2181,7 +2312,8 @@ function adminLogoutAll() {
 function sendAdminPush() {
     const msg = document.getElementById('pushMsgInput').value;
     if(msg) {
-        alert(`[PUSH SENT] Do 14,203 online: "${msg}"`);
+        // Trigger the Global Roast Animation
+        triggerRoastAnimation(msg);
         document.getElementById('pushMsgInput').value = '';
     }
 }
