@@ -2,57 +2,14 @@ KROK 1:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    document.getElementById('mmIcon').innerHTML = item.icon;
-    document.getElementById('mmIcon').className = ''; 
-    document.getElementById('mmCard').style.color = item.color;
-    
-    
-    document.getElementById('mmSellerName').textContent = item.seller;
+        let conditionHtml = '';
+        if (!isRankLocked && item.isConsumable && item.maxUses && (item.id < 1 || item.id > 5)) {
+            const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+            conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
+        }
 TREŚĆ:
-    document.getElementById('mmIcon').innerHTML = item.icon;
-    document.getElementById('mmIcon').className = ''; 
-    
-    const mmCard = document.getElementById('mmCard');
-    mmCard.style.color = item.color;
-
-    // Cleanup visual pie form previous opens
-    const oldPie = mmCard.querySelector('.mc-condition-pie');
-    if(oldPie) oldPie.remove();
-
-    if (item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
-        const pct = Math.round((item.usesLeft / item.maxUses) * 100);
-        const pie = document.createElement('div');
-        pie.className = 'mc-condition-pie';
-        pie.style.background = `conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%)`;
-        pie.style.width = '24px';
-        pie.style.height = '24px';
-        pie.style.top = '15px';
-        pie.style.right = '15px';
-        pie.title = `Stan: ${item.usesLeft}/${item.maxUses}`;
-        mmCard.appendChild(pie);
-    }
-    
-    
-    document.getElementById('mmSellerName').textContent = item.seller;
-
-KROK 2:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-    const tags = document.getElementById('mmTags');
-    const badgeClass = `badge-${item.rarity.toLowerCase()}`;
-    tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
-    if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
-    else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
-TREŚĆ:
-    const tags = document.getElementById('mmTags');
-    const badgeClass = `badge-${item.rarity.toLowerCase()}`;
-    tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
-    if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
-    else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
-
-    if (item.isConsumable && item.maxUses) {
-         tags.innerHTML += `<span class="badge-slot" style="color:var(--accent-green); border:1px solid var(--accent-green);">STAN: ${item.usesLeft}/${item.maxUses}</span>`;
-    } else {
-         tags.innerHTML += `<span class="badge-slot" style="opacity:0.7;">TRWAŁY</span>`;
-    }
+        let conditionHtml = '';
+        if (!isRankLocked && !isEquipped && item.isConsumable && item.maxUses && (item.id < 1 || item.id > 5)) {
+            const pct = Math.round((item.usesLeft / item.maxUses) * 100);
+            conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
+        }

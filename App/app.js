@@ -1329,7 +1329,7 @@ function renderInventoryView() {
         }
 
         let conditionHtml = '';
-        if (!isRankLocked && item.isConsumable && item.maxUses && (item.id < 1 || item.id > 5)) {
+        if (!isRankLocked && !isEquipped && item.isConsumable && item.maxUses && (item.id < 1 || item.id > 5)) {
             const pct = Math.round((item.usesLeft / item.maxUses) * 100);
             conditionHtml = `<div class="mc-condition-pie" style="background: conic-gradient(var(--accent-green) 0% ${pct}%, #555 ${pct}% 100%);" title="Stan: ${item.usesLeft}/${item.maxUses}"></div>`;
         }
