@@ -19,53 +19,60 @@ def get_target_directory():
             sys.exit(1)
         return target_path
     except FileNotFoundError:
-        print(f"BŁĄD: Brak pliku {CONFIG_FILE}. Utwórz go.")
+        print(f"BŁĄD: Brak pliku {CONFIG_FILE}. Utwórz go i wpisz ścieżkę do folderu.")
         sys.exit(1)
 
 def clean_css(text):
-    """Usuwa komentarze CSS /* ... */ chroniąc stringi."""
+    """
+    Usuwa komentarze CSS /* ... */.
+    Chroni stringi w cudzysłowach i apostrofach.
+    """
+    # Poprawiono błąd [^_] na [^']
     pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^_])*\')|(/\*[\s\S]*?\*/)'
+    # Lepsza wersja regexa dla stringów (bezpieczniejsza):
+    pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^\\\'])*\')|(/\*[\s\S]*?\*/)'
     
     def replacement(match):
-        if match.group(1): return match.group(1)
-        return "" 
+        if match.group(1): return match.group(1) # Zachowaj string
+        return "" # Usuń komentarz
 
     return re.sub(pattern, replacement, text)
 
-def clean_js(text):
-    """Usuwa komentarze JS // oraz /* ... */ chroniąc stringi i template literals."""
-    pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^_])?\'|`(?:\\[\s\S]|[^`])*`)|(/\*[\s\S]*?\*/|//[^\r\n]*)'
+def clean_js_scss(text):
+    """
+    Usuwa komentarze typu JS oraz SCSS:
+    1. Blokowe /* ... */
+    2. Liniowe // ...
+    Chroni stringi ", ', oraz backticks `.
+    """
+    # Wzorzec: (Stringi " ' `) LUB (Komentarze blokowe lub liniowe)
+    pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^\\\'])*\'|`(?:\\[\s\S]|[^`])*`)|(/\*[\s\S]*?\*/|//[^\r\n]*)'
 
     def replacement(match):
-        if match.group(1): return match.group(1)
-        return ""
+        if match.group(1): return match.group(1) # Zachowaj string
+        return "" # Usuń komentarz (zamień na pusty ciąg, usuwa też nową linię dla // jeśli jest na końcu)
 
     return re.sub(pattern, replacement, text)
 
 def clean_html(text):
     """
-    Usuwa komentarze HTML.
-    Regex jest budowany z kawałków, aby nie zepsuć wyświetlania tego kodu.
+    Usuwa komentarze HTML .
+    Chroni stringi w atrybutach, aby nie usunąć komentarza będącego częścią tekstu.
     """
-    # Konstrukcja wzorca komentarza HTML: < ! - - ... - - >
-    # Rozbijamy to, żeby edytor tekstu nie "zgłupiał" przy wyświetlaniu.
-    comment_start = r'<' + r'!--'
+    # Konstrukcja wzorca komentarza HTML: comment_start = r'<' + r'!--'
     comment_end = r'--' + r'>'
     
-    # Wzorzec: (Stringi) LUB (Komentarz HTML)
-    # Wyłapuje stringi w cudzysłowach, żeby nie usunąć komentarza będącego treścią atrybutu.
-    pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^_])*\')|(' + comment_start + r'[\s\S]*?' + comment_end + r')'
+    # Wzorzec: (Stringi " ') LUB (Komentarz HTML)
+    pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^\\\'])*\')|(' + comment_start + r'[\s\S]*?' + comment_end + r')'
 
     def replacement(match):
-        # Grupa 1 to String (zachowujemy), Grupa 2 to Komentarz (usuwamy)
-        if match.group(1):
-            return match.group(1) 
-        return "" 
+        if match.group(1): return match.group(1) # Zachowaj string
+        return "" # Usuń komentarz
 
     return re.sub(pattern, replacement, text)
 
 def process_file(filepath):
-    """Przetwarza pojedynczy plik."""
+    """Przetwarza pojedynczy plik zależnie od rozszerzenia."""
     ext = os.path.splitext(filepath)[1].lower()
     
     try:
@@ -75,11 +82,15 @@ def process_file(filepath):
         original = content
         new_content = content
 
+        # CSS - tylko /* */
         if ext == '.css':
             new_content = clean_css(content)
-        elif ext == '.js':
-            new_content = clean_js(content)
-        elif ext in ['.html', '.htm', '.php']: # PHP często zawiera HTML
+            
+        # JS i SCSS - obsługa // oraz /* */
+        elif ext in ['.js', '.scss']: 
+            new_content = clean_js_scss(content)
+            
+        # HTML i PHP - obsługa elif ext in ['.html', '.htm', '.php']:
             new_content = clean_html(content)
         
         if new_content != original:
@@ -92,10 +103,10 @@ def process_file(filepath):
 
 def main():
     target_dir = get_target_directory()
-    print(f"Start czyszczenia w: {target_dir}")
+    print(f"Start agresywnego czyszczenia w: {target_dir}")
     
-    # Rozszerzenia do sprawdzenia
-    extensions = {'.js', '.css', '.html', '.htm', '.php'}
+    # Dodano .scss do listy
+    extensions = {'.js', '.css', '.html', '.htm', '.php', '.scss'}
     count = 0
 
     for root, dirs, files in os.walk(target_dir):

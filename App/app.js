@@ -374,7 +374,7 @@ function openMarketItemModal(item) {
     const mmCard = document.getElementById('mmCard');
     mmCard.style.color = item.color;
 
-    // Cleanup visual pie form previous opens
+    
     const oldPie = mmCard.querySelector('.mc-condition-pie');
     if(oldPie) oldPie.remove();
 
@@ -1894,7 +1894,7 @@ function renderAdminHeatmap() {
     const grid = document.getElementById('adminHeatmapGrid');
     if(!grid || grid.children.length > 0) return;
 
-    // 53 kolumny (tygodnie) x 7 wierszy (dni)
+    
     const totalCells = 53 * 7;
     
     for(let i = 0; i < totalCells; i++) {
@@ -1902,7 +1902,7 @@ function renderAdminHeatmap() {
         const rand = Math.random();
         let level = 'l0';
         
-        // Symulacja rozkładu aktywności
+        
         if (rand > 0.75) level = 'l1';
         if (rand > 0.88) level = 'l2';
         if (rand > 0.95) level = 'l3';
@@ -1925,12 +1925,12 @@ function initAdminUsers() {
     const prefixes = ["Crypto", "Super", "Mega", "Iron", "Lazy", "Lucky", "Sad", "Rich", "Poor", "Bot"];
     const suffixes = ["Gamer", "Winner", "Loser", "Whale", "King", "Dog", "Cat", "Master", "Noob", "Pro"];
 
-    // Dodanie statycznych ważnych graczy
+    
     adminUsersDB.push({ id: 1, name: "MrGambler", rank: "Alpha Whale", balance: 5240000, lastActive: "Now", status: "Online", isAdmin: true });
     adminUsersDB.push({ id: 994, name: "Whale_Killer", rank: "RNG God", balance: 12500000, lastActive: "2 min temu", status: "Online" });
     adminUsersDB.push({ id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", balance: 0, lastActive: "5 dni temu", status: "Banned" });
 
-    // Generowanie 150 randomów
+    
     for(let i=0; i<150; i++) {
         const id = 1000 + i;
         const name = prefixes[Math.floor(Math.random()*prefixes.length)] + "_" + suffixes[Math.floor(Math.random()*suffixes.length)] + "_" + Math.floor(Math.random()*99);
@@ -1953,14 +1953,14 @@ function renderUsersView() {
     const filterStatus = document.getElementById('userFilterStatus').value;
     const searchVal = document.getElementById('userSearchInput').value.toLowerCase();
 
-    // Filtrowanie
+    
     let filtered = adminUsersDB.filter(u => {
         if(filterStatus !== 'all' && u.status !== filterStatus) return false;
         if(searchVal && !u.name.toLowerCase().includes(searchVal) && !u.id.toString().includes(searchVal)) return false;
         return true;
     });
 
-    // Paginacja
+    
     const totalPages = Math.ceil(filtered.length / adminUsersPerPage) || 1;
     if(adminUsersPage < 1) adminUsersPage = 1;
     if(adminUsersPage > totalPages) adminUsersPage = totalPages;
@@ -2006,7 +2006,7 @@ function changeUserPage(delta) {
     adminUsersPage += delta;
     renderUsersView();
 }
-/* --- ADMIN PANEL ACTIONS --- */
+
 
 function toggleAdminAction(action) {
     let msg = "";
@@ -2016,9 +2016,9 @@ function toggleAdminAction(action) {
         case 'gate_blik': msg = "Status bramki BLIK został zmieniony."; break;
         case 'gate_crypto': msg = "Status bramki Crypto został zmieniony."; break;
     }
-    // Symulacja requestu do API
+    
     console.log(`[ADMIN] Action: ${action}`);
-    // Toast notification simulation
+    
     alert(`[SYSTEM] ${msg}`); 
 }
 
@@ -2083,7 +2083,7 @@ function renderLogsView() {
         "User_Banned banned for 'Scripting'"
     ];
 
-    // Generowanie 200 logów
+    
     for(let i=0; i<200; i++) {
         const date = new Date();
         date.setSeconds(date.getSeconds() - i * (Math.random() * 10));
@@ -2317,13 +2317,13 @@ function scrollToMyPosition() {
     const container = document.getElementById('globalLeaderboardList');
     let myRow = document.getElementById('lb-my-row');
 
-    // Jeśli nie ma wiersza, spróbuj znaleźć indeks w danych i rozszerzyć listę
+    
     if (!myRow) {
         const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
         const myIndex = sortedPlayers.findIndex(p => p.isMe);
         
         if (myIndex !== -1) {
-            // Rozszerzamy listę, aby objęła użytkownika
+            
             lbShownCount = myIndex + 5;
             renderGlobalLeaderboard();
             myRow = document.getElementById('lb-my-row');
@@ -2364,7 +2364,7 @@ function renderDashActiveListings() {
     if(!container) return;
     container.innerHTML = '';
 
-    // Pobieramy oferty gracza (MrGambler)
+    
     const myListings = marketState.listings.filter(l => l.isMine);
 
     if(myListings.length === 0) {
@@ -2378,12 +2378,12 @@ function renderDashActiveListings() {
         el.style.cursor = 'pointer';
         el.style.transition = 'background 0.2s';
         
-        // Kliknięcie otwiera ten sam modal co na Rynku
+        
         el.onclick = () => openMarketItemModal(item);
 
         const priceDisplay = (item.listingType === 'auction' ? (item.currentBid || item.price) : item.price).toLocaleString();
         
-        // Status: Instant lub Licytacja (z czasem)
+        
         let statusHtml = '';
         if(item.listingType === 'instant') {
             statusHtml = `<span style="color:var(--accent-green); font-size:9px; font-weight:700;">INSTANT</span>`;
@@ -2405,7 +2405,7 @@ function renderDashActiveListings() {
             </div>
         `;
         
-        // Dodajemy hover effect w JS inline dla prostoty
+        
         el.onmouseenter = () => el.style.background = 'rgba(255,255,255,0.08)';
         el.onmouseleave = () => el.style.background = 'rgba(255,255,255,0.03)';
 
@@ -2420,7 +2420,7 @@ function renderPopularModes() {
 
     let allModes = [];
 
-    // Spłaszczanie struktury i przypisywanie graczy
+    
     gamesHubStructure.forEach(category => {
         if(category.games) {
             category.games.forEach(game => {
@@ -2439,10 +2439,10 @@ function renderPopularModes() {
         }
     });
 
-    // Sortowanie malejąco po liczbie graczy
+    
     allModes.sort((a, b) => b.players - a.players);
 
-    // Pobranie TOP 6
+    
     const topModes = allModes.slice(0, 6);
 
     topModes.forEach((m, index) => {
@@ -2639,7 +2639,7 @@ function openLoadoutEffectsModal() {
                 
                 let bonusText = item.bonus;
                 
-                // Jeśli przedmiot zużywalny, dodaj info o stanie w bonusie
+                
                 if (item.isConsumable && item.maxUses) {
                     bonusText += ` <span style="color:#666; font-size:10px;">(Stan: ${item.usesLeft}/${item.maxUses})</span>`;
                 }
@@ -2722,7 +2722,7 @@ function renderFavoritesPanel() {
 
         let foundGame = null;
         
-        // Poprawiona logika szukania gry (bez subkategorii)
+        
         gamesHubStructure.forEach(cat => {
             if (cat.games) {
                 const g = cat.games.find(x => x.id === gId);

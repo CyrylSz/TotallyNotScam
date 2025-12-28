@@ -1,11 +1,44 @@
 KROK 1:
-PLIK: "index.html"
+PLIK: "style.css"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-                        <div class="leaderboard-list" id="globalLeaderboardList" style="overflow-y: auto; flex: 1; max-height: none; padding-right: 5px;">
-                            
-                        </div>
+/* HEADER: Sticky + Centered Currency Parent */
+.header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    padding-top: 25px;
+    padding-bottom: 25px;
+    margin-bottom: 10px;
+    
+    position: sticky; 
+    top: 0;
+    /* Zwiększony Z-Index, aby był nad tłem wieloryba */
+    z-index: 1000; 
+    
+    background-color: var(--bg-dark);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
 TREŚĆ:
-                        <div class="leaderboard-list" id="globalLeaderboardList" style="overflow-y: auto; flex: 1; max-height: 550px; padding-right: 5px;">
-                            
-                        </div>
+/* HEADER: Sticky + Centered Currency Parent */
+.header { 
+    display: flex; 
+    justify-content: space-between; 
+    align-items: center; 
+    
+    /* FIX: Ujemne marginesy niwelują padding kontenera (.main-content ma 30px paddingu) */
+    margin-left: -30px;
+    margin-right: -30px;
+    
+    /* FIX: Dodajemy padding wewnątrz, aby elementy wróciły na swoją pozycję wizualną */
+    padding: 25px 30px;
+    
+    margin-bottom: 10px;
+    
+    position: sticky; 
+    top: 0;
+    z-index: 1000; 
+    
+    background-color: var(--bg-dark);
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
