@@ -2295,7 +2295,7 @@ function renderUsersView() {
             <div style="color:#888;">${u.lastActive}</div>
             <div><span class="ul-badge ${badgeClass}">${u.status}</span></div>
             <div class="ul-actions">
-                <button class="ul-btn" title="Edytuj"><i class="fas fa-edit"></i></button>
+                <button class="ul-btn" title="Edytuj" onclick="openEditUserModal(${u.id})"><i class="fas fa-edit"></i></button>
                 <button class="ul-btn danger" title="Zbanuj" onclick="alert('Zbanowano użytkownika ${u.name}')"><i class="fas fa-ban"></i></button>
             </div>
         `;
@@ -2413,6 +2413,81 @@ function openAdminFinancialLogs() {
         `;
         container.appendChild(div);
     });
+}
+
+function openEditUserModal(userId) {
+    const user = adminUsersDB.find(u => u.id === userId);
+    if(!user) return;
+
+    // Populate Fields
+    document.getElementById('euIdDisplay').textContent = `ID: #${user.id}`;
+    document.getElementById('euInputName').value = user.name;
+    document.getElementById('euInputBalance').value = user.balance;
+    document.getElementById('euSelectStatus').value = user.status;
+    document.getElementById('euCheckAdmin').checked = user.isAdmin || false;
+    
+    // Fake extended data since DB is simple
+    document.getElementById('euInputLP').value = Math.floor(Math.random() * 5000);
+    document.getElementById('euInputStreak').value = Math.floor(Math.random() * 10);
+    document.getElementById('euInputPfp').value = ""; // Placeholder
+    document.getElementById('euAvatarPreview').style.backgroundImage = "none";
+    document.getElementById('euAvatarPreview').style.backgroundColor = "#333";
+    
+    // Simulate fetching PFP
+    const pfpUrl = `https://i.pravatar.cc/150?u=${user.name}`;
+    document.getElementById('euAvatarPreview').style.backgroundImage = `url('${pfpUrl}')`;
+
+    // Populate Rank Select dynamically
+    const rankSelect = document.getElementById('euSelectRank');
+    rankSelect.innerHTML = '';
+    const ranks = ["Bankrupt", "Small Fry", "Risk Taker", "Table Shark", "Casino Legend", "Alpha Whale", "RNG God"];
+    ranks.forEach(r => {
+        const opt = document.createElement('option');
+        opt.value = r;
+        opt.textContent = r;
+        if(user.rank === r) opt.selected = true;
+        rankSelect.appendChild(opt);
+    });
+
+    document.getElementById('editUserModal').classList.add('active');
+}
+
+function saveUserEdit() {
+    const name = document.getElementById('euInputName').value;
+    const bal = document.getElementById('euInputBalance').value;
+    const status = document.getElementById('euSelectStatus').value;
+    const rank = document.getElementById('euSelectRank').value;
+    
+    // Update logic would go here
+    alert(`[SYSTEM] Zapisano zmiany dla użytkownika ${name}.\nSaldo: ${bal}\nRanga: ${rank}\nStatus: ${status}`);
+    document.getElementById('editUserModal').classList.remove('active');
+    
+    // Refresh list to show fake updates if we modified the object (omitted for brevity in mock)
+    renderUsersView();
+}
+
+function modifyUserInv(action) {
+    const itemId = document.getElementById('euInvItemId').value;
+    const qty = document.getElementById('euInvQty').value;
+    
+    if(!itemId || itemId <= 0) {
+        alert("BŁĄD: Podaj poprawne ID przedmiotu.");
+        return;
+    }
+    if(!qty || qty <= 0) {
+        alert("BŁĄD: Ilość musi być większa od 0.");
+        return;
+    }
+
+    const itemName = typeof allTreasures !== 'undefined' 
+        ? (allTreasures.find(t => t.id == itemId)?.name || "Nieznany Przedmiot") 
+        : "Przedmiot";
+
+    if(action === 'add') {
+        alert(`[SYSTEM] Pomyślnie dodano do ekwipunku:\n\nPrzedmiot: ${itemName} (ID: ${itemId})\nIlość: ${qty}x`);
+    } else {
+        alert(`[SYSTEM] Pomyślnie usunięto z ekwipunku:\n\nPrzedmiot: ${itemName} (ID: ${itemId})\nIlość: ${qty}x`);
+    }
 }
 
 function renderLogsView() {

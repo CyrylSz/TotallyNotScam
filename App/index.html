@@ -178,7 +178,7 @@
                                 <div class="pd-insights-content">
                                     <div class="pi-row">
                                         <span class="pi-label">BUILD TYPE:</span>
-                                        <span class="pi-val high-risk">High Risk / Skill-Biased</span>
+                                        <span class="pi-val high-risk">Medium Risk / Skill-Biased</span>
                                     </div>
                                     <div class="pi-row">
                                         <span class="pi-label">LUCK ↔ SKILL:</span>
@@ -477,7 +477,7 @@
                         <div class="pd-insights-content">
                             <div class="pi-row">
                                 <span class="pi-label">BUILD TYPE:</span>
-                                <span class="pi-val high-risk">High Risk / Skill-Biased</span>
+                                <span class="pi-val high-risk">Medium Risk / Skill-Biased</span>
                             </div>
                             <div class="pi-row">
                                 <span class="pi-label">LUCK ↔ SKILL:</span>
@@ -1659,6 +1659,128 @@
             </div>
             <div class="sm-content" id="dailyPLContent" style="padding: 0;">
                 </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="editUserModal">
+        <div class="steam-modal" style="width: 850px; max-width: 95vw; max-height: 90vh;">
+            <div class="sm-header" style="background: linear-gradient(90deg, #3730a3, #1e1b4b);">
+                <div class="sm-title"><i class="fas fa-user-edit"></i> ADMIN: EDYCJA UŻYTKOWNIKA</div>
+                <div class="sm-close" onclick="document.getElementById('editUserModal').classList.remove('active')"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-content" style="padding: 0; display:flex; flex-direction:column; height:100%;">
+                
+                <div class="eu-layout">
+                    <div class="eu-sidebar">
+                        <div class="eu-avatar-preview" id="euAvatarPreview"></div>
+                        <div class="input-group small" style="margin-bottom: 10px;">
+                            <span class="curr-prefix"><i class="fas fa-image"></i></span>
+                            <input type="text" id="euInputPfp" placeholder="URL Avatara...">
+                        </div>
+                        
+                        <div class="eu-id-badge" id="euIdDisplay">ID: #0000</div>
+
+                        <div class="eu-section-label">STATUS KONTA</div>
+                        <select id="euSelectStatus" class="eu-select">
+                            <option value="Online">🟢 Online</option>
+                            <option value="Offline">⚪ Offline</option>
+                            <option value="Suspicious">🟠 Suspicious</option>
+                            <option value="Banned">🔴 Banned</option>
+                        </select>
+
+                        <div class="eu-section-label" style="margin-top:15px;">UPRAWNIENIA</div>
+                        <label class="ms-check-row">
+                            <input type="checkbox" id="euCheckAdmin"> 
+                            <span style="color:var(--accent-purple); font-weight:700;">Administrator</span>
+                        </label>
+                        <label class="ms-check-row">
+                            <input type="checkbox" id="euCheckShadowban"> 
+                            <span>Shadowban (Ukryty)</span>
+                        </label>
+                    </div>
+
+                    <div class="eu-main">
+                        
+                        <div class="eu-grid-row">
+                            <div class="eu-block">
+                                <div class="eu-label"><i class="fas fa-user"></i> Nazwa Użytkownika</div>
+                                <input type="text" id="euInputName" class="eu-input-std">
+                            </div>
+                            <div class="eu-block">
+                                <div class="eu-label"><i class="fas fa-tag"></i> Aktywny Tytuł</div>
+                                <select id="euSelectTitle" class="eu-select">
+                                    <option value="">Brak</option>
+                                    <option value="The Collector">The Collector</option>
+                                    <option value="RNG God">RNG God</option>
+                                    <option value="Whale">Whale</option>
+                                    <option value="Scammer">Scammer (Tag)</option>
+                                </select>
+                            </div>
+                        </div>
+
+                        <div class="eu-divider">EKONOMIA & ZASOBY</div>
+
+                        <div class="eu-grid-row three-col">
+                            <div class="eu-block">
+                                <div class="eu-label" style="color:var(--accent-green);">Saldo ($)</div>
+                                <input type="number" id="euInputBalance" class="eu-input-std">
+                            </div>
+                            <div class="eu-block">
+                                <div class="eu-label" style="color:var(--accent-purple);">Loyalty Points (LP)</div>
+                                <input type="number" id="euInputLP" class="eu-input-std">
+                            </div>
+                            <div class="eu-block">
+                                <div class="eu-label" style="color:var(--accent-blue);">Win Streak</div>
+                                <input type="number" id="euInputStreak" class="eu-input-std">
+                            </div>
+                        </div>
+
+                        <div class="eu-grid-row">
+                            <div class="eu-block">
+                                <div class="eu-label"><i class="fas fa-trophy"></i> Ranga Systemowa</div>
+                                <select id="euSelectRank" class="eu-select">
+                                    </select>
+                            </div>
+                            <div class="eu-block">
+                                <div class="eu-label">Mnożnik Szczęścia (RNG Override)</div>
+                                <input type="range" min="0" max="200" value="100" class="eu-slider" id="euRngSlider" oninput="document.getElementById('euRngVal').textContent = this.value + '%'">
+                                <div style="text-align:right; font-size:10px; color:#aaa;">Value: <span id="euRngVal" style="color:white;">100%</span></div>
+                            </div>
+                        </div>
+
+                        <div class="eu-divider">ZARZĄDZANIE EKWIPUNKIEM</div>
+
+                        <div class="eu-grid-row three-col" style="align-items: end;">
+                            <div class="eu-block">
+                                <div class="eu-label">ID Przedmiotu</div>
+                                <input type="number" id="euInvItemId" class="eu-input-std" placeholder="ID">
+                            </div>
+                            <div class="eu-block">
+                                <div class="eu-label">Ilość</div>
+                                <input type="number" id="euInvQty" class="eu-input-std" value="1">
+                            </div>
+                            <div class="eu-block" style="flex-direction: row; gap: 5px;">
+                                <button class="ap-btn ap-btn-green" style="flex:1; height:32px;" onclick="modifyUserInv('add')" title="Dodaj przedmiot"><i class="fas fa-plus"></i> DODAJ</button>
+                                <button class="ap-btn ap-btn-red" style="flex:1; height:32px;" onclick="modifyUserInv('remove')" title="Usuń przedmiot"><i class="fas fa-minus"></i> USUŃ</button>
+                            </div>
+                        </div>
+                        <div class="eu-divider">LOGI & NOTATKI</div>
+
+                        <div class="eu-block" style="flex:1;">
+                            <div class="eu-label">Notatka Admina (Widoczna tylko dla staffu)</div>
+                            <textarea id="euInputNote" class="eu-textarea" placeholder="Wpisz powód bana lub uwagi..."></textarea>
+                        </div>
+
+                        <div class="eu-actions-footer">
+                            <button class="ap-btn ap-btn-red" onclick="alert('Wyzerowano ekwipunek!')"><i class="fas fa-trash"></i> Wyczyść Ekwipunek</button>
+                            <div style="flex:1;"></div>
+                            <button class="action-btn-large outline" style="padding: 8px 20px; font-size:12px;" onclick="document.getElementById('editUserModal').classList.remove('active')">ANULUJ</button>
+                            <button class="action-btn-large" style="padding: 8px 20px; font-size:12px;" onclick="saveUserEdit()">ZAPISZ ZMIANY</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
         </div>
     </div>
     <script src="data.js"></script>
