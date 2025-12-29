@@ -3027,6 +3027,9 @@ function openGameDetailsModal(game) {
         const playerCount = playersDistribution[index];
         const isFav = favoriteModes.includes(modeId);
 
+        // FIX: Ucieczka znaku apostrofu dla nazw typu "Hold'em"
+        const safeModeName = modeName.replace(/'/g, "\\'");
+
         const card = document.createElement('div');
         card.className = 'mode-card';
         
@@ -3045,7 +3048,7 @@ function openGameDetailsModal(game) {
                     <i class="fas ${game.icon}"></i>
                 </div>
                 <i class="${starClass}" 
-                   onclick="event.stopPropagation(); toggleFavoriteMode('${modeId}', '${game.id}', '${modeName}', '${game.icon}', '${game.color}', ${playerCount}, this)">
+                   onclick="event.stopPropagation(); toggleFavoriteMode('${modeId}', '${game.id}', '${safeModeName}', '${game.icon}', '${game.color}', ${playerCount}, this)">
                 </i>
             </div>
             

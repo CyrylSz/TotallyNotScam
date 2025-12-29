@@ -3344,7 +3344,19 @@ input:checked + .slider:before { transform: translateX(16px); }
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     padding-top: 10px;
+    /* Fix wysokości panelu */
     min-height: 100px;
+    max-height: 140px; /* 1 Rząd */
+    overflow-y: auto; 
+    padding-right: 5px; 
+    align-content: start; /* KLUCZOWE: Zapobiega rozciąganiu kart w pionie */
+}
+
+
+/* Nadpisanie specyficzne dla Popularnych Gier: 2 Rzędy */
+#popularModesGrid {
+    max-height: 275px !important; /* Idealna wysokość na 2 rzędy */
+    min-height: 100px; /* Usuwamy wymuszenie 290px, aby karty się nie rozciągały */
 }
 
 .fav-placeholder {

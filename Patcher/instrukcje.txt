@@ -1,84 +1,84 @@
 KROK 1:
-PLIK: "app.js"
-OPERACJA: [WSTAW_PO]
+PLIK: "style.css"
+OPERACJA: [ZASTĄP]
 SZUKAJ:
-    return distribution.sort((a,b) => b-a);
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding-top: 10px;
+    /* Fix wysokości panelu */
+    min-height: 100px;
+    max-height: 140px; /* 1 Rząd */
+    overflow-y: auto; 
+    padding-right: 5px; 
+    align-content: start; /* KLUCZOWE: Zapobiega rozciąganiu kart w pionie */
 }
 TREŚĆ:
+.favorites-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 10px;
+    padding-top: 10px;
+    overflow-y: auto; 
+    padding-right: 5px; 
+    align-content: start; 
+}
 
-function initGameModePersistence() {
-    // Generuje liczbę graczy dla każdego trybu RAZ przy starcie,
-    // aby była spójna we wszystkich widokach (Dashboard, Gry, Ulubione).
-    gamesHubStructure.forEach(category => {
-        if(category.games) {
-            category.games.forEach(game => {
-                // Zapisujemy wynik w obiekcie gry
-                game.modeCounts = distributePlayers(game.onlineCount, game.modes.length);
-            });
-        }
-    });
+/* FIX: Sztywne wymuszenie wysokości dla Ulubionych (1 Rząd) */
+#favoritesGrid {
+    height: 140px !important;
+    min-height: 140px !important;
+    max-height: 140px !important;
 }
 
 KROK 2:
-PLIK: "app.js"
-OPERACJA: [WSTAW_PO]
+PLIK: "style.css"
+OPERACJA: [ZASTĄP]
 SZUKAJ:
-function initDashboard() {
-    initInventorySystem(); 
+/* Nadpisanie specyficzne dla Popularnych Gier: 2 Rzędy */
+#popularModesGrid {
+    max-height: 275px !important; /* Idealna wysokość na 2 rzędy */
+    min-height: 100px; /* Usuwamy wymuszenie 290px, aby karty się nie rozciągały */
+}
 TREŚĆ:
-    initGameModePersistence(); // Inicjalizacja stałych liczników graczy
+/* FIX: Sztywne wymuszenie wysokości dla Popularnych (2 Rzędy) */
+#popularModesGrid {
+    height: 275px !important;
+    min-height: 275px !important;
+    max-height: 275px !important;
+}
 
 KROK 3:
-PLIK: "app.js"
+PLIK: "style.css"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    const playersDistribution = distributePlayers(game.onlineCount, game.modes.length);
-
-    game.modes.forEach((modeName, index) => {
+.fav-placeholder {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 30px;
+    color: var(--text-muted);
+    gap: 10px;
+    text-align: center;
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 8px;
+}
 TREŚĆ:
-    // Używamy zapisanych danych, aby liczby były spójne z Dashboardem
-    const playersDistribution = game.modeCounts || distributePlayers(game.onlineCount, game.modes.length);
-
-    game.modes.forEach((modeName, index) => {
-
-KROK 4:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-            category.games.forEach(game => {
-                const distrib = distributePlayers(game.onlineCount, game.modes.length);
-                game.modes.forEach((modeName, idx) => {
-                    allModes.push({
-                        modeName: modeName,
-                        gameName: game.name,
-                        players: distrib[idx],
-TREŚĆ:
-            category.games.forEach(game => {
-                // Pobieramy stałe dane zamiast losować na nowo
-                const distrib = game.modeCounts || distributePlayers(game.onlineCount, game.modes.length);
-                
-                game.modes.forEach((modeName, idx) => {
-                    allModes.push({
-                        modeName: modeName,
-                        gameName: game.name,
-                        players: distrib[idx],
-
-KROK 5:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-        if (foundGame) {
-            const modeName = foundGame.modes[mIdx];
-            
-            
-            const displayPlayers = Math.floor(foundGame.onlineCount / foundGame.modes.length); 
-
-            const card = document.createElement('div');
-TREŚĆ:
-        if (foundGame) {
-            const modeName = foundGame.modes[mIdx];
-            
-            // Pobieramy dokładną liczbę z persystencji, zamiast średniej
-            const displayPlayers = foundGame.modeCounts ? foundGame.modeCounts[mIdx] : 0;
-
-            const card = document.createElement('div');
+.fav-placeholder {
+    grid-column: 1 / -1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    height: 100%; /* Dopasowanie do rodzica */
+    padding: 0 20px; /* Mniejszy padding by nie rozpychać */
+    color: var(--text-muted);
+    gap: 10px;
+    text-align: center;
+    border: 1px dashed rgba(255,255,255,0.1);
+    border-radius: 8px;
+    box-sizing: border-box;
+}
