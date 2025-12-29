@@ -2466,6 +2466,236 @@ input:checked + .slider:before { transform: translateX(16px); }
     text-align: center;
 }
 
+/* --- Modern Battle Pass Styles --- */
+.bp-hero-section {
+    height: 160px;
+    background: linear-gradient(to bottom, rgba(15, 23, 42, 0.1), #0f111a), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop');
+    background-size: cover;
+    background-position: center;
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 20px 30px;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.bp-hero-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-end;
+}
+
+.bp-season-tag {
+    background: var(--accent-purple);
+    color: white;
+    font-size: 10px;
+    font-weight: 800;
+    padding: 4px 8px;
+    border-radius: 4px;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-bottom: 5px;
+    display: inline-block;
+    box-shadow: 0 0 10px rgba(139, 92, 246, 0.5);
+}
+
+.bp-hero-title {
+    font-size: 28px;
+    font-weight: 900;
+    color: white;
+    text-transform: uppercase;
+    text-shadow: 0 2px 10px rgba(0,0,0,0.8);
+    line-height: 1;
+}
+
+.bp-stats-bar {
+    display: flex;
+    gap: 20px;
+    background: rgba(0,0,0,0.6);
+    backdrop-filter: blur(5px);
+    padding: 8px 15px;
+    border-radius: 8px;
+    border: 1px solid rgba(255,255,255,0.1);
+}
+
+.bp-stat-item {
+    display: flex;
+    flex-direction: column;
+}
+.bp-stat-lbl { font-size: 9px; color: #aaa; text-transform: uppercase; }
+.bp-stat-val { font-size: 14px; font-weight: 700; color: white; }
+
+.bp-scroll-track {
+    overflow-x: auto;
+    padding: 40px 30px;
+    display: flex;
+    align-items: center;
+    background: radial-gradient(circle at center, #1e293b 0%, #0f111a 100%);
+    position: relative;
+    min-height: 300px;
+}
+
+/* Linia łącząca */
+.bp-connector-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 200%; /* Szeroka na scroll */
+    height: 4px;
+    background: rgba(255,255,255,0.05);
+    transform: translateY(-50%);
+    z-index: 0;
+}
+
+.bp-card-node {
+    position: relative;
+    z-index: 2;
+    margin-right: 20px;
+    flex-shrink: 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 140px;
+    transition: 0.3s;
+}
+
+.bp-lvl-indicator {
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    background: #0f172a;
+    border: 2px solid #334155;
+    color: #64748b;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-weight: 700;
+    font-size: 11px;
+    margin-bottom: 15px;
+    position: relative;
+    z-index: 2;
+    transition: 0.3s;
+}
+
+/* Active Level Styling */
+.bp-card-node.active .bp-lvl-indicator {
+    border-color: #00e5ff;
+    color: #00e5ff;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.4);
+    transform: scale(1.2);
+    background: #0f172a;
+}
+
+/* Claimed Level Styling */
+.bp-card-node.claimed .bp-lvl-indicator {
+    background: var(--accent-purple);
+    border-color: var(--accent-purple);
+    color: white;
+}
+
+.bp-reward-card {
+    width: 100%;
+    height: 160px;
+    background: linear-gradient(145deg, rgba(255,255,255,0.03), rgba(255,255,255,0.01));
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 12px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+    transition: 0.3s;
+    overflow: hidden;
+}
+
+.bp-card-node.active .bp-reward-card {
+    border-color: rgba(0, 229, 255, 0.5);
+    background: linear-gradient(145deg, rgba(0, 229, 255, 0.1), rgba(0,0,0,0.4));
+    box-shadow: 0 10px 30px rgba(0,0,0,0.5);
+    transform: translateY(-10px);
+}
+
+.bp-card-node.claimed .bp-reward-card {
+    opacity: 0.5;
+    filter: grayscale(0.8);
+}
+
+.bp-card-node:hover .bp-reward-card {
+    background: rgba(255,255,255,0.08);
+    border-color: rgba(255,255,255,0.3);
+}
+
+.bp-reward-icon {
+    font-size: 42px;
+    margin-bottom: 10px;
+    filter: drop-shadow(0 5px 10px rgba(0,0,0,0.5));
+}
+
+.bp-reward-name {
+    font-size: 11px;
+    font-weight: 700;
+    color: white;
+    text-align: center;
+    padding: 0 10px;
+}
+
+.bp-reward-type {
+    font-size: 9px;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    margin-top: 4px;
+}
+
+.bp-premium-badge {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    background: rgba(255, 215, 0, 0.1);
+    border: 1px solid rgba(255, 215, 0, 0.3);
+    color: gold;
+    font-size: 8px;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-weight: 700;
+    display: flex;
+    gap: 3px;
+    align-items: center;
+}
+
+.bp-claim-btn {
+    margin-top: 15px;
+    width: 100%;
+    padding: 8px;
+    border: none;
+    border-radius: 6px;
+    font-size: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    background: rgba(255,255,255,0.1);
+    color: #aaa;
+    transition: 0.2s;
+}
+
+.bp-card-node.active .bp-claim-btn {
+    background: #00e5ff;
+    color: #000;
+    box-shadow: 0 0 15px rgba(0, 229, 255, 0.3);
+    animation: pulse-blue 2s infinite;
+}
+.bp-card-node.active .bp-claim-btn:hover {
+    background: #fff;
+}
+
+@keyframes pulse-blue {
+    0% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0.7); }
+    70% { box-shadow: 0 0 0 8px rgba(0, 229, 255, 0); }
+    100% { box-shadow: 0 0 0 0 rgba(0, 229, 255, 0); }
+}
+
 .bp-lock-icon {
     position: absolute;
     top: -10px;

@@ -1460,6 +1460,13 @@ function closeRankModal() {
 function openBattlePassModal() {
     document.getElementById('battlePassModal').classList.add('active');
 }
+    // Auto-scroll to active node
+    setTimeout(() => {
+        const activeNode = document.getElementById('bpActiveNode');
+        if(activeNode) {
+            activeNode.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+        }
+    }, 300);
 
 function closeBattlePassModal() {
     document.getElementById('battlePassModal').classList.remove('active');
