@@ -22,79 +22,195 @@ def get_target_directory():
         print(f"BŁĄD: Brak pliku {CONFIG_FILE}. Utwórz go i wpisz ścieżkę do folderu.")
         sys.exit(1)
 
-def clean_css(text):
+def read_file_content(filepath):
+    """Wczytuje plik próbując różnych kodowań."""
+    encodings = ['utf-8', 'windows-1250', 'latin-1']
+    for enc in encodings:
+        try:
+            with open(filepath, 'r', encoding=enc) as f:
+                return f.read(), enc
+        except UnicodeDecodeError:
+            continue
+    # Fallback
+    with open(filepath, 'rb') as f:
+        return f.read().decode('utf-8', errors='ignore'), 'utf-8'
+
+def remove_js_comments_robust(text):
     """
-    Usuwa komentarze CSS /* ... */.
-    Chroni stringi w cudzysłowach i apostrofach.
+    Zaawansowany parser usuwający komentarze z JS/TS.
+    Obsługuje poprawnie:
+    - Stringi: "...", '...', `...`
+    - Komentarze: //..., /*...*/
+    - Regex Literals: /.../ (np. replace(/'/g, '')) - TO BYŁ PROBLEM
     """
-    # Poprawiono błąd [^_] na [^']
-    pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^_])*\')|(/\*[\s\S]*?\*/)'
-    # Lepsza wersja regexa dla stringów (bezpieczniejsza):
-    pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^\\\'])*\')|(/\*[\s\S]*?\*/)'
+    output = []
+    i = 0
+    n = len(text)
     
-    def replacement(match):
-        if match.group(1): return match.group(1) # Zachowaj string
-        return "" # Usuń komentarz
-
-    return re.sub(pattern, replacement, text)
-
-def clean_js_scss(text):
-    """
-    Usuwa komentarze typu JS oraz SCSS:
-    1. Blokowe /* ... */
-    2. Liniowe // ...
-    Chroni stringi ", ', oraz backticks `.
-    """
-    # Wzorzec: (Stringi " ' `) LUB (Komentarze blokowe lub liniowe)
-    pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^\\\'])*\'|`(?:\\[\s\S]|[^`])*`)|(/\*[\s\S]*?\*/|//[^\r\n]*)'
-
-    def replacement(match):
-        if match.group(1): return match.group(1) # Zachowaj string
-        return "" # Usuń komentarz (zamień na pusty ciąg, usuwa też nową linię dla // jeśli jest na końcu)
-
-    return re.sub(pattern, replacement, text)
-
-def clean_html(text):
-    """
-    Usuwa komentarze HTML .
-    Chroni stringi w atrybutach, aby nie usunąć komentarza będącego częścią tekstu.
-    """
-    # Konstrukcja wzorca komentarza HTML: comment_start = r'<' + r'!--'
-    comment_end = r'--' + r'>'
+    # Stany parsera
+    CODE = 0
+    SLASH = 1          # Widziano jeden '/'
+    BLOCK_COMMENT = 2
+    LINE_COMMENT = 3
+    STRING_DOUBLE = 4  # "
+    STRING_SINGLE = 5  # '
+    STRING_TEMPLATE = 6 # `
+    REGEX = 7
     
-    # Wzorzec: (Stringi " ') LUB (Komentarz HTML)
-    pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^\\\'])*\')|(' + comment_start + r'[\s\S]*?' + comment_end + r')'
+    state = CODE
+    
+    # Zmienne pomocnicze do wykrywania czy '/' to dzielenie czy regex
+    last_token_type = 'OPERATOR' # Zakładamy start jako operator, żeby /regex/ na początku działał
+    
+    # Znaki, po których '/' oznacza zazwyczaj regex, a nie dzielenie
+    regex_preceders = {
+        '(', ',', '=', ':', '[', '!', '&', '|', '?', '{', ';',
+        'return', 'throw', 'case', 'new', 'typeof', 'void', 'delete', 'await'
+    }
 
+    while i < n:
+        char = text[i]
+        
+        if state == CODE:
+            if char == '/':
+                state = SLASH
+            elif char == '"':
+                state = STRING_DOUBLE
+                output.append(char)
+                last_token_type = 'VALUE'
+            elif char == "'":
+                state = STRING_SINGLE
+                output.append(char)
+                last_token_type = 'VALUE'
+            elif char == '`':
+                state = STRING_TEMPLATE
+                output.append(char)
+                last_token_type = 'VALUE'
+            else:
+                output.append(char)
+                # Prosta heurystyka tokenów (pomijamy białe znaki przy aktualizacji last_token)
+                if not char.isspace():
+                    if char in regex_preceders:
+                        last_token_type = 'OPERATOR'
+                    elif char.isalnum() or char in ')]}_$':
+                        last_token_type = 'VALUE'
+                    else:
+                        last_token_type = 'OPERATOR'
+                        
+        elif state == SLASH:
+            if char == '/':
+                state = LINE_COMMENT
+                # Nie dodajemy drugiego slasha do outputu
+            elif char == '*':
+                state = BLOCK_COMMENT
+                # Nie dodajemy gwiazdki
+            else:
+                # To nie był komentarz, to był slash (dzielenie) lub początek regexa
+                # Decyzja: Dzielenie czy Regex?
+                is_regex = (last_token_type == 'OPERATOR')
+                
+                if is_regex:
+                    state = REGEX
+                    output.append('/') # Dodajemy zaległy slash
+                    output.append(char)
+                else:
+                    state = CODE
+                    output.append('/') # Dodajemy zaległy slash
+                    output.append(char)
+                    last_token_type = 'OPERATOR' # Dzielenie to operator
+        
+        elif state == LINE_COMMENT:
+            if char == '\n':
+                state = CODE
+                output.append('\n') # Zachowujemy nową linię, by nie skleić kodu
+                last_token_type = 'OPERATOR' # Traktujemy nową linię bezpiecznie
+                
+        elif state == BLOCK_COMMENT:
+            if char == '*' and i + 1 < n and text[i+1] == '/':
+                state = CODE
+                i += 1 # Pomiń '/'
+                last_token_type = 'VALUE' # Traktujemy blok jako separator
+                
+        elif state == STRING_DOUBLE:
+            output.append(char)
+            if char == '\\':
+                if i + 1 < n:
+                    output.append(text[i+1])
+                    i += 1
+            elif char == '"':
+                state = CODE
+                
+        elif state == STRING_SINGLE:
+            output.append(char)
+            if char == '\\':
+                if i + 1 < n:
+                    output.append(text[i+1])
+                    i += 1
+            elif char == "'":
+                state = CODE
+
+        elif state == STRING_TEMPLATE:
+            output.append(char)
+            if char == '\\':
+                if i + 1 < n:
+                    output.append(text[i+1])
+                    i += 1
+            elif char == '`':
+                state = CODE
+                
+        elif state == REGEX:
+            output.append(char)
+            if char == '\\':
+                if i + 1 < n:
+                    output.append(text[i+1])
+                    i += 1
+            elif char == '/':
+                state = CODE
+                last_token_type = 'VALUE' # Koniec regexa to wartość
+                
+        i += 1
+
+    # Jeśli plik kończy się w trakcie stanu SLASH, dopisz go
+    if state == SLASH:
+        output.append('/')
+
+    cleaned_text = "".join(output)
+    
+    # Kosmetyka: Usuwanie pustych linii
+    cleaned_text = re.sub(r'^\s*[\r\n]+', '', cleaned_text, flags=re.MULTILINE)
+    
+    return cleaned_text
+
+def clean_css_html_content(text, ext):
+    """Standardowy regex dla CSS i HTML (tam nie ma problemu z regex literals)."""
+    if ext == '.css':
+        pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^\\\'])*\')|(/\*[\s\S]*?\*/)'
+    else: # HTML / PHP
+        pattern = r'("(?:\\[\s\S]|[^"])*"|\'(?:\\[\s\S]|[^\\\'])*\')|()'
+        
     def replacement(match):
-        if match.group(1): return match.group(1) # Zachowaj string
-        return "" # Usuń komentarz
-
+        if match.group(1): return match.group(1)
+        return ""
     return re.sub(pattern, replacement, text)
 
 def process_file(filepath):
-    """Przetwarza pojedynczy plik zależnie od rozszerzenia."""
     ext = os.path.splitext(filepath)[1].lower()
     
     try:
-        with open(filepath, 'r', encoding='utf-8') as f:
-            content = f.read()
-        
+        content, encoding = read_file_content(filepath)
         original = content
-        new_content = content
-
-        # CSS - tylko /* */
-        if ext == '.css':
-            new_content = clean_css(content)
-            
-        # JS i SCSS - obsługa // oraz /* */
-        elif ext in ['.js', '.scss']: 
-            new_content = clean_js_scss(content)
-            
-        # HTML i PHP - obsługa elif ext in ['.html', '.htm', '.php']:
-            new_content = clean_html(content)
         
+        if ext in ['.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs']:
+            # Używamy pancernego parsera dla JS
+            new_content = remove_js_comments_robust(content)
+        elif ext in ['.css', '.scss', '.html', '.htm', '.php']:
+            # Używamy regexa dla reszty
+            new_content = clean_css_html_content(content, ext)
+        else:
+            return
+
         if new_content != original:
-            with open(filepath, 'w', encoding='utf-8') as f:
+            with open(filepath, 'w', encoding=encoding) as f:
                 f.write(new_content)
             print(f"[WYCZYSZCZONO]: {filepath}")
             
@@ -103,10 +219,10 @@ def process_file(filepath):
 
 def main():
     target_dir = get_target_directory()
-    print(f"Start agresywnego czyszczenia w: {target_dir}")
+    print(f"Start GŁĘBOKIEGO czyszczenia w: {target_dir}")
+    print("-" * 40)
     
-    # Dodano .scss do listy
-    extensions = {'.js', '.css', '.html', '.htm', '.php', '.scss'}
+    extensions = {'.js', '.jsx', '.ts', '.tsx', '.mjs', '.cjs', '.css', '.scss', '.html', '.htm', '.php'}
     count = 0
 
     for root, dirs, files in os.walk(target_dir):
@@ -115,6 +231,7 @@ def main():
                 process_file(os.path.join(root, file))
                 count += 1
                 
+    print("-" * 40)
     print(f"Zakończono. Przeskanowano plików: {count}")
 
 if __name__ == "__main__":

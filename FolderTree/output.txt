@@ -1,5 +1,0 @@
-App
-├── app.js
-├── data.js
-├── index.html
-└── style.css
