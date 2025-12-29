@@ -860,21 +860,25 @@ function renderTreasures() {
     currentItems.forEach(item => {
         const div = document.createElement('div');
         div.className = 'item-row';
+        div.style.cursor = 'pointer';
+        div.onclick = () => openInventoryItemModal(item); // Otwieranie modala
         
         let priceClass = 'price-neutral';
         let icon = '';
         let colorClass = '';
 
-        
         if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
         else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
 
+        // Obliczanie ceny rynkowej (spójne z modalem)
+        const trendVal = parseFloat((item.change || "0").replace('%', ''));
+        const dynamicPrice = Math.floor((item.rawPrice || 0) * (1 + (trendVal / 100)));
+        const displayPrice = dynamicPrice.toLocaleString() + ' $';
+
         let changeHtml = '';
-        
         if(item.change && item.change !== "0%") {
             changeHtml = `<div class="val-change-inline ${colorClass}" title="ostatnie 24h">${item.change} <i class="fas ${icon}"></i></div>`;
         }
-        
         
         const isEquipped = Object.values(myLoadout).includes(item.uid);
         let equippedTag = isEquipped ? `<span style="font-size:9px; color:var(--accent-blue); font-weight:700; margin-right:5px;">[EQ]</span>` : '';
@@ -892,7 +896,7 @@ function renderTreasures() {
             <div class="item-info">
                 <h5>${item.name}</h5>
                 <div class="item-price-row">
-                    <p class="${priceClass}">${item.price}</p>
+                    <p class="${priceClass}">${displayPrice}</p>
                     ${changeHtml}
                 </div>
             </div>
@@ -3534,21 +3538,26 @@ function openInventoryItemModal(item) {
         warning.classList.add('hidden');
     }
 
-    // 5. Market Logic (Fake Trends)
+    // 5. Market Logic (Spójne z Profilem)
     const rawPrice = item.rawPrice || 100;
-    // Symulacja wahań rynku +/- 15%
-    const marketFlux = 1 + ((Math.random() * 0.3) - 0.15); 
-    const avgPrice = Math.floor(rawPrice * marketFlux);
     
-    const trendVal = ((marketFlux - 1) * 100).toFixed(1);
+    // Pobieramy zapisaną wartość trendu z obiektu (zamiast losować nową)
+    let trendVal = 0;
+    if(item.change) {
+        trendVal = parseFloat(item.change.replace('%', ''));
+    }
+    
+    // Obliczamy cenę na podstawie rawPrice i trendu
+    const avgPrice = Math.floor(rawPrice * (1 + (trendVal / 100)));
+    
     const trendEl = document.getElementById('iiMarketTrend');
     const priceEl = document.getElementById('iiMarketPrice');
     
     priceEl.textContent = avgPrice.toLocaleString() + ' $';
-    trendEl.textContent = (trendVal > 0 ? '+' : '') + trendVal + '%';
+    trendEl.textContent = item.change; // Używamy sformatowanego stringa z obiektu
     
     // Colors
-    if(trendVal > 0.5) {
+    if(trendVal > 0) {
         trendEl.className = 'val-change-inline val-up';
         priceEl.style.color = 'var(--accent-green)';
     } else if(trendVal < -0.5) {
