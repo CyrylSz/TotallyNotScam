@@ -1,36 +1,40 @@
 KROK 1:
-PLIK: "style.css"
+PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-.eu-sidebar {
-    width: 240px;
-    background: rgba(0,0,0,0.2);
-    border-right: 1px solid rgba(255,255,255,0.05);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-}
+            <div class="ul-actions">
+                <button class="ul-btn" title="Edytuj" onclick="openEditUserModal(${u.id})"><i class="fas fa-edit"></i></button>
+                <button class="ul-btn danger" title="Zbanuj" onclick="alert('Zbanowano użytkownika ${u.name}')"><i class="fas fa-ban"></i></button>
+            </div>
 TREŚĆ:
-.eu-sidebar {
-    width: 240px;
-    background: rgba(0,0,0,0.2);
-    border-right: 1px solid rgba(255,255,255,0.05);
-    padding: 20px;
-    display: flex;
-    flex-direction: column;
-    gap: 15px;
-    overflow: hidden; /* Clip anything spilling out */
+            <div class="ul-actions">
+                <button class="ul-btn" title="Edytuj" onclick="openEditUserModal(${u.id})"><i class="fas fa-edit"></i></button>
+            </div>
+
+KROK 2:
+PLIK: "index.html"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+                        <div class="eu-actions-footer">
+                            <button class="ap-btn ap-btn-red" onclick="alert('Wyzerowano ekwipunek!')"><i class="fas fa-trash"></i> Wyczyść Ekwipunek</button>
+TREŚĆ:
+                        <div class="eu-actions-footer">
+                            <button class="ap-btn ap-btn-red" id="euBtnBan" style="margin-right: 5px;"><i class="fas fa-ban"></i> ZBANUJ</button>
+                            <button class="ap-btn ap-btn-red" onclick="alert('Wyzerowano ekwipunek!')"><i class="fas fa-trash"></i> Wyczyść Ekwipunek</button>
+
+KROK 3:
+PLIK: "app.js"
+OPERACJA: [WSTAW_PRZED]
+SZUKAJ:
+    document.getElementById('editUserModal').classList.add('active');
 }
 
-/* Wymuszenie szerokości inputa URL w sidebarze */
-.eu-sidebar .input-group {
-    width: 100% !important;
-    display: flex;
-    box-sizing: border-box;
-}
-.eu-sidebar .input-group input {
-    width: 0 !important; /* Hack: zmusza flexbox do kurczenia elementu */
-    min-width: 0 !important;
-    flex-grow: 1 !important;
-}
+function saveUserEdit() {
+TREŚĆ:
+    // Config Ban Button inside Modal
+    document.getElementById('euBtnBan').onclick = function() {
+        if(confirm(`Czy na pewno chcesz zbanować użytkownika ${user.name} (ID: ${user.id})?`)) {
+            alert(`[SYSTEM] Użytkownik ${user.name} został zbanowany.`);
+            document.getElementById('euSelectStatus').value = 'Banned';
+        }
+    };

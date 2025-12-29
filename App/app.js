@@ -2296,7 +2296,6 @@ function renderUsersView() {
             <div><span class="ul-badge ${badgeClass}">${u.status}</span></div>
             <div class="ul-actions">
                 <button class="ul-btn" title="Edytuj" onclick="openEditUserModal(${u.id})"><i class="fas fa-edit"></i></button>
-                <button class="ul-btn danger" title="Zbanuj" onclick="alert('Zbanowano użytkownika ${u.name}')"><i class="fas fa-ban"></i></button>
             </div>
         `;
         container.appendChild(div);
@@ -2449,6 +2448,13 @@ function openEditUserModal(userId) {
         rankSelect.appendChild(opt);
     });
 
+    // Config Ban Button inside Modal
+    document.getElementById('euBtnBan').onclick = function() {
+        if(confirm(`Czy na pewno chcesz zbanować użytkownika ${user.name} (ID: ${user.id})?`)) {
+            alert(`[SYSTEM] Użytkownik ${user.name} został zbanowany.`);
+            document.getElementById('euSelectStatus').value = 'Banned';
+        }
+    };
     document.getElementById('editUserModal').classList.add('active');
 }
 
