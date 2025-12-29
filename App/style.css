@@ -1684,6 +1684,94 @@ input:checked + .slider:before { transform: translateX(16px); }
     letter-spacing: 0.5px;
 }
 
+/* Match Details Modal Styles */
+.match-p-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 10px 12px;
+    background: rgba(255,255,255,0.03);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    transition: 0.2s;
+}
+.match-p-row:hover {
+    background: rgba(255,255,255,0.06);
+    border-color: rgba(255,255,255,0.1);
+}
+.match-p-row.is-me {
+    background: rgba(59, 130, 246, 0.1);
+    border-color: rgba(59, 130, 246, 0.3);
+}
+
+.mp-left { display: flex; align-items: center; gap: 12px; }
+.mp-avatar { width: 32px; height: 32px; border-radius: 8px; background-size: cover; background-position: center; border: 1px solid rgba(255,255,255,0.1); }
+.mp-names { display: flex; flex-direction: column; }
+.mp-name { font-size: 13px; font-weight: 600; color: white; }
+.mp-rank { font-size: 10px; color: var(--text-muted); }
+
+.mp-right { 
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; /* Rozsuwa loadout i profit */
+    gap: 15px; 
+    flex: 1;
+    margin-left: 20px;
+}
+
+.mp-loadout-wrapper {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1; /* Zajmuje dostępną przestrzeń na lewo */
+}
+
+.mp-loadout-col {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    max-width: 140px;
+}
+.mp-loadout-name { font-size: 11px; color: #ccc; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+.mp-gear-badge {
+    font-size: 9px;
+    padding: 1px 6px;
+    border-radius: 4px;
+    background: rgba(0,0,0,0.4);
+    width: fit-content;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #aaa;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+}
+.mp-gear-badge i { font-size: 8px; }
+
+.mp-profit-col {
+    text-align: right;
+    font-family: 'Inter', sans-serif;
+    font-size: 13px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    justify-content: flex-end;
+    min-width: 120px;
+}
+
+.mp-inspect-btn {
+    width: 28px;
+    height: 28px;
+    border-radius: 6px;
+    background: rgba(59, 130, 246, 0.1);
+    color: var(--accent-blue);
+    border: 1px solid rgba(59, 130, 246, 0.2);
+    cursor: pointer;
+    display: flex; align-items: center; justify-content: center;
+    transition: 0.2s;
+    flex-shrink: 0;
+}
+.mp-inspect-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+
 .eu-layout {
     display: flex;
     height: 100%;

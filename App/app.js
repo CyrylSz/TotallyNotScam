@@ -555,6 +555,159 @@ function closeMarketModal() {
     document.getElementById('marketModal').classList.remove('active');
 }
 
+function openMatchDetailsModal(game) {
+    const modal = document.getElementById('matchDetailsModal');
+    if(!modal) return;
+
+    // 1. Setup Header
+    const iconBox = document.getElementById('mdGameIcon');
+    iconBox.innerHTML = `<i class="fas ${game.icon}"></i>`;
+    
+    // Kolorystyka ikony zależna od wyniku
+    let resultColor = '#fff';
+    if(game.type === 'win') { resultColor = 'var(--accent-green)'; iconBox.style.background = 'rgba(16, 185, 129, 0.1)'; iconBox.style.borderColor = 'rgba(16, 185, 129, 0.3)'; }
+    else if(game.type === 'lose') { resultColor = 'var(--accent-red)'; iconBox.style.background = 'rgba(239, 68, 68, 0.1)'; iconBox.style.borderColor = 'rgba(239, 68, 68, 0.3)'; }
+    
+    iconBox.style.color = resultColor;
+
+    document.getElementById('mdGameName').textContent = game.name;
+    document.getElementById('mdGameTime').textContent = `Zakończono: ${game.time}`;
+    
+    const resEl = document.getElementById('mdGameResult');
+    resEl.textContent = game.money;
+    resEl.style.color = resultColor;
+
+    // 2. Generate Fake Participants
+    const list = document.getElementById('mdPlayerList');
+    list.innerHTML = '';
+
+    // Mock data generator for opponents
+    const generateParticipants = () => {
+        const participants = [];
+        
+        // Add ME
+        participants.push({
+            name: 'MrGambler',
+            pfp: 'https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false',
+            rank: 'Alpha Whale',
+            profit: game.money,
+            loadout: 'Poker Face Outfit',
+            gearPower: 145,
+            isMe: true
+        });
+
+        // Add Random Opponents (1 to 4)
+        const count = Math.floor(Math.random() * 4) + 1;
+        const botNames = ['Whale_Killer', 'LuckyLuke', 'CryptoBro', 'Bot_Network_01', 'Anon_99', 'HighRoller', 'NoobMaster'];
+        const loadouts = ['Default Set', 'High Roller Suit', 'Speed Run Config', 'Lucky Charm', 'Troll Build'];
+        
+        for(let i=0; i<count; i++) {
+            const name = botNames[Math.floor(Math.random() * botNames.length)];
+            // Avoid duplicates simple check
+            if(participants.find(p => p.name === name)) continue;
+
+            // Random Profit logic (inverse of player if 1v1, or random)
+            let prof = 0;
+            if(game.type === 'win') prof = -1 * Math.floor(Math.random() * 5000);
+            else prof = Math.floor(Math.random() * 10000);
+            
+            const profStr = (prof >= 0 ? '+' : '') + prof.toLocaleString() + ' $';
+
+            participants.push({
+                name: name,
+                pfp: `https://i.pravatar.cc/150?u=${name}`,
+                rank: ['Small Fry', 'Risk Taker', 'Table Shark', 'Casino Legend'][Math.floor(Math.random()*4)],
+                profit: profStr,
+                loadout: loadouts[Math.floor(Math.random() * loadouts.length)],
+                gearPower: Math.floor(Math.random() * 401), // 0-400
+                isMe: false
+            });
+        }
+        return participants;
+    };
+
+    const players = generateParticipants();
+
+    players.forEach(p => {
+        const row = document.createElement('div');
+        row.className = `match-p-row ${p.isMe ? 'is-me' : ''}`;
+        
+        // Color logic for gear power
+        let gpColor = '#aaa';
+        if(p.gearPower > 300) gpColor = '#ffd700'; // Gold
+        else if(p.gearPower > 200) gpColor = '#8b5cf6'; // Purple
+        else if(p.gearPower > 100) gpColor = '#3b82f6'; // Blue
+
+        // Color logic for profit
+        let profitColor = 'white';
+        if(p.profit.includes('+')) profitColor = 'var(--accent-green)';
+        if(p.profit.includes('-')) profitColor = 'var(--accent-red)';
+
+        // Logic for LP (Fixed: correlate with profit)
+        let lpVal = 0;
+
+        if(p.isMe && game.lp) {
+             // For "Me", keep consistency with dashboard history
+             lpVal = parseInt(game.lp.replace(' LP', '').replace('+', ''));
+        } else {
+             // For opponents, calculate based on their profit outcome
+             // Remove non-numeric chars (keep minus) to check value
+             const rawProfit = parseInt(p.profit.replace(/[^0-9-]/g, ''));
+             
+             if(rawProfit > 0) {
+                 // Winner gets positive LP (10 to 40)
+                 lpVal = Math.floor(Math.random() * 30) + 10;
+             } else if (rawProfit < 0) {
+                 // Loser gets negative LP (-5 to -25)
+                 lpVal = -1 * (Math.floor(Math.random() * 20) + 5);
+             } else {
+                 // Break even / 0
+                 lpVal = 0;
+             }
+        }
+
+        let lpStr = (lpVal > 0 ? '+' : '') + lpVal + ' LP';
+        let lpColor = lpVal >= 0 ? 'var(--accent-purple)' : '#9ca3af';
+
+        row.innerHTML = `
+            <div class="mp-left">
+                <div class="mp-avatar" style="background-image: url('${p.pfp}');"></div>
+                <div class="mp-names">
+                    <div class="mp-name">${p.name} ${p.isMe ? '(Ty)' : ''}</div>
+                    <div class="mp-rank">${p.rank}</div>
+                </div>
+            </div>
+            <div class="mp-right">
+                <div class="mp-loadout-wrapper">
+                    <button class="mp-inspect-btn" title="Zobacz Loadout" onclick="alert('Podgląd ekwipunku: ${p.name}')">
+                        <i class="fas fa-user-astronaut"></i>
+                    </button>
+                    <div class="mp-loadout-col">
+                        <div class="mp-loadout-name">${p.loadout}</div>
+                        <div class="mp-gear-badge" style="border-color:${gpColor}40;">
+                            <i class="fas fa-bolt" style="color:${gpColor};"></i> 
+                            <span style="color:${gpColor}; font-weight:700;">${p.gearPower}</span> 
+                            <span style="font-size:8px; margin-left:2px;">GP</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="mp-profit-col">
+                    <span style="color:${lpColor}; font-weight:600; font-size:11px;">${lpStr}</span>
+                    <span style="color:rgba(255,255,255,0.2);">|</span>
+                    <span style="color:${profitColor}; font-weight:700;">${p.profit}</span>
+                </div>
+            </div>
+        `;
+        list.appendChild(row);
+    });
+
+    modal.classList.add('active');
+}
+
+function closeMatchDetailsModal() {
+    document.getElementById('matchDetailsModal').classList.remove('active');
+}
 function initDashboard() {
     initInventorySystem();
     initGameModePersistence(); // Inicjalizacja stałych liczników graczy 
@@ -961,6 +1114,8 @@ function renderGames() {
 
         const div = document.createElement('div');
         div.className = `game-entry ${g.type}`;
+        div.style.cursor = 'pointer';
+        div.onclick = () => openMatchDetailsModal(g);
         
         div.innerHTML = `
             <div class="ge-left">
