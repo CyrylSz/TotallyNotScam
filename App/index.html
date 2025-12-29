@@ -1564,6 +1564,58 @@
             </div>
         </div>
     </div>
+    <div class="modal-overlay" id="inventoryItemModal">
+        <div class="steam-modal market-modal-size">
+            <div class="sm-header" style="background: linear-gradient(90deg, #1e293b, #0f172a); border-bottom:none;">
+                <div class="sm-title">SZCZEGÓŁY PRZEDMIOTU</div>
+                <div class="sm-close" onclick="closeInventoryItemModal()"><i class="fas fa-times"></i></div>
+            </div>
+            
+            <div class="mm-layout">
+                <div class="mm-visual-col">
+                    <div class="mm-item-card-large" id="iiCard">
+                        <div id="iiIcon" style="font-size: 100px; font-style: normal;"></div>
+                    </div>
+                    
+                    <div class="mm-seller-info" style="flex-direction: column; align-items: stretch; gap: 8px;">
+                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Średnia Cena Rynkowa</div>
+                        <div style="display: flex; justify-content: space-between; align-items: center;">
+                            <div class="mm-price-large" id="iiMarketPrice" style="font-size: 20px;">0 $</div>
+                            <div class="val-change-inline" id="iiMarketTrend">+0%</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="mm-data-col">
+                    <h2 id="iiItemName">Nazwa Przedmiotu</h2>
+                    <div class="mm-tags" id="iiTags"></div>
+
+                    <div class="mm-desc-box" style="margin-top: 0;">
+                        <div class="mm-lbl">Opis / Bonusy</div>
+                        <p id="iiDesc">Opis...</p>
+                        <div id="iiReqWarning" class="mm-warning hidden"></div>
+                    </div>
+
+                    <div style="flex: 1;"></div> <div class="mm-actions" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; flex-direction: column; align-items: stretch; gap: 10px;">
+                        
+                        <button class="action-btn-large full-width" id="btnInvAction" style="margin-bottom: 5px;">AKCJA</button>
+
+                        <div class="mm-btn-row" style="width: 100%;">
+                            <button class="action-btn-large outline" style="flex: 1; font-size: 11px;" onclick="alert('Przedmiot wystawiony na rynek!')">
+                                <i class="fas fa-gavel"></i> WYSTAW NA RYNEK
+                            </button>
+                            <button class="action-btn-large outline" style="flex: 1; font-size: 11px; border-color: var(--accent-red); color: var(--accent-red);" id="btnInvSellSystem">
+                                <i class="fas fa-hand-holding-usd"></i> SPRZEDAJ (FLOOR)
+                            </button>
+                        </div>
+                        <div style="font-size: 9px; color: #666; text-align: center; margin-top: 5px;">
+                            Sprzedaż do systemu (Floor Price) jest natychmiastowa, ale obarczona 20% podatkiem.
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
 
     <div class="chatbot-container">
         <div id="chatRoastBubble" class="chat-bubble-popup">

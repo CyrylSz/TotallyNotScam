@@ -426,7 +426,8 @@ function openMarketItemModal(item) {
     if(item.rarity === 'Divine' && currentRankId > 2) { isLocked = true; reqRankName = "RNG God"; }
     
     if(isLocked) {
-        warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: ${reqRankName} (do założenia)`;
+        const actionSuffix = item.isChest ? "(do otworzenia)" : "(do założenia)";
+        warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: ${reqRankName} ${actionSuffix}`;
         warning.classList.remove('hidden');
     } else {
         warning.classList.add('hidden');
@@ -1590,7 +1591,8 @@ function renderInventoryView() {
             ${conditionHtml}
         `;
         
-        
+        slot.onclick = () => openInventoryItemModal(item);
+
         let tooltipText = `${item.name} (${item.rarity})\nTyp: ${item.type}\nBonus: ${item.bonus}\nCena: ${item.price}`;
         if(item.stackCount > 1) tooltipText += `\nIlość w magazynie: ${item.stackCount}`;
         slot.title = tooltipText;
@@ -1617,7 +1619,7 @@ function setupLoadoutSlots() {
         
         newSlot.addEventListener('dragover', handleDragOver);
         newSlot.addEventListener('drop', handleDrop);
-        newSlot.addEventListener('click', handleUnequip); 
+        // remove direct handleUnequip to allow modal 
         
         
         const slotType = newSlot.dataset.type; 
@@ -1720,7 +1722,13 @@ function renderItemInSlot(slotElement, item) {
     slotElement.style.borderColor = item.color;
     slotElement.style.background = `rgba(${hexToRgb(item.color)}, 0.15)`;
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
-    slotElement.title = `${item.name} (Kliknij aby zdjąć)`;
+    slotElement.title = `${item.name}`;
+    
+    // Nadpisanie onclicka, aby otwierał modal zamiast od razu zdejmować
+    slotElement.onclick = (e) => {
+        e.stopPropagation(); // Zapobiega innym handlerom
+        openInventoryItemModal(item);
+    };
 }
 
 function resetSlotVisuals(slotElement) {
@@ -3291,6 +3299,167 @@ function openLoadoutEffectsModal() {
 
 function closeLoadoutEffectsModal() {
     document.getElementById('loadoutEffectsModal').classList.remove('active');
+}
+function openInventoryItemModal(item) {
+    const modal = document.getElementById('inventoryItemModal');
+    if(!modal) return;
+
+    // 1. Visuals
+    const iiCard = document.getElementById('iiCard');
+    const iiIcon = document.getElementById('iiIcon');
+    
+    iiIcon.innerHTML = item.icon;
+    iiCard.style.borderColor = `rgba(${hexToRgb(item.color)}, 0.5)`;
+    // Radial background setup
+    iiCard.style.background = `radial-gradient(circle at center, rgba(${hexToRgb(item.color)}, 0.15) 0%, rgba(21, 26, 45, 1) 70%)`;
+    iiCard.style.color = item.color;
+
+    // 2. Texts
+    document.getElementById('iiItemName').textContent = item.name;
+    document.getElementById('iiItemName').style.color = item.color;
+    
+    // 3. Tags
+    const tags = document.getElementById('iiTags');
+    const badgeClass = `badge-${item.rarity.toLowerCase()}`;
+    tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
+    tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
+    if(item.isConsumable && item.maxUses) {
+        tags.innerHTML += `<span class="badge-slot" style="color:var(--accent-green); border:1px solid var(--accent-green);">STAN: ${item.usesLeft}/${item.maxUses}</span>`;
+    }
+
+    // 4. Description & Warnings
+    let desc = item.desc + ' ' + item.bonus;
+    document.getElementById('iiDesc').textContent = desc;
+
+    const warning = document.getElementById('iiReqWarning');
+    let isLocked = false;
+    if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
+    
+    if(isLocked) {
+        const actionSuffix = (item.type === 'chest' || (item.id >= 1 && item.id <= 5)) ? "(do otworzenia)" : "(do założenia)";
+        warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: RNG God ${actionSuffix}`;
+        warning.classList.remove('hidden');
+    } else {
+        warning.classList.add('hidden');
+    }
+
+    // 5. Market Logic (Fake Trends)
+    const rawPrice = item.rawPrice || 100;
+    // Symulacja wahań rynku +/- 15%
+    const marketFlux = 1 + ((Math.random() * 0.3) - 0.15); 
+    const avgPrice = Math.floor(rawPrice * marketFlux);
+    
+    const trendVal = ((marketFlux - 1) * 100).toFixed(1);
+    const trendEl = document.getElementById('iiMarketTrend');
+    const priceEl = document.getElementById('iiMarketPrice');
+    
+    priceEl.textContent = avgPrice.toLocaleString() + ' $';
+    trendEl.textContent = (trendVal > 0 ? '+' : '') + trendVal + '%';
+    
+    // Colors
+    if(trendVal > 0.5) {
+        trendEl.className = 'val-change-inline val-up';
+        priceEl.style.color = 'var(--accent-green)';
+    } else if(trendVal < -0.5) {
+        trendEl.className = 'val-change-inline val-down';
+        priceEl.style.color = 'var(--accent-red)';
+    } else {
+        trendEl.className = 'val-change-inline';
+        trendEl.style.background = 'rgba(255,255,255,0.1)';
+        trendEl.style.color = 'white';
+        priceEl.style.color = 'white';
+    }
+
+    // 6. Action Buttons Logic
+    const btnAction = document.getElementById('btnInvAction');
+    const btnSell = document.getElementById('btnInvSellSystem');
+    
+    // Sell Logic
+    const floorPrice = Math.floor(avgPrice * 0.8); // 20% tax/undercut
+    btnSell.innerHTML = `<i class="fas fa-hand-holding-usd"></i> SPRZEDAJ (FLOOR: ${floorPrice.toLocaleString()}$)`;
+    btnSell.onclick = () => {
+        if(confirm(`Czy na pewno chcesz sprzedać ${item.name} za ${floorPrice}$? (Natychmiastowa gotówka)`)) {
+            alert(`Sprzedano przedmit za ${floorPrice}$!`);
+            closeInventoryItemModal();
+            // In full app: remove from inventory, add money
+        }
+    };
+
+    // Equip / Open Logic
+    const isEquipped = Object.values(myLoadout).includes(item.uid);
+    const isCase = (item.id >= 1 && item.id <= 5) || item.type === 'chest';
+
+    // Reset button style
+    btnAction.className = 'action-btn-large full-width';
+    btnAction.style.background = '';
+    btnAction.style.color = '';
+    
+    if (isCase) {
+        btnAction.textContent = "OTWÓRZ SKRZYNKĘ (OPEN CASE)";
+        btnAction.style.background = "linear-gradient(135deg, #f59e0b, #d97706)";
+        btnAction.onclick = () => {
+            alert("Otwieranie skrzynki... (Efekt wizualny)");
+            closeInventoryItemModal();
+        };
+    } else {
+        if (isEquipped) {
+            btnAction.textContent = "ZDEJMIJ (UNEQUIP)";
+            btnAction.className = 'action-btn-large outline full-width';
+            btnAction.onclick = () => {
+                // Find slot key
+                const slotKey = Object.keys(myLoadout).find(key => myLoadout[key] === item.uid);
+                if(slotKey) {
+                    delete myLoadout[slotKey];
+                    renderInventoryView(); // Refresh grids
+                    closeInventoryItemModal();
+                }
+            };
+        } else {
+            btnAction.textContent = "ZAŁÓŻ (EQUIP)";
+            
+            // Check rank lock
+            if (isLocked) {
+                btnAction.textContent = "ZABLOKOWANE (RANGA)";
+                btnAction.style.opacity = "0.5";
+                btnAction.style.cursor = "not-allowed";
+                btnAction.onclick = null;
+            } else {
+                btnAction.style.background = "var(--accent-blue)";
+                btnAction.onclick = () => {
+                    // Find suitable slot
+                    // Simple logic: find slot-type matching item.type
+                    // In a complex app we map slot names to types more robustly
+                    const slotMapping = {
+                        'head': 'slot-glasses',
+                        'neck': 'slot-neck',
+                        'suit': 'slot-suit',
+                        'watch': 'slot-watch',
+                        'gadget': 'slot-earpiece', // Default gadget slot
+                        'belt': 'slot-belt',
+                        'pants': 'slot-pants',
+                        'shoes': 'slot-shoes',
+                        'ring': 'slot-ring',
+                        'vehicle': 'slot-vehicle'
+                    };
+                    
+                    const targetSlot = slotMapping[item.type];
+                    if(targetSlot) {
+                        myLoadout[targetSlot] = item.uid;
+                        renderInventoryView(); // Refresh grids
+                        closeInventoryItemModal();
+                    } else {
+                        alert("Nie znaleziono pasującego slotu w obecnym Loadoucie.");
+                    }
+                };
+            }
+        }
+    }
+
+    modal.classList.add('active');
+}
+
+function closeInventoryItemModal() {
+    document.getElementById('inventoryItemModal').classList.remove('active');
 }
 const dailyHistoryDB = [
     { date: "Wczoraj", val: "-1,200 $", type: "loss" },
