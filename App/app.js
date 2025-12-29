@@ -2,7 +2,16 @@
 let shownTreasures = 5;
 let shownGames = 20; 
 let shownTrophies = 5;
-let notificationCount = 3;
+let notificationCount = 5;
+
+// Baza powiadomień (symulacja stanu)
+let notificationsDB = [
+    { id: 'n1', type: 'trophy', title: 'Osiągnięcie Odblokowane', desc: 'Seria Niefortunnych Zdarzeń', metaId: 8 },
+    { id: 'n2', type: 'trophy', title: 'Osiągnięcie Odblokowane', desc: 'Snajper', metaId: 10 },
+    { id: 'n3', type: 'trophy', title: 'Osiągnięcie Odblokowane', desc: 'Lootbox Junkie', metaId: 13 },
+    { id: 'n4', type: 'quest', title: 'Misja Ukończona', desc: 'Postaw łącznie 500$', metaId: 'btnQuest500' },
+    { id: 'n5', type: 'friend', title: 'Zaproszenie', desc: 'HighStakeJ chce dodać Cię do znajomych.', metaId: null }
+];
 
 
 let prevWinPerc = 0;
@@ -982,15 +991,23 @@ function showMoreGames() {
 function claimReward(id) {
     const ach = achievementsDB.find(a => a.id === id);
     if (ach) {
+        if (ach.rewardClaimed) return; // Prevent double claim if clicked elsewhere
         ach.rewardClaimed = true;
         
-        
-        if (notificationCount > 0) {
-            notificationCount--;
-        }
-        
+        // Update Stats & UI
         updateStats();
         renderTrophies();
+        
+        // Logika powiązana z powiadomieniami:
+        // Jeśli claimujemy z poziomu profilu, musimy usunąć odpowiednie powiadomienie z dzwoneczka
+        const relatedNotif = notificationsDB.find(n => n.type === 'trophy' && n.metaId === id);
+        if (relatedNotif) {
+            removeNotifFromDB(relatedNotif.id);
+        } else {
+            // Fallback jeśli nie ma powiadomienia w bazie (np. już usunięte), ale licznik trzeba zmniejszyć ręcznie
+            // W nowym systemie removeNotifFromDB obsługuje licznik, więc tutaj nie musimy robić `notificationCount--`
+            // chyba że achievement nie był w bazie notificationsDB.
+        }
     }
 }
 
@@ -2748,6 +2765,123 @@ function openEditGameModal(id) {
 function closeEditGameModal() {
     document.getElementById('editGameModal').classList.remove('active');
 }
+function toggleNotifications() {
+    const dropdown = document.getElementById('notificationDropdown');
+    const isActive = dropdown.classList.contains('active');
+    
+    if (isActive) {
+        dropdown.classList.remove('active');
+    } else {
+        renderNotifications();
+        dropdown.classList.add('active');
+    }
+}
+
+function renderNotifications() {
+    const list = document.getElementById('notificationList');
+    list.innerHTML = '';
+
+    if (notificationsDB.length === 0) {
+        list.innerHTML = '<div style="padding:20px; text-align:center; color:#666; font-size:11px;">Brak nowych powiadomień</div>';
+        return;
+    }
+
+    notificationsDB.forEach(n => {
+        const item = document.createElement('div');
+        item.className = 'notif-item unread';
+        item.id = `notif-${n.id}`;
+
+        let iconHtml = '';
+        let actionHtml = '';
+
+        if (n.type === 'trophy') {
+            iconHtml = '<div class="notif-icon ni-trophy"><i class="fas fa-trophy"></i></div>';
+            actionHtml = `<button class="notif-action-btn notif-btn-gold" onclick="handleNotifClaimAch(${n.metaId}, '${n.id}')">Claim Reward!</button>`;
+        } else if (n.type === 'quest') {
+            iconHtml = '<div class="notif-icon ni-quest"><i class="fas fa-check-circle"></i></div>';
+            actionHtml = `<button class="notif-action-btn notif-btn-green" onclick="handleNotifClaimQuest('${n.metaId}', '${n.id}')">Odbierz</button>`;
+        } else if (n.type === 'friend') {
+            iconHtml = '<div class="notif-icon ni-friend"><i class="fas fa-user-plus"></i></div>';
+            actionHtml = `
+                <div class="friend-actions">
+                    <button class="fa-btn fa-accept" onclick="handleNotifFriend('${n.id}', true)"><i class="fas fa-check"></i></button>
+                    <button class="fa-btn fa-decline" onclick="handleNotifFriend('${n.id}', false)"><i class="fas fa-times"></i></button>
+                </div>
+            `;
+        }
+
+        item.innerHTML = `
+            ${iconHtml}
+            <div class="notif-content">
+                <div class="notif-title">${n.title}</div>
+                <div class="notif-desc">${n.desc}</div>
+            </div>
+            ${actionHtml}
+        `;
+        list.appendChild(item);
+    });
+}
+
+function decreaseNotifCount() {
+    if (notificationCount > 0) {
+        notificationCount--;
+        const badge = document.getElementById('headerBellBadge');
+        badge.textContent = notificationCount;
+        if(notificationCount === 0) badge.classList.add('hidden');
+    }
+}
+
+function removeNotifFromDB(nId) {
+    const idx = notificationsDB.findIndex(x => x.id === nId);
+    if(idx !== -1) {
+        notificationsDB.splice(idx, 1);
+        const el = document.getElementById(`notif-${nId}`);
+        if(el) {
+            el.style.opacity = '0';
+            setTimeout(() => el.remove(), 300);
+        }
+        decreaseNotifCount();
+        
+        // Jeśli pusto po usunięciu
+        if(notificationsDB.length === 0) {
+            setTimeout(() => {
+                const list = document.getElementById('notificationList');
+                if(list) list.innerHTML = '<div style="padding:20px; text-align:center; color:#666; font-size:11px;">Brak nowych powiadomień</div>';
+            }, 300);
+        }
+    }
+}
+
+function handleNotifClaimAch(achId, nId) {
+    // 1. Wywołujemy logikę claimowania (istniejąca funkcja)
+    // Musimy upewnić się, że achievement jest oznaczony jako "nieodebrany" w bazie, żeby zadziałało
+    const ach = achievementsDB.find(a => a.id === achId);
+    if(ach) {
+        if(!ach.acquired) ach.acquired = true; // Force acquire for demo
+        ach.rewardClaimed = false; // Force claimable for demo logic
+        claimReward(achId);
+    }
+    // 2. Usuwamy powiadomienie
+    removeNotifFromDB(nId);
+}
+
+function handleNotifClaimQuest(domId, nId) {
+    // 1. Symulujemy kliknięcie w przycisk na Dashboardzie
+    const btn = document.getElementById(domId);
+    if(btn && !btn.disabled) {
+        // Scrollujemy do widoku dashboardu jeśli nie jesteśmy na nim?
+        // showView('dashboard'); // Opcjonalne, ale lepiej zostać w kontekście
+        claimQuest(btn);
+    }
+    // 2. Usuwamy powiadomienie
+    removeNotifFromDB(nId);
+}
+
+function handleNotifFriend(nId, accepted) {
+    if(accepted) alert("Zaakceptowano zaproszenie od HighStakeJ!");
+    else alert("Odrzucono zaproszenie.");
+    removeNotifFromDB(nId);
+}
 initDashboard();
 
 
@@ -2990,6 +3124,33 @@ function initDashboardExtras() {
     renderFavoritesPanel();
     renderPopularModes();
     renderDashActiveListings();
+}
+function claimQuest(btn) {
+    const item = btn.closest('.quest-item');
+    if(!item) return;
+
+    // Animacja i zmiana stylu na szary/zrobiony
+    item.style.transition = 'all 0.3s ease';
+    item.style.opacity = '0.5';
+    item.style.background = 'rgba(255,255,255,0.02)';
+    item.style.filter = 'grayscale(100%)'; 
+    item.style.borderColor = 'transparent';
+
+    // Zamiana przycisku na ptaszka
+    const checkIcon = document.createElement('div');
+    checkIcon.innerHTML = '<i class="fas fa-check"></i>';
+    checkIcon.style.color = '#fff'; // Będzie szary przez filtr grayscale na rodzicu, ale to pasuje do koncepcji
+    checkIcon.style.fontSize = '16px';
+    checkIcon.style.fontWeight = '800';
+    checkIcon.style.padding = '0 15px';
+    checkIcon.style.display = 'flex';
+    checkIcon.style.alignItems = 'center';
+    checkIcon.style.justifyContent = 'center';
+
+    btn.replaceWith(checkIcon);
+
+    // Feedback (opcjonalny)
+    // alert("Nagroda odebrana!"); 
 }
 
 function renderDashActiveListings() {

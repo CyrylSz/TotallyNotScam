@@ -78,10 +78,19 @@
                 <span id="currencyCount">2,450,000</span> <i class="fas fa-dollar-sign"></i>
             </div>
 
-            <div class="header-actions">
-                <div class="header-bell-container">
+            <div class="header-actions" style="position: relative;">
+                <div class="header-bell-container" onclick="toggleNotifications()">
                     <i class="fas fa-bell"></i>
-                    <div class="header-bell-badge" id="headerBellBadge">3</div>
+                    <div class="header-bell-badge" id="headerBellBadge">5</div>
+                </div>
+                
+                <div class="notification-dropdown" id="notificationDropdown">
+                    <div class="notif-header">
+                        <span>Powiadomienia</span>
+                        <span class="notif-clear" onclick="alert('Wyczyszczono!')">Wyczyść</span>
+                    </div>
+                    <div id="notificationList">
+                        </div>
                 </div>
             </div>
         </div>
@@ -280,7 +289,7 @@
                                     <div class="q-progress-bar"><div class="q-fill" style="width: 100%; background: var(--accent-green);"></div></div>
                                     <div class="q-desc">Postęp: 500/500</div>
                                 </div>
-                                 <button class="gc-btn play q-btn active-claim">Odbierz</button>
+                                 <button id="btnQuest500" class="gc-btn play q-btn active-claim" onclick="claimQuest(this)">Odbierz</button>
                             </div>
                              <div class="quest-item">
                                 <div class="quest-info">
