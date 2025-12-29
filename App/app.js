@@ -4,11 +4,13 @@ let shownGames = 20;
 let shownTrophies = 5;
 let notificationCount = 5;
 
-// Baza powiadomień (symulacja stanu)
+// Baza powiadomień (zsynchronizowana z achievementsDB)
 let notificationsDB = [
-    { id: 'n1', type: 'trophy', title: 'Osiągnięcie Odblokowane', desc: 'Seria Niefortunnych Zdarzeń', metaId: 8 },
-    { id: 'n2', type: 'trophy', title: 'Osiągnięcie Odblokowane', desc: 'Snajper', metaId: 10 },
-    { id: 'n3', type: 'trophy', title: 'Osiągnięcie Odblokowane', desc: 'Lootbox Junkie', metaId: 13 },
+    // ID w metaId muszą pasować do ID w achievementsDB (7, 4, 2)
+    { id: 'n1', type: 'trophy', title: 'Wilk z Wall Street', desc: 'Sprzedaj przedmiot na Rynku z zyskiem.', metaId: 7 },
+    { id: 'n2', type: 'trophy', title: 'Bankructwo', desc: 'Zejdź do salda 0 kredytów.', metaId: 4 },
+    { id: 'n3', type: 'trophy', title: 'AI Buddy', desc: "Napisz 'Cześć' do Asystenta AI.", metaId: 2 },
+    
     { id: 'n4', type: 'quest', title: 'Misja Ukończona', desc: 'Postaw łącznie 500$', metaId: 'btnQuest500' },
     { id: 'n5', type: 'friend', title: 'Zaproszenie', desc: 'HighStakeJ chce dodać Cię do znajomych.', metaId: null }
 ];
@@ -704,14 +706,9 @@ function updateStats() {
     const total = achievementsDB.length;
     const perc = Math.round((earned / total) * 100);
 
-    
-    const badge = document.getElementById('headerBellBadge');
-    if (notificationCount > 0) {
-        badge.textContent = notificationCount;
-        badge.classList.remove('hidden');
-    } else {
-        badge.classList.add('hidden');
-    }
+    // UWAGA: Usunięto stąd logikę aktualizacji badge'a dzwoneczka, 
+    // ponieważ teraz zarządza nią bezpośrednio system powiadomień (removeNotifFromDB),
+    // aby uniknąć konfliktów przy odświeżaniu widoku.
 
     document.getElementById('mainTrophyCount').textContent = `${earned}/${total}`;
     document.getElementById('modalEarnedText').textContent = `${earned} OF ${total} ACHIEVEMENTS EARNED`;
@@ -991,23 +988,22 @@ function showMoreGames() {
 function claimReward(id) {
     const ach = achievementsDB.find(a => a.id === id);
     if (ach) {
-        if (ach.rewardClaimed) return; // Prevent double claim if clicked elsewhere
+        if (ach.rewardClaimed) return; // Zabezpieczenie przed podwójnym klikiem
         ach.rewardClaimed = true;
         
-        // Update Stats & UI
+        // Update UI Profilu
         updateStats();
         renderTrophies();
         
-        // Logika powiązana z powiadomieniami:
-        // Jeśli claimujemy z poziomu profilu, musimy usunąć odpowiednie powiadomienie z dzwoneczka
+        // SYNCHRONIZACJA: Usuwamy powiadomienie z dzwoneczka (jeśli istnieje)
+        // To automatycznie zmniejszy licznik o 1.
         const relatedNotif = notificationsDB.find(n => n.type === 'trophy' && n.metaId === id);
         if (relatedNotif) {
             removeNotifFromDB(relatedNotif.id);
-        } else {
-            // Fallback jeśli nie ma powiadomienia w bazie (np. już usunięte), ale licznik trzeba zmniejszyć ręcznie
-            // W nowym systemie removeNotifFromDB obsługuje licznik, więc tutaj nie musimy robić `notificationCount--`
-            // chyba że achievement nie był w bazie notificationsDB.
         }
+        
+        // Feedback wizualny (opcjonalny)
+        // alert(`Odebrano nagrodę za: ${ach.title}!`);
     }
 }
 
@@ -2853,16 +2849,19 @@ function removeNotifFromDB(nId) {
 }
 
 function handleNotifClaimAch(achId, nId) {
-    // 1. Wywołujemy logikę claimowania (istniejąca funkcja)
-    // Musimy upewnić się, że achievement jest oznaczony jako "nieodebrany" w bazie, żeby zadziałało
+    // Logika dwukierunkowa:
+    // Kliknięcie w powiadomieniu wywołuje główną funkcję claimReward.
+    // claimReward z kolei sama znajdzie to powiadomienie i je usunie.
+    // Dzięki temu nie robimy removeNotifFromDB tutaj, unikając podwójnego odejmowania.
+    
     const ach = achievementsDB.find(a => a.id === achId);
     if(ach) {
-        if(!ach.acquired) ach.acquired = true; // Force acquire for demo
-        ach.rewardClaimed = false; // Force claimable for demo logic
+        // Upewniamy się, że system widzi to jako możliwe do odebrania (dla demo)
+        if(!ach.acquired) ach.acquired = true; 
+        
+        // Wywołujemy główną funkcję, która obsłuży UI Profilu ORAZ usunie powiadomienie
         claimReward(achId);
     }
-    // 2. Usuwamy powiadomienie
-    removeNotifFromDB(nId);
 }
 
 function handleNotifClaimQuest(domId, nId) {
@@ -3129,6 +3128,14 @@ function claimQuest(btn) {
     const item = btn.closest('.quest-item');
     if(!item) return;
 
+    // Logika synchronizacji z dzwoneczkiem
+    if(btn.id) {
+        const notifIndex = notificationsDB.findIndex(n => n.type === 'quest' && n.metaId === btn.id);
+        if(notifIndex !== -1) {
+            removeNotifFromDB(notificationsDB[notifIndex].id);
+        }
+    }
+
     // Animacja i zmiana stylu na szary/zrobiony
     item.style.transition = 'all 0.3s ease';
     item.style.opacity = '0.5';
@@ -3139,7 +3146,7 @@ function claimQuest(btn) {
     // Zamiana przycisku na ptaszka
     const checkIcon = document.createElement('div');
     checkIcon.innerHTML = '<i class="fas fa-check"></i>';
-    checkIcon.style.color = '#fff'; // Będzie szary przez filtr grayscale na rodzicu, ale to pasuje do koncepcji
+    checkIcon.style.color = '#fff'; 
     checkIcon.style.fontSize = '16px';
     checkIcon.style.fontWeight = '800';
     checkIcon.style.padding = '0 15px';
@@ -3148,9 +3155,6 @@ function claimQuest(btn) {
     checkIcon.style.justifyContent = 'center';
 
     btn.replaceWith(checkIcon);
-
-    // Feedback (opcjonalny)
-    // alert("Nagroda odebrana!"); 
 }
 
 function renderDashActiveListings() {
