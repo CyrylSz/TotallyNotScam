@@ -2544,18 +2544,15 @@ input:checked + .slider:before { transform: translateX(16px); }
     position: absolute;
     top: 55px;
     height: 4px;
-    
-    /* Startujemy idealnie pod środkiem pierwszego okręgu (padding 30px + połowa noda 70px) */
     left: 100px;
     
-    /* Całkowita długość linii od środka noda 1 do środka noda 25 (24 odstępy * 160px) */
-    width: 3840px; 
+    /* FIX: Dodano !important, aby nadpisać style="width: 300%" wpisane na sztywno w HTML (index.html).
+       3840px to dokładna odległość od środka Noda 1 do Noda 25. */
+    width: 3840px !important; 
 
-    /* FIX: Używamy sztywnych PIKSELI (px) zamiast procentów (%), aby gradient nie pływał.
-       2560px = odległość do środka 17-tego noda (16 odstępów * 160px).
-    */
+    /* FIX: Odwrócono kolory (Fiolet -> Niebieski) */
     background: linear-gradient(to right, 
-        #00e5ff 0px, 
+        var(--accent-purple) 0px, 
         var(--accent-purple) 2560px, 
         rgba(255,255,255,0.05) 2560px, 
         rgba(255,255,255,0.05) 100%
