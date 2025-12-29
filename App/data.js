@@ -1,5 +1,3 @@
-
-
 const gamesHubStructure = [
     {
         id: 'casino',
@@ -119,74 +117,42 @@ const gamesHubStructure = [
         ]
     }
 ];
-
-
-
-
 let allTreasures = [
-    
     { id: 1, name: "Peasant Case", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💼", rarity: "Peasant", desc: "Stara, skórzana teczka.", bonus: "Może zawierać kanapki.", isConsumable: true, maxUses: 1 },
     { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "💼", rarity: "Rare", desc: "Walizka z szyfrem.", bonus: "Gwarantowany gadżet.", isConsumable: true, maxUses: 1 },
     { id: 3, name: "Epic Case", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "💼", rarity: "Epic", desc: "Wzmocniona tytanem.", bonus: "Pachnie drogimi perfumami.", isConsumable: true, maxUses: 1 },
     { id: 4, name: "Relic Case", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "💼", rarity: "Relic", desc: "Używana przez mafię.", bonus: "Ryzykowna zawartość.", isConsumable: true, maxUses: 1 },
     { id: 5, name: "Divine Case", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💼", rarity: "Divine", desc: "Wykonana ze złota i diamentów.", bonus: "Tylko dla 1%.", isConsumable: true, maxUses: 1 },
-
-    
-    
-    
     { id: 6, name: "Czapka z daszkiem", type: "head", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧢", rarity: "Peasant", desc: "Z logo stacji benzynowej.", bonus: "-5 do Stylu", isConsumable: false, maxUses: null },
     { id: 7, name: "RayBan Aviator", type: "head", price: "1,500 $", rawPrice: 1500, color: "#3b82f6", icon: "🕶️", rarity: "Rare", desc: "Ukrywają poker face.", bonus: "+10 do Blefowania", isConsumable: false, maxUses: null },
     { id: 8, name: "Gogle VR Pro", type: "head", price: "15,000 $", rawPrice: 15000, color: "#ef4444", icon: "🥽", rarity: "Relic", desc: "Widzisz algorytm kasyna.", bonus: "Przewidywanie Wygranej", isConsumable: false, maxUses: null },
-
-    
     { id: 9, name: "Krawat z Poliestru", type: "neck", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "👔", rarity: "Peasant", desc: "Drapie w szyję.", bonus: "Brak", isConsumable: false, maxUses: null },
     { id: 10, name: "Złoty Łańcuch", type: "neck", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "⛓️", rarity: "Epic", desc: "Waży 2kg.", bonus: "+20 do Respectu", isConsumable: false, maxUses: null },
-    
-    
     { id: 11, name: "Koszula Hawajska", type: "suit", price: "80 $", rawPrice: 80, color: "#9ca3af", icon: "👕", rarity: "Peasant", desc: "Idealna na wakacje, nie do kasyna.", bonus: "Luz +100", isConsumable: false, maxUses: null },
     { id: 12, name: "Garnitur Hugo Boss", type: "suit", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "🤵", rarity: "Rare", desc: "Klasyczna elegancja.", bonus: "+5 do Negocjacji", isConsumable: false, maxUses: null },
     { id: 13, name: "Smoking Bonda", type: "suit", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "🍸", rarity: "Divine", desc: "Wstrząśnięty, nie zmieszany.", bonus: "Kuloodporność finansowa", isConsumable: false, maxUses: null },
-
-    
     { id: 14, name: "Zegarek z Komunii", type: "watch", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "⌚", rarity: "Peasant", desc: "Pamiątka rodzinna.", bonus: "Pokazuje czas", isConsumable: false, maxUses: null },
     { id: 15, name: "Rolex Submariner", type: "watch", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "⌚", rarity: "Epic", desc: "Znasz jego wartość.", bonus: "+15 do Prestiżu", isConsumable: false, maxUses: null },
     { id: 16, name: "Patek Philippe", type: "watch", price: "2,500,000 $", rawPrice: 2500000, color: "#ffd700", icon: "🕰️", rarity: "Divine", desc: "Nie ty go masz, ty go przechowujesz dla pokoleń.", bonus: "Zatrzymuje czas (długów)", isConsumable: false, maxUses: null },
-
-    
     { id: 17, name: "Sznurek", type: "belt", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "🧶", rarity: "Peasant", desc: "Trzyma spodnie.", bonus: "Brak", isConsumable: false, maxUses: null },
     { id: 18, name: "Pasek Gucci", type: "belt", price: "800 $", rawPrice: 800, color: "#3b82f6", icon: "🐍", rarity: "Rare", desc: "Wielka klamra.", bonus: "+2 do Lansu", isConsumable: false, maxUses: null },
-
-    
     { id: 19, name: "Dżinsy z Dziurami", type: "pants", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "👖", rarity: "Peasant", desc: "Modne, ale czy w kasynie?", bonus: "Wentylacja", isConsumable: false, maxUses: null },
     { id: 20, name: "Spodnie od Garnituru", type: "pants", price: "2,000 $", rawPrice: 2000, color: "#3b82f6", icon: "👖", rarity: "Rare", desc: "Dopasowane.", bonus: "Wygoda +5", isConsumable: false, maxUses: null },
-
-    
     { id: 21, name: "Klapki Basenowe", type: "shoes", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "🩴", rarity: "Peasant", desc: "Szur szur.", bonus: "-50 do Poważania", isConsumable: false, maxUses: null },
     { id: 22, name: "Mokasyny", type: "shoes", price: "3,000 $", rawPrice: 3000, color: "#8b5cf6", icon: "👞", rarity: "Epic", desc: "Włoska skóra.", bonus: "Cichy chód", isConsumable: false, maxUses: null },
-
-    
     { id: 23, name: "Sygnet Rodowy", type: "ring", price: "15,000 $", rawPrice: 15000, color: "#8b5cf6", icon: "🧿", rarity: "Epic", desc: "Z herbem nieistniejącego rodu.", bonus: "+10 do Blefu", isConsumable: false, maxUses: null },
     { id: 24, name: "Obrączka", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💍", rarity: "Peasant", desc: "Z grawerem.", bonus: "Wierność", isConsumable: false, maxUses: null },
-
-    
     { id: 25, name: "Bilet Autobusowy", type: "vehicle", price: "2 $", rawPrice: 2, color: "#9ca3af", icon: "🚌", rarity: "Peasant", desc: "Ważny 20 minut.", bonus: "Transport publiczny", isConsumable: true, maxUses: 1 },
     { id: 26, name: "Kluczyki BMW", type: "vehicle", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "🔑", rarity: "Rare", desc: "M3 w leasingu.", bonus: "Szybki dojazd", isConsumable: false, maxUses: null },
     { id: 27, name: "Karta do Bugatti", type: "vehicle", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "🏎️", rarity: "Divine", desc: "Top G.", bonus: "Prędkość światła", isConsumable: false, maxUses: null },
-
-    
     { id: 28, name: "Nokia 3310", type: "gadget", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧱", rarity: "Peasant", desc: "Niezniszczalna.", bonus: "Samoobrona", isConsumable: false, maxUses: null },
     { id: 29, name: "iPhone 16 Pro Max", type: "gadget", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "📱", rarity: "Rare", desc: "Więcej aparatów niż sensu.", bonus: "+5 do Selfie", isConsumable: false, maxUses: null },
     { id: 30, name: "Szyfrowany Telefon", type: "gadget", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "📡", rarity: "Relic", desc: "Nikt nie podsłucha.", bonus: "Anonimowość", isConsumable: false, maxUses: null },
     { id: 31, name: "Czarne American Express", type: "gadget", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💳", rarity: "Divine", desc: "Bez limitu.", bonus: "Nieskończony debet", isConsumable: false, maxUses: null },
-    
-    
     { id: 32, name: "Cygaro Kubańskie", type: "gadget", price: "500 $", rawPrice: 500, color: "#3b82f6", icon: "🚬", rarity: "Rare", desc: "Kopci jak smok.", bonus: "Relaks", isConsumable: true, maxUses: 5 },
     { id: 33, name: "Szklanka Whisky", type: "gadget", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "🥃", rarity: "Peasant", desc: "Z lodem.", bonus: "Odwaga +5", isConsumable: true, maxUses: 3 }
 ];
-
-
 const titlesDB = [
-    
     { id: "t_r1", text: "King of The Gamblers", rarity: "Divine" },
     { id: "t_r2", text: "RNG God", rarity: "Divine" },
     { id: "t_r3", text: "Alpha Whale", rarity: "Relic" },
@@ -195,8 +161,6 @@ const titlesDB = [
     { id: "t_r6", text: "Risk Taker", rarity: "Rare" },
     { id: "t_r7", text: "Small Fry", rarity: "Peasant" },
     { id: "t_r8", text: "Bankrupt", rarity: "Peasant" },
-    
-    
     { id: "t_a1", text: "The Novice", rarity: "Peasant" },
     { id: "t_a5", text: "Blackjack Master", rarity: "Rare" },
     { id: "t_a7", text: "Wolf of Wall St", rarity: "Epic" },
@@ -213,10 +177,8 @@ const playersDB = [
         activeTitle: "The Collector",
         pfp: "https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false", 
         inventory: [
-            
             { id: 7 }, { id: 10 }, { id: 12 }, { id: 15 }, { id: 18 }, 
             { id: 20 }, { id: 22 }, { id: 23 }, { id: 26 }, { id: 31 },
-            
             { id: 5 }, 
             { id: 16 }, 
             { id: 28 }, { id: 9 }, { id: 33, usesLeft: 1 }, { id: 21 }, 
@@ -248,10 +210,7 @@ const playersDB = [
         inventory: [{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 25}, {id: 25}] 
     }
 ];
-
-
 const staticGamesList = [
-    
     { name: "Classic", money: "+2,450 $", lp: "+12 LP", type: "win", icon: "fa-layer-group", time: "2 min temu" },
     { name: "Aviator", money: "-5,000 $", lp: "-15 LP", type: "lose", icon: "fa-chart-line", time: "5 min temu" },
     { name: "Degenerate Worms", money: "+12,000 $", lp: "+18 LP", type: "win", icon: "fa-skull-crossbones", time: "12 min temu" },
@@ -262,8 +221,6 @@ const staticGamesList = [
     { name: "Speed Baccarat", money: "-8,000 $", lp: "-19 LP", type: "lose", icon: "fa-dragon", time: "45 min temu" },
     { name: "Gambling Chess", money: "+3,000 $", lp: "+10 LP", type: "win", icon: "fa-chess", time: "1h temu" },
     { name: "Turbo Mines", money: "+4,200 $", lp: "+11 LP", type: "win", icon: "fa-bomb", time: "1h 10m temu" },
-    
-    
     { name: "Slot Tournaments", money: "-1,200 $", lp: "-8 LP", type: "lose", icon: "fa-trophy", time: "1h 20m temu" },
     { name: "Age of Gambling", money: "+15,000 $", lp: "+20 LP", type: "win", icon: "fa-shield-alt", time: "1h 30m temu" },
     { name: "Craps", money: "0 $", lp: "+1 LP", type: "draw", icon: "fa-dice", time: "1h 45m temu" },
@@ -274,8 +231,6 @@ const staticGamesList = [
     { name: "Gambling Mystery", money: "+8,000 $", lp: "+16 LP", type: "win", icon: "fa-user-secret", time: "3h 15m temu" },
     { name: "Jackpot Progressive", money: "-15,000 $", lp: "-20 LP", type: "lose", icon: "fa-star", time: "4h temu" },
     { name: "Zeppelin", money: "+2,100 $", lp: "+7 LP", type: "win", icon: "fa-rocket", time: "4h 30m temu" },
-
-    
     { name: "Logic Race Bet", money: "-100 $", lp: "-2 LP", type: "lose", icon: "fa-puzzle-piece", time: "5h temu" },
     { name: "Lightning", money: "-2,000 $", lp: "-9 LP", type: "lose", icon: "fa-bolt", time: "5h 15m temu" },
     { name: "Pot Limit Omaha", money: "+14,500 $", lp: "+19 LP", type: "win", icon: "fa-heart", time: "6h temu" },
@@ -286,8 +241,6 @@ const staticGamesList = [
     { name: "BGaming Plinko", money: "-50 $", lp: "-1 LP", type: "lose", icon: "fa-bowling-ball", time: "11h temu" },
     { name: "Spaceman", money: "+9,000 $", lp: "+15 LP", type: "win", icon: "fa-chart-line", time: "12h temu" },
     { name: "Gambling Chess", money: "-5,000 $", lp: "-14 LP", type: "lose", icon: "fa-chess", time: "13h temu" },
-    
-    
     { name: "Cash Games", money: "+1,000 $", lp: "+4 LP", type: "win", icon: "fa-heart", time: "1d temu" },
     { name: "Pontoon", money: "-200 $", lp: "-2 LP", type: "lose", icon: "fa-layer-group", time: "1d temu" },
     { name: "American", money: "+5,000 $", lp: "+12 LP", type: "win", icon: "fa-circle-notch", time: "1d temu" },
@@ -309,10 +262,7 @@ const staticGamesList = [
     { name: "No Commission", money: "+3,000 $", lp: "+9 LP", type: "win", icon: "fa-dragon", time: "4d temu" },
     { name: "Degenerate Worms", money: "+2,000 $", lp: "+6 LP", type: "win", icon: "fa-skull-crossbones", time: "5d temu" }
 ];
-
 let allGames = staticGamesList;
-
-
 const achievementsDB = [
     { id: 1, title: "Nowicjusz", desc: "Postaw swój pierwszy zakład.", rarity: "92.5%", hidden: false, acquired: true, date: "10 Dec 2025", icon: "fa-user-tag", rewardClaimed: true },
     { id: 2, title: "AI Buddy", desc: "Napisz 'Cześć' do Asystenta AI.", rarity: "68.3%", hidden: false, acquired: true, date: "14 Dec 2025", icon: "fa-robot", rewardClaimed: false },
@@ -340,10 +290,6 @@ const achievementsDB = [
     { id: 24, title: "Szczęśliwa Siódemka", desc: "Wygraj dokładnie 777 kredytów w jednym zakładzie.", rarity: "0.5%", hidden: true, acquired: false, icon: "fa-star", rewardClaimed: true },
     { id: 25, title: "Glitch w Matrixie", desc: "Kliknij 10 razy szybko w logo Totally Not Scam.", rarity: "0.01%", hidden: true, acquired: true, date: "19 Dec 2025", icon: "fa-bug", rewardClaimed: true }
 ];
-
-
-
-
 const ranksDB = [
     { 
         id: 8, 
@@ -435,10 +381,6 @@ const ranksDB = [
         margin: "margin-top: -10px;" 
     }
 ];
-
-
-
-
 const availableGamesDB = [
     { id: 1, name: "Neon Blackjack", type: "Karciane", players: 1240, imgColor: "#10b981", isHot: true, icon: "fa-dice" },
     { id: 2, name: "Cyber Roulette", type: "Live", players: 890, imgColor: "#ef4444", isHot: true, icon: "fa-circle-notch" },
@@ -449,13 +391,11 @@ const availableGamesDB = [
     { id: 7, name: "Dice Mines", type: "Sloty", players: 120, imgColor: "#64748b", isHot: false, icon: "fa-bomb" },
     { id: 8, name: "Crypto Plinko", type: "Sloty", players: 850, imgColor: "#ec4899", isHot: false, icon: "fa-coins" },
 ];
-
 const globalLeaderboardDB = [
     { rankVal: 1, rankName: "King of The Gamblers", title: "King of The Gamblers", name: "Not_Elon", lp: 9500, netWorth: 154000000 },
     { rankVal: 2, rankName: "RNG God", title: "Dice Master", name: "LuckyLuke", lp: 4200, netWorth: 25000000 },
     { rankVal: 2, rankName: "RNG God", title: "Bot Network Admin", name: "Casino_AI", lp: 3800, netWorth: 18500000 },
     { rankVal: 3, rankName: "Alpha Whale", title: "Legendary Finder", name: "DiamondH", lp: 1950, netWorth: 8500000 },
-    
     { rankVal: 3, rankName: "Alpha Whale", title: "The Collector", name: "MrGambler", lp: 1469, netWorth: 5240000, isMe: true }, 
     { rankVal: 3, rankName: "Alpha Whale", title: "Crypto Whale", name: "CryptoBro", lp: 1200, netWorth: 5200000 },
     { rankVal: 4, rankName: "Casino Legend", title: "Casino Legend", name: "ZeroCool", lp: 980, netWorth: 2100000 },
@@ -483,7 +423,6 @@ const globalLeaderboardDB = [
     { rankVal: 7, rankName: "Small Fry", title: "Learning", name: "Learning", lp: 20, netWorth: 25000 },
     { rankVal: 6, rankName: "Risk Taker", title: "Crypto Dad", name: "CryptoDad", lp: 150, netWorth: 135000 }
 ];
-
 const walletLogsDB = [
     { id: '#TX9925', type: 'Przelew (Przychodzący)', val: '+25,000 $', date: '26 Dec, 12:30', status: 'Completed', detail: 'Od: User_KillerWhale' },
     { id: '#TX9924', type: 'Zakup Rynkowy', val: '-120,000 $', date: '26 Dec, 10:15', status: 'Completed', detail: 'Przedmiot: Sygnet Prezesa' },
