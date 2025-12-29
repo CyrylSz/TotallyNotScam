@@ -1780,9 +1780,8 @@
                                     </select>
                             </div>
                             <div class="eu-block">
-                                <div class="eu-label">Mnożnik Szczęścia (RNG Override)</div>
-                                <input type="range" min="0" max="200" value="100" class="eu-slider" id="euRngSlider" oninput="document.getElementById('euRngVal').textContent = this.value + '%'">
-                                <div style="text-align:right; font-size:10px; color:#aaa;">Value: <span id="euRngVal" style="color:white;">100%</span></div>
+                                <div class="eu-label" style="color:var(--accent-orange);">Custom Status (Priorytet)</div>
+                                <input type="text" id="euInputCustomRank" class="eu-input-std" placeholder="np. VIP, Bot, Cheater...">
                             </div>
                         </div>
 
@@ -1810,11 +1809,153 @@
                         </div>
 
                         <div class="eu-actions-footer">
-                            <button class="ap-btn ap-btn-red" id="euBtnBan" style="margin-right: 5px;"><i class="fas fa-ban"></i> ZBANUJ</button>
                             <button class="ap-btn ap-btn-red" onclick="alert('Wyzerowano ekwipunek!')"><i class="fas fa-trash"></i> Wyczyść Ekwipunek</button>
                             <div style="flex:1;"></div>
                             <button class="action-btn-large outline" style="padding: 8px 20px; font-size:12px;" onclick="document.getElementById('editUserModal').classList.remove('active')">ANULUJ</button>
                             <button class="action-btn-large" style="padding: 8px 20px; font-size:12px;" onclick="saveUserEdit()">ZAPISZ ZMIANY</button>
+                        </div>
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <div class="modal-overlay" id="editGameModal">
+        <div class="steam-modal" style="width: 850px; max-width: 95vw; max-height: 90vh;">
+            <div class="sm-header" style="background: linear-gradient(90deg, #0f172a, #1e293b); border-bottom: 1px solid var(--accent-blue);">
+                <div class="sm-title"><i class="fas fa-cogs" style="color:var(--accent-blue); margin-right:8px;"></i> KONTROLA GRY (ADMIN)</div>
+                <div class="sm-close" onclick="closeEditGameModal()"><i class="fas fa-times"></i></div>
+            </div>
+            <div class="sm-content" style="padding: 0; display:flex; flex-direction:column; height:100%;">
+                
+                <div class="eu-layout">
+                    <div class="eu-sidebar" style="width: 220px; background: rgba(0,0,0,0.3);">
+                        <div class="gm-big-icon-box" id="egIconBox" style="width: 80px; height: 80px; font-size: 32px; align-self: center; margin-bottom: 10px;">
+                            <i class="fas fa-gamepad" id="egIcon"></i>
+                        </div>
+                        <div class="eu-id-badge" id="egIdDisplay" style="margin-bottom: 10px;">ID: #000</div>
+                        
+                        <div class="eu-label" style="text-align: center;">Nazwa Kodowa</div>
+                        <div style="text-align: center; color: white; font-weight: 700; margin-bottom: 20px;" id="egNameDisplay">Game Name</div>
+
+                        <div class="eu-section-label">STATUS SERWERA</div>
+                        <select id="egSelectStatus" class="eu-select">
+                            <option value="Active">🟢 Aktywna</option>
+                            <option value="Maintenance">🟠 Przerwa Techniczna</option>
+                            <option value="Disabled">🔴 Wyłączona (Kill Switch)</option>
+                        </select>
+
+                        <div class="eu-section-label" style="margin-top:15px;">DANE LIVE</div>
+                        <div class="stat-group-vertical" style="align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px;">
+                            <span style="font-size: 10px; color: #aaa;">Aktywni Gracze</span>
+                            <span style="font-size: 16px; color: var(--accent-blue); font-weight: 800;" id="egLivePlayers">0</span>
+                        </div>
+                        <div class="stat-group-vertical" style="align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px; margin-top: 5px;">
+                            <span style="font-size: 10px; color: #aaa;">Otwarte Sesje</span>
+                            <span style="font-size: 16px; color: white; font-weight: 800;" id="egLiveSessions">0</span>
+                        </div>
+                    </div>
+
+                    <div class="eu-main">
+                        
+                        <div class="eu-divider"><i class="fas fa-balance-scale"></i> EKONOMIA & ZASADY</div>
+                        <div class="eu-grid-row three-col">
+                            <div class="eu-block">
+                                <div class="eu-label">RTP (%)</div>
+                                <input type="number" id="egInputRTP" class="eu-input-std" placeholder="96.00">
+                            </div>
+                            <div class="eu-block">
+                                <div class="eu-label">Zmienność (Volatility)</div>
+                                <select id="egSelectVol" class="eu-select">
+                                    <option value="Low">Low</option>
+                                    <option value="Medium">Medium</option>
+                                    <option value="High">High</option>
+                                    <option value="Extreme">Extreme (Degen)</option>
+                                </select>
+                            </div>
+                            <div class="eu-block">
+                                <div class="eu-label">RNG Override</div>
+                                <input type="range" min="0" max="200" value="100" class="eu-slider" id="egSliderRNG" oninput="document.getElementById('egRngGlobalVal').textContent = this.value + '%'">
+                                <div style="text-align:right; font-size:10px; color:#aaa;">Value: <span id="egRngGlobalVal" style="color:white;">100%</span></div>
+                            </div>
+                        </div>
+                        <div class="eu-block" style="flex-direction: row; justify-content: flex-end; margin-top: 10px;">
+                            <button class="action-btn-large outline" style="padding: 6px 12px; font-size: 10px; border-color: #666; color: #ccc;" onclick="alert('Przywrócono globalne ustawienia domyślne.')">RESET DOMYŚLNE</button>
+                        </div>
+
+                        <div class="eu-divider" style="color: var(--accent-red); border-color: rgba(239,68,68,0.3);">
+                            <i class="fas fa-crosshairs"></i> EKONOMIA & ZASADY DLA GRACZA (TARGETING)
+                        </div>
+                        <div style="background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 6px;">
+                            <div class="eu-grid-row" style="align-items: end; margin-bottom: 15px;">
+                                <div class="eu-block" style="flex: 2;">
+                                    <div class="eu-label" style="color: #fca5a5;">Cel (ID Gracza lub Login)</div>
+                                    <div class="input-group small" style="margin:0;">
+                                        <span class="curr-prefix" style="color: var(--accent-red);"><i class="fas fa-user-secret"></i></span>
+                                        <input type="text" id="egTargetInput" placeholder="Szukaj ofiary..." style="background: rgba(0,0,0,0.4);">
+                                    </div>
+                                </div>
+                                <div class="eu-block" style="flex: 1;">
+                                    <button class="ap-btn ap-btn-red" style="height: 32px;" onclick="alert('Załadowano profil gracza. Wyświetlam specyficzne ustawienia.')">SZUKAJ</button>
+                                </div>
+                            </div>
+                            
+                            <div class="eu-grid-row three-col" style="margin-bottom: 10px;">
+                                <div class="eu-block">
+                                    <div class="eu-label" style="color:#fca5a5;">Player RTP (%)</div>
+                                    <input type="number" id="egPlayerRTP" class="eu-input-std" placeholder="Default">
+                                </div>
+                                <div class="eu-block">
+                                    <div class="eu-label" style="color:#fca5a5;">Player Volatility</div>
+                                    <select id="egPlayerVol" class="eu-select">
+                                        <option value="Default">Default</option>
+                                        <option value="Low">Low</option>
+                                        <option value="Medium">Medium</option>
+                                        <option value="High">High</option>
+                                        <option value="Extreme">Extreme</option>
+                                    </select>
+                                </div>
+                                <div class="eu-block">
+                                    <div class="eu-label" style="color:#fca5a5;">Player RNG Override</div>
+                                    <input type="range" min="0" max="200" value="100" class="eu-slider" oninput="document.getElementById('egPlayerRngVal').textContent = this.value + '%'">
+                                    <div style="text-align:right; font-size:10px; color:#aaa;">Value: <span id="egPlayerRngVal" style="color:#fca5a5;">100%</span></div>
+                                </div>
+                            </div>
+
+                            <div class="eu-block" style="flex-direction: row; align-items: center; gap: 10px; margin-top: 10px;">
+                                <button class="ap-btn" style="background: rgba(255,255,255,0.1);" onclick="alert('Otwieranie listy targetowanych graczy...')"><i class="fas fa-list-ul"></i> Lista Celów</button>
+                                <div style="flex:1;"></div>
+                                <button class="action-btn-large outline" style="padding: 6px 12px; font-size: 10px; border-color: #666; color: #ccc;" onclick="alert('Zresetowano ustawienia gracza do wartości globalnych.')">RESET DOMYŚLNE</button>
+                                <button class="ap-btn ap-btn-red" onclick="alert('Zastosowano nadpisanie zasad dla wybranego gracza. Priorytet: HIGH.')">APLIKUJ ZMIANY</button>
+                            </div>
+                        </div>
+
+                        <div class="eu-divider"><i class="fas fa-server"></i> SESJE & LOGI</div>
+                        <div class="eu-grid-row" style="align-items: end;">
+                            <div class="eu-block" style="flex: 1.5;">
+                                <div class="eu-label">Podgląd Sesji (Session ID)</div>
+                                <div class="input-group small" style="margin:0;">
+                                    <span class="curr-prefix"><i class="fas fa-key"></i></span>
+                                    <input type="text" id="egSessionInput" placeholder="np. SES_8821...">
+                                </div>
+                            </div>
+                            <div class="eu-block" style="flex: 1;">
+                                <button class="ap-btn ap-btn-blue" style="height: 32px;" onclick="alert('Otwieranie podglądu sesji na żywo...')"><i class="fas fa-eye"></i> OBSERWUJ</button>
+                            </div>
+                            <div class="eu-block" style="flex: 1.5; align-items: flex-end;">
+                                <div style="display:flex; gap: 5px;">
+                                    <button class="ap-btn" style="background: rgba(255,255,255,0.1);" onclick="alert('Lista 428 aktywnych sesji...')"><i class="fas fa-list"></i> AKTYWNE SESJE</button>
+                                    <button class="ap-btn" style="background: rgba(255,255,255,0.1);" onclick="alert('Pobieranie pełnej historii rozdań...')"><i class="fas fa-history"></i> HISTORIA</button>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="eu-actions-footer">
+                            <button class="ap-btn ap-btn-red" onclick="alert('Wyczyszczono ustawienia i zresetowano silnik gry do stanu fabrycznego.')"><i class="fas fa-trash"></i> CAŁKOWITY RESET DOMYŚLNE</button>
+                            <div style="flex:1;"></div>
+                            <button class="action-btn-large outline" style="padding: 8px 20px; font-size:12px;" onclick="closeEditGameModal()">ANULUJ</button>
+                            <button class="action-btn-large" style="padding: 8px 20px; font-size:12px;" onclick="alert('Zapisano globalne ustawienia gry.')">ZAPISZ ZMIANY</button>
                         </div>
 
                     </div>

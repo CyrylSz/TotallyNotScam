@@ -2311,6 +2311,8 @@ function renderUsersView() {
             <div><span class="ul-badge ${badgeClass}">${u.status}</span></div>
             <div class="ul-actions">
                 <button class="ul-btn" title="Edytuj" onclick="openEditUserModal(${u.id})"><i class="fas fa-edit"></i></button>
+                <button class="ul-btn" title="Wyślij Prezent" onclick="alert('Otwieranie menu prezentów dla: ${u.name}')"><i class="fas fa-gift"></i></button>
+                <button class="ul-btn danger" title="Zbanuj" onclick="if(confirm('Czy na pewno zbanować ${u.name}?')) { alert('${u.name} został zbanowany.'); renderUsersView(); }"><i class="fas fa-ban"></i></button>
             </div>
         `;
         container.appendChild(div);
@@ -2436,6 +2438,7 @@ function openEditUserModal(userId) {
     // Populate Fields
     document.getElementById('euIdDisplay').textContent = `ID: #${user.id}`;
     document.getElementById('euInputName').value = user.name;
+    document.getElementById('euInputCustomRank').value = ""; // Reset pola
     document.getElementById('euInputBalance').value = user.balance;
     document.getElementById('euSelectStatus').value = user.status;
     document.getElementById('euCheckAdmin').checked = user.isAdmin || false;
@@ -2463,13 +2466,6 @@ function openEditUserModal(userId) {
         rankSelect.appendChild(opt);
     });
 
-    // Config Ban Button inside Modal
-    document.getElementById('euBtnBan').onclick = function() {
-        if(confirm(`Czy na pewno chcesz zbanować użytkownika ${user.name} (ID: ${user.id})?`)) {
-            alert(`[SYSTEM] Użytkownik ${user.name} został zbanowany.`);
-            document.getElementById('euSelectStatus').value = 'Banned';
-        }
-    };
     document.getElementById('editUserModal').classList.add('active');
 }
 
@@ -2690,6 +2686,7 @@ function renderGamesControlView() {
             <div><span class="ul-badge ${statusClass}">${g.status}</span></div>
             
             <div class="ul-actions">
+                <button class="ul-btn" title="Edytuj Parametry" onclick="openEditGameModal(${g.id})"><i class="fas fa-edit"></i></button>
                 <button class="ul-btn" title="Restart Serwera Gry" onclick="alert('Restartowanie instancji: ${g.name}...')"><i class="fas fa-sync"></i></button>
                 <button class="ul-btn danger" title="Zatrzymaj" onclick="alert('Zatrzymano tryb: ${g.name}')"><i class="fas fa-stop"></i></button>
             </div>
@@ -2703,6 +2700,41 @@ function renderGamesControlView() {
 function changeGameControlPage(delta) {
     adminGamesPage += delta;
     renderGamesControlView();
+}
+function openEditGameModal(id) {
+    const game = adminGamesDB.find(g => g.id === id);
+    if(!game) return;
+
+    document.getElementById('egIdDisplay').textContent = `ID: #${game.id}`;
+    document.getElementById('egNameDisplay').textContent = game.name;
+    document.getElementById('egIcon').className = `fas ${game.icon}`;
+    document.getElementById('egIcon').style.color = game.color;
+    document.getElementById('egIconBox').style.borderColor = game.color;
+    document.getElementById('egIconBox').style.background = `linear-gradient(135deg, ${game.color}20, rgba(0,0,0,0.4))`;
+    
+    document.getElementById('egSelectStatus').value = game.status;
+    document.getElementById('egLivePlayers').textContent = game.online.toLocaleString();
+    document.getElementById('egLiveSessions').textContent = game.sessions.toLocaleString();
+
+    // Randomize fake stats for realism
+    document.getElementById('egInputRTP').value = (94 + Math.random() * 5).toFixed(2);
+    
+    // Reset sliders and target inputs
+    document.getElementById('egSliderRNG').value = 100;
+    document.getElementById('egRngGlobalVal').textContent = '100%';
+    
+    document.getElementById('egTargetInput').value = '';
+    document.getElementById('egPlayerRTP').value = '';
+    document.getElementById('egPlayerVol').value = 'Default';
+    document.getElementById('egPlayerRngVal').textContent = '100%';
+    
+    document.getElementById('egSessionInput').value = '';
+
+    document.getElementById('editGameModal').classList.add('active');
+}
+
+function closeEditGameModal() {
+    document.getElementById('editGameModal').classList.remove('active');
 }
 initDashboard();
 
