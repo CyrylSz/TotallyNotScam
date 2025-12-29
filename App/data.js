@@ -35,7 +35,7 @@ const gamesHubStructure = [
             },
             { 
                 id: 'g_dice', name: 'Kości', variants: 3, onlineCount: 950, players: '1+', icon: 'fa-dice', color: '#06b6d4', tag: 'Table Game',
-                desc: 'Rzuć kośćmi. Emocje tłumu i skomplikowane zakłady.',
+                desc: 'Rzuć kośćmi. Emocje tłumu i złożone zakłady.',
                 modes: ['Craps', 'Sic Bo', 'Lightning Dice']
             }
         ]
@@ -88,32 +88,32 @@ const gamesHubStructure = [
         games: [
             { 
                 id: 'g_chess', name: 'Gambling Chess', variants: 1, onlineCount: 140, players: '2', icon: 'fa-chess', color: '#94a3b8', tag: 'Exclusive',
-                desc: 'Szachy. Licytuj każdy ruch i obstawiaj życie pionków.',
+                desc: 'Szachy, ale możesz licytować każdy ruch i obstawiać życie pionków.',
                 modes: ['Gambling Chess']
             },
             { 
                 id: 'g_war', name: 'Age of Gambling', variants: 1, onlineCount: 85, players: '2', icon: 'fa-shield-alt', color: '#b91c1c', tag: 'Exclusive', 
-                desc: 'RTS. Kupuj nuklearne czołgi za $$ i zniszcz bazę.',
+                desc: 'Age of War, ale na pieniądze i z chaotycznymi katastrofami.',
                 modes: ['Age of Gambling']
             },
             { 
                 id: 'g_mystery', name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4-15', icon: 'fa-user-secret', color: '#6d28d9', tag: 'Exclusive', 
-                desc: 'Mafia na pieniądze. Kłam, manipuluj, zgarnij pulę.',
+                desc: 'Murder Mystery, ale na pieniądze. Kłam, manipuluj, zgarnij pulę.',
                 modes: ['Gambling Mystery']
             },
             { 
                 id: 'g_worms', name: 'Degenerate Worms', variants: 1, onlineCount: 450, players: '2-8', icon: 'fa-skull-crossbones', color: '#84cc16', tag: 'Exclusive', 
-                desc: 'Artyleria 2D. Dokup "Święty Granat" w trakcie tury za realny hajs.',
+                desc: 'Worms 2D, ale na pieniadze. Można się ratować portfelem, lecz zmniejsza to twoją pulę.',
                 modes: ['Degenerate Worms']
             },
             { 
                 id: 'g_logic', name: 'Logic Race Bet', variants: 1, onlineCount: 60, players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', tag: 'Exclusive', 
-                desc: 'Wyścig IQ. Kto pierwszy rozwiąże zagadkę, bierze wszystko.',
+                desc: 'Wyścig mózgów. Kto pierwszy rozwiąże zagadkę, bierze wszystko.',
                 modes: ['Logic Race Bet']
             },
             { 
                 id: 'g_aim', name: 'Aim Duel Bet', variants: 1, onlineCount: 320, players: '2', icon: 'fa-crosshairs', color: '#f43f5e', tag: 'Exclusive', 
-                desc: 'FPS 1v1. Czysty refleks. Kto kliknie szybciej, wygrywa.',
+                desc: 'Czysty refleks. Ten kto trafi jak największą ilosć tarcz zgarnia pulę.',
                 modes: ['Aim Duel Bet']
             }
         ]

@@ -55,11 +55,22 @@
 
     <main class="main-content">
         <div class="header">
-            <div>
+            <div style="display: flex; align-items: center;">
                 <h2 id="pageHeaderTitle">Dashboard</h2>
-                <button id="editProfileBtn" class="qp-btn-small" onclick="alert('Edycja profilu')" style="display: none; margin-left: 15px; width:auto; padding:6px 10px;"><i class="fa-solid fa-pen-to-square"></i></button>
-                <div id="headerSeparator" style="display:none; width:1px; height:20px; background:rgba(255,255,255,0.1); margin:0 10px;"></div>
-                <button id="browseProfilesBtn" class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')" style="display: none;">Przeglądaj Profile</button>
+                
+                <div id="profileActionWrapper" style="display: none; align-items: center; margin-left: 15px;">
+                    <button class="qp-btn-small" onclick="alert('Edycja profilu')" title="Edytuj Profil"
+                        style="width: 36px; height: 36px; min-width: 0; padding: 0; margin: 0; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;">
+                        <i class="fa-solid fa-pen-to-square" style="font-size: 14px; margin:0;"></i>
+                    </button>
+                    
+                    <div style="width:1px; height:20px; background:rgba(255,255,255,0.2); margin:0 16px;"></div>
+                    
+                    <button class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')" title="Przeglądaj Profile"
+                        style="width: 36px; height: 36px; min-width: 0; padding: 0; margin: 0; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;">
+                        <i class="fas fa-search" style="font-size: 14px; margin:0;"></i>
+                    </button>
+                </div>
             </div>
             
             <div class="currency-display">
@@ -318,7 +329,7 @@
                         <div class="rob-progress-bar">
                             <div class="rob-progress-fill" style="width: 72.5%;"></div> 
                         </div>
-                        <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-red);">531 LP</span> do próby awansu na <b>RNG God</b></div>
+                        <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-purple);">531 LP</span> do próby awansu na <b>RNG God</b></div>
                     </div>
                 </div>
                 <div class="rs-card streak-block">
@@ -900,7 +911,7 @@
                         <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 8px;">
                             <div style="font-size:10px; color:#aaa;">Global AI Chatbot Roast</div>
                             <div class="ap-input-group">
-                                <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. 'Łał, masz niższe IQ niż temp mojego CPU'">
+                                <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. Łał, masz niższe IQ niż temperatura mojego CPU...">
                                 <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i class="fas fa-paper-plane"></i></button>
                             </div>
                         </div>
@@ -923,7 +934,7 @@
                         <!-- Banner Management -->
                         <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 8px; margin-top: auto;">
                              <div style="width:100%;">
-                                <div style="font-size:10px; color:#aaa; margin-bottom: 5px;">Baner Dashboardu</div>
+                                <div style="font-size:10px; color:#aaa; margin-bottom: 5px;">Edycja Banerów</div>
                             </div>
                             <div style="display: flex; gap: 6px; width: 100%; align-items: center;">
                                 <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;" title="Slide 1">
@@ -1565,11 +1576,11 @@
                 </div>
             </div>
             <div class="chat-messages" id="chatMessages">
-                <div class="msg bot">Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?</div>
+                <div class="msg bot">Siemka! Widzę, że masz złą passę. Powiedzieć ci czemu ssiesz?</div>
             </div>
             <div class="chat-input-area">
                 <input type="text" id="chatInput" placeholder="Napisz wiadomość...">
-                <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
+                <button class="ap-btn ap-btn-purple" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
         

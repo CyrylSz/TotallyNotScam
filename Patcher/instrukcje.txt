@@ -1,477 +1,80 @@
 KROK 1:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-                <h2 id="pageHeaderTitle">Dashboard</h2>
-                <button id="browseProfilesBtn" class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')" style="display: none; margin-left: 15px;">Przeglądaj Profile</button>
-            </div>
-TREŚĆ:
-                <h2 id="pageHeaderTitle">Dashboard</h2>
-                <button id="editProfileBtn" class="qp-btn-small" onclick="alert('Edycja profilu')" style="display: none; margin-left: 15px; width:auto; padding:6px 10px;"><i class="fa-solid fa-pen-to-square"></i></button>
-                <div id="headerSeparator" style="display:none; width:1px; height:20px; background:rgba(255,255,255,0.1); margin:0 10px;"></div>
-                <button id="browseProfilesBtn" class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')" style="display: none;">Przeglądaj Profile</button>
-            </div>
-
-KROK 2:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-    <div class="chatbot-container">
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <i class="fas fa-robot" style="color: var(--accent-purple);"></i>
-                <div>
-                    <h3>AI Asystent</h3>
-                    <span style="font-size: 10px; color: var(--text-muted);">Online - Pomocnik Gracza</span>
-                </div>
-                <div class="status-dot" style="margin-left: auto;"></div>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="msg bot">Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?</div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Napisz wiadomość...">
-                <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-        
-        <button class="chat-toggle" onclick="toggleChat()">
-            <i class="fas fa-robot" id="toggleIcon"></i>
-        </button>
-    </div>
-TREŚĆ:
-    <div class="chatbot-container">
-        <div id="chatRoastBubble" class="chat-bubble-popup">
-            <div class="bubble-dots">
-                <span></span><span></span><span></span>
-            </div>
-            <div class="bubble-text"></div>
-        </div>
-
-        <div class="chat-friend-panel" id="chatFriendPanel">
-            <div class="cfp-header">
-                <div class="input-group small" style="margin:0; width: 100%;">
-                    <input type="text" placeholder="Szukaj znajomych..." style="border-radius: 4px;">
-                </div>
-                <button class="cfp-add-btn"><i class="fas fa-user-plus"></i></button>
-            </div>
-            <div class="cfp-list">
-                <div class="cfp-section-title">AI Chatboty</div>
-                <div class="cfp-item active" onclick="switchChatPartner('ai', 'AI Buddy', 'Pomocnik Gracza', 'fa-robot')">
-                    <div class="cfp-avatar ai"><i class="fas fa-robot"></i></div>
-                    <div class="cfp-name">AI Buddy</div>
-                </div>
-                
-                <div class="cfp-section-title" style="margin-top:10px;">Znajomi</div>
-                <div class="cfp-item" onclick="switchChatPartner('user', 'Whale_Killer', 'RNG God', 'https://i.pravatar.cc/150?u=Whale_Killer')">
-                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=Whale_Killer');"></div>
-                    <div class="cfp-name">Whale_Killer</div>
-                </div>
-                <div class="cfp-item" onclick="switchChatPartner('user', 'LuckyLuke', 'Table Shark', 'https://i.pravatar.cc/150?u=LuckyLuke')">
-                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=LuckyLuke');"></div>
-                    <div class="cfp-name">LuckyLuke</div>
-                </div>
-                <div class="cfp-item" onclick="switchChatPartner('user', 'CryptoBro', 'Risk Taker', 'https://i.pravatar.cc/150?u=CryptoBro')">
-                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=CryptoBro');"></div>
-                    <div class="cfp-name">CryptoBro</div>
-                </div>
-            </div>
-        </div>
-
-        <div class="chat-window" id="chatWindow">
-            <div class="chat-header">
-                <div id="chatHeaderIcon" class="chat-header-avatar ai"><i class="fas fa-robot"></i></div>
-                <div>
-                    <h3 id="chatHeaderName">AI Buddy</h3>
-                    <span id="chatHeaderStatus" style="font-size: 10px; color: var(--text-muted);">Pomocnik Gracza</span>
-                </div>
-                <div class="chat-header-actions" style="margin-left: auto; display: flex; gap: 10px;">
-                    <i class="fas fa-sort-up" onclick="toggleFriendPanel()" style="cursor: pointer; color: #fff; font-size: 16px; margin-top: 5px;"></i>
-                </div>
-            </div>
-            <div class="chat-messages" id="chatMessages">
-                <div class="msg bot">Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?</div>
-            </div>
-            <div class="chat-input-area">
-                <input type="text" id="chatInput" placeholder="Napisz wiadomość...">
-                <button onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
-            </div>
-        </div>
-        
-        <button class="chat-toggle" id="chatToggleBtn" onclick="toggleChat()">
-            <div id="chatToggleContent"><i class="fas fa-robot"></i></div>
-        </button>
-    </div>
-
-KROK 3:
-PLIK: "style.css"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-.chatbot-container { position: fixed; bottom: 30px; right: 30px; z-index: 900; display: flex; flex-direction: column; align-items: flex-end; }
-.chat-toggle { width: 60px; height: 60px; background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue)); border-radius: 50%; display: flex; align-items: center; justify-content: center; color: white; font-size: 24px; cursor: pointer; box-shadow: 0 4px 15px rgba(139, 92, 246, 0.4); border: none; transition: 0.3s; }
-.chat-toggle:hover { transform: scale(1.1); }
-.chat-window { width: 320px; height: 400px; background-color: var(--card-bg); border: 1px solid var(--border-color); border-radius: 16px; margin-bottom: 15px; display: none; flex-direction: column; overflow: hidden; }
-.chat-window.open { display: flex; }
-.chat-header { background: rgba(139, 92, 246, 0.1); padding: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); }
-.chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; }
-.msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; }
-.msg.bot { align-self: flex-start; background-color: rgba(255,255,255,0.05); color: #ddd; }
-.msg.user { align-self: flex-end; background-color: var(--accent-purple); color: white; }
-.chat-input-area { padding: 10px; border-top: 1px solid var(--border-color); display: flex; gap: 10px; }
-.chat-input-area input { flex-grow: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 15px; color: white; outline: none; }
-TREŚĆ:
-.chatbot-container { position: fixed; bottom: 30px; right: 30px; z-index: 900; display: flex; flex-direction: column; align-items: flex-end; pointer-events: none; }
-.chatbot-container > * { pointer-events: auto; }
-
-.chat-toggle { 
-    width: 60px; height: 60px; 
-    background: rgba(21, 26, 45, 0.95); /* Glassy dark */
-    backdrop-filter: blur(5px);
-    border: 1px solid rgba(255,255,255,0.15);
-    border-radius: 50%; 
-    display: flex; align-items: center; justify-content: center; 
-    color: white; font-size: 24px; 
-    cursor: pointer; 
-    box-shadow: 0 4px 20px rgba(0,0,0,0.5); 
-    transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    overflow: hidden;
-    position: relative;
-    z-index: 905;
-}
-.chat-toggle:hover { transform: scale(1.1); border-color: var(--accent-purple); box-shadow: 0 0 25px rgba(139, 92, 246, 0.4); }
-.chat-toggle:active { transform: scale(0.95); }
-
-#chatToggleContent { width: 100%; height: 100%; display: flex; align-items: center; justify-content: center; background-size: cover; background-position: center; }
-
-.chat-window { 
-    width: 320px; height: 400px; 
-    background-color: var(--card-bg); 
-    border: 1px solid var(--border-color); 
-    border-radius: 16px; 
-    margin-bottom: 15px; 
-    display: none; 
-    flex-direction: column; 
-    overflow: hidden; 
-    box-shadow: 0 10px 40px rgba(0,0,0,0.5);
-    position: relative;
-    z-index: 902;
-    animation: slideUpChat 0.3s cubic-bezier(0.16, 1, 0.3, 1);
-}
-.chat-window.open { display: flex; }
-
-@keyframes slideUpChat { from { opacity: 0; transform: translateY(20px) scale(0.95); } to { opacity: 1; transform: translateY(0) scale(1); } }
-
-.chat-friend-panel {
-    width: 320px; height: 400px;
-    background-color: #12141e;
-    border: 1px solid var(--border-color);
-    border-bottom: none;
-    border-radius: 16px 16px 0 0;
-    position: absolute;
-    bottom: 100%; 
-    right: 0;
-    margin-bottom: -415px; /* Hidden initially behind window */
-    z-index: 901; /* Behind chat window */
-    display: flex;
-    flex-direction: column;
-    padding: 15px;
-    transition: margin-bottom 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
-    opacity: 0;
-    pointer-events: none;
-    box-shadow: 0 -10px 30px rgba(0,0,0,0.3);
-}
-.chat-friend-panel.open {
-    margin-bottom: -15px; /* Overlap slightly */
-    opacity: 1;
-    pointer-events: auto;
-}
-
-.cfp-header { display: flex; gap: 10px; margin-bottom: 15px; }
-.cfp-add-btn { background: rgba(255,255,255,0.1); border: 1px solid rgba(255,255,255,0.1); color: white; width: 35px; border-radius: 4px; cursor: pointer; }
-.cfp-add-btn:hover { background: var(--accent-purple); border-color: var(--accent-purple); }
-
-.cfp-list { flex: 1; overflow-y: auto; display: flex; flex-direction: column; gap: 5px; }
-.cfp-section-title { font-size: 10px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; margin-bottom: 5px; padding-left: 5px; }
-.cfp-item { display: flex; align-items: center; gap: 10px; padding: 8px; border-radius: 8px; cursor: pointer; transition: 0.2s; }
-.cfp-item:hover { background: rgba(255,255,255,0.05); }
-.cfp-item.active { background: rgba(139, 92, 246, 0.15); }
-.cfp-avatar { width: 30px; height: 30px; border-radius: 50%; background-size: cover; background-position: center; border: 1px solid #444; }
-.cfp-avatar.ai { background: var(--accent-purple); display: flex; align-items: center; justify-content: center; color: white; font-size: 14px; }
-.cfp-name { font-size: 12px; font-weight: 600; color: #eee; }
-
-.chat-header { background: rgba(21, 26, 45, 0.95); padding: 15px; display: flex; align-items: center; gap: 10px; border-bottom: 1px solid var(--border-color); z-index: 2; }
-.chat-header-avatar { width: 32px; height: 32px; border-radius: 50%; background-size: cover; background-position: center; }
-.chat-header-avatar.ai { background: var(--accent-purple); display: flex; align-items: center; justify-content: center; color: white; }
-
-.chat-messages { flex-grow: 1; padding: 15px; overflow-y: auto; display: flex; flex-direction: column; gap: 10px; background: #0b0e14; }
-.msg { max-width: 80%; padding: 8px 12px; border-radius: 12px; font-size: 13px; line-height: 1.4; }
-.msg.bot { align-self: flex-start; background-color: #1e293b; color: #e2e8f0; border-bottom-left-radius: 2px; }
-.msg.user { align-self: flex-end; background-color: var(--accent-purple); color: white; border-bottom-right-radius: 2px; }
-.chat-input-area { padding: 10px; border-top: 1px solid var(--border-color); display: flex; gap: 10px; background: var(--card-bg); }
-.chat-input-area input { flex-grow: 1; background: rgba(0,0,0,0.2); border: 1px solid var(--border-color); border-radius: 20px; padding: 8px 15px; color: white; outline: none; }
-
-/* Roast Bubble */
-.chat-bubble-popup {
-    position: absolute;
-    bottom: 80px;
-    right: 10px; /* Aligned with ball */
-    background: white;
-    color: #0f172a;
-    padding: 12px 16px;
-    border-radius: 18px 18px 2px 18px; /* Tail bottom right */
-    box-shadow: 0 5px 20px rgba(0,0,0,0.3);
-    max-width: 250px;
-    width: max-content;
-    display: none;
-    flex-direction: column;
-    font-size: 13px;
-    font-weight: 600;
-    z-index: 910;
-    opacity: 0;
-    transform: scale(0.8) translateY(10px);
-    transform-origin: bottom right;
-    transition: all 0.3s cubic-bezier(0.175, 0.885, 0.32, 1.275);
-}
-.chat-bubble-popup.visible { display: flex; opacity: 1; transform: scale(1) translateY(0); }
-
-.bubble-dots { display: flex; gap: 4px; padding: 5px; }
-.bubble-dots span { width: 6px; height: 6px; background: #94a3b8; border-radius: 50%; animation: bubbleBounce 1.4s infinite ease-in-out both; }
-.bubble-dots span:nth-child(1) { animation-delay: -0.32s; }
-.bubble-dots span:nth-child(2) { animation-delay: -0.16s; }
-@keyframes bubbleBounce { 0%, 80%, 100% { transform: scale(0); } 40% { transform: scale(1); } }
-
-.bubble-text { display: none; white-space: pre-wrap; word-wrap: break-word; }
-
-KROK 4:
 PLIK: "app.js"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-    const browseProfilesBtn = document.getElementById('browseProfilesBtn');
-    if (browseProfilesBtn) {
-        browseProfilesBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
-    }
+const tW = { name: "Blackjack", val: "+400", type: "win", icon: "fa-dice", iColor: "#10b981" };
+const tL = { name: "Ruletka EU", val: "-500", type: "lose", icon: "fa-circle-notch", iColor: "#ef4444" };
+const tD = { name: "Bakarat", val: "0", type: "draw", icon: "fa-hand-paper", iColor: "#8b92a5" };
+const tW2 = { name: "Poker Holdem", val: "+1200", type: "win", icon: "fa-playing-card", iColor: "#10b981" };
+const tL2 = { name: "Slot Fortune", val: "-100", type: "lose", icon: "fa-gem", iColor: "#8b5cf6" };
+
+
+const staticGamesList = [
+    
+    {...tW, time: "2 min temu"}, {...tW2, time: "5 min temu"}, {...tL, time: "12 min temu"}, {...tW, time: "15 min temu"},
+    {...tW, time: "18 min temu"}, {...tD, time: "22 min temu"}, {...tW2, time: "30 min temu"}, {...tL, time: "45 min temu"},
+    {...tW, time: "1h temu"}, {...tW, time: "1h 10m temu"}, {...tD, time: "1h 15m temu"}, {...tL2, time: "1h 20m temu"},
+    {...tW, time: "1h 30m temu"}, {...tW2, time: "1h 45m temu"}, {...tL, time: "2h temu"}, {...tW, time: "2h 10m temu"},
+    {...tW, time: "2h 30m temu"}, {...tD, time: "3h temu"}, {...tW2, time: "3h 15m temu"}, {...tL, time: "4h temu"},
+
+    
+    {...tL, time: "5h temu"}, {...tL, time: "5h 10m temu"}, {...tL2, time: "5h 30m temu"}, {...tL, time: "6h temu"},
+    {...tL, time: "6h 15m temu"}, {...tD, time: "7h temu"}, {...tL, time: "8h temu"}, {...tL2, time: "8h 30m temu"},
+    {...tW, time: "9h temu"}, {...tL, time: "10h temu"}, {...tL, time: "11h temu"}, {...tL, time: "12h temu"},
+    {...tL, time: "13h temu"}, {...tL, time: "14h temu"}, {...tL2, time: "15h temu"}, {...tL, time: "16h temu"},
+    {...tD, time: "17h temu"}, {...tL, time: "18h temu"}, {...tW, time: "19h temu"}, {...tL, time: "20h temu"},
+
+    
+    {...tD, time: "1d temu"}, {...tD, time: "1d temu"}, {...tW, time: "1d temu"}, {...tL, time: "1d temu"},
+    {...tD, time: "1d temu"}, {...tW, time: "1d temu"}, {...tL, time: "1d temu"}, {...tD, time: "1d temu"},
+    {...tW, time: "1d temu"}, {...tL, time: "1d temu"}, {...tW2, time: "1d temu"}, {...tL2, time: "1d temu"},
+    {...tD, time: "1d temu"}, {...tW, time: "1d temu"}, {...tL, time: "1d temu"}, {...tD, time: "1d temu"},
+    {...tW, time: "1d temu"}, {...tL, time: "1d temu"}, {...tW2, time: "1d temu"}, {...tL2, time: "1d temu"},
+
+      
+      {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"},
+      {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"},
+      {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"},
+      {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"},
+      {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"}
+];
 TREŚĆ:
-    const browseProfilesBtn = document.getElementById('browseProfilesBtn');
-    const editProfileBtn = document.getElementById('editProfileBtn');
-    const headerSeparator = document.getElementById('headerSeparator');
+// Definicje szablonów opartych na grach z gamesHubStructure
+const tW_BJ   = { name: "Neon Blackjack", val: "+400", type: "win", icon: "fa-layer-group", iColor: "#4f46e5" };
+const tL_Crash= { name: "Aviator (Crash)", val: "-500", type: "lose", icon: "fa-chart-line", iColor: "#ef4444" };
+const tD_Punt = { name: "Punto Banco", val: "0", type: "draw", icon: "fa-dragon", iColor: "#8b92a5" };
+const tW_Poker= { name: "No Limit Hold'em", val: "+1200", type: "win", icon: "fa-heart", iColor: "#10b981" };
+const tL_Slot = { name: "Classic 3-Reel", val: "-100", type: "lose", icon: "fa-star", iColor: "#d946ef" };
+const tW_Rou  = { name: "Lightning Roulette", val: "+3600", type: "epic", icon: "fa-bolt", iColor: "#f59e0b" }; // Epic win
+const tL_Mine = { name: "Turbo Mines", val: "-2500", type: "lose", icon: "fa-bomb", iColor: "#8b5cf6" };
+const tW_Worm = { name: "Degenerate Worms", val: "+150", type: "win", icon: "fa-skull-crossbones", iColor: "#84cc16" };
 
-    if (browseProfilesBtn) browseProfilesBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
-    if (editProfileBtn) editProfileBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
-    if (headerSeparator) headerSeparator.style.display = viewName === 'profile' ? 'block' : 'none';
+const staticGamesList = [
+    // Page 1 (Recent)
+    {...tW_BJ, time: "2 min temu"}, {...tW_Poker, time: "5 min temu"}, {...tL_Crash, time: "12 min temu"}, {...tW_Worm, time: "15 min temu"},
+    {...tW_Rou, time: "18 min temu"}, {...tD_Punt, time: "22 min temu"}, {...tW_Poker, time: "30 min temu"}, {...tL_Mine, time: "45 min temu"},
+    {...tW_BJ, time: "1h temu"}, {...tW_Worm, time: "1h 10m temu"}, {...tD_Punt, time: "1h 15m temu"}, {...tL_Slot, time: "1h 20m temu"},
+    {...tW_BJ, time: "1h 30m temu"}, {...tW_Poker, time: "1h 45m temu"}, {...tL_Crash, time: "2h temu"}, {...tW_Rou, time: "2h 10m temu"},
+    {...tW_BJ, time: "2h 30m temu"}, {...tD_Punt, time: "3h temu"}, {...tW_Poker, time: "3h 15m temu"}, {...tL_Mine, time: "4h temu"},
 
-KROK 5:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-const chatWindow = document.getElementById('chatWindow');
-const toggleIcon = document.getElementById('toggleIcon');
-const chatInput = document.getElementById('chatInput');
-const chatMessages = document.getElementById('chatMessages');
-function toggleChat() {
-    const isOpen = chatWindow.classList.contains('open');
-    if (isOpen) {
-        chatWindow.classList.remove('open');
-        toggleIcon.className = 'fas fa-robot';
-    } else {
-        chatWindow.classList.add('open');
-        toggleIcon.className = 'fas fa-times';
-    }
-}
-function sendMessage() {
-    const text = chatInput.value.trim();
-    if (!text) return;
-    addMessage(text, 'user');
-    chatInput.value = '';
-    setTimeout(() => addMessage("Jestem tylko demem UI, ale dziękuję za wiadomość!", 'bot'), 1000);
-}
-function addMessage(text, type) {
-    const div = document.createElement('div');
-    div.className = `msg ${type}`;
-    div.textContent = text;
-    chatMessages.appendChild(div);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-chatInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') sendMessage();
-});
-TREŚĆ:
-const chatWindow = document.getElementById('chatWindow');
-const chatFriendPanel = document.getElementById('chatFriendPanel');
-const chatInput = document.getElementById('chatInput');
-const chatMessages = document.getElementById('chatMessages');
-const chatRoastBubble = document.getElementById('chatRoastBubble');
+    // Page 2
+    {...tL_Crash, time: "5h temu"}, {...tL_Mine, time: "5h 10m temu"}, {...tL_Slot, time: "5h 30m temu"}, {...tL_Crash, time: "6h temu"},
+    {...tL_Slot, time: "6h 15m temu"}, {...tD_Punt, time: "7h temu"}, {...tL_Mine, time: "8h temu"}, {...tL_Slot, time: "8h 30m temu"},
+    {...tW_Rou, time: "9h temu"}, {...tL_Crash, time: "10h temu"}, {...tL_Crash, time: "11h temu"}, {...tL_Mine, time: "12h temu"},
+    {...tL_Mine, time: "13h temu"}, {...tL_Slot, time: "14h temu"}, {...tL_Slot, time: "15h temu"}, {...tL_Crash, time: "16h temu"},
+    {...tD_Punt, time: "17h temu"}, {...tL_Mine, time: "18h temu"}, {...tW_Worm, time: "19h temu"}, {...tL_Crash, time: "20h temu"},
 
-let activeChatPartner = { type: 'ai', name: 'AI Buddy', status: 'Pomocnik Gracza', icon: 'fa-robot', img: null };
+    // Page 3
+    {...tD_Punt, time: "1d temu"}, {...tD_Punt, time: "1d temu"}, {...tW_BJ, time: "1d temu"}, {...tL_Crash, time: "1d temu"},
+    {...tD_Punt, time: "1d temu"}, {...tW_Worm, time: "1d temu"}, {...tL_Slot, time: "1d temu"}, {...tD_Punt, time: "1d temu"},
+    {...tW_BJ, time: "1d temu"}, {...tL_Mine, time: "1d temu"}, {...tW_Poker, time: "1d temu"}, {...tL_Slot, time: "1d temu"},
+    {...tD_Punt, time: "1d temu"}, {...tW_BJ, time: "1d temu"}, {...tL_Crash, time: "1d temu"}, {...tD_Punt, time: "1d temu"},
+    {...tW_Rou, time: "1d temu"}, {...tL_Mine, time: "1d temu"}, {...tW_Poker, time: "1d temu"}, {...tL_Slot, time: "1d temu"},
 
-function toggleChat() {
-    // If bubble is active, clicking ball just closes bubble first
-    if(chatRoastBubble.classList.contains('visible')) {
-        chatRoastBubble.classList.remove('visible');
-        return;
-    }
-
-    const isOpen = chatWindow.classList.contains('open');
-    if (isOpen) {
-        chatWindow.classList.remove('open');
-        chatFriendPanel.classList.remove('open'); // Close friend panel if open
-        updateToggleIcon(false);
-    } else {
-        chatWindow.classList.add('open');
-        updateToggleIcon(true);
-    }
-}
-
-function updateToggleIcon(isOpen) {
-    const content = document.getElementById('chatToggleContent');
-    if (isOpen) {
-        content.innerHTML = '<i class="fas fa-times" style="font-size:20px;"></i>';
-        content.style.backgroundImage = 'none';
-        content.style.backgroundColor = 'transparent';
-    } else {
-        // Show active partner icon/img
-        if (activeChatPartner.type === 'ai') {
-            content.innerHTML = `<i class="fas ${activeChatPartner.icon}" style="font-size:24px;"></i>`;
-            content.style.backgroundImage = 'none';
-        } else {
-            content.innerHTML = '';
-            content.style.backgroundImage = `url('${activeChatPartner.img}')`;
-        }
-    }
-}
-
-function toggleFriendPanel() {
-    const isOpen = chatFriendPanel.classList.contains('open');
-    if (isOpen) chatFriendPanel.classList.remove('open');
-    else chatFriendPanel.classList.add('open');
-}
-
-function switchChatPartner(type, name, status, visual) {
-    // 1. Update State
-    activeChatPartner = { type, name, status };
-    if(type === 'ai') activeChatPartner.icon = visual;
-    else activeChatPartner.img = visual;
-
-    // 2. Update UI - Header
-    document.getElementById('chatHeaderName').textContent = name;
-    document.getElementById('chatHeaderStatus').textContent = status;
-    const headerIcon = document.getElementById('chatHeaderIcon');
-    if(type === 'ai') {
-        headerIcon.className = 'chat-header-avatar ai';
-        headerIcon.innerHTML = `<i class="fas ${visual}"></i>`;
-        headerIcon.style.backgroundImage = 'none';
-    } else {
-        headerIcon.className = 'chat-header-avatar';
-        headerIcon.innerHTML = '';
-        headerIcon.style.backgroundImage = `url('${visual}')`;
-    }
-
-    // 3. Clear/Load Messages (Mock)
-    chatMessages.innerHTML = '';
-    if(type === 'ai') addMessage("Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?", 'bot');
-    else addMessage(`[Historia rozmowy z ${name} wczytana...]`, 'bot');
-
-    // 4. Close upper panel
-    chatFriendPanel.classList.remove('open');
-
-    // 5. Update Ball Icon if closed (or just refresh state)
-    // If window is open, icon is "X". If closed, icon is Partner.
-    // Use animation class on Toggle Button
-    const btn = document.getElementById('chatToggleBtn');
-    btn.style.transform = "scale(0.8)";
-    setTimeout(() => {
-        if (!chatWindow.classList.contains('open')) updateToggleIcon(false);
-        btn.style.transform = "scale(1)";
-    }, 200);
-}
-
-function sendMessage() {
-    const text = chatInput.value.trim();
-    if (!text) return;
-    addMessage(text, 'user');
-    chatInput.value = '';
-    
-    // Auto reply mock
-    if(activeChatPartner.type === 'ai') {
-        setTimeout(() => addMessage("Jestem tylko demem UI, ale dziękuję za wiadomość!", 'bot'), 1000);
-    }
-}
-
-function addMessage(text, type) {
-    const div = document.createElement('div');
-    div.className = `msg ${type}`;
-    div.textContent = text;
-    chatMessages.appendChild(div);
-    chatMessages.scrollTop = chatMessages.scrollHeight;
-}
-
-chatInput.addEventListener('keypress', function (e) {
-    if (e.key === 'Enter') sendMessage();
-});
-
-function triggerRoastAnimation(message) {
-    // 1. Force switch to AI Partner without opening panels
-    activeChatPartner = { type: 'ai', name: 'AI Buddy', status: 'Roast Master', icon: 'fa-robot' };
-    
-    // Close everything
-    chatWindow.classList.remove('open');
-    chatFriendPanel.classList.remove('open');
-    
-    // Update Ball Icon visually with animation
-    const btn = document.getElementById('chatToggleBtn');
-    btn.style.transition = "transform 0.3s";
-    btn.style.transform = "rotate(360deg) scale(1.2)";
-    updateToggleIcon(false); // Shows robot icon
-    
-    setTimeout(() => {
-        btn.style.transform = "scale(1)";
-        
-        // 2. Show Bubble with dots
-        chatRoastBubble.style.display = 'flex';
-        // Force reflow
-        void chatRoastBubble.offsetWidth; 
-        chatRoastBubble.classList.add('visible');
-        
-        const dots = chatRoastBubble.querySelector('.bubble-dots');
-        const txt = chatRoastBubble.querySelector('.bubble-text');
-        
-        dots.style.display = 'flex';
-        txt.style.display = 'none';
-        txt.textContent = message;
-
-        // 3. Reveal text after 1s
-        setTimeout(() => {
-            dots.style.display = 'none';
-            txt.style.display = 'block';
-            
-            // Auto hide based on length (min 3s, max 10s)
-            const duration = Math.max(3000, Math.min(10000, message.length * 100));
-            setTimeout(() => {
-                chatRoastBubble.classList.remove('visible');
-                setTimeout(() => chatRoastBubble.style.display = 'none', 300);
-            }, duration);
-            
-        }, 1000);
-        
-    }, 300);
-}
-
-KROK 6:
-PLIK: "app.js"
-OPERACJA: [ZASTĄP]
-SZUKAJ:
-function sendAdminPush() {
-    const msg = document.getElementById('pushMsgInput').value;
-    if(msg) {
-        alert(`[PUSH SENT] Do 14,203 online: "${msg}"`);
-        document.getElementById('pushMsgInput').value = '';
-    }
-}
-TREŚĆ:
-function sendAdminPush() {
-    const msg = document.getElementById('pushMsgInput').value;
-    if(msg) {
-        // Trigger the Global Roast Animation
-        triggerRoastAnimation(msg);
-        document.getElementById('pushMsgInput').value = '';
-    }
-}
+    // Page 4
+    {...tW_Worm, time: "2d temu"}, {...tW_BJ, time: "2d temu"}, {...tW_Rou, time: "2d temu"}, {...tW_Poker, time: "2d temu"},
+    {...tW_BJ, time: "2d temu"}, {...tW_BJ, time: "2d temu"}, {...tW_Worm, time: "2d temu"}, {...tW_Poker, time: "2d temu"},
+    {...tW_BJ, time: "2d temu"}, {...tW_Rou, time: "2d temu"}, {...tW_BJ, time: "2d temu"}, {...tW_Poker, time: "2d temu"},
+    {...tW_Worm, time: "2d temu"}, {...tW_BJ, time: "2d temu"}, {...tW_Rou, time: "2d temu"}, {...tW_Poker, time: "2d temu"},
+    {...tW_BJ, time: "2d temu"}, {...tW_Worm, time: "2d temu"}, {...tW_BJ, time: "2d temu"}, {...tW_Poker, time: "2d temu"}
+];

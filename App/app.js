@@ -815,13 +815,10 @@ function showView(viewName) {
     document.getElementById('pageHeaderTitle').textContent = config.title;
 
     
-    const browseProfilesBtn = document.getElementById('browseProfilesBtn');
-    const editProfileBtn = document.getElementById('editProfileBtn');
-    const headerSeparator = document.getElementById('headerSeparator');
-
-    if (browseProfilesBtn) browseProfilesBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
-    if (editProfileBtn) editProfileBtn.style.display = viewName === 'profile' ? 'inline-block' : 'none';
-    if (headerSeparator) headerSeparator.style.display = viewName === 'profile' ? 'block' : 'none';
+    const profileActions = document.getElementById('profileActionWrapper');
+    if (profileActions) {
+        profileActions.style.display = viewName === 'profile' ? 'flex' : 'none';
+    }
 
     
     if (viewName === 'games') renderGamesHub();
