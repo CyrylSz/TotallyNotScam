@@ -2891,7 +2891,8 @@ function renderPopularModes() {
                         players: distrib[idx],
                         icon: game.icon,
                         color: game.color,
-                        gameId: game.id
+                        gameId: game.id,
+                        tag: game.tag
                     });
                 });
             });
@@ -2917,8 +2918,10 @@ function renderPopularModes() {
                 <div style="font-size:10px; color:#aaa; font-weight:700;">#${index + 1}</div>
             </div>
             <div class="mc-title">${m.modeName}</div>
-            <div class="mc-sub" style="margin-bottom:2px; font-size:9px; opacity:0.7;">${m.gameName}</div>
-            <div class="mc-players"><i class="fas fa-user"></i> ${m.players.toLocaleString()}</div>
+            <div class="mc-players">
+                <span><i class="fas fa-user"></i> ${m.players.toLocaleString()}</span>
+                <span class="mc-tag-mini">${m.tag}</span>
+            </div>
              <div class="mc-overlay-play">
                 <div class="play-btn-round"><i class="fas fa-play"></i></div>
             </div>
@@ -3214,7 +3217,10 @@ function renderFavoritesPanel() {
                     <i class="fas fa-star mc-star active" onclick="toggleFavoriteMode('${favId}', null, null, null, null, 0, this)"></i>
                 </div>
                 <div class="mc-title">${modeName}</div>
-                <div class="mc-players"><i class="fas fa-user"></i> ${displayPlayers}</div>
+                <div class="mc-players">
+                    <span><i class="fas fa-user"></i> ${displayPlayers}</span>
+                    <span class="mc-tag-mini">${foundGame.tag}</span>
+                </div>
                  <div class="mc-overlay-play">
                     <div class="play-btn-round"><i class="fas fa-play"></i></div>
                 </div>
