@@ -924,16 +924,41 @@ function renderGames() {
     currentGames.forEach(g => {
         let tagClass = 'tag-lose';
         let tagText = 'Przegrana';
-        if(g.type === 'win') { tagClass = 'tag-win'; tagText = 'Wygrana'; }
-        else if(g.type === 'draw') { tagClass = ''; tagText = 'Remis'; }
+        let iconColor = 'var(--accent-red)'; 
         
+        if(g.type === 'win') { 
+            tagClass = 'tag-win'; 
+            tagText = 'Wygrana'; 
+            iconColor = 'var(--accent-green)';
+        }
+        else if(g.type === 'draw') { 
+            tagClass = ''; 
+            tagText = 'Remis'; 
+            iconColor = '#fff';
+        }
+        
+        // Kolory walut
+        let moneyColor = '#fff';
+        if (g.money && g.money.includes('+')) moneyColor = 'var(--accent-green)';
+        else if (g.money && g.money.includes('-')) moneyColor = 'var(--accent-red)';
+
+        let lpColor = '#9ca3af'; // Szary dla minusa/zera
+        if (g.lp && g.lp.includes('+')) lpColor = 'var(--accent-purple)';
+
         const div = document.createElement('div');
         div.className = `game-entry ${g.type}`;
         
         div.innerHTML = `
             <div class="ge-left">
-                <div class="ge-icon" style="color:${g.iColor};"><i class="fas ${g.icon}"></i></div>
-                <div class="ge-info"><h5>${g.name}</h5><span>${g.val}</span></div>
+                <div class="ge-icon" style="color:${iconColor};"><i class="fas ${g.icon}"></i></div>
+                <div class="ge-info">
+                    <h5>${g.name}</h5>
+                    <div style="font-size:10px; margin-top:3px; display:flex; align-items:center; gap:6px;">
+                        <span style="color:${lpColor}; font-weight:600;">${g.lp}</span>
+                        <span style="color:rgba(255,255,255,0.2);">|</span>
+                        <span style="color:${moneyColor}; font-weight:700;">${g.money}</span>
+                    </div>
+                </div>
             </div>
             <div class="ge-right">
                 <div class="ge-tag ${tagClass}">${tagText}</div>

@@ -250,41 +250,64 @@ const playersDB = [
 ];
 
 
-const tW = { name: "Blackjack", val: "+400", type: "win", icon: "fa-dice", iColor: "#10b981" };
-const tL = { name: "Ruletka EU", val: "-500", type: "lose", icon: "fa-circle-notch", iColor: "#ef4444" };
-const tD = { name: "Bakarat", val: "0", type: "draw", icon: "fa-hand-paper", iColor: "#8b92a5" };
-const tW2 = { name: "Poker Holdem", val: "+1200", type: "win", icon: "fa-playing-card", iColor: "#10b981" };
-const tL2 = { name: "Slot Fortune", val: "-100", type: "lose", icon: "fa-gem", iColor: "#8b5cf6" };
-
-
 const staticGamesList = [
+    // Page 1 (Current Session)
+    { name: "Classic", money: "+2,450 $", lp: "+12 LP", type: "win", icon: "fa-layer-group", time: "2 min temu" },
+    { name: "Aviator", money: "-5,000 $", lp: "-15 LP", type: "lose", icon: "fa-chart-line", time: "5 min temu" },
+    { name: "Degenerate Worms", money: "+12,000 $", lp: "+18 LP", type: "win", icon: "fa-skull-crossbones", time: "12 min temu" },
+    { name: "No Limit Hold'em", money: "+8,200 $", lp: "+14 LP", type: "win", icon: "fa-heart", time: "15 min temu" },
+    { name: "European", money: "0 $", lp: "+1 LP", type: "draw", icon: "fa-circle-notch", time: "18 min temu" },
+    { name: "Megaways", money: "-250 $", lp: "-2 LP", type: "lose", icon: "fa-star", time: "22 min temu" },
+    { name: "Spribe Plinko", money: "+1,500 $", lp: "+5 LP", type: "win", icon: "fa-bowling-ball", time: "30 min temu" },
+    { name: "Speed Baccarat", money: "-8,000 $", lp: "-19 LP", type: "lose", icon: "fa-dragon", time: "45 min temu" },
+    { name: "Gambling Chess", money: "+3,000 $", lp: "+10 LP", type: "win", icon: "fa-chess", time: "1h temu" },
+    { name: "Turbo Mines", money: "+4,200 $", lp: "+11 LP", type: "win", icon: "fa-bomb", time: "1h 10m temu" },
     
-    {...tW, time: "2 min temu"}, {...tW2, time: "5 min temu"}, {...tL, time: "12 min temu"}, {...tW, time: "15 min temu"},
-    {...tW, time: "18 min temu"}, {...tD, time: "22 min temu"}, {...tW2, time: "30 min temu"}, {...tL, time: "45 min temu"},
-    {...tW, time: "1h temu"}, {...tW, time: "1h 10m temu"}, {...tD, time: "1h 15m temu"}, {...tL2, time: "1h 20m temu"},
-    {...tW, time: "1h 30m temu"}, {...tW2, time: "1h 45m temu"}, {...tL, time: "2h temu"}, {...tW, time: "2h 10m temu"},
-    {...tW, time: "2h 30m temu"}, {...tD, time: "3h temu"}, {...tW2, time: "3h 15m temu"}, {...tL, time: "4h temu"},
+    // Page 1 (Cont.)
+    { name: "Slot Tournaments", money: "-1,200 $", lp: "-8 LP", type: "lose", icon: "fa-trophy", time: "1h 20m temu" },
+    { name: "Age of Gambling", money: "+15,000 $", lp: "+20 LP", type: "win", icon: "fa-shield-alt", time: "1h 30m temu" },
+    { name: "Craps", money: "0 $", lp: "+1 LP", type: "draw", icon: "fa-dice", time: "1h 45m temu" },
+    { name: "Aim Duel Bet", money: "-500 $", lp: "-4 LP", type: "lose", icon: "fa-crosshairs", time: "2h temu" },
+    { name: "Higher vs Lower", money: "+200 $", lp: "+3 LP", type: "win", icon: "fa-arrows-alt-v", time: "2h 15m temu" },
+    { name: "Switch", money: "+5,500 $", lp: "+13 LP", type: "win", icon: "fa-layer-group", time: "2h 30m temu" },
+    { name: "Caribbean Stud", money: "0 $", lp: "+1 LP", type: "draw", icon: "fa-crown", time: "3h temu" },
+    { name: "Gambling Mystery", money: "+8,000 $", lp: "+16 LP", type: "win", icon: "fa-user-secret", time: "3h 15m temu" },
+    { name: "Jackpot Progressive", money: "-15,000 $", lp: "-20 LP", type: "lose", icon: "fa-star", time: "4h temu" },
+    { name: "Zeppelin", money: "+2,100 $", lp: "+7 LP", type: "win", icon: "fa-rocket", time: "4h 30m temu" },
 
+    // Page 2 (Older)
+    { name: "Logic Race Bet", money: "-100 $", lp: "-2 LP", type: "lose", icon: "fa-puzzle-piece", time: "5h temu" },
+    { name: "Lightning", money: "-2,000 $", lp: "-9 LP", type: "lose", icon: "fa-bolt", time: "5h 15m temu" },
+    { name: "Pot Limit Omaha", money: "+14,500 $", lp: "+19 LP", type: "win", icon: "fa-heart", time: "6h temu" },
+    { name: "Bonus Buy", money: "-5,000 $", lp: "-12 LP", type: "lose", icon: "fa-star", time: "7h temu" },
+    { name: "Degenerate Worms", money: "+500 $", lp: "+2 LP", type: "win", icon: "fa-skull-crossbones", time: "8h temu" },
+    { name: "Dragon Tiger", money: "0 $", lp: "+1 LP", type: "draw", icon: "fa-dragon", time: "9h temu" },
+    { name: "Single Deck", money: "-3,000 $", lp: "-10 LP", type: "lose", icon: "fa-layer-group", time: "10h temu" },
+    { name: "BGaming Plinko", money: "-50 $", lp: "-1 LP", type: "lose", icon: "fa-bowling-ball", time: "11h temu" },
+    { name: "Spaceman", money: "+9,000 $", lp: "+15 LP", type: "win", icon: "fa-chart-line", time: "12h temu" },
+    { name: "Gambling Chess", money: "-5,000 $", lp: "-14 LP", type: "lose", icon: "fa-chess", time: "13h temu" },
     
-    {...tL, time: "5h temu"}, {...tL, time: "5h 10m temu"}, {...tL2, time: "5h 30m temu"}, {...tL, time: "6h temu"},
-    {...tL, time: "6h 15m temu"}, {...tD, time: "7h temu"}, {...tL, time: "8h temu"}, {...tL2, time: "8h 30m temu"},
-    {...tW, time: "9h temu"}, {...tL, time: "10h temu"}, {...tL, time: "11h temu"}, {...tL, time: "12h temu"},
-    {...tL, time: "13h temu"}, {...tL, time: "14h temu"}, {...tL2, time: "15h temu"}, {...tL, time: "16h temu"},
-    {...tD, time: "17h temu"}, {...tL, time: "18h temu"}, {...tW, time: "19h temu"}, {...tL, time: "20h temu"},
-
-    
-    {...tD, time: "1d temu"}, {...tD, time: "1d temu"}, {...tW, time: "1d temu"}, {...tL, time: "1d temu"},
-    {...tD, time: "1d temu"}, {...tW, time: "1d temu"}, {...tL, time: "1d temu"}, {...tD, time: "1d temu"},
-    {...tW, time: "1d temu"}, {...tL, time: "1d temu"}, {...tW2, time: "1d temu"}, {...tL2, time: "1d temu"},
-    {...tD, time: "1d temu"}, {...tW, time: "1d temu"}, {...tL, time: "1d temu"}, {...tD, time: "1d temu"},
-    {...tW, time: "1d temu"}, {...tL, time: "1d temu"}, {...tW2, time: "1d temu"}, {...tL2, time: "1d temu"},
-
-     
-     {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"},
-     {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"},
-     {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"},
-     {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"},
-     {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW, time: "2d temu"}, {...tW2, time: "2d temu"}
+    // Page 3+ (Fillers)
+    { name: "Cash Games", money: "+1,000 $", lp: "+4 LP", type: "win", icon: "fa-heart", time: "1d temu" },
+    { name: "Pontoon", money: "-200 $", lp: "-2 LP", type: "lose", icon: "fa-layer-group", time: "1d temu" },
+    { name: "American", money: "+5,000 $", lp: "+12 LP", type: "win", icon: "fa-circle-notch", time: "1d temu" },
+    { name: "Minesweeper", money: "0 $", lp: "+1 LP", type: "draw", icon: "fa-bomb", time: "1d temu" },
+    { name: "Video Slots", money: "-10,000 $", lp: "-18 LP", type: "lose", icon: "fa-star", time: "1d temu" },
+    { name: "Punto Banco", money: "+2,500 $", lp: "+8 LP", type: "win", icon: "fa-dragon", time: "1d temu" },
+    { name: "JetX", money: "-1,000 $", lp: "-5 LP", type: "lose", icon: "fa-rocket", time: "1d temu" },
+    { name: "Turnieje SIT&GO", money: "+30,000 $", lp: "+20 LP", type: "win", icon: "fa-heart", time: "2d temu" },
+    { name: "Degenerate Worms", money: "-500 $", lp: "-3 LP", type: "lose", icon: "fa-skull-crossbones", time: "2d temu" },
+    { name: "Gambling Chess", money: "+500 $", lp: "+3 LP", type: "win", icon: "fa-chess", time: "2d temu" },
+    { name: "Higher vs Lower", money: "0 $", lp: "0 LP", type: "draw", icon: "fa-arrows-alt-v", time: "2d temu" },
+    { name: "BGaming Plinko", money: "-2,000 $", lp: "-8 LP", type: "lose", icon: "fa-bowling-ball", time: "2d temu" },
+    { name: "Immersive", money: "+7,000 $", lp: "+15 LP", type: "win", icon: "fa-circle-notch", time: "2d temu" },
+    { name: "Classic", money: "-4,000 $", lp: "-11 LP", type: "lose", icon: "fa-layer-group", time: "3d temu" },
+    { name: "Cluster Pays", money: "+100,000 $", lp: "+20 LP", type: "win", icon: "fa-star", time: "3d temu" },
+    { name: "No Limit Hold'em", money: "-15,000 $", lp: "-20 LP", type: "lose", icon: "fa-heart", time: "3d temu" },
+    { name: "Cash or Crash", money: "+5,000 $", lp: "+12 LP", type: "win", icon: "fa-chart-line", time: "3d temu" },
+    { name: "Turbo Mines", money: "-1,000 $", lp: "-6 LP", type: "lose", icon: "fa-bomb", time: "4d temu" },
+    { name: "No Commission", money: "+3,000 $", lp: "+9 LP", type: "win", icon: "fa-dragon", time: "4d temu" },
+    { name: "Degenerate Worms", money: "+2,000 $", lp: "+6 LP", type: "win", icon: "fa-skull-crossbones", time: "5d temu" }
 ];
 
 let allGames = staticGamesList;
