@@ -543,7 +543,8 @@ function closeMarketModal() {
 }
 
 function initDashboard() {
-    initInventorySystem(); 
+    initInventorySystem();
+    initGameModePersistence(); // Inicjalizacja stałych liczników graczy 
     initMarketData();
     initWalletBg();
     initGamesBg();
@@ -1828,6 +1829,19 @@ function distributePlayers(total, count) {
     return distribution.sort((a,b) => b-a);
 }
 
+function initGameModePersistence() {
+    // Generuje liczbę graczy dla każdego trybu RAZ przy starcie,
+    // aby była spójna we wszystkich widokach (Dashboard, Gry, Ulubione).
+    gamesHubStructure.forEach(category => {
+        if(category.games) {
+            category.games.forEach(game => {
+                // Zapisujemy wynik w obiekcie gry
+                game.modeCounts = distributePlayers(game.onlineCount, game.modes.length);
+            });
+        }
+    });
+}
+
 let currentDepositMethod = 'visa';
 let currentWithdrawMethod = 'visa';
 
@@ -2867,7 +2881,9 @@ function renderPopularModes() {
     gamesHubStructure.forEach(category => {
         if(category.games) {
             category.games.forEach(game => {
-                const distrib = distributePlayers(game.onlineCount, game.modes.length);
+                // Pobieramy stałe dane zamiast losować na nowo
+                const distrib = game.modeCounts || distributePlayers(game.onlineCount, game.modes.length);
+                
                 game.modes.forEach((modeName, idx) => {
                     allModes.push({
                         modeName: modeName,
@@ -3003,7 +3019,8 @@ function openGameDetailsModal(game) {
     grid.innerHTML = '';
 
     
-    const playersDistribution = distributePlayers(game.onlineCount, game.modes.length);
+    // Używamy zapisanych danych, aby liczby były spójne z Dashboardem
+    const playersDistribution = game.modeCounts || distributePlayers(game.onlineCount, game.modes.length);
 
     game.modes.forEach((modeName, index) => {
         const modeId = `${game.id}_${index}`;
@@ -3176,8 +3193,8 @@ function renderFavoritesPanel() {
         if (foundGame) {
             const modeName = foundGame.modes[mIdx];
             
-            
-            const displayPlayers = Math.floor(foundGame.onlineCount / foundGame.modes.length); 
+            // Pobieramy dokładną liczbę z persystencji, zamiast średniej
+            const displayPlayers = foundGame.modeCounts ? foundGame.modeCounts[mIdx] : 0;
 
             const card = document.createElement('div');
             card.className = 'mode-card';

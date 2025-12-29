@@ -1,40 +1,84 @@
 KROK 1:
 PLIK: "app.js"
-OPERACJA: [ZASTĄP]
+OPERACJA: [WSTAW_PO]
 SZUKAJ:
-            <div class="ul-actions">
-                <button class="ul-btn" title="Edytuj" onclick="openEditUserModal(${u.id})"><i class="fas fa-edit"></i></button>
-                <button class="ul-btn danger" title="Zbanuj" onclick="alert('Zbanowano użytkownika ${u.name}')"><i class="fas fa-ban"></i></button>
-            </div>
+    return distribution.sort((a,b) => b-a);
+}
 TREŚĆ:
-            <div class="ul-actions">
-                <button class="ul-btn" title="Edytuj" onclick="openEditUserModal(${u.id})"><i class="fas fa-edit"></i></button>
-            </div>
+
+function initGameModePersistence() {
+    // Generuje liczbę graczy dla każdego trybu RAZ przy starcie,
+    // aby była spójna we wszystkich widokach (Dashboard, Gry, Ulubione).
+    gamesHubStructure.forEach(category => {
+        if(category.games) {
+            category.games.forEach(game => {
+                // Zapisujemy wynik w obiekcie gry
+                game.modeCounts = distributePlayers(game.onlineCount, game.modes.length);
+            });
+        }
+    });
+}
 
 KROK 2:
-PLIK: "index.html"
-OPERACJA: [ZASTĄP]
+PLIK: "app.js"
+OPERACJA: [WSTAW_PO]
 SZUKAJ:
-                        <div class="eu-actions-footer">
-                            <button class="ap-btn ap-btn-red" onclick="alert('Wyzerowano ekwipunek!')"><i class="fas fa-trash"></i> Wyczyść Ekwipunek</button>
+function initDashboard() {
+    initInventorySystem(); 
 TREŚĆ:
-                        <div class="eu-actions-footer">
-                            <button class="ap-btn ap-btn-red" id="euBtnBan" style="margin-right: 5px;"><i class="fas fa-ban"></i> ZBANUJ</button>
-                            <button class="ap-btn ap-btn-red" onclick="alert('Wyzerowano ekwipunek!')"><i class="fas fa-trash"></i> Wyczyść Ekwipunek</button>
+    initGameModePersistence(); // Inicjalizacja stałych liczników graczy
 
 KROK 3:
 PLIK: "app.js"
-OPERACJA: [WSTAW_PRZED]
+OPERACJA: [ZASTĄP]
 SZUKAJ:
-    document.getElementById('editUserModal').classList.add('active');
-}
+    const playersDistribution = distributePlayers(game.onlineCount, game.modes.length);
 
-function saveUserEdit() {
+    game.modes.forEach((modeName, index) => {
 TREŚĆ:
-    // Config Ban Button inside Modal
-    document.getElementById('euBtnBan').onclick = function() {
-        if(confirm(`Czy na pewno chcesz zbanować użytkownika ${user.name} (ID: ${user.id})?`)) {
-            alert(`[SYSTEM] Użytkownik ${user.name} został zbanowany.`);
-            document.getElementById('euSelectStatus').value = 'Banned';
-        }
-    };
+    // Używamy zapisanych danych, aby liczby były spójne z Dashboardem
+    const playersDistribution = game.modeCounts || distributePlayers(game.onlineCount, game.modes.length);
+
+    game.modes.forEach((modeName, index) => {
+
+KROK 4:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+            category.games.forEach(game => {
+                const distrib = distributePlayers(game.onlineCount, game.modes.length);
+                game.modes.forEach((modeName, idx) => {
+                    allModes.push({
+                        modeName: modeName,
+                        gameName: game.name,
+                        players: distrib[idx],
+TREŚĆ:
+            category.games.forEach(game => {
+                // Pobieramy stałe dane zamiast losować na nowo
+                const distrib = game.modeCounts || distributePlayers(game.onlineCount, game.modes.length);
+                
+                game.modes.forEach((modeName, idx) => {
+                    allModes.push({
+                        modeName: modeName,
+                        gameName: game.name,
+                        players: distrib[idx],
+
+KROK 5:
+PLIK: "app.js"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+        if (foundGame) {
+            const modeName = foundGame.modes[mIdx];
+            
+            
+            const displayPlayers = Math.floor(foundGame.onlineCount / foundGame.modes.length); 
+
+            const card = document.createElement('div');
+TREŚĆ:
+        if (foundGame) {
+            const modeName = foundGame.modes[mIdx];
+            
+            // Pobieramy dokładną liczbę z persystencji, zamiast średniej
+            const displayPlayers = foundGame.modeCounts ? foundGame.modeCounts[mIdx] : 0;
+
+            const card = document.createElement('div');
