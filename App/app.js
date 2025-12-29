@@ -428,8 +428,14 @@ function openMarketItemModal(item) {
     
     
     const template = allTreasures.find(t => t.id === item.templateId);
-    let desc = template ? (template.desc + ' ' + template.bonus) : '';
-    document.getElementById('mmDesc').textContent = desc;
+    let descHtml = '';
+    if(template) {
+        descHtml = `<div class="item-desc-text">"${template.desc}"</div>`;
+        if(template.bonus && template.bonus !== "Brak") {
+            descHtml += `<div class="item-bonus-text"><i class="fas fa-magic"></i> ${template.bonus}</div>`;
+        }
+    }
+    document.getElementById('mmDesc').innerHTML = descHtml;
 
     
     const warning = document.getElementById('mmReqWarning');
@@ -3720,8 +3726,11 @@ function openInventoryItemModal(item) {
     }
 
     // 4. Description & Warnings
-    let desc = item.desc + ' ' + item.bonus;
-    document.getElementById('iiDesc').textContent = desc;
+    let descHtml = `<div class="item-desc-text">"${item.desc}"</div>`;
+    if(item.bonus && item.bonus !== "Brak") {
+        descHtml += `<div class="item-bonus-text"><i class="fas fa-magic"></i> ${item.bonus}</div>`;
+    }
+    document.getElementById('iiDesc').innerHTML = descHtml;
 
     const warning = document.getElementById('iiReqWarning');
     let isLocked = false;

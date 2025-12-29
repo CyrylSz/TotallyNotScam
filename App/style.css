@@ -4377,7 +4377,28 @@ input:checked + .slider:before { transform: translateX(16px); }
 .chart-line-mock { width: 80%; height: 50%; border-bottom: 2px solid var(--accent-green); border-right: 2px solid var(--accent-green); opacity: 0.5; }
 .chart-label { position: absolute; top: 5px; left: 10px; font-size: 10px; color: #666; }
 
-.mm-desc-box { background: rgba(255,255,255,0.03); padding: 10px; border-radius: 6px; font-size: 12px; line-height: 1.4; color: #ccc; }
+.item-desc-text {
+    font-style: italic;
+    color: #94a3b8;
+    margin-bottom: 8px;
+    font-family: serif;
+    font-size: 13px;
+    opacity: 0.8;
+}
+
+.item-bonus-text {
+    color: #60a5fa;
+    font-weight: 700;
+    font-family: 'Consolas', 'Monaco', monospace;
+    font-size: 11px;
+    background: rgba(59, 130, 246, 0.1);
+    padding: 6px 10px;
+    border-radius: 4px;
+    border-left: 2px solid var(--accent-blue);
+    display: inline-block;
+    letter-spacing: 0.5px;
+}
+
 .mm-warning { color: var(--accent-red); margin-top: 5px; font-weight: 700; display: flex; align-items: center; gap: 5px; }
 
 .mm-actions { margin-top: auto; border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; display: flex; justify-content: space-between; align-items: center; }
