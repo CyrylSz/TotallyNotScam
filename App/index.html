@@ -1352,58 +1352,133 @@
         </div>
     </div>
     <div class="modal-overlay" id="accountModal">
-        <div class="steam-modal" style="width: 800px;">
-            <div class="sm-header">
-                <div class="sm-title">Konto</div>
+        <div class="steam-modal" style="width: 850px; max-height: 90vh;">
+            <div class="sm-header" style="background: #0f172a; border-bottom: none;">
+                <div class="sm-title"><i class="fas fa-cog"></i> USTAWIENIA KONTA</div>
                 <div class="sm-close" onclick="closeAccountModal()"><i class="fas fa-times"></i></div>
             </div>
-            <div class="sm-content" style="padding-top: 15px;">
+            
+            <div class="sm-content" style="padding: 0; display: flex; flex-direction: column;">
                 
-                <div class="sm-section-title">Details</div>
-                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">E-Mail</div>
-                        <div style="font-size: 14px;">admin@casinolab.pl</div>
+                <div class="acc-header-profile">
+                    <div class="acc-avatar-large" style="background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');"></div>
+                    <div class="acc-user-details">
+                        <h2>MrGambler</h2>
+                        <div style="display: flex; gap: 10px;">
+                            <span class="acc-user-badge"><i class="fas fa-hashtag"></i> ID: 9942</span>
+                            <span class="acc-user-badge" style="color:var(--accent-green);"><i class="fas fa-calendar-alt"></i> 10 Dec 2025</span>
+                        </div>
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Credit Cards</div>
-                        <div style="font-size: 14px;">•••• •••• •••• 4242</div>
-                        <button class="gc-btn play" style="margin-top: 10px; width: auto; padding: 5px 15px; font-size: 11px;">Zarządzaj kartami</button>
-                    </div>
-                    <div>
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Cryptocurrency Wallet</div>
-                        <div style="font-size: 14px; font-family: monospace;">0x742d35Cc6634C0532925a3b844Bc9e7595f0bEb</div>
-                        <button class="gc-btn play" style="margin-top: 10px; width: auto; padding: 5px 15px; font-size: 11px;">Zarządzaj portfelem</button>
+                    <div style="margin-left: auto;">
+                        <button class="action-btn-large outline" style="padding: 8px 20px; font-size: 11px;" onclick="alert('Otwieranie edytora profilu...')"><i class="fas fa-camera"></i> Zmień Avatar</button>
                     </div>
                 </div>
 
-                <div class="sm-section-title">Security</div>
-                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Password</div>
-                        <button class="gc-btn play" style="width: auto; padding: 5px 15px; font-size: 11px;">Zmień hasło</button>
+                <div class="acc-settings-grid">
+                    
+                    <div class="acc-card">
+                        <div class="acc-card-title"><i class="fas fa-user-shield"></i> Dane Osobowe</div>
+                        <div class="acc-field">
+                            <div class="acc-label">Adres E-mail</div>
+                            <div class="acc-input-box">
+                                <span>admin@casinolab.pl</span>
+                                <i class="fas fa-pen acc-edit-icon" title="Edytuj"></i>
+                            </div>
+                        </div>
+                        <div class="acc-field">
+                            <div class="acc-label">Telefon</div>
+                            <div class="acc-input-box">
+                                <span>+48 *** *** 123</span>
+                                <i class="fas fa-pen acc-edit-icon" title="Edytuj"></i>
+                            </div>
+                        </div>
+                        <div class="acc-field">
+                            <div class="acc-label">Weryfikacja KYC</div>
+                            <div class="acc-input-box" style="border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05);">
+                                <span style="color: var(--accent-green); font-weight: 700;"><i class="fas fa-check-circle"></i> ZWERYFIKOWANO</span>
+                            </div>
+                        </div>
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Two-factor authentication</div>
-                        <div style="font-size: 14px; color: var(--accent-red); margin-bottom: 10px;">Nieaktywne</div>
-                        <button class="gc-btn play" style="width: auto; padding: 5px 15px; font-size: 11px;">Włącz 2FA</button>
+
+                    <div class="acc-card">
+                        <div class="acc-card-title"><i class="fas fa-lock" style="color: var(--accent-purple);"></i> Bezpieczeństwo</div>
+                        <div class="acc-field">
+                            <div class="acc-label">Hasło</div>
+                            <div class="acc-input-box">
+                                <span>•••••••••••••</span>
+                                <button class="acc-action-btn" style="width: auto; flex:0; white-space:nowrap;">Zmień</button>
+                            </div>
+                        </div>
+                        <div class="acc-field">
+                            <div class="acc-label">2FA (Google Authenticator)</div>
+                            <div class="acc-input-box" style="border-color: rgba(239, 68, 68, 0.3);">
+                                <span style="color: var(--accent-red); font-weight: 600;">NIEAKTYWNE</span>
+                                <label class="switch" style="transform: scale(0.7);">
+                                    <input type="checkbox">
+                                    <span class="slider"></span>
+                                </label>
+                            </div>
+                        </div>
+                        <div class="acc-btn-row">
+                            <button class="acc-action-btn"><i class="fas fa-history"></i> Logi Logowania</button>
+                            <button class="acc-action-btn"><i class="fas fa-mobile-alt"></i> Sesje</button>
+                        </div>
                     </div>
-                    <div>
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Backup codes</div>
-                        <button class="gc-btn play" style="width: auto; padding: 5px 15px; font-size: 11px;">Wygeneruj kody zapasowe</button>
+
+                    <div class="acc-card">
+                        <div class="acc-card-title"><i class="fas fa-wallet" style="color: var(--accent-green);"></i> Metody Płatności</div>
+                        <div class="acc-field">
+                            <div class="acc-label">Aktywna Karta</div>
+                            <div class="acc-input-box">
+                                <span><i class="fab fa-cc-visa"></i> •••• 4242</span>
+                                <i class="fas fa-trash acc-edit-icon" style="color: var(--accent-red);"></i>
+                            </div>
+                        </div>
+                        <div class="acc-field">
+                            <div class="acc-label">Adres Crypto (USDT)</div>
+                            <div class="acc-input-box">
+                                <span style="font-size: 11px;">0x742d...f0bEb</span>
+                                <i class="fas fa-copy acc-edit-icon"></i>
+                            </div>
+                        </div>
+                        <button class="acc-action-btn" style="margin-top: auto;"><i class="fas fa-plus"></i> Dodaj nową metodę</button>
                     </div>
+
+                    <div class="acc-card">
+                        <div class="acc-card-title"><i class="fas fa-sliders-h" style="color: var(--accent-orange);"></i> Preferencje</div>
+                        <div class="acc-field">
+                            <div class="acc-label">Język / Region</div>
+                            <select class="eu-select" style="background: rgba(0,0,0,0.3);">
+                                <option>Polski (PL)</option>
+                                <option>English (US)</option>
+                            </select>
+                        </div>
+                        <div class="acc-field" style="flex-direction: row; justify-content: space-between; align-items: center; margin-top: 5px;">
+                            <div class="acc-label" style="color:white;">Powiadomienia Email</div>
+                            <label class="switch switch-green" style="transform: scale(0.8);">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                        <div class="acc-field" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                            <div class="acc-label" style="color:white;">Dźwięki Gry</div>
+                            <label class="switch switch-green" style="transform: scale(0.8);">
+                                <input type="checkbox" checked>
+                                <span class="slider"></span>
+                            </label>
+                        </div>
+                    </div>
+
                 </div>
 
-                <div class="sm-section-title">Account connections</div>
-                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
-                    <div style="font-size: 12px; color: var(--text-muted);">Brak połączonych kont</div>
-                    <button class="gc-btn play" style="margin-top: 10px; width: auto; padding: 5px 15px; font-size: 11px;">Połącz konto</button>
-                </div>
-
-                <div class="sm-section-title">Data Management</div>
-                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
-                    <div style="font-size: 12px; color: var(--text-muted); margin-bottom: 15px;">Usunięcie konta jest nieodwracalne. Wszystkie dane zostaną trwale usunięte.</div>
-                    <button class="gc-btn play" style="background: var(--accent-red); width: auto; padding: 5px 15px; font-size: 11px;" onclick="alert('Usuwanie konta niedostępne w demo')">Usuń konto</button>
+                <div class="acc-danger-zone">
+                    <div class="acc-danger-text">
+                        <h4>Strefa Niebezpieczna</h4>
+                        <p>Usunięcie konta jest nieodwracalne. Utracisz dostęp do wszystkich środków i przedmiotów.</p>
+                    </div>
+                    <button class="action-btn-large outline" style="border-color: var(--accent-red); color: var(--accent-red); font-size: 11px; padding: 10px 20px;" onclick="alert('Niedostępne w wersji demo.')">
+                        <i class="fas fa-trash"></i> USUŃ KONTO
+                    </button>
                 </div>
 
             </div>

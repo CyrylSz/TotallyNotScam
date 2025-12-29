@@ -3737,6 +3737,126 @@ input:checked + .slider:before { transform: translateX(16px); }
     overflow-y: auto;
     padding-right: 5px;
 }
+
+/* --- Account Modal Styles --- */
+.acc-header-profile {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    padding: 25px;
+    background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(21, 26, 45, 0.8));
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+}
+.acc-avatar-large {
+    width: 80px;
+    height: 80px;
+    border-radius: 20px;
+    background-size: cover;
+    background-position: center;
+    border: 3px solid var(--accent-purple);
+    box-shadow: 0 0 20px rgba(139, 92, 246, 0.3);
+}
+.acc-user-details h2 { font-size: 24px; color: white; margin-bottom: 5px; }
+.acc-user-badge {
+    font-size: 10px;
+    background: rgba(255,255,255,0.1);
+    padding: 3px 8px;
+    border-radius: 4px;
+    color: var(--text-muted);
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    font-weight: 600;
+}
+
+.acc-settings-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 20px;
+    padding: 25px;
+}
+
+.acc-card {
+    background: rgba(255,255,255,0.02);
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 12px;
+    padding: 20px;
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+    transition: 0.2s;
+}
+.acc-card:hover {
+    background: rgba(255,255,255,0.04);
+    border-color: rgba(255,255,255,0.1);
+}
+
+.acc-card-title {
+    font-size: 12px;
+    font-weight: 700;
+    color: var(--text-muted);
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border-bottom: 1px solid rgba(255,255,255,0.05);
+    padding-bottom: 10px;
+    margin-bottom: 5px;
+}
+.acc-card-title i { color: var(--accent-blue); }
+
+.acc-field {
+    display: flex;
+    flex-direction: column;
+    gap: 5px;
+}
+.acc-label { font-size: 10px; color: #888; font-weight: 500; }
+.acc-input-box {
+    background: rgba(0,0,0,0.3);
+    border: 1px solid rgba(255,255,255,0.1);
+    padding: 8px 12px;
+    border-radius: 6px;
+    color: white;
+    font-size: 13px;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.acc-input-box span { font-family: monospace; color: #ccc; }
+.acc-edit-icon { color: var(--accent-blue); cursor: pointer; font-size: 12px; transition: 0.2s; opacity: 0.7; }
+.acc-edit-icon:hover { opacity: 1; transform: scale(1.1); }
+
+.acc-btn-row {
+    margin-top: auto;
+    display: flex;
+    gap: 10px;
+}
+.acc-action-btn {
+    flex: 1;
+    padding: 8px;
+    font-size: 11px;
+    font-weight: 600;
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #ccc;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: 0.2s;
+}
+.acc-action-btn:hover { background: rgba(255,255,255,0.1); color: white; }
+
+.acc-danger-zone {
+    margin: 0 25px 25px 25px;
+    padding: 15px;
+    border: 1px dashed rgba(239, 68, 68, 0.3);
+    border-radius: 8px;
+    background: rgba(239, 68, 68, 0.05);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+.acc-danger-text h4 { font-size: 13px; color: var(--accent-red); margin-bottom: 2px; }
+.acc-danger-text p { font-size: 11px; color: var(--text-muted); }
 .ms-type-btn:hover { 
     color: white; 
     background: rgba(255,255,255,0.03); 
