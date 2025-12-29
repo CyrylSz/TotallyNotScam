@@ -1684,7 +1684,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     letter-spacing: 0.5px;
 }
 
-/* Match Details Modal Styles */
+
 .match-p-row {
     display: flex;
     align-items: center;
@@ -1713,7 +1713,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .mp-right { 
     display: flex; 
     align-items: center; 
-    justify-content: space-between; /* Rozsuwa loadout i profit */
+    justify-content: space-between; 
     gap: 15px; 
     flex: 1;
     margin-left: 20px;
@@ -1723,7 +1723,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     display: flex;
     align-items: center;
     gap: 10px;
-    flex: 1; /* Zajmuje dostępną przestrzeń na lewo */
+    flex: 1; 
 }
 
 .mp-loadout-col {
@@ -2466,10 +2466,10 @@ input:checked + .slider:before { transform: translateX(16px); }
     text-align: center;
 }
 
-/* --- Modern Battle Pass Styles --- */
+
 .bp-hero-section {
     height: 165px;
-    /* Usunieto border-bottom (jasny pasek) i wzmocniono gradient na dole */
+    
     background: linear-gradient(to bottom, rgba(15, 23, 42, 0.1) 0%, rgba(15, 17, 26, 0.6) 70%, #0f111a 98%, #0f111a 100%), url('https://images.unsplash.com/photo-1550745165-9bc0b252726f?q=80&w=2070&auto=format&fit=crop');
     background-size: cover;
     background-position: center;
@@ -2533,22 +2533,37 @@ input:checked + .slider:before { transform: translateX(16px); }
     overflow-x: auto;
     padding: 40px 30px;
     display: flex;
-    align-items: center;
+    align-items: flex-start; /* FIX: Wyrównanie do góry, aby okręgi były zawsze w tej samej linii */
     background: radial-gradient(circle at center, #1e293b 0%, #0f111a 100%);
     position: relative;
     min-height: 300px;
 }
 
-/* Linia łącząca */
+
 .bp-connector-line {
     position: absolute;
-    top: 50%;
-    left: 0;
-    width: 200%; /* Szeroka na scroll */
+    top: 55px;
     height: 4px;
-    background: rgba(255,255,255,0.05);
+    
+    /* Startujemy idealnie pod środkiem pierwszego okręgu (padding 30px + połowa noda 70px) */
+    left: 100px;
+    
+    /* Całkowita długość linii od środka noda 1 do środka noda 25 (24 odstępy * 160px) */
+    width: 3840px; 
+
+    /* FIX: Używamy sztywnych PIKSELI (px) zamiast procentów (%), aby gradient nie pływał.
+       2560px = odległość do środka 17-tego noda (16 odstępów * 160px).
+    */
+    background: linear-gradient(to right, 
+        #00e5ff 0px, 
+        var(--accent-purple) 2560px, 
+        rgba(255,255,255,0.05) 2560px, 
+        rgba(255,255,255,0.05) 100%
+    );
+    
     transform: translateY(-50%);
     z-index: 0;
+    border-radius: 2px;
 }
 
 .bp-card-node {
@@ -2581,7 +2596,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     transition: 0.3s;
 }
 
-/* Active Level Styling */
+
 .bp-card-node.active .bp-lvl-indicator {
     border-color: #00e5ff;
     color: #00e5ff;
@@ -2590,7 +2605,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     background: #0f172a;
 }
 
-/* Claimed Level Styling */
+
 .bp-card-node.claimed .bp-lvl-indicator {
     background: var(--accent-purple);
     border-color: var(--accent-purple);
@@ -2619,16 +2634,37 @@ input:checked + .slider:before { transform: translateX(16px); }
     transform: translateY(-10px);
 }
 
-/* Zmieniono logikę claimed, aby nie szarzyć badge'a Premium */
+
 .bp-card-node.claimed .bp-reward-card {
     opacity: 1;
     filter: none;
 }
 
-/* Szarzymy wszystko w środku OPRÓCZ klasy .bp-premium-badge */
+
 .bp-card-node.claimed .bp-reward-card > *:not(.bp-premium-badge) {
     opacity: 0.5;
     filter: grayscale(0.8);
+}
+
+.bp-card-node:nth-child(odd).claimed .bp-reward-card > *:not(.bp-premium-badge) {
+    opacity: 1;
+    filter: none;
+}
+
+
+/* FIX: Złoty styl przycisków dla nagród Premium (ZABLOKOWANE - STONOWANE) */
+.bp-card-node:nth-child(odd) .bp-claim-btn {
+    /* Ciemniejszy, mniej nasycony złoty gradient */
+    background: linear-gradient(180deg, rgba(124, 95, 39, 0.6), rgba(82, 62, 24, 0.8));
+    /* Jasny kolor tekstu, lekko przygaszony */
+    color: rgba(255, 255, 255, 0.65);
+    /* Bardzo delikatne obramowanie */
+    border: 1px solid rgba(245, 158, 11, 0.15);
+    opacity: 1 !important;
+    /* Usunięto jasny cień zewnętrzny, dodano delikatny cień wewnętrzny dla głębi */
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.25);
+    /* Zmniejszona waga czcionki */
+    font-weight: 600;
 }
 
 .bp-card-node:hover .bp-reward-card {
@@ -3976,7 +4012,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     padding-right: 5px;
 }
 
-/* --- Account Modal Styles --- */
+
 .acc-header-profile {
     display: flex;
     align-items: center;
@@ -4913,7 +4949,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .pl-date { color: var(--text-muted); }
 .pl-val { font-weight: 700; font-family: 'Inter', sans-serif; }
 
-/* --- Daily P/L Modern Styles --- */
+
 .pl-summary-card {
     background: linear-gradient(135deg, rgba(21, 26, 45, 0.8), rgba(30, 41, 59, 0.8));
     border: 1px solid rgba(255,255,255,0.05);
@@ -4960,7 +4996,7 @@ input:checked + .slider:before { transform: translateX(16px); }
 .pl-m-date { font-size: 11px; color: var(--text-muted); font-weight: 600; }
 .pl-m-visual { display: flex; align-items: center; height: 100%; padding: 0 15px; }
 .pl-bar-bg { width: 100%; height: 4px; background: rgba(0,0,0,0.3); border-radius: 2px; overflow: hidden; display: flex; }
-/* Pasek wypełnienia będzie stylizowany inline w JS */
+
 
 .pl-m-val { text-align: right; font-size: 13px; font-weight: 700; font-family: monospace; }
 .rs-card.streak-block {
