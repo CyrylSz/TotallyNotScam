@@ -12,7 +12,8 @@ let notificationsDB = [
     { id: 'n3', type: 'trophy', title: 'AI Buddy', desc: "Napisz 'Cześć' do Asystenta AI.", metaId: 2 },
     
     { id: 'n4', type: 'quest', title: 'Misja Ukończona', desc: 'Postaw łącznie 500$', metaId: 'btnQuest500' },
-    { id: 'n5', type: 'friend', title: 'Zaproszenie', desc: 'HighStakeJ chce dodać Cię do znajomych.', metaId: null }
+    // metaId zawiera teraz obiekt z danymi gracza
+    { id: 'n5', type: 'friend', title: 'Zaproszenie', desc: 'HighStakeJ chce dodać Cię do znajomych.', metaId: { name: 'HighStakeJ', rank: 'Risk Taker', pfp: 'https://i.pravatar.cc/150?u=HighStakeJ' } }
 ];
 
 
@@ -2877,8 +2878,29 @@ function handleNotifClaimQuest(domId, nId) {
 }
 
 function handleNotifFriend(nId, accepted) {
-    if(accepted) alert("Zaakceptowano zaproszenie od HighStakeJ!");
-    else alert("Odrzucono zaproszenie.");
+    // Pobieramy dane powiadomienia zanim je usuniemy
+    const notif = notificationsDB.find(n => n.id === nId);
+
+    if(accepted && notif && notif.metaId) {
+        const friend = notif.metaId;
+        const list = document.querySelector('.cfp-list');
+        
+        // Tworzymy nowy element DOM dla listy znajomych
+        const el = document.createElement('div');
+        el.className = 'cfp-item';
+        // Dodajemy logikę switchChatPartner
+        el.onclick = () => switchChatPartner('user', friend.name, friend.rank, friend.pfp);
+        
+        el.innerHTML = `
+            <div class="cfp-avatar" style="background-image: url('${friend.pfp}');"></div>
+            <div class="cfp-name">${friend.name}</div>
+        `;
+        
+        // Dodajemy do listy bez popupu
+        list.appendChild(el);
+    }
+    
+    // Usuwamy powiadomienie bez popupu
     removeNotifFromDB(nId);
 }
 initDashboard();
