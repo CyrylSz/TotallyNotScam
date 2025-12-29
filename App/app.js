@@ -1458,15 +1458,50 @@ function closeRankModal() {
 
 
 function openBattlePassModal() {
-    document.getElementById('battlePassModal').classList.add('active');
-}
-    // Auto-scroll to active node
+    const modal = document.getElementById('battlePassModal');
+    if (!modal) return;
+    modal.classList.add('active');
+
+    // Custom smooth scroll animation with ease-out
     setTimeout(() => {
+        const track = document.getElementById('bpTrackContainer');
         const activeNode = document.getElementById('bpActiveNode');
-        if(activeNode) {
-            activeNode.scrollIntoView({ behavior: 'smooth', inline: 'center', block: 'nearest' });
+
+        if(track && activeNode) {
+            // Obliczamy pozycję docelową (środek kontenera)
+            const trackWidth = track.clientWidth;
+            const nodeLeft = activeNode.offsetLeft;
+            const nodeWidth = activeNode.clientWidth;
+            
+            // Cel: node ma być na środku, więc scrollLeft = pozycja noda - połowa szerokości kontenera + połowa szerokości noda
+            const targetScroll = nodeLeft - (trackWidth / 2) + (nodeWidth / 2);
+            const startScroll = track.scrollLeft;
+            const distance = targetScroll - startScroll;
+
+            let startTime = null;
+            const duration = 1200; // ms (czas trwania animacji)
+
+            function animation(currentTime) {
+                if (startTime === null) startTime = currentTime;
+                const timeElapsed = currentTime - startTime;
+                
+                // Funkcja Easing: Ease Out Quint (szybki start, bardzo wolne hamowanie)
+                // Wzór: 1 - pow(1 - x, 5)
+                let progress = 1 - Math.pow(1 - (timeElapsed / duration), 5);
+                
+                if (progress > 1) progress = 1;
+
+                track.scrollLeft = startScroll + (distance * progress);
+
+                if (timeElapsed < duration) {
+                    requestAnimationFrame(animation);
+                }
+            }
+
+            requestAnimationFrame(animation);
         }
     }, 300);
+}
 
 function closeBattlePassModal() {
     document.getElementById('battlePassModal').classList.remove('active');
