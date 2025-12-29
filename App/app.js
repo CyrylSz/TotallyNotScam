@@ -1549,6 +1549,7 @@ function renderInventoryView() {
         slot.setAttribute('draggable', !isLocked);
         slot.dataset.uid = item.uid;
         slot.addEventListener('dragstart', handleDragStart);
+        slot.addEventListener('dragend', handleDragEnd);
 
         let rarityColor = getRarityColor(item.rarity);
 
@@ -1648,6 +1649,9 @@ function handleDragStart(e) {
     e.dataTransfer.setData("text/plain", e.target.dataset.uid);
     e.dataTransfer.effectAllowed = "move";
     e.target.style.opacity = '0.4';
+}
+function handleDragEnd(e) {
+    e.target.style.opacity = '1';
 }
 
 function handleDragOver(e) {
