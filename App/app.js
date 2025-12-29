@@ -4,15 +4,15 @@ let shownGames = 20;
 let shownTrophies = 5;
 let notificationCount = 5;
 
-// Baza powiadomień (zsynchronizowana z achievementsDB)
+
 let notificationsDB = [
-    // ID w metaId muszą pasować do ID w achievementsDB (7, 4, 2)
+    
     { id: 'n1', type: 'trophy', title: 'Wilk z Wall Street', desc: 'Sprzedaj przedmiot na Rynku z zyskiem.', metaId: 7 },
     { id: 'n2', type: 'trophy', title: 'Bankructwo', desc: 'Zejdź do salda 0 kredytów.', metaId: 4 },
     { id: 'n3', type: 'trophy', title: 'AI Buddy', desc: "Napisz 'Cześć' do Asystenta AI.", metaId: 2 },
     
     { id: 'n4', type: 'quest', title: 'Misja Ukończona', desc: 'Postaw łącznie 500$', metaId: 'btnQuest500' },
-    // metaId zawiera teraz obiekt z danymi gracza
+    
     { id: 'n5', type: 'friend', title: 'Zaproszenie', desc: 'HighStakeJ chce dodać Cię do znajomych.', metaId: { name: 'HighStakeJ', rank: 'Risk Taker', pfp: 'https://i.pravatar.cc/150?u=HighStakeJ' } }
 ];
 
@@ -559,11 +559,11 @@ function openMatchDetailsModal(game) {
     const modal = document.getElementById('matchDetailsModal');
     if(!modal) return;
 
-    // 1. Setup Header
+    
     const iconBox = document.getElementById('mdGameIcon');
     iconBox.innerHTML = `<i class="fas ${game.icon}"></i>`;
     
-    // Kolorystyka ikony zależna od wyniku
+    
     let resultColor = '#fff';
     if(game.type === 'win') { resultColor = 'var(--accent-green)'; iconBox.style.background = 'rgba(16, 185, 129, 0.1)'; iconBox.style.borderColor = 'rgba(16, 185, 129, 0.3)'; }
     else if(game.type === 'lose') { resultColor = 'var(--accent-red)'; iconBox.style.background = 'rgba(239, 68, 68, 0.1)'; iconBox.style.borderColor = 'rgba(239, 68, 68, 0.3)'; }
@@ -577,15 +577,15 @@ function openMatchDetailsModal(game) {
     resEl.textContent = game.money;
     resEl.style.color = resultColor;
 
-    // 2. Generate Fake Participants
+    
     const list = document.getElementById('mdPlayerList');
     list.innerHTML = '';
 
-    // Mock data generator for opponents
+    
     const generateParticipants = () => {
         const participants = [];
         
-        // Add ME
+        
         participants.push({
             name: 'MrGambler',
             pfp: 'https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false',
@@ -596,17 +596,17 @@ function openMatchDetailsModal(game) {
             isMe: true
         });
 
-        // Add Random Opponents (1 to 4)
+        
         const count = Math.floor(Math.random() * 4) + 1;
         const botNames = ['Whale_Killer', 'LuckyLuke', 'CryptoBro', 'Bot_Network_01', 'Anon_99', 'HighRoller', 'NoobMaster'];
         const loadouts = ['Default Set', 'High Roller Suit', 'Speed Run Config', 'Lucky Charm', 'Troll Build'];
         
         for(let i=0; i<count; i++) {
             const name = botNames[Math.floor(Math.random() * botNames.length)];
-            // Avoid duplicates simple check
+            
             if(participants.find(p => p.name === name)) continue;
 
-            // Random Profit logic (inverse of player if 1v1, or random)
+            
             let prof = 0;
             if(game.type === 'win') prof = -1 * Math.floor(Math.random() * 5000);
             else prof = Math.floor(Math.random() * 10000);
@@ -619,7 +619,7 @@ function openMatchDetailsModal(game) {
                 rank: ['Small Fry', 'Risk Taker', 'Table Shark', 'Casino Legend'][Math.floor(Math.random()*4)],
                 profit: profStr,
                 loadout: loadouts[Math.floor(Math.random() * loadouts.length)],
-                gearPower: Math.floor(Math.random() * 401), // 0-400
+                gearPower: Math.floor(Math.random() * 401), 
                 isMe: false
             });
         }
@@ -632,36 +632,36 @@ function openMatchDetailsModal(game) {
         const row = document.createElement('div');
         row.className = `match-p-row ${p.isMe ? 'is-me' : ''}`;
         
-        // Color logic for gear power
+        
         let gpColor = '#aaa';
-        if(p.gearPower > 300) gpColor = '#ffd700'; // Gold
-        else if(p.gearPower > 200) gpColor = '#8b5cf6'; // Purple
-        else if(p.gearPower > 100) gpColor = '#3b82f6'; // Blue
+        if(p.gearPower > 300) gpColor = '#ffd700'; 
+        else if(p.gearPower > 200) gpColor = '#8b5cf6'; 
+        else if(p.gearPower > 100) gpColor = '#3b82f6'; 
 
-        // Color logic for profit
+        
         let profitColor = 'white';
         if(p.profit.includes('+')) profitColor = 'var(--accent-green)';
         if(p.profit.includes('-')) profitColor = 'var(--accent-red)';
 
-        // Logic for LP (Fixed: correlate with profit)
+        
         let lpVal = 0;
 
         if(p.isMe && game.lp) {
-             // For "Me", keep consistency with dashboard history
+             
              lpVal = parseInt(game.lp.replace(' LP', '').replace('+', ''));
         } else {
-             // For opponents, calculate based on their profit outcome
-             // Remove non-numeric chars (keep minus) to check value
+             
+             
              const rawProfit = parseInt(p.profit.replace(/[^0-9-]/g, ''));
              
              if(rawProfit > 0) {
-                 // Winner gets positive LP (10 to 40)
+                 
                  lpVal = Math.floor(Math.random() * 30) + 10;
              } else if (rawProfit < 0) {
-                 // Loser gets negative LP (-5 to -25)
+                 
                  lpVal = -1 * (Math.floor(Math.random() * 20) + 5);
              } else {
-                 // Break even / 0
+                 
                  lpVal = 0;
              }
         }
@@ -710,7 +710,7 @@ function closeMatchDetailsModal() {
 }
 function initDashboard() {
     initInventorySystem();
-    initGameModePersistence(); // Inicjalizacja stałych liczników graczy 
+    initGameModePersistence(); 
     initMarketData();
     initWalletBg();
     initGamesBg();
@@ -732,14 +732,14 @@ function initProfileStars() {
     const container = document.getElementById('profileStarsBg');
     if(!container || container.children.length > 0) return;
 
-    // Generujemy rzadkie gwiazdy (zwiększony zakres, mała ilość)
+    
     const starCount = 70;
 
     for(let i=0; i<starCount; i++) {
         const star = document.createElement('div');
         star.className = 'star-real';
         
-        // Używamy % względem kontenera (który jest już wypozycjonowany za sidebarem)
+        
         const x = Math.random() * 100;
         const y = Math.random() * 100;
         
@@ -772,15 +772,15 @@ function initWalletBg() {
         el.textContent = moneyChars[Math.floor(Math.random() * moneyChars.length)];
         
         const x = Math.random() * 100;
-        const size = Math.random() * 20 + 15; // 15px - 35px
-        const duration = Math.random() * 10 + 5; // 5s - 15s
+        const size = Math.random() * 20 + 15; 
+        const duration = Math.random() * 10 + 5; 
         const delay = Math.random() * 10;
 
         el.style.left = `${x}%`;
         el.style.fontSize = `${size}px`;
         el.style.opacity = Math.random() * 0.3 + 0.1;
         el.style.animationDuration = `${duration}s`;
-        el.style.animationDelay = `-${delay}s`; // Negative delay for instant start
+        el.style.animationDelay = `-${delay}s`; 
 
         container.appendChild(el);
     }
@@ -791,7 +791,7 @@ function initGamesBg() {
     if(!container || container.children.length > 0) return;
 
     const colors = ['#ef4444', '#3b82f6', '#10b981', '#000'];
-    // Znacznie mniejsza ilość (mniejsza gęstość)
+    
     const count = 12;
 
     for(let i=0; i<count; i++) {
@@ -801,15 +801,15 @@ function initGamesBg() {
         const color = colors[Math.floor(Math.random() * colors.length)];
         el.style.backgroundColor = color;
         
-        // Logika: tylko po bokach (0-15% lub 85-100%), aby nie zasłaniać paneli
+        
         let x;
         if (Math.random() > 0.5) {
-            x = Math.random() * 15; // Lewa strona
+            x = Math.random() * 15; 
         } else {
-            x = 85 + Math.random() * 15; // Prawa strona
+            x = 85 + Math.random() * 15; 
         }
 
-        // Dłuższy czas spadania = spokojniejsza animacja
+        
         const duration = Math.random() * 20 + 15; 
         const delay = Math.random() * 20;
 
@@ -860,9 +860,9 @@ function updateStats() {
     const total = achievementsDB.length;
     const perc = Math.round((earned / total) * 100);
 
-    // UWAGA: Usunięto stąd logikę aktualizacji badge'a dzwoneczka, 
-    // ponieważ teraz zarządza nią bezpośrednio system powiadomień (removeNotifFromDB),
-    // aby uniknąć konfliktów przy odświeżaniu widoku.
+    
+    
+    
 
     document.getElementById('mainTrophyCount').textContent = `${earned}/${total}`;
     document.getElementById('modalEarnedText').textContent = `${earned} OF ${total} ACHIEVEMENTS EARNED`;
@@ -1014,7 +1014,7 @@ function renderTreasures() {
         const div = document.createElement('div');
         div.className = 'item-row';
         div.style.cursor = 'pointer';
-        div.onclick = () => openInventoryItemModal(item); // Otwieranie modala
+        div.onclick = () => openInventoryItemModal(item); 
         
         let priceClass = 'price-neutral';
         let icon = '';
@@ -1023,7 +1023,7 @@ function renderTreasures() {
         if (item.trend === 'up' || item.type === 'up') { priceClass = 'price-up'; icon = 'fa-caret-up'; colorClass = 'val-up'; }
         else if (item.trend === 'down' || item.type === 'down') { priceClass = 'price-down'; icon = 'fa-caret-down'; colorClass = 'val-down'; }
 
-        // Obliczanie ceny rynkowej (spójne z modalem)
+        
         const trendVal = parseFloat((item.change || "0").replace('%', ''));
         const dynamicPrice = Math.floor((item.rawPrice || 0) * (1 + (trendVal / 100)));
         const displayPrice = dynamicPrice.toLocaleString() + ' $';
@@ -1104,12 +1104,12 @@ function renderGames() {
             iconColor = '#fff';
         }
         
-        // Kolory walut
+        
         let moneyColor = '#fff';
         if (g.money && g.money.includes('+')) moneyColor = 'var(--accent-green)';
         else if (g.money && g.money.includes('-')) moneyColor = 'var(--accent-red)';
 
-        let lpColor = '#9ca3af'; // Szary dla minusa/zera
+        let lpColor = '#9ca3af'; 
         if (g.lp && g.lp.includes('+')) lpColor = 'var(--accent-purple)';
 
         const div = document.createElement('div');
@@ -1148,22 +1148,22 @@ function showMoreGames() {
 function claimReward(id) {
     const ach = achievementsDB.find(a => a.id === id);
     if (ach) {
-        if (ach.rewardClaimed) return; // Zabezpieczenie przed podwójnym klikiem
+        if (ach.rewardClaimed) return; 
         ach.rewardClaimed = true;
         
-        // Update UI Profilu
+        
         updateStats();
         renderTrophies();
         
-        // SYNCHRONIZACJA: Usuwamy powiadomienie z dzwoneczka (jeśli istnieje)
-        // To automatycznie zmniejszy licznik o 1.
+        
+        
         const relatedNotif = notificationsDB.find(n => n.type === 'trophy' && n.metaId === id);
         if (relatedNotif) {
             removeNotifFromDB(relatedNotif.id);
         }
         
-        // Feedback wizualny (opcjonalny)
-        // alert(`Odebrano nagrodę za: ${ach.title}!`);
+        
+        
     }
 }
 
@@ -1462,31 +1462,31 @@ function openBattlePassModal() {
     if (!modal) return;
     modal.classList.add('active');
 
-    // Custom smooth scroll animation with ease-out
+    
     setTimeout(() => {
         const track = document.getElementById('bpTrackContainer');
         const activeNode = document.getElementById('bpActiveNode');
 
         if(track && activeNode) {
-            // Obliczamy pozycję docelową (środek kontenera)
+            
             const trackWidth = track.clientWidth;
             const nodeLeft = activeNode.offsetLeft;
             const nodeWidth = activeNode.clientWidth;
             
-            // Cel: node ma być na środku, więc scrollLeft = pozycja noda - połowa szerokości kontenera + połowa szerokości noda
+            
             const targetScroll = nodeLeft - (trackWidth / 2) + (nodeWidth / 2);
             const startScroll = track.scrollLeft;
             const distance = targetScroll - startScroll;
 
             let startTime = null;
-            const duration = 1200; // ms (czas trwania animacji)
+            const duration = 1200; 
 
             function animation(currentTime) {
                 if (startTime === null) startTime = currentTime;
                 const timeElapsed = currentTime - startTime;
                 
-                // Funkcja Easing: Ease Out Quint (szybki start, bardzo wolne hamowanie)
-                // Wzór: 1 - pow(1 - x, 5)
+                
+                
                 let progress = 1 - Math.pow(1 - (timeElapsed / duration), 5);
                 
                 if (progress > 1) progress = 1;
@@ -1534,7 +1534,7 @@ const chatRoastBubble = document.getElementById('chatRoastBubble');
 let activeChatPartner = { type: 'ai', name: 'AI Buddy', status: 'Pomocnik Gracza', icon: 'fa-robot', img: null };
 
 function toggleChat() {
-    // If bubble is active, clicking ball just closes bubble first
+    
     if(chatRoastBubble.classList.contains('visible')) {
         chatRoastBubble.classList.remove('visible');
         return;
@@ -1543,7 +1543,7 @@ function toggleChat() {
     const isOpen = chatWindow.classList.contains('open');
     if (isOpen) {
         chatWindow.classList.remove('open');
-        chatFriendPanel.classList.remove('open'); // Close friend panel if open
+        chatFriendPanel.classList.remove('open'); 
         updateToggleIcon(false);
     } else {
         chatWindow.classList.add('open');
@@ -1558,7 +1558,7 @@ function updateToggleIcon(isOpen) {
         content.style.backgroundImage = 'none';
         content.style.backgroundColor = 'transparent';
     } else {
-        // Show active partner icon/img
+        
         if (activeChatPartner.type === 'ai') {
             content.innerHTML = `<i class="fas ${activeChatPartner.icon}" style="font-size:24px;"></i>`;
             content.style.backgroundImage = 'none';
@@ -1576,12 +1576,12 @@ function toggleFriendPanel() {
 }
 
 function switchChatPartner(type, name, status, visual) {
-    // 1. Update State
+    
     activeChatPartner = { type, name, status };
     if(type === 'ai') activeChatPartner.icon = visual;
     else activeChatPartner.img = visual;
 
-    // 2. Update UI - Header
+    
     document.getElementById('chatHeaderName').textContent = name;
     document.getElementById('chatHeaderStatus').textContent = status;
     const headerIcon = document.getElementById('chatHeaderIcon');
@@ -1595,17 +1595,17 @@ function switchChatPartner(type, name, status, visual) {
         headerIcon.style.backgroundImage = `url('${visual}')`;
     }
 
-    // 3. Clear/Load Messages (Mock)
+    
     chatMessages.innerHTML = '';
     if(type === 'ai') addMessage("Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?", 'bot');
     else addMessage(`[Historia rozmowy z ${name} wczytana...]`, 'bot');
 
-    // 4. Close upper panel
+    
     chatFriendPanel.classList.remove('open');
 
-    // 5. Update Ball Icon if closed (or just refresh state)
-    // If window is open, icon is "X". If closed, icon is Partner.
-    // Use animation class on Toggle Button
+    
+    
+    
     const btn = document.getElementById('chatToggleBtn');
     btn.style.transform = "scale(0.8)";
     setTimeout(() => {
@@ -1620,7 +1620,7 @@ function sendMessage() {
     addMessage(text, 'user');
     chatInput.value = '';
     
-    // Auto reply mock
+    
     if(activeChatPartner.type === 'ai') {
         setTimeout(() => addMessage("Jestem tylko demem UI, ale dziękuję za wiadomość!", 'bot'), 1000);
     }
@@ -1639,25 +1639,25 @@ chatInput.addEventListener('keypress', function (e) {
 });
 
 function triggerRoastAnimation(message) {
-    // 1. Force switch to AI Partner without opening panels
+    
     activeChatPartner = { type: 'ai', name: 'AI Buddy', status: 'Roast Master', icon: 'fa-robot' };
     
-    // Close everything
+    
     chatWindow.classList.remove('open');
     chatFriendPanel.classList.remove('open');
     
-    // Update Ball Icon visually with animation
+    
     const btn = document.getElementById('chatToggleBtn');
     btn.style.transition = "transform 0.3s";
     btn.style.transform = "rotate(360deg) scale(1.2)";
-    updateToggleIcon(false); // Shows robot icon
+    updateToggleIcon(false); 
     
     setTimeout(() => {
         btn.style.transform = "scale(1)";
         
-        // 2. Show Bubble with dots
+        
         chatRoastBubble.style.display = 'flex';
-        // Force reflow
+        
         void chatRoastBubble.offsetWidth; 
         chatRoastBubble.classList.add('visible');
         
@@ -1668,12 +1668,12 @@ function triggerRoastAnimation(message) {
         txt.style.display = 'none';
         txt.textContent = message;
 
-        // 3. Reveal text after 1s
+        
         setTimeout(() => {
             dots.style.display = 'none';
             txt.style.display = 'block';
             
-            // Auto hide based on length (min 3s, max 10s)
+            
             const duration = Math.max(3000, Math.min(10000, message.length * 100));
             setTimeout(() => {
                 chatRoastBubble.classList.remove('visible');
@@ -1835,7 +1835,7 @@ function setupLoadoutSlots() {
         
         newSlot.addEventListener('dragover', handleDragOver);
         newSlot.addEventListener('drop', handleDrop);
-        // remove direct handleUnequip to allow modal 
+        
         
         
         const slotType = newSlot.dataset.type; 
@@ -1943,9 +1943,9 @@ function renderItemInSlot(slotElement, item) {
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
     slotElement.title = `${item.name}`;
     
-    // Nadpisanie onclicka, aby otwierał modal zamiast od razu zdejmować
+    
     slotElement.onclick = (e) => {
-        e.stopPropagation(); // Zapobiega innym handlerom
+        e.stopPropagation(); 
         openInventoryItemModal(item);
     };
 }
@@ -2058,12 +2058,12 @@ function distributePlayers(total, count) {
 }
 
 function initGameModePersistence() {
-    // Generuje liczbę graczy dla każdego trybu RAZ przy starcie,
-    // aby była spójna we wszystkich widokach (Dashboard, Gry, Ulubione).
+    
+    
     gamesHubStructure.forEach(category => {
         if(category.games) {
             category.games.forEach(game => {
-                // Zapisujemy wynik w obiekcie gry
+                
                 game.modeCounts = distributePlayers(game.onlineCount, game.modes.length);
             });
         }
@@ -2385,7 +2385,7 @@ let heatmapState = { players: true, admins: true };
 
 function renderAdminHeatmap() {
     const grid = document.getElementById('adminHeatmapGrid');
-    if(!grid) return; // Allow re-render
+    if(!grid) return; 
     grid.innerHTML = '';
 
     const totalCells = 53 * 7;
@@ -2393,16 +2393,16 @@ function renderAdminHeatmap() {
     for(let i = 0; i < totalCells; i++) {
         const div = document.createElement('div');
         
-        // Randomize type: 90% Player, 10% Admin logic
-        // But only applies if there is activity
+        
+        
         const rand = Math.random();
         let type = 'player';
         if(Math.random() > 0.9) type = 'admin';
 
         let level = '0';
-        let cellClass = 'l0'; // default empty
+        let cellClass = 'l0'; 
 
-        // Generate activity
+        
         if (rand > 0.70) {
             if (rand > 0.75) level = '1';
             if (rand > 0.88) level = '2';
@@ -2412,13 +2412,13 @@ function renderAdminHeatmap() {
             if(type === 'admin') cellClass = `al${level}`;
             else cellClass = `l${level}`;
         } else {
-            type = 'none'; // No activity
+            type = 'none'; 
         }
 
         div.className = `gh-cell ${cellClass}`;
         div.dataset.type = type;
         
-        // Apply initial visibility state
+        
         if(type === 'player' && !heatmapState.players) div.style.opacity = '0.1';
         if(type === 'admin' && !heatmapState.admins) div.style.opacity = '0.1';
 
@@ -2431,15 +2431,15 @@ function renderAdminHeatmap() {
 function toggleHeatmapSource(source) {
     heatmapState[source] = !heatmapState[source];
     
-    // Update buttons visual state
+    
     const btn = document.getElementById(source === 'players' ? 'btnHmPlayers' : 'btnHmAdmins');
     if(btn) btn.classList.toggle('active', heatmapState[source]);
 
-    // Update grid cells visibility
+    
     const cells = document.querySelectorAll('.gh-cell');
     cells.forEach(cell => {
         const type = cell.dataset.type;
-        if(type === 'none') return; // Ignore empty cells
+        if(type === 'none') return; 
 
         if(type === 'player') {
             cell.style.opacity = heatmapState.players ? '1' : '0.1';
@@ -2577,7 +2577,7 @@ function adminLogoutAll() {
 function sendAdminPush() {
     const msg = document.getElementById('pushMsgInput').value;
     if(msg) {
-        // Trigger the Global Roast Animation
+        
         triggerRoastAnimation(msg);
         document.getElementById('pushMsgInput').value = '';
     }
@@ -2605,19 +2605,19 @@ function openAdminFinancialLogs() {
     const modal = document.getElementById('financialLogsModal');
     if(!modal) return;
     
-    // Otwórz modal
+    
     modal.classList.add('active');
     
-    // Nadpisz tytuł na adminowy
+    
     const title = modal.querySelector('.sm-title');
     if(title) title.innerHTML = '<i class="fas fa-university"></i> System: Globalne Finanse';
 
-    // Pobierz kontener listy
+    
     const container = document.getElementById('financialLogsList');
     if (!container) return;
     container.innerHTML = '';
 
-    // Generuj dane globalne
+    
     const adminLogs = [
         { id: '#SYS_9921', type: 'Wypłata (Visa)', val: '-500,000 $', date: '2 min temu', status: 'Processing', detail: 'User: Whale_Killer | Visa **** 9921' },
         { id: '#SYS_9920', type: 'Wpłata (Crypto)', val: '+12,500 USDT', date: '5 min temu', status: 'Completed', detail: 'User: CryptoBro | Sieć: TRC20' },
@@ -2662,26 +2662,26 @@ function openEditUserModal(userId) {
     const user = adminUsersDB.find(u => u.id === userId);
     if(!user) return;
 
-    // Populate Fields
+    
     document.getElementById('euIdDisplay').textContent = `ID: #${user.id}`;
     document.getElementById('euInputName').value = user.name;
-    document.getElementById('euInputCustomRank').value = ""; // Reset pola
+    document.getElementById('euInputCustomRank').value = ""; 
     document.getElementById('euInputBalance').value = user.balance;
     document.getElementById('euSelectStatus').value = user.status;
     document.getElementById('euCheckAdmin').checked = user.isAdmin || false;
     
-    // Fake extended data since DB is simple
+    
     document.getElementById('euInputLP').value = Math.floor(Math.random() * 5000);
     document.getElementById('euInputStreak').value = Math.floor(Math.random() * 10);
-    document.getElementById('euInputPfp').value = ""; // Placeholder
+    document.getElementById('euInputPfp').value = ""; 
     document.getElementById('euAvatarPreview').style.backgroundImage = "none";
     document.getElementById('euAvatarPreview').style.backgroundColor = "#333";
     
-    // Simulate fetching PFP
+    
     const pfpUrl = `https://i.pravatar.cc/150?u=${user.name}`;
     document.getElementById('euAvatarPreview').style.backgroundImage = `url('${pfpUrl}')`;
 
-    // Populate Rank Select dynamically
+    
     const rankSelect = document.getElementById('euSelectRank');
     rankSelect.innerHTML = '';
     const ranks = ["Bankrupt", "Small Fry", "Risk Taker", "Table Shark", "Casino Legend", "Alpha Whale", "RNG God"];
@@ -2702,11 +2702,11 @@ function saveUserEdit() {
     const status = document.getElementById('euSelectStatus').value;
     const rank = document.getElementById('euSelectRank').value;
     
-    // Update logic would go here
+    
     alert(`[SYSTEM] Zapisano zmiany dla użytkownika ${name}.\nSaldo: ${bal}\nRanga: ${rank}\nStatus: ${status}`);
     document.getElementById('editUserModal').classList.remove('active');
     
-    // Refresh list to show fake updates if we modified the object (omitted for brevity in mock)
+    
     renderUsersView();
 }
 
@@ -2805,29 +2805,29 @@ function initAdminGames() {
 
     let globalId = 1;
 
-    // Iterujemy po strukturze z data.js (Kasyno, Arcade, Oryginały)
+    
     gamesHubStructure.forEach(category => {
         if(category.games) {
             category.games.forEach(game => {
                 
-                // Pobieramy liczbę graczy (z symulacji persystentnej lub losujemy)
+                
                 const totalPlayers = game.onlineCount;
                 const dist = game.modeCounts || distributePlayers(totalPlayers, game.modes.length);
 
                 game.modes.forEach((modeName, idx) => {
                     const modePlayers = dist[idx] || 0;
                     
-                    // Obliczamy liczbę sesji (zawsze mniej niż graczy, min 1 jeśli są gracze)
-                    // Średnio 2-4 graczy na sesję (dla gier typu Poker/Table) lub 1 dla Slotów
+                    
+                    
                     let avgPerSession = 1;
-                    if(game.tag === 'Card Game' || game.tag === 'Table Game') avgPerSession = Math.random() * 3 + 1; // 1-4
+                    if(game.tag === 'Card Game' || game.tag === 'Table Game') avgPerSession = Math.random() * 3 + 1; 
                     else if(game.tag === 'Exclusive') avgPerSession = 2; 
                     
                     let sessions = Math.ceil(modePlayers / avgPerSession);
-                    if(sessions > modePlayers) sessions = modePlayers; // Safety check
+                    if(sessions > modePlayers) sessions = modePlayers; 
                     if(modePlayers > 0 && sessions === 0) sessions = 1;
 
-                    // Status - losowy dla realizmu, ale większość Active
+                    
                     let status = "Active";
                     const r = Math.random();
                     if(r > 0.96) status = "Maintenance";
@@ -2835,10 +2835,10 @@ function initAdminGames() {
 
                     adminGamesDB.push({
                         id: globalId++,
-                        name: modeName,       // Konkretny tryb np. "Speed Baccarat"
-                        parentGame: game.name,// Rodzic np. "Baccarat"
-                        cat: category.label,  // np. "Kasyno"
-                        type: game.tag,       // np. "Card Game"
+                        name: modeName,       
+                        parentGame: game.name,
+                        cat: category.label,  
+                        type: game.tag,       
                         online: modePlayers,
                         sessions: sessions,
                         status: status,
@@ -2878,14 +2878,14 @@ function renderGamesControlView() {
     pageItems.forEach(g => {
         const div = document.createElement('div');
         div.className = 'ul-row';
-        div.style.gridTemplateColumns = '50px 2fr 1fr 1fr 1fr 1fr 100px 90px'; // Nowy layout kolumn
+        div.style.gridTemplateColumns = '50px 2fr 1fr 1fr 1fr 1fr 100px 90px'; 
 
         let statusClass = 'ul-b-offline'; 
         if(g.status === 'Active') statusClass = 'ul-b-online'; 
         if(g.status === 'Maintenance') statusClass = 'ul-b-suspicious'; 
         if(g.status === 'Disabled') statusClass = 'ul-b-banned'; 
 
-        // Kolorowanie kategorii
+        
         let catColor = '#aaa';
         if(g.cat === 'Kasyno') catColor = '#10b981';
         if(g.cat === 'Arcade') catColor = '#d946ef';
@@ -2943,10 +2943,10 @@ function openEditGameModal(id) {
     document.getElementById('egLivePlayers').textContent = game.online.toLocaleString();
     document.getElementById('egLiveSessions').textContent = game.sessions.toLocaleString();
 
-    // Randomize fake stats for realism
+    
     document.getElementById('egInputRTP').value = (94 + Math.random() * 5).toFixed(2);
     
-    // Reset sliders and target inputs
+    
     document.getElementById('egSliderRNG').value = 100;
     document.getElementById('egRngGlobalVal').textContent = '100%';
     
@@ -3040,7 +3040,7 @@ function removeNotifFromDB(nId) {
         }
         decreaseNotifCount();
         
-        // Jeśli pusto po usunięciu
+        
         if(notificationsDB.length === 0) {
             setTimeout(() => {
                 const list = document.getElementById('notificationList');
@@ -3051,45 +3051,45 @@ function removeNotifFromDB(nId) {
 }
 
 function handleNotifClaimAch(achId, nId) {
-    // Logika dwukierunkowa:
-    // Kliknięcie w powiadomieniu wywołuje główną funkcję claimReward.
-    // claimReward z kolei sama znajdzie to powiadomienie i je usunie.
-    // Dzięki temu nie robimy removeNotifFromDB tutaj, unikając podwójnego odejmowania.
+    
+    
+    
+    
     
     const ach = achievementsDB.find(a => a.id === achId);
     if(ach) {
-        // Upewniamy się, że system widzi to jako możliwe do odebrania (dla demo)
+        
         if(!ach.acquired) ach.acquired = true; 
         
-        // Wywołujemy główną funkcję, która obsłuży UI Profilu ORAZ usunie powiadomienie
+        
         claimReward(achId);
     }
 }
 
 function handleNotifClaimQuest(domId, nId) {
-    // 1. Symulujemy kliknięcie w przycisk na Dashboardzie
+    
     const btn = document.getElementById(domId);
     if(btn && !btn.disabled) {
-        // Scrollujemy do widoku dashboardu jeśli nie jesteśmy na nim?
-        // showView('dashboard'); // Opcjonalne, ale lepiej zostać w kontekście
+        
+        
         claimQuest(btn);
     }
-    // 2. Usuwamy powiadomienie
+    
     removeNotifFromDB(nId);
 }
 
 function handleNotifFriend(nId, accepted) {
-    // Pobieramy dane powiadomienia zanim je usuniemy
+    
     const notif = notificationsDB.find(n => n.id === nId);
 
     if(accepted && notif && notif.metaId) {
         const friend = notif.metaId;
         const list = document.querySelector('.cfp-list');
         
-        // Tworzymy nowy element DOM dla listy znajomych
+        
         const el = document.createElement('div');
         el.className = 'cfp-item';
-        // Dodajemy logikę switchChatPartner
+        
         el.onclick = () => switchChatPartner('user', friend.name, friend.rank, friend.pfp);
         
         el.innerHTML = `
@@ -3097,11 +3097,11 @@ function handleNotifFriend(nId, accepted) {
             <div class="cfp-name">${friend.name}</div>
         `;
         
-        // Dodajemy do listy bez popupu
+        
         list.appendChild(el);
     }
     
-    // Usuwamy powiadomienie bez popupu
+    
     removeNotifFromDB(nId);
 }
 initDashboard();
@@ -3351,7 +3351,7 @@ function claimQuest(btn) {
     const item = btn.closest('.quest-item');
     if(!item) return;
 
-    // Logika synchronizacji z dzwoneczkiem
+    
     if(btn.id) {
         const notifIndex = notificationsDB.findIndex(n => n.type === 'quest' && n.metaId === btn.id);
         if(notifIndex !== -1) {
@@ -3359,14 +3359,14 @@ function claimQuest(btn) {
         }
     }
 
-    // Animacja i zmiana stylu na szary/zrobiony
+    
     item.style.transition = 'all 0.3s ease';
     item.style.opacity = '0.5';
     item.style.background = 'rgba(255,255,255,0.02)';
     item.style.filter = 'grayscale(100%)'; 
     item.style.borderColor = 'transparent';
 
-    // Zamiana przycisku na ptaszka
+    
     const checkIcon = document.createElement('div');
     checkIcon.innerHTML = '<i class="fas fa-check"></i>';
     checkIcon.style.color = '#fff'; 
@@ -3445,7 +3445,7 @@ function renderPopularModes() {
     gamesHubStructure.forEach(category => {
         if(category.games) {
             category.games.forEach(game => {
-                // Pobieramy stałe dane zamiast losować na nowo
+                
                 const distrib = game.modeCounts || distributePlayers(game.onlineCount, game.modes.length);
                 
                 game.modes.forEach((modeName, idx) => {
@@ -3586,7 +3586,7 @@ function openGameDetailsModal(game) {
     grid.innerHTML = '';
 
     
-    // Używamy zapisanych danych, aby liczby były spójne z Dashboardem
+    
     const playersDistribution = game.modeCounts || distributePlayers(game.onlineCount, game.modes.length);
 
     game.modes.forEach((modeName, index) => {
@@ -3594,7 +3594,7 @@ function openGameDetailsModal(game) {
         const playerCount = playersDistribution[index];
         const isFav = favoriteModes.includes(modeId);
 
-        // FIX: Ucieczka znaku apostrofu dla nazw typu "Hold'em"
+        
         const safeModeName = modeName.replace(/'/g, "\\'");
 
         const card = document.createElement('div');

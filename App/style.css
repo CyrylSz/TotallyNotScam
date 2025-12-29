@@ -1917,6 +1917,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     background: #333;
     border-radius: 2px;
     outline: none;
+    appearance: none;
     -webkit-appearance: none;
     margin-top: 10px;
 }
@@ -2533,7 +2534,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     overflow-x: auto;
     padding: 40px 30px;
     display: flex;
-    align-items: flex-start; /* FIX: Wyrównanie do góry, aby okręgi były zawsze w tej samej linii */
+    align-items: flex-start; 
     background: radial-gradient(circle at center, #1e293b 0%, #0f111a 100%);
     position: relative;
     min-height: 300px;
@@ -2546,11 +2547,10 @@ input:checked + .slider:before { transform: translateX(16px); }
     height: 4px;
     left: 100px;
     
-    /* FIX: Dodano !important, aby nadpisać style="width: 300%" wpisane na sztywno w HTML (index.html).
-       3840px to dokładna odległość od środka Noda 1 do Noda 25. */
+    
     width: 3840px !important; 
 
-    /* FIX: Odwrócono kolory (Fiolet -> Niebieski) */
+    
     background: linear-gradient(to right, 
         var(--accent-purple) 0px, 
         var(--accent-purple) 2560px, 
@@ -2649,18 +2649,18 @@ input:checked + .slider:before { transform: translateX(16px); }
 }
 
 
-/* FIX: Złoty styl przycisków dla nagród Premium (ZABLOKOWANE - STONOWANE) */
+
 .bp-card-node:nth-child(odd) .bp-claim-btn {
-    /* Ciemniejszy, mniej nasycony złoty gradient */
+    
     background: linear-gradient(180deg, rgba(124, 95, 39, 0.6), rgba(82, 62, 24, 0.8));
-    /* Jasny kolor tekstu, lekko przygaszony */
+    
     color: rgba(255, 255, 255, 0.65);
-    /* Bardzo delikatne obramowanie */
+    
     border: 1px solid rgba(245, 158, 11, 0.15);
     opacity: 1 !important;
-    /* Usunięto jasny cień zewnętrzny, dodano delikatny cień wewnętrzny dla głębi */
+    
     box-shadow: inset 0 2px 4px rgba(0,0,0,0.25);
-    /* Zmniejszona waga czcionki */
+    
     font-weight: 600;
 }
 

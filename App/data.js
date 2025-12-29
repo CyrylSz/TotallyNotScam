@@ -186,7 +186,7 @@ let allTreasures = [
 
 
 const titlesDB = [
-    // Ranks as Titles
+    
     { id: "t_r1", text: "King of The Gamblers", rarity: "Divine" },
     { id: "t_r2", text: "RNG God", rarity: "Divine" },
     { id: "t_r3", text: "Alpha Whale", rarity: "Relic" },
@@ -196,7 +196,7 @@ const titlesDB = [
     { id: "t_r7", text: "Small Fry", rarity: "Peasant" },
     { id: "t_r8", text: "Bankrupt", rarity: "Peasant" },
     
-    // Achievement Titles
+    
     { id: "t_a1", text: "The Novice", rarity: "Peasant" },
     { id: "t_a5", text: "Blackjack Master", rarity: "Rare" },
     { id: "t_a7", text: "Wolf of Wall St", rarity: "Epic" },
@@ -251,7 +251,7 @@ const playersDB = [
 
 
 const staticGamesList = [
-    // Page 1 (Current Session)
+    
     { name: "Classic", money: "+2,450 $", lp: "+12 LP", type: "win", icon: "fa-layer-group", time: "2 min temu" },
     { name: "Aviator", money: "-5,000 $", lp: "-15 LP", type: "lose", icon: "fa-chart-line", time: "5 min temu" },
     { name: "Degenerate Worms", money: "+12,000 $", lp: "+18 LP", type: "win", icon: "fa-skull-crossbones", time: "12 min temu" },
@@ -263,7 +263,7 @@ const staticGamesList = [
     { name: "Gambling Chess", money: "+3,000 $", lp: "+10 LP", type: "win", icon: "fa-chess", time: "1h temu" },
     { name: "Turbo Mines", money: "+4,200 $", lp: "+11 LP", type: "win", icon: "fa-bomb", time: "1h 10m temu" },
     
-    // Page 1 (Cont.)
+    
     { name: "Slot Tournaments", money: "-1,200 $", lp: "-8 LP", type: "lose", icon: "fa-trophy", time: "1h 20m temu" },
     { name: "Age of Gambling", money: "+15,000 $", lp: "+20 LP", type: "win", icon: "fa-shield-alt", time: "1h 30m temu" },
     { name: "Craps", money: "0 $", lp: "+1 LP", type: "draw", icon: "fa-dice", time: "1h 45m temu" },
@@ -275,7 +275,7 @@ const staticGamesList = [
     { name: "Jackpot Progressive", money: "-15,000 $", lp: "-20 LP", type: "lose", icon: "fa-star", time: "4h temu" },
     { name: "Zeppelin", money: "+2,100 $", lp: "+7 LP", type: "win", icon: "fa-rocket", time: "4h 30m temu" },
 
-    // Page 2 (Older)
+    
     { name: "Logic Race Bet", money: "-100 $", lp: "-2 LP", type: "lose", icon: "fa-puzzle-piece", time: "5h temu" },
     { name: "Lightning", money: "-2,000 $", lp: "-9 LP", type: "lose", icon: "fa-bolt", time: "5h 15m temu" },
     { name: "Pot Limit Omaha", money: "+14,500 $", lp: "+19 LP", type: "win", icon: "fa-heart", time: "6h temu" },
@@ -287,7 +287,7 @@ const staticGamesList = [
     { name: "Spaceman", money: "+9,000 $", lp: "+15 LP", type: "win", icon: "fa-chart-line", time: "12h temu" },
     { name: "Gambling Chess", money: "-5,000 $", lp: "-14 LP", type: "lose", icon: "fa-chess", time: "13h temu" },
     
-    // Page 3+ (Fillers)
+    
     { name: "Cash Games", money: "+1,000 $", lp: "+4 LP", type: "win", icon: "fa-heart", time: "1d temu" },
     { name: "Pontoon", money: "-200 $", lp: "-2 LP", type: "lose", icon: "fa-layer-group", time: "1d temu" },
     { name: "American", money: "+5,000 $", lp: "+12 LP", type: "win", icon: "fa-circle-notch", time: "1d temu" },
