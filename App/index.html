@@ -27,6 +27,7 @@
         <div class="nav-section hidden" id="adminNavSection">
             <div class="nav-title">Zarządzanie</div>
             <a onclick="showView('adminDash')" class="nav-item" id="navAdminDash"><i class="fas fa-tachometer-alt"></i> Dashboard Admina</a>
+            <a onclick="showView('gamesControl')" class="nav-item" id="navGamesControl"><i class="fas fa-server"></i> Kontrola Gier</a>
             <a onclick="showView('users')" class="nav-item" id="navUsers"><i class="fas fa-users"></i> Użytkownicy</a>
             <a onclick="showView('logs')" class="nav-item" id="navLogs"><i class="fas fa-file-alt"></i> Logi</a>
         </div>
@@ -225,7 +226,7 @@
 
                 <div class="d3-col">
                                         <div class="card dash-card daily-hub-card">
-                         <div class="card-header"><div class="card-title"><i class="fas fa-calendar-alt"></i> Centrum Nagród</div></div>
+                         <div class="card-header"><div class="card-title"><i class="fas fa-calendar-alt"></i> Cykliczne Nagrody</div></div>
 
                          <div class="bp-mini-status" style="margin-bottom: 30px; padding: 12px 15px;">
                             <div class="bp-mini-info">
@@ -1161,7 +1162,45 @@
             </div>
         </div>
 
-                <div class="view-container" id="viewLogs">
+                <div class="view-container" id="viewGamesControl">
+            <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column; border: 1px solid rgba(245, 158, 11, 0.2);">
+                <div class="card-header" style="justify-content: space-between;">
+                    <div class="card-title" style="color: #fca5a5;"><i class="fas fa-gamepad"></i> Baza Gier (Global)</div>
+                    <div class="user-list-toolbar">
+                        <select id="gameFilterStatus" onchange="renderGamesControlView()" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px; border-radius: 6px; font-size: 11px; outline: none;">
+                            <option value="all">Wszystkie</option>
+                            <option value="Active">Aktywne</option>
+                            <option value="Maintenance">Przerwa</option>
+                            <option value="Disabled">Wyłączone</option>
+                        </select>
+                        <div class="input-group small" style="margin-bottom: 0; width: 200px;">
+                            <input type="text" id="gameSearchInput" placeholder="Nazwa gry / ID..." onkeyup="renderGamesControlView()" style="border-radius: 6px;">
+                        </div>
+                    </div>
+                </div>
+                
+                <div class="ul-grid-header" style="grid-template-columns: 50px 2fr 1fr 1fr 1fr 1fr 100px 90px;">
+                    <span>ID</span>
+                    <span>TRYB / GRA</span>
+                    <span>KATEGORIA</span>
+                    <span>TYP</span>
+                    <span>GRACZE</span>
+                    <span>SESJE</span>
+                    <span>STATUS</span>
+                    <span style="text-align: right;">AKCJE</span>
+                </div>
+
+                <div class="list-container users-list-scroll" id="gamesControlContainer">
+                    </div>
+
+                <div class="market-pagination">
+                    <button onclick="changeGameControlPage(-1)"><i class="fas fa-chevron-left"></i></button>
+                    <span id="gameControlPageIndicator">Strona 1 z 1</span>
+                    <button onclick="changeGameControlPage(1)"><i class="fas fa-chevron-right"></i></button>
+                </div>
+            </div>
+        </div>
+        <div class="view-container" id="viewLogs">
             <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column;">
                 <div class="card-header" style="justify-content: space-between;">
                     <div class="card-title"><i class="fas fa-terminal"></i> Pełne Logi Serwera</div>

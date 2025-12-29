@@ -796,6 +796,7 @@ const navMap = {
     'wallet': { title: "Portfel", navId: "navWallet", viewId: "viewWallet", init: renderWalletView },
     'adminDash': { title: "Dashboard Admina", navId: "navAdminDash", viewId: "viewAdminDash", init: renderAdminHeatmap },
     'users': { title: "Użytkownicy", navId: "navUsers", viewId: "viewUsers", init: renderUsersView },
+    'gamesControl': { title: "Baza Gier", navId: "navGamesControl", viewId: "viewGamesControl", init: renderGamesControlView },
     'logs': { title: "Logi", navId: "navLogs", viewId: "viewLogs", init: renderLogsView }
 };
 
@@ -2572,6 +2573,137 @@ function renderLogsView() {
 }
 
 
+let adminGamesDB = [];
+let adminGamesPage = 1;
+const adminGamesPerPage = 15;
+
+function initAdminGames() {
+    if(adminGamesDB.length > 0) return;
+
+    let globalId = 1;
+
+    // Iterujemy po strukturze z data.js (Kasyno, Arcade, Oryginały)
+    gamesHubStructure.forEach(category => {
+        if(category.games) {
+            category.games.forEach(game => {
+                
+                // Pobieramy liczbę graczy (z symulacji persystentnej lub losujemy)
+                const totalPlayers = game.onlineCount;
+                const dist = game.modeCounts || distributePlayers(totalPlayers, game.modes.length);
+
+                game.modes.forEach((modeName, idx) => {
+                    const modePlayers = dist[idx] || 0;
+                    
+                    // Obliczamy liczbę sesji (zawsze mniej niż graczy, min 1 jeśli są gracze)
+                    // Średnio 2-4 graczy na sesję (dla gier typu Poker/Table) lub 1 dla Slotów
+                    let avgPerSession = 1;
+                    if(game.tag === 'Card Game' || game.tag === 'Table Game') avgPerSession = Math.random() * 3 + 1; // 1-4
+                    else if(game.tag === 'Exclusive') avgPerSession = 2; 
+                    
+                    let sessions = Math.ceil(modePlayers / avgPerSession);
+                    if(sessions > modePlayers) sessions = modePlayers; // Safety check
+                    if(modePlayers > 0 && sessions === 0) sessions = 1;
+
+                    // Status - losowy dla realizmu, ale większość Active
+                    let status = "Active";
+                    const r = Math.random();
+                    if(r > 0.96) status = "Maintenance";
+                    else if(r > 0.99) status = "Disabled";
+
+                    adminGamesDB.push({
+                        id: globalId++,
+                        name: modeName,       // Konkretny tryb np. "Speed Baccarat"
+                        parentGame: game.name,// Rodzic np. "Baccarat"
+                        cat: category.label,  // np. "Kasyno"
+                        type: game.tag,       // np. "Card Game"
+                        online: modePlayers,
+                        sessions: sessions,
+                        status: status,
+                        icon: game.icon,
+                        color: game.color
+                    });
+                });
+            });
+        }
+    });
+}
+
+function renderGamesControlView() {
+    initAdminGames();
+    
+    const container = document.getElementById('gamesControlContainer');
+    if(!container) return;
+    container.innerHTML = '';
+
+    const filterStatus = document.getElementById('gameFilterStatus').value;
+    const searchVal = document.getElementById('gameSearchInput').value.toLowerCase();
+
+    let filtered = adminGamesDB.filter(g => {
+        if(filterStatus !== 'all' && g.status !== filterStatus) return false;
+        const searchStr = (g.name + " " + g.parentGame + " " + g.type).toLowerCase();
+        if(searchVal && !searchStr.includes(searchVal) && !g.id.toString().includes(searchVal)) return false;
+        return true;
+    });
+
+    const totalPages = Math.ceil(filtered.length / adminGamesPerPage) || 1;
+    if(adminGamesPage < 1) adminGamesPage = 1;
+    if(adminGamesPage > totalPages) adminGamesPage = totalPages;
+
+    const start = (adminGamesPage - 1) * adminGamesPerPage;
+    const pageItems = filtered.slice(start, start + adminGamesPerPage);
+
+    pageItems.forEach(g => {
+        const div = document.createElement('div');
+        div.className = 'ul-row';
+        div.style.gridTemplateColumns = '50px 2fr 1fr 1fr 1fr 1fr 100px 90px'; // Nowy layout kolumn
+
+        let statusClass = 'ul-b-offline'; 
+        if(g.status === 'Active') statusClass = 'ul-b-online'; 
+        if(g.status === 'Maintenance') statusClass = 'ul-b-suspicious'; 
+        if(g.status === 'Disabled') statusClass = 'ul-b-banned'; 
+
+        // Kolorowanie kategorii
+        let catColor = '#aaa';
+        if(g.cat === 'Kasyno') catColor = '#10b981';
+        if(g.cat === 'Arcade') catColor = '#d946ef';
+        if(g.cat === 'Oryginały') catColor = '#f59e0b';
+
+        div.innerHTML = `
+            <div style="font-family:monospace; color:#666;">#${g.id}</div>
+            
+            <div style="display:flex; flex-direction:column;">
+                <div style="font-weight:600; color:white; font-size:12px;">${g.name}</div>
+                <div style="font-size:10px; color:${g.color};"><i class="fas ${g.icon}" style="font-size:9px;"></i> ${g.parentGame}</div>
+            </div>
+
+            <div style="color:${catColor}; font-size:11px; font-weight:600;">${g.cat}</div>
+            <div style="color:#aaa; font-size:11px;">${g.type}</div>
+            
+            <div style="font-family:monospace; color:${g.online > 500 ? 'var(--accent-blue)' : '#ddd'};">
+                <i class="fas fa-user" style="font-size:9px; opacity:0.5;"></i> ${g.online.toLocaleString()}
+            </div>
+            
+            <div style="font-family:monospace; color:#fff;">
+                <i class="fas fa-door-open" style="font-size:9px; opacity:0.5;"></i> ${g.sessions.toLocaleString()}
+            </div>
+
+            <div><span class="ul-badge ${statusClass}">${g.status}</span></div>
+            
+            <div class="ul-actions">
+                <button class="ul-btn" title="Restart Serwera Gry" onclick="alert('Restartowanie instancji: ${g.name}...')"><i class="fas fa-sync"></i></button>
+                <button class="ul-btn danger" title="Zatrzymaj" onclick="alert('Zatrzymano tryb: ${g.name}')"><i class="fas fa-stop"></i></button>
+            </div>
+        `;
+        container.appendChild(div);
+    });
+
+    document.getElementById('gameControlPageIndicator').textContent = `Strona ${adminGamesPage} z ${totalPages}`;
+}
+
+function changeGameControlPage(delta) {
+    adminGamesPage += delta;
+    renderGamesControlView();
+}
 initDashboard();
 
 
