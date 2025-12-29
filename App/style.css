@@ -1590,7 +1590,7 @@ input:checked + .slider:before { transform: translateX(16px); }
     font-weight: 500;
     letter-spacing: 0.5px;
 }
-/* Edit User Modal Styles */
+
 .eu-layout {
     display: flex;
     height: 100%;
@@ -1605,23 +1605,23 @@ input:checked + .slider:before { transform: translateX(16px); }
     display: flex;
     flex-direction: column;
     gap: 15px;
-    overflow: hidden; /* Clip anything spilling out */
+    overflow: hidden; 
 }
 
-/* Wymuszenie szerokości inputa URL w sidebarze */
+
 .eu-sidebar .input-group {
     width: 100% !important;
     display: flex;
     box-sizing: border-box;
 }
 .eu-sidebar .input-group input {
-    width: 0 !important; /* Hack: zmusza flexbox do kurczenia elementu */
+    width: 0 !important; 
     min-width: 0 !important;
     flex-grow: 1 !important;
 }
 
 .eu-main {
-/* Fix dla paska URL w sidebarze - zapobiega rozpychaniu */
+
 .eu-sidebar .input-group {
     width: 100%;
     max-width: 100%;
@@ -3344,19 +3344,19 @@ input:checked + .slider:before { transform: translateX(16px); }
     grid-template-columns: repeat(3, 1fr);
     gap: 10px;
     padding-top: 10px;
-    /* Fix wysokości panelu */
+    
     min-height: 100px;
-    max-height: 134px; /* 1 Rząd */
+    max-height: 134px; 
     overflow-y: auto; 
     padding-right: 5px; 
-    align-content: start; /* KLUCZOWE: Zapobiega rozciąganiu kart w pionie */
+    align-content: start; 
 }
 
 
-/* Nadpisanie specyficzne dla Popularnych Gier: 2 Rzędy */
+
 #popularModesGrid {
-    max-height: 215px !important; /* Idealna wysokość na 2 rzędy */
-    min-height: 100px; /* Usuwamy wymuszenie 290px, aby karty się nie rozciągały */
+    max-height: 215px !important; 
+    min-height: 100px; 
 }
 
 .fav-placeholder {

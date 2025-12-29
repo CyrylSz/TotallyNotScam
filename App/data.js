@@ -108,12 +108,12 @@ const gamesHubStructure = [
             },
             { 
                 id: 'g_logic', name: 'Logic Race Bet', variants: 1, onlineCount: 60, players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', tag: 'Exclusive', 
-                desc: 'Wyścig mózgów. Kto pierwszy rozwiąże zagadkę, bierze wszystko.',
+                desc: 'Wyścig mózgów. Kto pierwszy rozwiąże zagadkę zgarnia pulę.',
                 modes: ['Logic Race Bet']
             },
             { 
                 id: 'g_aim', name: 'Aim Duel Bet', variants: 1, onlineCount: 320, players: '2', icon: 'fa-crosshairs', color: '#f43f5e', tag: 'Exclusive', 
-                desc: 'Czysty refleks. Ten kto trafi jak największą ilosć tarcz zgarnia pulę.',
+                desc: 'Czysty refleks. Kto trafi jak największą ilość tarcz zgarnia pulę.',
                 modes: ['Aim Duel Bet']
             }
         ]
