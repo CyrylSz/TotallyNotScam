@@ -796,7 +796,7 @@ const navMap = {
     'wallet': { title: "Portfel", navId: "navWallet", viewId: "viewWallet", init: renderWalletView },
     'adminDash': { title: "Dashboard Admina", navId: "navAdminDash", viewId: "viewAdminDash", init: renderAdminHeatmap },
     'users': { title: "Użytkownicy", navId: "navUsers", viewId: "viewUsers", init: renderUsersView },
-    'gamesControl': { title: "Baza Gier", navId: "navGamesControl", viewId: "viewGamesControl", init: renderGamesControlView },
+    'gamesControl': { title: "Kontrola Gier", navId: "navGamesControl", viewId: "viewGamesControl", init: renderGamesControlView },
     'logs': { title: "Logi", navId: "navLogs", viewId: "viewLogs", init: renderLogsView }
 };
 
