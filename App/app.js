@@ -3833,19 +3833,60 @@ function openDailyPLModal() {
 
     container.innerHTML = '';
 
-    dailyHistoryDB.forEach(day => {
-        const div = document.createElement('div');
-        div.className = 'pl-row';
-        
-        const color = day.type === 'profit' ? 'var(--accent-green)' : 'var(--accent-red)';
-        
-        div.innerHTML = `
-            <div class="pl-date">${day.date}</div>
-            <div class="pl-val" style="color: ${color};">${day.val}</div>
-        `;
-        container.appendChild(div);
+    // 1. Obliczanie sumy i max wartości do paska wizualnego
+    let totalPL = 0;
+    let maxAbsVal = 0;
+
+    // Parsowanie wartości (usuwanie $ i przecinków)
+    const parsedData = dailyHistoryDB.map(d => {
+        const cleanVal = parseInt(d.val.replace(/[^0-9-]/g, ''));
+        if(Math.abs(cleanVal) > maxAbsVal) maxAbsVal = Math.abs(cleanVal);
+        totalPL += cleanVal;
+        return { ...d, rawVal: cleanVal };
     });
 
+    // 2. Renderowanie nagłówka z sumą
+    const totalColor = totalPL >= 0 ? 'var(--accent-green)' : 'var(--accent-red)';
+    const totalSign = totalPL >= 0 ? '+' : '';
+    
+    const summaryHtml = `
+        <div class="pl-summary-card">
+            <div class="pl-sum-label">Bilans z ostatnich 7 dni</div>
+            <div class="pl-sum-val" style="color:${totalColor}">${totalSign}${totalPL.toLocaleString()} $</div>
+        </div>
+        <div class="pl-modern-list">
+    `;
+    
+    let listHtml = '';
+
+    // 3. Renderowanie wierszy
+    parsedData.forEach(day => {
+        const isProfit = day.rawVal >= 0;
+        const color = isProfit ? 'var(--accent-green)' : 'var(--accent-red)';
+        const barColor = isProfit ? '#10b981' : '#ef4444';
+        
+        // Obliczanie długości paska (względem największej wartości w historii)
+        // Min 5% żeby pasek był widoczny
+        const barWidth = Math.max(5, Math.round((Math.abs(day.rawVal) / maxAbsVal) * 100));
+        
+        // Flex alignment trick: 
+        // Profit: pusty lewy, pasek prawy
+        // Loss: pasek lewy, pusty prawy (dla efektu środka) - w tym prostym widoku zrobimy po prostu pasek od lewej
+        
+        listHtml += `
+            <div class="pl-modern-row">
+                <div class="pl-m-date">${day.date}</div>
+                <div class="pl-m-visual">
+                    <div class="pl-bar-bg">
+                        <div style="width: ${barWidth}%; background: ${barColor}; height: 100%; border-radius: 2px; box-shadow: 0 0 10px ${barColor}80;"></div>
+                    </div>
+                </div>
+                <div class="pl-m-val" style="color: ${color};">${day.val}</div>
+            </div>
+        `;
+    });
+
+    container.innerHTML = summaryHtml + listHtml + '</div>';
     modal.classList.add('active');
 }
 

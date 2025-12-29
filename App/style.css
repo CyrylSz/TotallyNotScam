@@ -4674,6 +4674,57 @@ input:checked + .slider:before { transform: translateX(16px); }
 .pl-row:last-child { border-bottom: none; }
 .pl-date { color: var(--text-muted); }
 .pl-val { font-weight: 700; font-family: 'Inter', sans-serif; }
+
+/* --- Daily P/L Modern Styles --- */
+.pl-summary-card {
+    background: linear-gradient(135deg, rgba(21, 26, 45, 0.8), rgba(30, 41, 59, 0.8));
+    border: 1px solid rgba(255,255,255,0.05);
+    border-radius: 8px;
+    padding: 20px;
+    text-align: center;
+    margin-bottom: 20px;
+    box-shadow: 0 4px 15px rgba(0,0,0,0.2);
+    position: relative;
+    overflow: hidden;
+}
+.pl-summary-card::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; width: 100%; height: 4px;
+    background: linear-gradient(90deg, var(--accent-purple), var(--accent-blue));
+}
+
+.pl-sum-label { font-size: 10px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 5px; }
+.pl-sum-val { font-size: 32px; font-weight: 800; color: white; text-shadow: 0 0 20px rgba(255,255,255,0.1); }
+
+.pl-modern-list {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.pl-modern-row {
+    display: grid;
+    grid-template-columns: 80px 1fr 100px;
+    align-items: center;
+    padding: 10px 15px;
+    background: rgba(255,255,255,0.02);
+    border-radius: 6px;
+    transition: 0.2s;
+    border: 1px solid transparent;
+}
+.pl-modern-row:hover {
+    background: rgba(255,255,255,0.05);
+    border-color: rgba(255,255,255,0.05);
+    transform: translateX(2px);
+}
+
+.pl-m-date { font-size: 11px; color: var(--text-muted); font-weight: 600; }
+.pl-m-visual { display: flex; align-items: center; height: 100%; padding: 0 15px; }
+.pl-bar-bg { width: 100%; height: 4px; background: rgba(0,0,0,0.3); border-radius: 2px; overflow: hidden; display: flex; }
+/* Pasek wypełnienia będzie stylizowany inline w JS */
+
+.pl-m-val { text-align: right; font-size: 13px; font-weight: 700; font-family: monospace; }
 .rs-card.streak-block {
     flex: 0 0 auto;
     min-width: 130px;

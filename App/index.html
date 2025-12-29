@@ -1827,13 +1827,14 @@
         </div>
     </div>
     <div class="modal-overlay" id="dailyPLModal">
-        <div class="steam-modal" style="width: 400px;">
-            <div class="sm-header">
-                <div class="sm-title"><i class="fas fa-calendar-alt"></i> Historia Dziennego P/L</div>
+        <div class="steam-modal" style="width: 550px;">
+            <div class="sm-header" style="background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.05);">
+                <div class="sm-title"><i class="fas fa-chart-bar" style="color: var(--accent-blue); margin-right: 8px;"></i> HISTORIA WYNIKÓW (7 DNI)</div>
                 <div class="sm-close" onclick="closeDailyPLModal()"><i class="fas fa-times"></i></div>
             </div>
-            <div class="sm-content" id="dailyPLContent" style="padding: 0;">
-                </div>
+            <div class="sm-content" style="padding: 20px;">
+                <div id="dailyPLContent"></div>
+            </div>
         </div>
     </div>
     <div class="modal-overlay" id="editUserModal">
