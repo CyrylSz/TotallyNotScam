@@ -2,5 +2,5 @@
 # PATH = ścieżka do folderu lub pliku zip (może być względna, np. ../App)
 # CONTENT = true (z treścią plików) lub false (samo drzewo)
 
-PATH=../App
+PATH=..
 CONTENT=false

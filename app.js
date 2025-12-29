@@ -1303,9 +1303,10 @@ function renderInventoryView() {
         slot.className = 'inv-grid-slot';
         const isEquipped = Object.values(myLoadout).includes(item.uid);
         const isOnSale = item.isOnSale === true;
+        const isRankLocked = item.rarity === 'Divine' && currentRankId > 2;
         if (isEquipped) slot.classList.add('is-equipped');
         if (isOnSale) slot.classList.add('on-sale');
-        const isLocked = isEquipped || isOnSale;
+        const isLocked = isEquipped || isOnSale || isRankLocked;
         slot.setAttribute('draggable', !isLocked);
         slot.dataset.uid = item.uid;
         slot.addEventListener('dragstart', handleDragStart);
@@ -1322,7 +1323,6 @@ function renderInventoryView() {
         }
         if (isEquipped) badgeHtml += `<div class="equipped-badge">EQ</div>`;
         else if (isOnSale) badgeHtml += `<div class="on-sale-badge">NA RYNKU</div>`;
-        const isRankLocked = item.rarity === 'Divine' && currentRankId > 2;
         if (isRankLocked) {
             badgeHtml += `<div class="inv-lock-overlay"><i class="fas fa-lock"></i></div>`;
             slot.classList.add('is-rank-locked');
@@ -2855,14 +2855,17 @@ function openInventoryItemModal(item) {
                     closeInventoryItemModal();
                 }
             };
-        } else {
-            btnAction.textContent = "ZAŁÓŻ (EQUIP)";
-            if (isLocked) {
-                btnAction.textContent = "ZABLOKOWANE (RANGA)";
-                btnAction.style.opacity = "0.5";
-                btnAction.style.cursor = "not-allowed";
-                btnAction.onclick = null;
-            } else {
+                    } else {
+                btnAction.textContent = "ZAŁÓŻ (EQUIP)";
+                if (isLocked) {
+                    btnAction.textContent = "ZABLOKOWANE (RANGA)";
+                    btnAction.style.background = "var(--accent-red)";
+                    btnAction.style.opacity = "0.5";
+                    btnAction.style.cursor = "not-allowed";
+                    btnAction.onclick = null;
+                } else {
+                btnAction.style.opacity = "1";
+                btnAction.style.cursor = "pointer";
                 btnAction.style.background = "var(--accent-blue)";
                 btnAction.onclick = () => {
                     const slotMapping = {

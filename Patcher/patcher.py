@@ -1,7 +1,6 @@
 import os
 import re
 
-# 1. Konfiguracja ścieżek
 script_dir = os.path.dirname(os.path.abspath(__file__))
 TARGET_FOLDER_NAME = "App"
 app_dir = os.path.join(os.path.dirname(script_dir), TARGET_FOLDER_NAME)
@@ -102,7 +101,6 @@ def apply_changes():
         if not found:
             print(f"   ⚠️ NIE ZNALEZIONO fragmentu w pliku!")
             print(f"      Sprawdź czy w sekcji SZUKAJ nie brakuje komentarzy lub linii, które są w pliku.")
-            # Debug: Pokaż pierwsze 100 znaków tego, czego szukaliśmy
             debug_str = ' '.join(search_str.split())[:100]
             print(f"      Szukano: '{debug_str}...'")
             continue

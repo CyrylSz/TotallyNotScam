@@ -1721,59 +1721,86 @@
     </div>
 
     <div class="modal-overlay" id="playerStatsModal">
-        <div class="steam-modal" style="width: 600px;">
-            <div class="sm-header">
-                <div class="sm-title">Statystyki Gracza</div>
+        <div class="steam-modal" style="width: 700px; max-width: 95vw;">
+            <div class="sm-header" style="background: linear-gradient(90deg, #1e293b, #0f172a);">
+                <div class="sm-title"><i class="fas fa-chart-pie" style="color:var(--accent-purple); margin-right:8px;"></i> STATYSTYKI GRACZA</div>
                 <div class="sm-close" onclick="closePlayerStatsModal()"><i class="fas fa-times"></i></div>
             </div>
-            <div class="sm-content" style="padding-top: 15px;">
-                
-                <div class="sm-section-title">Informacje</div>
-                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Dołączył</div>
-                        <div style="font-size: 14px;">10 Dec 2025</div>
+            <div class="sm-content" style="padding: 0;">
+                <div class="ps-layout">
+                    <div class="ps-hero">
+                        <div class="ps-avatar" style="background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');"></div>
+                        <div class="ps-user-info">
+                            <h2>MrGambler</h2>
+                            <span><i class="fas fa-calendar-alt"></i> Dołączył: 10 Dec 2025</span>
+                        </div>
+                        <div style="margin-left: auto; text-align: right;">
+                            <div class="ps-label">Total Playtime</div>
+                            <div class="ps-value" style="font-family: monospace; color: var(--accent-orange);">148h 20m</div>
+                        </div>
                     </div>
-                </div>
 
-                <div class="sm-section-title">Statystyki Gier</div>
-                <div style="padding: 15px; background: rgba(255,255,255,0.02); border-radius: 8px; margin-bottom: 20px;">
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Sumaryczna liczba gier</div>
-                        <div style="font-size: 18px; font-weight: 700; color: var(--accent-blue);">432 gier</div>
+                    <div class="ps-grid">
+                        <div class="ps-stat-card">
+                            <div class="ps-label">Games Played</div>
+                            <div class="ps-value">432</div>
+                            <div class="ps-sub">Win Rate: <span style="color:var(--accent-green);">48%</span></div>
+                        </div>
+                        <div class="ps-stat-card win">
+                            <div class="ps-label">Biggest Win</div>
+                            <div class="ps-value" style="color:var(--accent-green);">500,000 $</div>
+                            <div class="ps-sub">Game: <i class="fas fa-circle-notch"></i> Roulette</div>
+                        </div>
+                        <div class="ps-stat-card loss">
+                            <div class="ps-label">Total Wagered</div>
+                            <div class="ps-value">12.5M $</div>
+                            <div class="ps-sub">Avg Bet: 28k $</div>
+                        </div>
+                        <div class="ps-stat-card">
+                            <div class="ps-label">Net Profit</div>
+                            <div class="ps-value" style="color:var(--accent-green);">+2.4M $</div>
+                            <div class="ps-sub">Lifetime P/L</div>
+                        </div>
                     </div>
-                    <div style="margin-bottom: 15px;">
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 5px;">Największa wygrana</div>
-                        <div style="font-size: 18px; font-weight: 700; color: var(--accent-green);">500,000 $</div>
-                    </div>
+
                     <div>
-                        <div style="font-size: 11px; color: var(--text-muted); margin-bottom: 10px;">Najczęściej grywane gry</div>
-                        <div style="display: flex; flex-direction: column; gap: 8px;">
-                            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <div style="font-size: 14px; font-weight: 600;">Quantum Slots</div>
-                                    <div style="font-size: 11px; color: var(--text-muted);">Ulubiona gra</div>
+                        <div class="eu-divider" style="margin-bottom: 15px;">NAJCZĘŚCIEJ GRANE</div>
+                        <div class="ps-games-list">
+                            <div class="ps-game-row">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="ps-g-icon" style="color: #d946ef;"><i class="fas fa-star"></i></div>
+                                    <div style="font-size:13px; font-weight:700; color:white;">Megaways</div>
                                 </div>
-                                <div style="font-size: 12px; color: var(--accent-blue);">142 gry</div>
+                                <div class="ps-g-bar-container">
+                                    <div class="ps-g-bar" style="width: 85%; background: #d946ef; box-shadow: 0 0 10px rgba(217, 70, 239, 0.4);"></div>
+                                </div>
+                                <div style="font-size:12px; font-weight:700; color:#ddd;">142 gier</div>
                             </div>
-                            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <div style="font-size: 14px; font-weight: 600;">Blackjack</div>
-                                    <div style="font-size: 11px; color: var(--text-muted);">Druga najczęstsza</div>
+
+                            <div class="ps-game-row">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="ps-g-icon" style="color: #84cc16;"><i class="fas fa-skull-crossbones"></i></div>
+                                    <div style="font-size:13px; font-weight:700; color:white;">Degenerate Worms</div>
                                 </div>
-                                <div style="font-size: 12px; color: var(--accent-blue);">98 gier</div>
+                                <div class="ps-g-bar-container">
+                                    <div class="ps-g-bar" style="width: 60%; background: #84cc16;"></div>
+                                </div>
+                                <div style="font-size:12px; font-weight:700; color:#ddd;">98 gier</div>
                             </div>
-                            <div style="padding: 10px; background: rgba(255,255,255,0.03); border-radius: 6px; display: flex; justify-content: space-between; align-items: center;">
-                                <div>
-                                    <div style="font-size: 14px; font-weight: 600;">Roulette</div>
-                                    <div style="font-size: 11px; color: var(--text-muted);">Trzecia najczęstsza</div>
+
+                            <div class="ps-game-row">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="ps-g-icon" style="color: #7c3aed;"><i class="fas fa-crown"></i></div>
+                                    <div style="font-size:13px; font-weight:700; color:white;">Three Card Poker</div>
                                 </div>
-                                <div style="font-size: 12px; color: var(--accent-blue);">76 gier</div>
+                                <div class="ps-g-bar-container">
+                                    <div class="ps-g-bar" style="width: 45%; background: #7c3aed;"></div>
+                                </div>
+                                <div style="font-size:12px; font-weight:700; color:#ddd;">76 gier</div>
                             </div>
                         </div>
                     </div>
                 </div>
-
             </div>
         </div>
     </div>

@@ -1,75 +1,105 @@
 KROK 1:
-PLIK: "data.js"
+PLIK: "index.html"
 OPERACJA: [ZASTĄP]
 SZUKAJ:
-let allTreasures = [
-    { id: 1, name: "Peasant Case", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💼", rarity: "Peasant", desc: "Stara, skórzana teczka.", bonus: "Może zawierać kanapki.", isConsumable: true, maxUses: 1 },
-    { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "💼", rarity: "Rare", desc: "Walizka z szyfrem.", bonus: "Gwarantowany gadżet.", isConsumable: true, maxUses: 1 },
-    { id: 3, name: "Epic Case", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "💼", rarity: "Epic", desc: "Wzmocniona tytanem.", bonus: "Pachnie drogimi perfumami.", isConsumable: true, maxUses: 1 },
-    { id: 4, name: "Relic Case", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "💼", rarity: "Relic", desc: "Używana przez mafię.", bonus: "Ryzykowna zawartość.", isConsumable: true, maxUses: 1 },
-    { id: 5, name: "Divine Case", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💼", rarity: "Divine", desc: "Wykonana ze złota i diamentów.", bonus: "Tylko dla 1%.", isConsumable: true, maxUses: 1 },
-    { id: 6, name: "Czapka z daszkiem", type: "head", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧢", rarity: "Peasant", desc: "Z logo stacji benzynowej.", bonus: "-5 do Stylu", isConsumable: false, maxUses: null },
-    { id: 7, name: "RayBan Aviator", type: "head", price: "1,500 $", rawPrice: 1500, color: "#3b82f6", icon: "🕶️", rarity: "Rare", desc: "Ukrywają poker face.", bonus: "+10 do Blefowania", isConsumable: false, maxUses: null },
-    { id: 8, name: "Gogle VR Pro", type: "head", price: "15,000 $", rawPrice: 15000, color: "#ef4444", icon: "🥽", rarity: "Relic", desc: "Widzisz algorytm kasyna.", bonus: "Przewidywanie Wygranej", isConsumable: false, maxUses: null },
-    { id: 9, name: "Krawat z Poliestru", type: "neck", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "👔", rarity: "Peasant", desc: "Drapie w szyję.", bonus: "Brak", isConsumable: false, maxUses: null },
-    { id: 10, name: "Złoty Łańcuch", type: "neck", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "⛓️", rarity: "Epic", desc: "Waży 2kg.", bonus: "+20 do Respectu", isConsumable: false, maxUses: null },
-    { id: 11, name: "Koszula Hawajska", type: "suit", price: "80 $", rawPrice: 80, color: "#9ca3af", icon: "👕", rarity: "Peasant", desc: "Idealna na wakacje, nie do kasyna.", bonus: "Luz +100", isConsumable: false, maxUses: null },
-    { id: 12, name: "Garnitur Hugo Boss", type: "suit", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "🤵", rarity: "Rare", desc: "Klasyczna elegancja.", bonus: "+5 do Negocjacji", isConsumable: false, maxUses: null },
-    { id: 13, name: "Smoking Bonda", type: "suit", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "🍸", rarity: "Divine", desc: "Wstrząśnięty, nie zmieszany.", bonus: "Kuloodporność finansowa", isConsumable: false, maxUses: null },
-    { id: 14, name: "Zegarek z Komunii", type: "watch", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "⌚", rarity: "Peasant", desc: "Pamiątka rodzinna.", bonus: "Pokazuje czas", isConsumable: false, maxUses: null },
-    { id: 15, name: "Rolex Submariner", type: "watch", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "⌚", rarity: "Epic", desc: "Znasz jego wartość.", bonus: "+15 do Prestiżu", isConsumable: false, maxUses: null },
-    { id: 16, name: "Patek Philippe", type: "watch", price: "2,500,000 $", rawPrice: 2500000, color: "#ffd700", icon: "🕰️", rarity: "Divine", desc: "Nie ty go masz, ty go przechowujesz dla pokoleń.", bonus: "Zatrzymuje czas (długów)", isConsumable: false, maxUses: null },
-    { id: 17, name: "Sznurek", type: "belt", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "🧶", rarity: "Peasant", desc: "Trzyma spodnie.", bonus: "Brak", isConsumable: false, maxUses: null },
-    { id: 18, name: "Pasek Gucci", type: "belt", price: "800 $", rawPrice: 800, color: "#3b82f6", icon: "🐍", rarity: "Rare", desc: "Wielka klamra.", bonus: "+2 do Lansu", isConsumable: false, maxUses: null },
-    { id: 19, name: "Dżinsy z Dziurami", type: "pants", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "👖", rarity: "Peasant", desc: "Modne, ale czy w kasynie?", bonus: "Wentylacja", isConsumable: false, maxUses: null },
-    { id: 20, name: "Spodnie od Garnituru", type: "pants", price: "2,000 $", rawPrice: 2000, color: "#3b82f6", icon: "👖", rarity: "Rare", desc: "Dopasowane.", bonus: "Wygoda +5", isConsumable: false, maxUses: null },
-    { id: 21, name: "Klapki Basenowe", type: "shoes", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "🩴", rarity: "Peasant", desc: "Szur szur.", bonus: "-50 do Poważania", isConsumable: false, maxUses: null },
-    { id: 22, name: "Mokasyny", type: "shoes", price: "3,000 $", rawPrice: 3000, color: "#8b5cf6", icon: "👞", rarity: "Epic", desc: "Włoska skóra.", bonus: "Cichy chód", isConsumable: false, maxUses: null },
-    { id: 23, name: "Sygnet Rodowy", type: "ring", price: "15,000 $", rawPrice: 15000, color: "#8b5cf6", icon: "🧿", rarity: "Epic", desc: "Z herbem nieistniejącego rodu.", bonus: "+10 do Blefu", isConsumable: false, maxUses: null },
-    { id: 24, name: "Obrączka", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💍", rarity: "Peasant", desc: "Z grawerem.", bonus: "Wierność", isConsumable: false, maxUses: null },
-    { id: 25, name: "Bilet Autobusowy", type: "vehicle", price: "2 $", rawPrice: 2, color: "#9ca3af", icon: "🚌", rarity: "Peasant", desc: "Ważny 20 minut.", bonus: "Transport publiczny", isConsumable: true, maxUses: 1 },
-    { id: 26, name: "Kluczyki BMW", type: "vehicle", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "🔑", rarity: "Rare", desc: "M3 w leasingu.", bonus: "Szybki dojazd", isConsumable: false, maxUses: null },
-    { id: 27, name: "Karta do Bugatti", type: "vehicle", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "🏎️", rarity: "Divine", desc: "Top G.", bonus: "Prędkość światła", isConsumable: false, maxUses: null },
-    { id: 28, name: "Nokia 3310", type: "gadget", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧱", rarity: "Peasant", desc: "Niezniszczalna.", bonus: "Samoobrona", isConsumable: false, maxUses: null },
-    { id: 29, name: "iPhone 16 Pro Max", type: "gadget", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "📱", rarity: "Rare", desc: "Więcej aparatów niż sensu.", bonus: "+5 do Selfie", isConsumable: false, maxUses: null },
-    { id: 30, name: "Szyfrowany Telefon", type: "gadget", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "📡", rarity: "Relic", desc: "Nikt nie podsłucha.", bonus: "Anonimowość", isConsumable: false, maxUses: null },
-    { id: 31, name: "Czarne American Express", type: "gadget", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💳", rarity: "Divine", desc: "Bez limitu.", bonus: "Nieskończony debet", isConsumable: false, maxUses: null },
-    { id: 32, name: "Cygaro Kubańskie", type: "gadget", price: "500 $", rawPrice: 500, color: "#3b82f6", icon: "🚬", rarity: "Rare", desc: "Kopci jak smok.", bonus: "Relaks", isConsumable: true, maxUses: 5 },
-    { id: 33, name: "Szklanka Whisky", type: "gadget", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "🥃", rarity: "Peasant", desc: "Z lodem.", bonus: "Odwaga +5", isConsumable: true, maxUses: 3 }
-];
+                        <div class="ps-user-info">
+                            <h2>MrGambler</h2>
+                            <span><i class="fas fa-calendar-alt"></i> Dołączył: 10 Dec 2025</span>
+                            <div style="margin-top: 5px;">
+                                <span class="rank-badge" style="background: rgba(59,130,246,0.1); color: var(--accent-blue); padding: 2px 8px; border-radius: 4px; font-weight:700; border:1px solid rgba(59,130,246,0.2); font-size: 10px;">ALPHA WHALE</span>
+                            </div>
+                        </div>
 TREŚĆ:
-let allTreasures = [
-    { id: 1, name: "Peasant Case", type: "chest", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💼", rarity: "Peasant", desc: "Stara, skórzana teczka.", bonus: "Może zawierać kanapki.", isConsumable: true, maxUses: 1 },
-    { id: 2, name: "Rare Case", type: "chest", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "💼", rarity: "Rare", desc: "Walizka z szyfrem.", bonus: "Gwarantowany gadżet.", isConsumable: true, maxUses: 1 },
-    { id: 3, name: "Epic Case", type: "chest", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "💼", rarity: "Epic", desc: "Wzmocniona tytanem.", bonus: "Pachnie drogimi perfumami.", isConsumable: true, maxUses: 1 },
-    { id: 4, name: "Relic Case", type: "chest", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "💼", rarity: "Relic", desc: "Używana przez mafię.", bonus: "Ryzykowna zawartość.", isConsumable: true, maxUses: 1 },
-    { id: 5, name: "Divine Case", type: "chest", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💼", rarity: "Divine", desc: "Wykonana ze złota i diamentów.", bonus: "Tylko dla 1%.", isConsumable: true, maxUses: 1 },
-    { id: 6, name: "Czapka z daszkiem", type: "head", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧢", rarity: "Peasant", desc: "Ukrywa łzy po przegranej.", bonus: "+2% Szansy na litość Admina", isConsumable: false, maxUses: null },
-    { id: 7, name: "RayBan Aviator", type: "head", price: "1,500 $", rawPrice: 1500, color: "#3b82f6", icon: "🕶️", rarity: "Rare", desc: "Nie widać oczu, nie widać strachu.", bonus: "+10% Poker Face, Ukrywa emocje w czacie", isConsumable: false, maxUses: null },
-    { id: 8, name: "Gogle VR Pro", type: "head", price: "15,000 $", rawPrice: 15000, color: "#ef4444", icon: "🥽", rarity: "Relic", desc: "Widzisz macierz. Albo po prostu bad pixele.", bonus: "Podgląd RTP gier na żywo, +5% XP", isConsumable: false, maxUses: null },
-    { id: 9, name: "Krawat z Poliestru", type: "neck", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "👔", rarity: "Peasant", desc: "Drapie w szyję. Dostałeś go na komunię.", bonus: "-10 Charyzmy, Zwiększa szansę na 'Bankructwo'", isConsumable: false, maxUses: null },
-    { id: 10, name: "Złoty Łańcuch", type: "neck", price: "25,000 $", rawPrice: 25000, color: "#8b5cf6", icon: "⛓️", rarity: "Epic", desc: "Waży tyle co twoje długi.", bonus: "+15% Respectu, Dostęp do stolików VIP", isConsumable: false, maxUses: null },
-    { id: 11, name: "Koszula Hawajska", type: "suit", price: "80 $", rawPrice: 80, color: "#9ca3af", icon: "👕", rarity: "Peasant", desc: "Idealna, by udawać, że wszystko jest OK.", bonus: "+20% Luzu, -5% Prowizji przy wpłatach", isConsumable: false, maxUses: null },
-    { id: 12, name: "Garnitur Hugo Boss", type: "suit", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "🤵", rarity: "Rare", desc: "Wyglądasz jak ktoś, kto wie co robi.", bonus: "+10% do Negocjacji, Większy limit zakładu", isConsumable: false, maxUses: null },
-    { id: 13, name: "Smoking Bonda", type: "suit", price: "500,000 $", rawPrice: 500000, color: "#ffd700", icon: "🍸", rarity: "Divine", desc: "Wstrząśnięty portfel, niezmieszany gracz.", bonus: "Ochrona przed banem (1 użycie), +50% Prestiżu", isConsumable: false, maxUses: null },
-    { id: 14, name: "Zegarek z Komunii", type: "watch", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "⌚", rarity: "Peasant", desc: "Bateria padła w 2010. Tak jak twoja passa.", bonus: "Pokazuje złą godzinę", isConsumable: false, maxUses: null },
-    { id: 15, name: "Rolex Submariner", type: "watch", price: "40,000 $", rawPrice: 40000, color: "#8b5cf6", icon: "⌚", rarity: "Epic", desc: "Wodoodporny. Przydatne, gdy idziesz na dno.", bonus: "+5% Cashback (Szansa na zwrot przegranej)", isConsumable: false, maxUses: null },
-    { id: 16, name: "Patek Philippe", type: "watch", price: "2,500,000 $", rawPrice: 2500000, color: "#ffd700", icon: "🕰️", rarity: "Divine", desc: "Nie ty go masz, ty go przechowujesz dla komornika.", bonus: "Zatrzymuje czas sesji, +20% LP", isConsumable: false, maxUses: null },
-    { id: 17, name: "Sznurek", type: "belt", price: "5 $", rawPrice: 5, color: "#9ca3af", icon: "🧶", rarity: "Peasant", desc: "Ostatnia deska ratunku dla twoich spodni.", bonus: "+1 Slot na śmieci", isConsumable: false, maxUses: null },
-    { id: 18, name: "Pasek Gucci", type: "belt", price: "800 $", rawPrice: 800, color: "#3b82f6", icon: "🐍", rarity: "Rare", desc: "Klamra wielkości talerza. Widać ją z kosmosu.", bonus: "+5% Lansu, Lepszy drop rate w skrzynkach", isConsumable: false, maxUses: null },
-    { id: 19, name: "Dżinsy z Dziurami", type: "pants", price: "150 $", rawPrice: 150, color: "#9ca3af", icon: "👖", rarity: "Peasant", desc: "To moda, czy bieda? Nikt nie pyta.", bonus: "Wentylacja portfela (Szybsze spiny)", isConsumable: false, maxUses: null },
-    { id: 20, name: "Spodnie od Garnituru", type: "pants", price: "2,000 $", rawPrice: 2000, color: "#3b82f6", icon: "👖", rarity: "Rare", desc: "Dopasowane tak, że nie wciśniesz tam grosza.", bonus: "+5% Ochrony przed kradzieżą (Yoink)", isConsumable: false, maxUses: null },
-    { id: 21, name: "Klapki Basenowe", type: "shoes", price: "20 $", rawPrice: 20, color: "#9ca3af", icon: "🩴", rarity: "Peasant", desc: "Legendary Kubota. Skarpety w zestawie.", bonus: "+50% Prędkości ucieczki przed długami", isConsumable: false, maxUses: null },
-    { id: 22, name: "Mokasyny", type: "shoes", price: "3,000 $", rawPrice: 3000, color: "#8b5cf6", icon: "👞", rarity: "Epic", desc: "Nie nosisz skarpet, bo cię stać na talk.", bonus: "Cichy chód (Mniejsza szansa na bana)", isConsumable: false, maxUses: null },
-    { id: 23, name: "Sygnet Rodowy", type: "ring", price: "15,000 $", rawPrice: 15000, color: "#8b5cf6", icon: "🧿", rarity: "Epic", desc: "Herb rodu 'Zastaw i Postaw'.", bonus: "+10% do Blefu, +2% Szansy na Critical Win", isConsumable: false, maxUses: null },
-    { id: 24, name: "Obrączka", type: "ring", price: "500 $", rawPrice: 500, color: "#9ca3af", icon: "💍", rarity: "Peasant", desc: "Żona myśli, że jesteś w pracy.", bonus: "Ukrywa status 'Online'", isConsumable: false, maxUses: null },
-    { id: 25, name: "Bilet Autobusowy", type: "vehicle", price: "2 $", rawPrice: 2, color: "#9ca3af", icon: "🚌", rarity: "Peasant", desc: "Ważny 20 minut. Jak twoja wypłata.", bonus: "Darmowy powrót do lobby po bankructwie", isConsumable: true, maxUses: 1 },
-    { id: 26, name: "Kluczyki BMW", type: "vehicle", price: "50,000 $", rawPrice: 50000, color: "#3b82f6", icon: "🔑", rarity: "Rare", desc: "Leasing na babcię. Kierunkowskazy opcjonalne.", bonus: "Agresywna jazda (+5% Speed w Arcade)", isConsumable: false, maxUses: null },
-    { id: 27, name: "Karta do Bugatti", type: "vehicle", price: "2,000,000 $", rawPrice: 2000000, color: "#ffd700", icon: "🏎️", rarity: "Divine", desc: "What color is your Bugatti? Przezroczysty.", bonus: "Natychmiastowe Wypłaty, Prestiż level: Tate", isConsumable: false, maxUses: null },
-    { id: 28, name: "Nokia 3310", type: "gadget", price: "50 $", rawPrice: 50, color: "#9ca3af", icon: "🧱", rarity: "Peasant", desc: "Można nią zabić, albo zadzwonić po pożyczkę.", bonus: "Niezniszczalność (Ochrona przed zerowaniem)", isConsumable: false, maxUses: null },
-    { id: 29, name: "iPhone 16 Pro Max", type: "gadget", price: "5,000 $", rawPrice: 5000, color: "#3b82f6", icon: "📱", rarity: "Rare", desc: "Więcej aparatów niż masz zer na koncie.", bonus: "+5% Szansy na drop z Social Media", isConsumable: false, maxUses: null },
-    { id: 30, name: "Szyfrowany Telefon", type: "gadget", price: "100,000 $", rawPrice: 100000, color: "#ef4444", icon: "📡", rarity: "Relic", desc: "FBI nienawidzi tego triku.", bonus: "Anonimowe transakcje, Brak logów", isConsumable: false, maxUses: null },
-    { id: 31, name: "Czarne American Express", type: "gadget", price: "1,000,000 $", rawPrice: 1000000, color: "#ffd700", icon: "💳", rarity: "Divine", desc: "Karta cięższa niż twoje sumienie.", bonus: "Nieskończony debet (do -10k $)", isConsumable: false, maxUses: null },
-    { id: 32, name: "Cygaro Kubańskie", type: "gadget", price: "500 $", rawPrice: 500, color: "#3b82f6", icon: "🚬", rarity: "Rare", desc: "Smakuje jak zwycięstwo, nawet gdy przegrywasz.", bonus: "Regeneracja Stressu, +10% LP przez 1h", isConsumable: true, maxUses: 5 },
-    { id: 33, name: "Szklanka Whisky", type: "gadget", price: "100 $", rawPrice: 100, color: "#9ca3af", icon: "🥃", rarity: "Peasant", desc: "Z lodem. Rozwadnia smutki.", bonus: "Odwaga (+20% Max Bet), Zamazany ekran", isConsumable: true, maxUses: 3 }
-];
+                        <div class="ps-user-info">
+                            <h2>MrGambler</h2>
+                            <span><i class="fas fa-calendar-alt"></i> Dołączył: 10 Dec 2025</span>
+                        </div>
+
+KROK 2:
+PLIK: "index.html"
+OPERACJA: [ZASTĄP]
+SZUKAJ:
+                    <div>
+                        <div class="eu-divider" style="margin-bottom: 15px;">ULUBIONE GRY</div>
+                        <div class="ps-games-list">
+                            <div class="ps-game-row">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="ps-g-icon" style="color: #8b5cf6;"><i class="fas fa-gem"></i></div>
+                                    <div>
+                                        <div style="font-size:13px; font-weight:700; color:white;">Quantum Slots</div>
+                                        <div style="font-size:10px; color:#666;">Most Played</div>
+                                    </div>
+                                </div>
+                                <div class="ps-g-bar-container">
+                                    <div class="ps-g-bar" style="width: 85%; background: #8b5cf6; box-shadow: 0 0 10px rgba(139,92,246,0.4);"></div>
+                                </div>
+                                <div style="font-size:12px; font-weight:700; color:#ddd;">142 gier</div>
+                            </div>
+
+                            <div class="ps-game-row">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="ps-g-icon" style="color: #4f46e5;"><i class="fas fa-layer-group"></i></div>
+                                    <div>
+                                        <div style="font-size:13px; font-weight:700; color:white;">Blackjack</div>
+                                        <div style="font-size:10px; color:#666;">Highest Win Rate</div>
+                                    </div>
+                                </div>
+                                <div class="ps-g-bar-container">
+                                    <div class="ps-g-bar" style="width: 60%; background: #4f46e5;"></div>
+                                </div>
+                                <div style="font-size:12px; font-weight:700; color:#ddd;">98 gier</div>
+                            </div>
+
+                            <div class="ps-game-row">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="ps-g-icon" style="color: #f59e0b;"><i class="fas fa-circle-notch"></i></div>
+                                    <div>
+                                        <div style="font-size:13px; font-weight:700; color:white;">Roulette</div>
+                                        <div style="font-size:10px; color:#666;">High Risk</div>
+                                    </div>
+                                </div>
+                                <div class="ps-g-bar-container">
+                                    <div class="ps-g-bar" style="width: 45%; background: #f59e0b;"></div>
+                                </div>
+                                <div style="font-size:12px; font-weight:700; color:#ddd;">76 gier</div>
+                            </div>
+                        </div>
+                    </div>
+TREŚĆ:
+                    <div>
+                        <div class="eu-divider" style="margin-bottom: 15px;">NAJCZĘŚCIEJ GRANE</div>
+                        <div class="ps-games-list">
+                            <div class="ps-game-row">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="ps-g-icon" style="color: #d946ef;"><i class="fas fa-star"></i></div>
+                                    <div style="font-size:13px; font-weight:700; color:white;">Megaways</div>
+                                </div>
+                                <div class="ps-g-bar-container">
+                                    <div class="ps-g-bar" style="width: 85%; background: #d946ef; box-shadow: 0 0 10px rgba(217, 70, 239, 0.4);"></div>
+                                </div>
+                                <div style="font-size:12px; font-weight:700; color:#ddd;">142 gier</div>
+                            </div>
+
+                            <div class="ps-game-row">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="ps-g-icon" style="color: #84cc16;"><i class="fas fa-skull-crossbones"></i></div>
+                                    <div style="font-size:13px; font-weight:700; color:white;">Degenerate Worms</div>
+                                </div>
+                                <div class="ps-g-bar-container">
+                                    <div class="ps-g-bar" style="width: 60%; background: #84cc16;"></div>
+                                </div>
+                                <div style="font-size:12px; font-weight:700; color:#ddd;">98 gier</div>
+                            </div>
+
+                            <div class="ps-game-row">
+                                <div style="display: flex; align-items: center;">
+                                    <div class="ps-g-icon" style="color: #7c3aed;"><i class="fas fa-crown"></i></div>
+                                    <div style="font-size:13px; font-weight:700; color:white;">Three Card Poker</div>
+                                </div>
+                                <div class="ps-g-bar-container">
+                                    <div class="ps-g-bar" style="width: 45%; background: #7c3aed;"></div>
+                                </div>
+                                <div style="font-size:12px; font-weight:700; color:#ddd;">76 gier</div>
+                            </div>
+                        </div>
+                    </div>

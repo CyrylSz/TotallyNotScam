@@ -4,7 +4,6 @@ from pathlib import Path
 import zipfile
 import io
 
-# --- FUNKCJE GENERUJĄCE DRZEWO (BEZ ZMIAN) ---
 
 def generate_tree_dir(
     path: Path,
@@ -180,7 +179,6 @@ def main():
 
     if not input_path.exists():
         print(f"❌ Błąd: Ścieżka nie istnieje:\n    {input_path}")
-        # Dajemy czas na przeczytanie błędu przy kliknięciu dwukrotnym
         if source_is_settings:
             input("Naciśnij Enter, aby zamknąć...")
         sys.exit(1)

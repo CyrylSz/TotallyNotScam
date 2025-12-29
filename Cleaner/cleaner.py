@@ -49,7 +49,7 @@ def remove_js_comments_robust(text):
     
     # Stany parsera
     CODE = 0
-    SLASH = 1          # Widziano jeden '/'
+    SLASH = 1
     BLOCK_COMMENT = 2
     LINE_COMMENT = 3
     STRING_DOUBLE = 4  # "
@@ -62,7 +62,6 @@ def remove_js_comments_robust(text):
     # Zmienne pomocnicze do wykrywania czy '/' to dzielenie czy regex
     last_token_type = 'OPERATOR' # Zakładamy start jako operator, żeby /regex/ na początku działał
     
-    # Znaki, po których '/' oznacza zazwyczaj regex, a nie dzielenie
     regex_preceders = {
         '(', ',', '=', ':', '[', '!', '&', '|', '?', '{', ';',
         'return', 'throw', 'case', 'new', 'typeof', 'void', 'delete', 'await'

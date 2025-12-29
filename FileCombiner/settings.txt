@@ -1,5 +1,5 @@
 === paths ===
-C:\Users\Akwar\Documents\Soul-Sucking\s5\BYT\Htmltests\TotallyNotScam\App
+/path/here/
 
 === Include ===
 *
