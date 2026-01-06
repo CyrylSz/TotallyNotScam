@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="pl">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -9,25 +10,31 @@
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
     <link rel="stylesheet" href="style.css">
 </head>
+
 <body>
 
     <nav class="sidebar">
         <div class="brand"><i class="fas fa-money-bill-wave-alt"></i> Totally Not Scam</div>
         <div class="brand-sub">(This is a joke project btw)</div>
-        
+
         <div class="nav-section">
-            <a onclick="showView('dashboard')" class="nav-item active" id="navDash"><i class="fas fa-chart-line"></i> Dashboard</a>
+            <a onclick="showView('dashboard')" class="nav-item active" id="navDash"><i class="fas fa-chart-line"></i>
+                Dashboard</a>
             <a onclick="showView('games')" class="nav-item" id="navGames"><i class="fas fa-gamepad"></i> Gry</a>
-            <a onclick="showView('inventory')" class="nav-item" id="navInventory"><i class="fas fa-suitcase"></i> Ekwipunek</a>
+            <a onclick="showView('inventory')" class="nav-item" id="navInventory"><i class="fas fa-suitcase"></i>
+                Ekwipunek</a>
             <a onclick="showView('market')" class="nav-item" id="navMarket"><i class="fas fa-store"></i> Rynek</a>
             <a onclick="showView('wallet')" class="nav-item" id="navWallet"><i class="fas fa-wallet"></i> Portfel</a>
-            <a onclick="showView('profile')" class="nav-item" id="navProfile"><i class="fas fa-user-circle"></i> Profil</a>
+            <a onclick="showView('profile')" class="nav-item" id="navProfile"><i class="fas fa-user-circle"></i>
+                Profil</a>
         </div>
 
         <div class="nav-section hidden" id="adminNavSection">
             <div class="nav-title">Zarządzanie</div>
-            <a onclick="showView('adminDash')" class="nav-item" id="navAdminDash"><i class="fas fa-tachometer-alt"></i> Dashboard Admina</a>
-            <a onclick="showView('gamesControl')" class="nav-item" id="navGamesControl"><i class="fas fa-server"></i> Kontrola Gier</a>
+            <a onclick="showView('adminDash')" class="nav-item" id="navAdminDash"><i class="fas fa-tachometer-alt"></i>
+                Dashboard Admina</a>
+            <a onclick="showView('gamesControl')" class="nav-item" id="navGamesControl"><i class="fas fa-server"></i>
+                Kontrola Gier</a>
             <a onclick="showView('users')" class="nav-item" id="navUsers"><i class="fas fa-users"></i> Użytkownicy</a>
             <a onclick="showView('logs')" class="nav-item" id="navLogs"><i class="fas fa-file-alt"></i> Logi</a>
         </div>
@@ -43,9 +50,13 @@
 
             <div class="user-profile">
                 <div class="profile-left">
-                    <div class="user-avatar" style="background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'); background-size: cover;"></div>
+                    <div class="user-avatar"
+                        style="background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'); background-size: cover;">
+                    </div>
                     <div class="user-info">
-                        <div style="font-size: 10px; color: var(--accent-purple); font-weight: 600; margin-bottom: 2px;">ADMIN</div>
+                        <div
+                            style="font-size: 10px; color: var(--accent-purple); font-weight: 600; margin-bottom: 2px;">
+                            ADMIN</div>
                         <h4>MrGambler</h4>
                     </div>
                 </div>
@@ -58,22 +69,23 @@
         <div class="header">
             <div style="display: flex; align-items: center;">
                 <h2 id="pageHeaderTitle">Dashboard</h2>
-                
+
                 <div id="profileActionWrapper" style="display: none; align-items: center; margin-left: 15px;">
                     <button class="qp-btn-small" onclick="alert('Edycja profilu')" title="Edytuj Profil"
                         style="width: 36px; height: 36px; min-width: 0; padding: 0; margin: 0; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;">
                         <i class="fa-solid fa-pen-to-square" style="font-size: 14px; margin:0;"></i>
                     </button>
-                    
+
                     <div style="width:1px; height:20px; background:rgba(255,255,255,0.2); margin:0 16px;"></div>
-                    
-                    <button class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')" title="Przeglądaj Profile Innych Graczy"
+
+                    <button class="qp-btn-small" onclick="alert('Przeglądanie profili niedostępne w demo')"
+                        title="Przeglądaj Profile Innych Graczy"
                         style="width: 36px; height: 36px; min-width: 0; padding: 0; margin: 0; display: flex; align-items: center; justify-content: center; flex: 0 0 auto;">
                         <i class="fas fa-search" style="font-size: 14px; margin:0;"></i>
                     </button>
                 </div>
             </div>
-            
+
             <div class="currency-display">
                 <span id="currencyCount">2,450,000</span> <i class="fas fa-dollar-sign"></i>
             </div>
@@ -83,43 +95,52 @@
                     <i class="fas fa-bell"></i>
                     <div class="header-bell-badge" id="headerBellBadge">5</div>
                 </div>
-                
+
                 <div class="notification-dropdown" id="notificationDropdown">
                     <div class="notif-header">
                         <span>Powiadomienia</span>
                         <span class="notif-clear" onclick="alert('Wyczyszczono!')">Wyczyść</span>
                     </div>
                     <div id="notificationList">
-                        </div>
+                    </div>
                 </div>
             </div>
         </div>
 
         <div class="view-container dashboard active" id="viewDashboard">
-            
+
             <div style="display: flex; flex-direction: column;">
                 <div class="dash-section top-banner-section">
                     <div class="carousel-container">
-                        
-                        <div class="carousel-slide active" style="background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%), url('https://images.unsplash.com/photo-1511193311914-0346f16efe90?q=80&w=2073&auto=format&fit=crop'); background-position: center;">
+
+                        <div class="carousel-slide active"
+                            style="background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%), url('https://images.unsplash.com/photo-1511193311914-0346f16efe90?q=80&w=2073&auto=format&fit=crop'); background-position: center;">
                             <div class="carousel-content">
-                                <h3 style="color: #f59e0b; text-shadow: 0 0 15px rgba(245, 158, 11, 0.5);">TURNIEJ: HIGH ROLLERS</h3>
+                                <h3 style="color: #f59e0b; text-shadow: 0 0 15px rgba(245, 158, 11, 0.5);">TURNIEJ: HIGH
+                                    ROLLERS</h3>
                                 <p>Wpisowe 100k $. Zwycięzca bierze wszystko + unikalny tytuł.</p>
-                                <button class="gc-btn play" style="background: #f59e0b; color: black; font-weight: 800;">DOŁĄCZ (RYZYKO 99%)</button>
+                                <button class="gc-btn play"
+                                    style="background: #f59e0b; color: black; font-weight: 800;">DOŁĄCZ (RYZYKO
+                                    99%)</button>
                             </div>
                         </div>
-                        
-                        <div class="carousel-slide" style="background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%), url('https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=1932&auto=format&fit=crop'); background-position: center;">
+
+                        <div class="carousel-slide"
+                            style="background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%), url('https://images.unsplash.com/photo-1642104704074-907c0698cbd9?q=80&w=1932&auto=format&fit=crop'); background-position: center;">
                             <div class="carousel-content">
-                                <h3 style="color: #10b981; text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);">HOSSA NA RYNKU</h3>
+                                <h3 style="color: #10b981; text-shadow: 0 0 15px rgba(16, 185, 129, 0.5);">HOSSA NA
+                                    RYNKU</h3>
                                 <p>Ceny 'Divine' przedmiotów wzrosły o 400%. Sprzedawaj póki gorące!</p>
-                                <button class="gc-btn play" style="background: #10b981; color: white;">IDŹ DO RYNKU</button>
+                                <button class="gc-btn play" style="background: #10b981; color: white;">IDŹ DO
+                                    RYNKU</button>
                             </div>
                         </div>
-                        
-                        <div class="carousel-slide" style="background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%), url('https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?q=80&w=2070&auto=format&fit=crop'); background-position: center;">
+
+                        <div class="carousel-slide"
+                            style="background: linear-gradient(90deg, rgba(0,0,0,0.8) 0%, rgba(0,0,0,0.2) 100%), url('https://images.unsplash.com/photo-1534423861386-85a16f5d13fd?q=80&w=2070&auto=format&fit=crop'); background-position: center;">
                             <div class="carousel-content">
-                                <h3 style="color: #d946ef; text-shadow: 0 0 15px rgba(217, 70, 239, 0.5);">KOLEKCJA: NEON DEGEN</h3>
+                                <h3 style="color: #d946ef; text-shadow: 0 0 15px rgba(217, 70, 239, 0.5);">KOLEKCJA:
+                                    NEON DEGEN</h3>
                                 <p>Nowe skiny, które nie dają absolutnie żadnej przewagi, ale świecą.</p>
                                 <button class="gc-btn play" style="background: #d946ef; color: white;">DROP IT</button>
                             </div>
@@ -133,45 +154,61 @@
                 <div class="dash-section ticker-section">
                     <div class="ticker-wrap">
                         <div class="ticker">
-                            <div class="ticker__item"><i class="fas fa-skull-crossbones" style="color:var(--accent-red);"></i> User_992 postawił dom w Ruletce i... przegrał. (RIP)</div>
-                            <div class="ticker__item"><i class="fas fa-crown" style="color:gold;"></i> Not_Elon: "To kasyno to scam, uwielbiam je!"</div>
-                            <div class="ticker__item"><i class="fas fa-rocket" style="color:var(--accent-orange);"></i> Crash: Rakieta wybuchła przy 1.00x. Rekordowa liczba bankructw!</div>
-                            <div class="ticker__item"><i class="fas fa-gem" style="color:var(--accent-purple);"></i> Drop: LuckyLuke trafił 'Niewidzialny Płaszcz' (Divine).</div>
-                            <div class="ticker__item"><i class="fas fa-gavel" style="color:#ef4444;"></i> System: Zbanowano gracza Bot_Farm_PL za "zbyt duże szczęście".</div>
-                            <div class="ticker__item"><i class="fas fa-chart-line" style="color:var(--accent-green);"></i> Rynek: Cena 'Wody po parówkach' wzrosła o 500%.</div>
-                            <div class="ticker__item"><i class="fas fa-university" style="color:#fff;"></i> Bank: Wypłaty opóźnione, admin pojechał na Bahamy.</div>
-                            <div class="ticker__item"><i class="fas fa-dice" style="color:var(--accent-blue);"></i> Statystyki: 99% graczy rezygnuje tuż przed wielką wygraną.</div>
+                            <div class="ticker__item"><i class="fas fa-skull-crossbones"
+                                    style="color:var(--accent-red);"></i> User_992 postawił dom w Ruletce i... przegrał.
+                                (RIP)</div>
+                            <div class="ticker__item"><i class="fas fa-crown" style="color:gold;"></i> Not_Elon: "To
+                                kasyno to scam, uwielbiam je!"</div>
+                            <div class="ticker__item"><i class="fas fa-rocket" style="color:var(--accent-orange);"></i>
+                                Crash: Rakieta wybuchła przy 1.00x. Rekordowa liczba bankructw!</div>
+                            <div class="ticker__item"><i class="fas fa-gem" style="color:var(--accent-purple);"></i>
+                                Drop: LuckyLuke trafił 'Niewidzialny Płaszcz' (Divine).</div>
+                            <div class="ticker__item"><i class="fas fa-gavel" style="color:#ef4444;"></i> System:
+                                Zbanowano gracza Bot_Farm_PL za "zbyt duże szczęście".</div>
+                            <div class="ticker__item"><i class="fas fa-chart-line"
+                                    style="color:var(--accent-green);"></i> Rynek: Cena 'Wody po parówkach' wzrosła o
+                                500%.</div>
+                            <div class="ticker__item"><i class="fas fa-university" style="color:#fff;"></i> Bank:
+                                Wypłaty opóźnione, admin pojechał na Bahamy.</div>
+                            <div class="ticker__item"><i class="fas fa-dice" style="color:var(--accent-blue);"></i>
+                                Statystyki: 99% graczy rezygnuje tuż przed wielką wygraną.</div>
                         </div>
                     </div>
-                 </div>
+                </div>
             </div>
 
             <div class="dash-new-layout dash-3-col-layout">
-                
+
                 <div class="d3-col">
                     <div class="card dash-card combined-panel">
                         <div class="cp-section">
                             <div class="card-header">
                                 <div class="card-title"><i class="fas fa-tags"></i> Moje Oferty</div>
-                                <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('market')" title="Przejdź do Rynku"></i>
+                                <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('market')"
+                                    title="Przejdź do Rynku"></i>
                             </div>
                             <div class="market-watch-list" id="dashActiveListings" style="gap: 5px;">
-                                </div>
+                            </div>
                         </div>
 
                         <div class="cp-divider"></div>
 
                         <div class="cp-section">
-                             <div class="card-header">
+                            <div class="card-header">
                                 <div class="card-title"><i class="fas fa-user-astronaut"></i> Loadout</div>
-                                <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('inventory')" title="Pełny ekwipunek"></i>
+                                <i class="fas fa-external-link-alt filter-icon-abs" onclick="showView('inventory')"
+                                    title="Pełny ekwipunek"></i>
                             </div>
-                            
-                            <div style="padding: 0 5px; display: flex; flex-direction: column; gap: 15px; flex-grow: 1; justify-content: center;">
+
+                            <div
+                                style="padding: 0 5px; display: flex; flex-direction: column; gap: 15px; flex-grow: 1; justify-content: center;">
                                 <div style="display: flex; justify-content: space-between; align-items: flex-end;">
-                                    <div class="inv-value-display" style="border: none; margin: 0; padding: 0; height: auto; align-items: flex-start;">
+                                    <div class="inv-value-display"
+                                        style="border: none; margin: 0; padding: 0; height: auto; align-items: flex-start;">
                                         <div class="iv-label">GEAR POWER</div>
-                                        <div class="iv-val" style="font-size: 28px; color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">145</div>
+                                        <div class="iv-val"
+                                            style="font-size: 28px; color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">
+                                            145</div>
                                     </div>
                                     <div class="loadout-select-box" style="height: auto; align-items: flex-end;">
                                         <div class="iv-label">ACTIVE LOADOUT</div>
@@ -183,7 +220,9 @@
                                     </div>
                                 </div>
 
-                                <div style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);"></div>
+                                <div
+                                    style="height: 1px; background: linear-gradient(90deg, transparent, rgba(255,255,255,0.1), transparent);">
+                                </div>
 
                                 <div class="pd-insights-content">
                                     <div class="pi-row">
@@ -212,10 +251,11 @@
                     <div class="card dash-card favorites-panel" style="width: 100%; max-width: 100%; min-height: auto;">
                         <div class="card-header">
                             <div class="card-title"><i class="fas fa-star" style="color:gold;"></i> Ulubione Gry</div>
-                            <i class="fas fa-filter filter-icon-abs" onclick="alert('Filtrowanie ulubionych...')" title="Filtruj"></i>
+                            <i class="fas fa-filter filter-icon-abs" onclick="alert('Filtrowanie ulubionych...')"
+                                title="Filtruj"></i>
                         </div>
                         <div class="favorites-grid" id="favoritesGrid">
-                            
+
                             <div class="fav-placeholder">
                                 <i class="far fa-star"></i>
                                 <span>Dodaj gry do ulubionych, aby mieć do nich szybki dostęp.</span>
@@ -223,62 +263,86 @@
                         </div>
                     </div>
 
-                    <div class="card dash-card favorites-panel" style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid rgba(245, 158, 11, 0.2); min-height: auto;">
+                    <div class="card dash-card favorites-panel"
+                        style="background: linear-gradient(135deg, #1a1a2e, #16213e); border: 1px solid rgba(245, 158, 11, 0.2); min-height: auto;">
                         <div class="card-header">
-                            <div class="card-title"><i class="fas fa-fire" style="color:#f59e0b;"></i> Popularne Gry</div>
+                            <div class="card-title"><i class="fas fa-fire" style="color:#f59e0b;"></i> Popularne Gry
+                            </div>
                             <i class="fas fa-filter filter-icon-abs" onclick="alert('Filtrowanie popularnych...')"></i>
                         </div>
-                         <div class="favorites-grid" id="popularModesGrid" style="padding-top: 5px;">
-                            </div>
+                        <div class="favorites-grid" id="popularModesGrid" style="padding-top: 5px;">
+                        </div>
                     </div>
                 </div>
 
                 <div class="d3-col">
-                                        <div class="card dash-card daily-hub-card">
-                         <div class="card-header"><div class="card-title"><i class="fas fa-calendar-alt"></i> Cykliczne Nagrody</div></div>
+                    <div class="card dash-card daily-hub-card">
+                        <div class="card-header">
+                            <div class="card-title"><i class="fas fa-calendar-alt"></i> Cykliczne Nagrody</div>
+                        </div>
 
-                         <div class="bp-mini-status" style="margin-bottom: 30px; padding: 12px 15px;">
+                        <div class="bp-mini-status" style="margin-bottom: 30px; padding: 12px 15px;">
                             <div class="bp-mini-info">
-                                <div style="font-size: 10px; color: var(--accent-purple); font-weight:800; letter-spacing: 1px;">BATTLE PASS: SEZON 2</div>
-                                <div style="font-size: 18px; font-weight: 800; margin-top: 2px;">Level 17 <span style="font-size:11px; color:var(--text-muted); font-weight:600;">/ 100</span></div>
+                                <div
+                                    style="font-size: 10px; color: var(--accent-purple); font-weight:800; letter-spacing: 1px;">
+                                    BATTLE PASS: SEZON 2</div>
+                                <div style="font-size: 18px; font-weight: 800; margin-top: 2px;">Level 17 <span
+                                        style="font-size:11px; color:var(--text-muted); font-weight:600;">/ 100</span>
+                                </div>
                             </div>
-                            
+
                             <div class="bp-mini-next-reward">
-                                <span style="font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Następna nagroda</span>
-                                <div style="display: flex; align-items: center; gap: 6px; color: white; font-weight: 700; font-size: 12px; margin-top: 2px;">
+                                <span
+                                    style="font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.5px;">Następna
+                                    nagroda</span>
+                                <div
+                                    style="display: flex; align-items: center; gap: 6px; color: white; font-weight: 700; font-size: 12px; margin-top: 2px;">
                                     <i class="fas fa-briefcase" style="color: #3b82f6; font-size: 14px;"></i> Rare Case
                                 </div>
                             </div>
 
-                            <div class="bp-mini-dots" onclick="openBattlePassModal()" title="Otwórz Battle Pass" style="padding: 8px;">
+                            <div class="bp-mini-dots" onclick="openBattlePassModal()" title="Otwórz Battle Pass"
+                                style="padding: 8px;">
                                 <i class="fas fa-expand-alt" style="font-size: 14px;"></i>
                             </div>
-                         </div>
-                        
-                         <div class="dh-streak-section" style="margin-bottom: 15px;">
-                             <div style="font-size: 10px; color: var(--text-muted); margin-bottom: 8px; text-transform:uppercase; font-weight: 700;">Daily Streak</div>
+                        </div>
+
+                        <div class="dh-streak-section" style="margin-bottom: 15px;">
+                            <div
+                                style="font-size: 10px; color: var(--text-muted); margin-bottom: 8px; text-transform:uppercase; font-weight: 700;">
+                                Daily Streak</div>
                             <div class="streak-days" style="justify-content: space-between;">
-                                <div class="s-day claimed" style="width:30px; height:40px;"><i class="fas fa-check"></i><span style="font-size:8px;">D1</span></div>
-                                <div class="s-day claimed" style="width:30px; height:40px;"><i class="fas fa-check"></i><span style="font-size:8px;">D2</span></div>
-                                <div class="s-day claimed" style="width:30px; height:40px;"><i class="fas fa-check"></i><span style="font-size:8px;">D3</span></div>
-                                <div class="s-day current" style="width:30px; height:40px;"><i class="fas fa-box"></i><span style="font-size:8px;">D4</span></div>
-                                <div class="s-day" style="width:30px; height:40px;"><i class="fas fa-lock"></i><span style="font-size:8px;">D5</span></div>
-                                <div class="s-day" style="width:30px; height:40px;"><i class="fas fa-lock"></i><span style="font-size:8px;">D6</span></div>
-                                <div class="s-day golden" style="width:30px; height:40px;"><i class="fas fa-gift"></i><span style="font-size:8px;">D7</span></div>
+                                <div class="s-day claimed" style="width:30px; height:40px;"><i
+                                        class="fas fa-check"></i><span style="font-size:8px;">D1</span></div>
+                                <div class="s-day claimed" style="width:30px; height:40px;"><i
+                                        class="fas fa-check"></i><span style="font-size:8px;">D2</span></div>
+                                <div class="s-day claimed" style="width:30px; height:40px;"><i
+                                        class="fas fa-check"></i><span style="font-size:8px;">D3</span></div>
+                                <div class="s-day current" style="width:30px; height:40px;"><i
+                                        class="fas fa-box"></i><span style="font-size:8px;">D4</span></div>
+                                <div class="s-day" style="width:30px; height:40px;"><i class="fas fa-lock"></i><span
+                                        style="font-size:8px;">D5</span></div>
+                                <div class="s-day" style="width:30px; height:40px;"><i class="fas fa-lock"></i><span
+                                        style="font-size:8px;">D6</span></div>
+                                <div class="s-day golden" style="width:30px; height:40px;"><i
+                                        class="fas fa-gift"></i><span style="font-size:8px;">D7</span></div>
                             </div>
-                         </div>
+                        </div>
 
-                         <div class="cp-divider" style="margin: 0 0 15px 0;"></div>
+                        <div class="cp-divider" style="margin: 0 0 15px 0;"></div>
 
-                         <div class="quest-list" style="gap: 10px;">
-                            <div style="font-size: 10px; color: var(--text-muted); text-transform:uppercase; display: flex; justify-content: space-between; align-items: center;">
+                        <div class="quest-list" style="gap: 10px;">
+                            <div
+                                style="font-size: 10px; color: var(--text-muted); text-transform:uppercase; display: flex; justify-content: space-between; align-items: center;">
                                 <span style="font-weight: 700; letter-spacing: 0.5px;">Misje Dzienne</span>
                                 <span style="font-size: 9px; opacity: 0.7;"><i class="far fa-clock"></i> 14h 22m</span>
                             </div>
                             <div class="quest-item">
                                 <div class="quest-info">
                                     <div class="q-title">Zagraj 10 spinów</div>
-                                    <div class="q-progress-bar"><div class="q-fill" style="width: 80%;"></div></div>
+                                    <div class="q-progress-bar">
+                                        <div class="q-fill" style="width: 80%;"></div>
+                                    </div>
                                     <div class="q-desc">Postęp: 8/10</div>
                                 </div>
                                 <button class="gc-btn play q-btn">Odbierz</button>
@@ -286,18 +350,23 @@
                             <div class="quest-item">
                                 <div class="quest-info">
                                     <div class="q-title">Postaw łącznie 500$</div>
-                                    <div class="q-progress-bar"><div class="q-fill" style="width: 100%; background: var(--accent-green);"></div></div>
+                                    <div class="q-progress-bar">
+                                        <div class="q-fill" style="width: 100%; background: var(--accent-green);"></div>
+                                    </div>
                                     <div class="q-desc">Postęp: 500/500</div>
                                 </div>
-                                 <button id="btnQuest500" class="gc-btn play q-btn active-claim" onclick="claimQuest(this)">Odbierz</button>
+                                <button id="btnQuest500" class="gc-btn play q-btn active-claim"
+                                    onclick="claimQuest(this)">Odbierz</button>
                             </div>
-                             <div class="quest-item">
+                            <div class="quest-item">
                                 <div class="quest-info">
                                     <div class="q-title">Otwórz skrzynkę</div>
-                                    <div class="q-progress-bar"><div class="q-fill" style="width: 0%;"></div></div>
+                                    <div class="q-progress-bar">
+                                        <div class="q-fill" style="width: 0%;"></div>
+                                    </div>
                                     <div class="q-desc">Postęp: 0/1</div>
                                 </div>
-                                 <button class="gc-btn play q-btn disabled">Odbierz</button>
+                                <button class="gc-btn play q-btn disabled">Odbierz</button>
                             </div>
                         </div>
                     </div>
@@ -309,22 +378,25 @@
 
         <div class="view-container" id="viewGames">
             <div id="gamesBgAnim" class="fixed-bg-anim"></div>
-            
+
             <div class="rank-stats-wrapper">
                 <div class="rs-card daily-pl-block">
-                    <div class="pl-history-icon" onclick="openDailyPLModal()" title="Historia P/L"><i class="fas fa-history"></i></div>
+                    <div class="pl-history-icon" onclick="openDailyPLModal()" title="Historia P/L"><i
+                            class="fas fa-history"></i></div>
                     <div class="ws-data">
                         <div class="ws-label">DAILY P/L</div>
                         <div class="ws-val" style="color: var(--accent-green);">+2,450 $</div>
-                        <div class="ws-highest" style="color: #8b92a5; font-size: 9px; margin-top: 2px;">Reset: 14h 22m</div>
+                        <div class="ws-highest" style="color: #8b92a5; font-size: 9px; margin-top: 2px;">Reset: 14h 22m
+                        </div>
                     </div>
                 </div>
                 <div class="rs-card rank-block">
                     <i class="fas fa-ellipsis-h rob-menu-btn" onclick="openRankModal()"></i>
                     <div class="rob-left">
-                        <div class="rob-icon" style="background: transparent; border: none; font-size: 42px; width: auto; height: auto;">
+                        <div class="rob-icon"
+                            style="background: transparent; border: none; font-size: 42px; width: auto; height: auto;">
                             🐋
-                        </div> 
+                        </div>
                         <div class="rob-info">
                             <div class="rob-label">Twoja Ranga</div>
                             <div class="rob-title">Alpha Whale</div>
@@ -337,50 +409,55 @@
                             <span>Następna ranga: <b>2,000 LP</b></span>
                         </div>
                         <div class="rob-progress-bar">
-                            <div class="rob-progress-fill" style="width: 72.5%;"></div> 
+                            <div class="rob-progress-fill" style="width: 72.5%;"></div>
                         </div>
-                        <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-purple);">531 LP</span> do próby awansu na <b>RNG God</b></div>
+                        <div class="rob-progress-diff">Brakuje <span style="color:var(--accent-purple);">531 LP</span>
+                            do próby awansu na <b>RNG God</b></div>
                     </div>
                 </div>
                 <div class="rs-card streak-block">
                     <div class="ws-data">
                         <div class="ws-label">WIN STREAK</div>
-                        <div class="ws-val" style="color:#ef4444;">2 <i class="fas fa-fire" style="font-size:14px; color:#ef4444; margin-left:4px;"></i></div>
-                        <div class="ws-highest">Highest: <span style="color:rgba(239, 68, 68, 0.4); font-size:11px; font-weight:700;">11</span></div>
+                        <div class="ws-val" style="color:#ef4444;">2 <i class="fas fa-fire"
+                                style="font-size:14px; color:#ef4444; margin-left:4px;"></i></div>
+                        <div class="ws-highest">Highest: <span
+                                style="color:rgba(239, 68, 68, 0.4); font-size:11px; font-weight:700;">11</span></div>
                     </div>
                 </div>
             </div>
-            
+
 
             <div class="games-hub-grid">
-                
+
                 <div class="games-column">
-                    
+
                     <div id="gamesHubHeader"></div>
 
-                    
+
                     <div id="availableGamesContainer"></div>
                 </div>
 
                 <div class="leaderboard-column">
-                    
+
                     <div class="card" style="height: 100%; display: flex; flex-direction: column;">
                         <div class="card-header" style="justify-content: space-between; padding-right: 0;">
-                            
-                            <div class="card-title"><i class="fas fa-trophy" style="color:gold; margin-right:8px;"></i> Leaderboard</div>
-                            
+
+                            <div class="card-title"><i class="fas fa-trophy" style="color:gold; margin-right:8px;"></i>
+                                Leaderboard</div>
+
                             <i class="fas fa-filter filter-icon-abs" style="position: static;" title="Filtruj"></i>
                         </div>
-                        
+
                         <div class="leaderboard-header">
                             <span>#</span>
                             <span>Gracz</span>
                             <span style="text-align:right;">Net Worth</span>
                         </div>
-                        
-                        
-                        <div class="leaderboard-list" id="globalLeaderboardList" style="overflow-y: auto; flex: 1; max-height: 550px; padding-right: 5px;">
-                            
+
+
+                        <div class="leaderboard-list" id="globalLeaderboardList"
+                            style="overflow-y: auto; flex: 1; max-height: 550px; padding-right: 5px;">
+
                         </div>
 
                         <div style="display: flex; gap: 10px; margin-top: 15px;">
@@ -395,57 +472,68 @@
 
         <div class="view-container" id="viewInventory">
             <div class="inventory-split-layout">
-                
+
                 <div class="inv-panel left-panel">
                     <div class="inv-header">
                         <div class="inv-title">
                             <i class="fas fa-box-open"></i> MAGAZYN
-                            <div class="inv-value-display" style="border-right: none; border-left: 1px solid rgba(255,255,255,0.1); align-items: flex-start; margin-left: 15px; padding-left: 15px; padding-right: 0;">
+                            <div class="inv-value-display"
+                                style="border-right: none; border-left: 1px solid rgba(255,255,255,0.1); align-items: flex-start; margin-left: 15px; padding-left: 15px; padding-right: 0;">
                                 <div class="iv-label">TOTAL VALUE</div>
                                 <div class="iv-val">~2,790,000 $</div>
                             </div>
 
-                            <div style="display: flex; align-items: center; gap: 8px; margin-left: 15px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px; height: 30px;">
+                            <div
+                                style="display: flex; align-items: center; gap: 8px; margin-left: 15px; border-left: 1px solid rgba(255,255,255,0.1); padding-left: 15px; height: 30px;">
                                 <label class="switch" style="transform: scale(0.7);">
                                     <input type="checkbox">
                                     <span class="slider"></span>
                                 </label>
                                 <div style="display:flex; flex-direction:column;">
-                                    <span style="font-size: 9px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;">SHOW PRICES</span>
+                                    <span
+                                        style="font-size: 9px; font-weight: 700; color: var(--text-muted); letter-spacing: 0.5px;">SHOW
+                                        PRICES</span>
                                 </div>
                             </div>
                         </div>
                         <div class="inv-stats">
                             <div class="ms-toggle-row" style="display:inline-flex; width: 180px;">
-                                <button id="btnInvItem" class="ms-type-btn active" onclick="toggleInvFilter('item')" style="margin:0;">
+                                <button id="btnInvItem" class="ms-type-btn active" onclick="toggleInvFilter('item')"
+                                    style="margin:0;">
                                     <i class="fas fa-cube"></i> Item
                                 </button>
-                                <button id="btnInvCase" class="ms-type-btn active" onclick="toggleInvFilter('case')" style="margin:0;">
+                                <button id="btnInvCase" class="ms-type-btn active" onclick="toggleInvFilter('case')"
+                                    style="margin:0;">
                                     <i class="fas fa-briefcase"></i> Case
                                 </button>
                             </div>
-                            <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 12px;"></div>
+                            <div style="width: 1px; height: 24px; background: rgba(255,255,255,0.1); margin: 0 12px;">
+                            </div>
                             <button class="inv-filter-btn" title="Sortuj / Filtruj">
                                 <i class="fas fa-filter"></i>
                             </button>
                         </div>
                     </div>
                     <div class="inventory-grid-scroll" id="inventoryContainer">
-                        
+
                     </div>
                 </div>
 
-                
+
                 <div class="inv-panel right-panel">
                     <div class="inv-header">
                         <div class="inv-title"><i class="fas fa-user-astronaut"></i> LOADOUT</div>
                         <div class="inv-stats">
                             <div class="inv-value-display">
                                 <div class="iv-label" style="display: flex; align-items: center; gap: 6px;">
-                                    <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; font-size: 11px;" onclick="alert('Gear Power to suma punktów twoich założonych przedmiotów.')"></i>
+                                    <i class="fas fa-info-circle"
+                                        style="color: var(--text-muted); cursor: pointer; font-size: 11px;"
+                                        onclick="alert('Gear Power to suma punktów twoich założonych przedmiotów.')"></i>
                                     GEAR POWER
                                 </div>
-                                <div class="iv-val" style="color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">145</div>
+                                <div class="iv-val"
+                                    style="color: var(--accent-blue); text-shadow: 0 0 15px rgba(59, 130, 246, 0.4);">
+                                    145</div>
                             </div>
                             <div class="loadout-select-box">
                                 <div class="iv-label">ACTIVE LOADOUT</div>
@@ -457,32 +545,45 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div class="paper-doll-container">
                         <div class="pd-formation">
                             <div class="pd-silhouette"><i class="fas fa-user-tie"></i></div>
-                            
-                            <div class="pd-slot slot-glasses" data-type="head" title="HEAD"><i class="fas fa-hat-cowboy placeholder"></i></div>
-                            <div class="pd-slot slot-neck" data-type="neck" title="NECK"><i class="fas fa-link placeholder"></i></div>
-                            <div class="pd-slot slot-earpiece" data-type="gadget" title="GADGET"><i class="fas fa-microchip placeholder"></i></div>
 
-                            <div class="pd-slot slot-watch" data-type="watch" title="WATCH"><i class="fas fa-clock placeholder"></i></div>
-                            <div class="pd-slot slot-suit" data-type="suit" title="SUIT"><i class="fas fa-user-tie placeholder"></i></div>
-                            <div class="pd-slot slot-cufflink" data-type="ring" title="RING"><i class="fas fa-ring placeholder"></i></div>
+                            <div class="pd-slot slot-glasses" data-type="head" title="HEAD"><i
+                                    class="fas fa-hat-cowboy placeholder"></i></div>
+                            <div class="pd-slot slot-neck" data-type="neck" title="NECK"><i
+                                    class="fas fa-link placeholder"></i></div>
+                            <div class="pd-slot slot-earpiece" data-type="gadget" title="GADGET"><i
+                                    class="fas fa-microchip placeholder"></i></div>
 
-                            <div class="pd-slot slot-ring" data-type="ring" title="RING"><i class="fas fa-ring placeholder"></i></div>
-                            <div class="pd-slot slot-belt" data-type="belt" title="BELT"><i class="fas fa-grip-lines placeholder"></i></div>
-                            <div class="pd-slot slot-pants" data-type="pants" title="PANTS"><i class="fas fa-columns placeholder"></i></div>
+                            <div class="pd-slot slot-watch" data-type="watch" title="WATCH"><i
+                                    class="fas fa-clock placeholder"></i></div>
+                            <div class="pd-slot slot-suit" data-type="suit" title="SUIT"><i
+                                    class="fas fa-user-tie placeholder"></i></div>
+                            <div class="pd-slot slot-cufflink" data-type="ring" title="RING"><i
+                                    class="fas fa-ring placeholder"></i></div>
 
-                            <div class="pd-slot slot-vehicle" data-type="vehicle" title="VEHICLE"><i class="fas fa-car placeholder"></i></div>
-                            <div class="pd-slot slot-shoes" data-type="shoes" title="SHOES"><i class="fas fa-shoe-prints placeholder"></i></div>
-                            <div class="pd-slot slot-hand" data-type="gadget" title="GADGET"><i class="fas fa-mobile-alt placeholder"></i></div>
+                            <div class="pd-slot slot-ring" data-type="ring" title="RING"><i
+                                    class="fas fa-ring placeholder"></i></div>
+                            <div class="pd-slot slot-belt" data-type="belt" title="BELT"><i
+                                    class="fas fa-grip-lines placeholder"></i></div>
+                            <div class="pd-slot slot-pants" data-type="pants" title="PANTS"><i
+                                    class="fas fa-columns placeholder"></i></div>
+
+                            <div class="pd-slot slot-vehicle" data-type="vehicle" title="VEHICLE"><i
+                                    class="fas fa-car placeholder"></i></div>
+                            <div class="pd-slot slot-shoes" data-type="shoes" title="SHOES"><i
+                                    class="fas fa-shoe-prints placeholder"></i></div>
+                            <div class="pd-slot slot-hand" data-type="gadget" title="GADGET"><i
+                                    class="fas fa-mobile-alt placeholder"></i></div>
                         </div>
                     </div>
                     <div class="pd-insights-wrapper">
                         <div class="pd-insights-header">
                             <div class="pd-insights-title">KEY INSIGHTS</div>
-                            <i class="fas fa-ellipsis-h pd-more-btn" onclick="openLoadoutEffectsModal()" title="Pokaż efekty zestawu"></i>
+                            <i class="fas fa-ellipsis-h pd-more-btn" onclick="openLoadoutEffectsModal()"
+                                title="Pokaż efekty zestawu"></i>
                         </div>
                         <div class="pd-insights-content">
                             <div class="pi-row">
@@ -509,63 +610,86 @@
 
         <div class="view-container" id="viewMarket">
             <div class="market-layout-main">
-                
+
                 <aside class="market-sidebar">
                     <div class="ms-header">
                         <i class="fas fa-filter"></i> FILTRY RYNKU
                     </div>
-                    
-                    
+
+
                     <div class="ms-section">
                         <div class="ms-label">Przedmiot</div>
                         <div class="input-group small" style="margin-bottom: 0;">
-                            <input type="text" id="marketSearchInput" placeholder="Nazwa przedmiotu..." onkeyup="filterMarket()">
+                            <input type="text" id="marketSearchInput" placeholder="Nazwa przedmiotu..."
+                                onkeyup="filterMarket()">
                             <button class="ms-search-btn"><i class="fas fa-search"></i></button>
                         </div>
                     </div>
 
-                    
+
                     <div class="ms-section">
                         <div class="ms-label">Sprzedawca</div>
                         <div class="input-group small" style="margin-bottom: 5px;">
                             <span class="curr-prefix" style="padding: 0 10px;"><i class="fas fa-user"></i></span>
-                            <input type="text" id="marketSearchPlayer" placeholder="Nazwa gracza..." onkeyup="filterMarket()">
+                            <input type="text" id="marketSearchPlayer" placeholder="Nazwa gracza..."
+                                onkeyup="filterMarket()">
                         </div>
                         <label class="ms-check-row" style="padding-left: 2px;">
-                            <input type="checkbox" id="chkOnlyMine" onchange="filterMarket()"> 
-                            <span style="font-size: 11px; color: var(--accent-blue); font-weight: 600;">Tylko moje oferty</span>
+                            <input type="checkbox" id="chkOnlyMine" onchange="filterMarket()">
+                            <span style="font-size: 11px; color: var(--accent-blue); font-weight: 600;">Tylko moje
+                                oferty</span>
                         </label>
                     </div>
                     <div class="ms-section">
                         <div class="ms-label">Trwałość</div>
                         <div class="ms-toggle-row">
-                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('consumable', this)"><i class="fas fa-apple-alt"></i> Zużywalne</button>
-                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('durable', this)"><i class="fas fa-shield-alt"></i> Trwałe</button>
+                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('consumable', this)"><i
+                                    class="fas fa-apple-alt"></i> Zużywalne</button>
+                            <button class="ms-type-btn active" onclick="toggleDurabilityFilter('durable', this)"><i
+                                    class="fas fa-shield-alt"></i> Trwałe</button>
                         </div>
                     </div>
 
                     <div class="ms-section">
                         <div class="ms-label">Typ Aktywa</div>
                         <div class="ms-toggle-row">
-                            <button class="ms-type-btn active" onclick="toggleMarketType('item', this)" data-type="item"><i class="fas fa-cube"></i> Item</button>
-                            <button class="ms-type-btn active" onclick="toggleMarketType('case', this)" data-type="case"><i class="fas fa-briefcase"></i> Case</button>
+                            <button class="ms-type-btn active" onclick="toggleMarketType('item', this)"
+                                data-type="item"><i class="fas fa-cube"></i> Item</button>
+                            <button class="ms-type-btn active" onclick="toggleMarketType('case', this)"
+                                data-type="case"><i class="fas fa-briefcase"></i> Case</button>
                         </div>
                     </div>
 
                     <div class="ms-section" id="slotFilterSection">
                         <div class="ms-label">Slot Ekwipunku</div>
                         <div class="ms-slots-grid" style="grid-template-columns: repeat(5, 1fr);">
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('head', this)" title="Głowa"><i class="fas fa-glasses"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('neck', this)" title="Szyja"><i class="fas fa-link"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('suit', this)" title="Garnitur"><i class="fas fa-user-tie"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('watch', this)" title="Zegarek"><i class="fas fa-clock"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('gadget', this)" title="Gadżet"><i class="fas fa-mobile-alt"></i></div>
-                            
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('belt', this)" title="Pasek"><i class="fas fa-grip-lines"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('pants', this)" title="Spodnie"><i class="fas fa-columns"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('shoes', this)" title="Buty"><i class="fas fa-shoe-prints"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('ring', this)" title="Biżuteria"><i class="fas fa-ring"></i></div>
-                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('vehicle', this)" title="Pojazd"><i class="fas fa-car"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('head', this)" title="Głowa"><i
+                                    class="fas fa-glasses"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('neck', this)" title="Szyja"><i
+                                    class="fas fa-link"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('suit', this)" title="Garnitur">
+                                <i class="fas fa-user-tie"></i>
+                            </div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('watch', this)" title="Zegarek">
+                                <i class="fas fa-clock"></i>
+                            </div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('gadget', this)" title="Gadżet">
+                                <i class="fas fa-mobile-alt"></i>
+                            </div>
+
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('belt', this)" title="Pasek"><i
+                                    class="fas fa-grip-lines"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('pants', this)" title="Spodnie">
+                                <i class="fas fa-columns"></i>
+                            </div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('shoes', this)" title="Buty"><i
+                                    class="fas fa-shoe-prints"></i></div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('ring', this)" title="Biżuteria">
+                                <i class="fas fa-ring"></i>
+                            </div>
+                            <div class="ms-slot-icon active" onclick="toggleSlotFilter('vehicle', this)" title="Pojazd">
+                                <i class="fas fa-car"></i>
+                            </div>
                         </div>
                     </div>
 
@@ -581,26 +705,34 @@
                     <div class="ms-section">
                         <div class="ms-label">Rzadkość (Wymagana Ranga)</div>
                         <div class="ms-rarity-list">
-                            <label class="ms-check-row"><input type="checkbox" value="Peasant" onchange="filterMarket()" checked> <span class="dot-r peasant"></span> Peasant</label>
-                            <label class="ms-check-row"><input type="checkbox" value="Rare" onchange="filterMarket()" checked> <span class="dot-r rare"></span> Rare</label>
-                            <label class="ms-check-row"><input type="checkbox" value="Epic" onchange="filterMarket()" checked> <span class="dot-r epic"></span> Epic</label>
-                            <label class="ms-check-row"><input type="checkbox" value="Relic" onchange="filterMarket()" checked> <span class="dot-r relic"></span> Relic</label>
-                            
-                            <label class="ms-check-row"><input type="checkbox" value="Divine" onchange="filterMarket()" checked> <span class="dot-r divine"></span> Divine <i class="fas fa-lock lock-icon" id="lockDivine"></i></label>
+                            <label class="ms-check-row"><input type="checkbox" value="Peasant" onchange="filterMarket()"
+                                    checked> <span class="dot-r peasant"></span> Peasant</label>
+                            <label class="ms-check-row"><input type="checkbox" value="Rare" onchange="filterMarket()"
+                                    checked> <span class="dot-r rare"></span> Rare</label>
+                            <label class="ms-check-row"><input type="checkbox" value="Epic" onchange="filterMarket()"
+                                    checked> <span class="dot-r epic"></span> Epic</label>
+                            <label class="ms-check-row"><input type="checkbox" value="Relic" onchange="filterMarket()"
+                                    checked> <span class="dot-r relic"></span> Relic</label>
+
+                            <label class="ms-check-row"><input type="checkbox" value="Divine" onchange="filterMarket()"
+                                    checked> <span class="dot-r divine"></span> Divine <i class="fas fa-lock lock-icon"
+                                    id="lockDivine"></i></label>
                         </div>
                     </div>
 
-                    
-                    <div class="ms-section" style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
+
+                    <div class="ms-section"
+                        style="margin-top: auto; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.05);">
                         <div style="font-size: 10px; color: #666; line-height: 1.4; font-style: italic;">
-                            <i class="fas fa-lock" style="color: var(--accent-red);"></i> - Oznacza brak wymaganej rangi do <b>założenia</b> przedmiotu. Nadal możesz nim handlować w 100%.
+                            <i class="fas fa-lock" style="color: var(--accent-red);"></i> - Oznacza brak wymaganej rangi
+                            do <b>założenia</b> przedmiotu. Nadal możesz nim handlować w 100%.
                         </div>
                     </div>
                 </aside>
 
-                
+
                 <div class="market-content">
-                    
+
                     <div class="market-topbar">
                         <div class="mt-tabs">
                             <button class="mt-tab active" onclick="switchMarketMode('auction')" id="tabAuctionMode">
@@ -622,12 +754,12 @@
                         </div>
                     </div>
 
-                    
+
                     <div class="market-grid" id="marketGrid">
-                        
+
                     </div>
 
-                    
+
                     <div class="market-pagination">
                         <button id="btnPrevPage" onclick="changePage(-1)"><i class="fas fa-chevron-left"></i></button>
                         <span id="pageIndicator">Strona 1 z 10</span>
@@ -639,16 +771,17 @@
 
         <div class="view-container" id="viewWallet">
             <div id="walletBgAnim" class="fixed-bg-anim"></div>
-            
+
             <div class="wallet-layout-centered">
-                
-                
+
+
                 <div class="nw-main-card">
                     <div class="nw-header">
                         <div class="nw-title">TOTAL NET WORTH</div>
-                        <button class="nw-history-btn" onclick="openFinancialLogsModal()" title="Logi Finansowe"><i class="fas fa-history"></i></button>
+                        <button class="nw-history-btn" onclick="openFinancialLogsModal()" title="Logi Finansowe"><i
+                                class="fas fa-history"></i></button>
                     </div>
-                    
+
                     <div class="nw-big-val">
                         <span id="nwTotalDisplay">0.00</span> <small>$</small>
                     </div>
@@ -667,32 +800,38 @@
 
                     <div class="nw-loyalty-bar">
                         <div class="nw-loyalty-info">
-                            <span><i class="fas fa-gem"></i> Loyalty Points: <b style="color:var(--accent-purple);">12,500</b></span>
-                            <i class="fas fa-info-circle" style="color: var(--text-muted); cursor: pointer; margin-left: 8px;" onclick="alert('Punkty Lojalnościowe (LP) zdobywasz za każdy obrót w grach.')"></i>
+                            <span><i class="fas fa-gem"></i> Loyalty Points: <b
+                                    style="color:var(--accent-purple);">12,500</b></span>
+                            <i class="fas fa-info-circle"
+                                style="color: var(--text-muted); cursor: pointer; margin-left: 8px;"
+                                onclick="alert('Punkty Lojalnościowe (LP) zdobywasz za każdy obrót w grach.')"></i>
                         </div>
                         <button class="nw-loyalty-btn" onclick="alert('Nagroda odebrana!')">Odbierz Nagrodę</button>
                     </div>
                 </div>
 
-                
+
                 <div class="action-center-container">
                     <div class="w-tabs centered-tabs">
-                        <button class="w-tab active" onclick="switchWalletTab('deposit')"><i class="fas fa-arrow-down"></i> Wpłata</button>
-                        <button class="w-tab" onclick="switchWalletTab('withdraw')"><i class="fas fa-arrow-up"></i> Wypłata</button>
-                        <button class="w-tab" onclick="switchWalletTab('transfer')"><i class="fas fa-exchange-alt"></i> Transfer</button>
+                        <button class="w-tab active" onclick="switchWalletTab('deposit')"><i
+                                class="fas fa-arrow-down"></i> Wpłata</button>
+                        <button class="w-tab" onclick="switchWalletTab('withdraw')"><i class="fas fa-arrow-up"></i>
+                            Wypłata</button>
+                        <button class="w-tab" onclick="switchWalletTab('transfer')"><i class="fas fa-exchange-alt"></i>
+                            Transfer</button>
                     </div>
 
                     <div class="w-tab-content-container">
-                        
-                        
+
+
                         <div class="w-content active" id="tab-deposit">
-                            
-                            
+
+
                             <div class="pay-methods-grid compact" id="depositMethodsGrid">
-                                
+
                             </div>
-                            
-                            
+
+
                             <div id="depositDynamicContainer"></div>
 
                             <div class="deposit-form centered-form" style="padding:0;">
@@ -703,22 +842,24 @@
                                 </div>
                                 <div class="quick-amounts">
                                     <button onclick="document.getElementById('depositAmount').value=50">50</button>
-                                    <button onclick="document.getElementById('depositAmount').value=100" class="active">100</button>
+                                    <button onclick="document.getElementById('depositAmount').value=100"
+                                        class="active">100</button>
                                     <button onclick="document.getElementById('depositAmount').value=250">250</button>
                                     <button onclick="document.getElementById('depositAmount').value=5000">MAX</button>
                                 </div>
                                 <div class="dep-footer centered-footer">
-                                    <button class="action-btn-large full-width" onclick="handleWalletAction('deposit')">WPŁAĆ TERAZ</button>
+                                    <button class="action-btn-large full-width"
+                                        onclick="handleWalletAction('deposit')">WPŁAĆ TERAZ</button>
                                 </div>
                             </div>
                         </div>
 
-                        
+
                         <div class="w-content" id="tab-withdraw">
                             <div class="withdraw-form centered-form">
-                                
+
                                 <div class="pay-methods-grid compact" id="withdrawMethodsGrid">
-                                    
+
                                 </div>
                                 <div id="withdrawDynamicContainer" style="margin-bottom: 20px;"></div>
 
@@ -727,12 +868,13 @@
                                     <span class="curr-prefix">$</span>
                                     <input type="number" id="withdrawAmount" placeholder="Dostępne: 2,450,000">
                                 </div>
-                                <button class="action-btn-large outline full-width" onclick="handleWalletAction('withdraw')">ZLEĆ WYPŁATĘ</button>
+                                <button class="action-btn-large outline full-width"
+                                    onclick="handleWalletAction('withdraw')">ZLEĆ WYPŁATĘ</button>
                             </div>
                         </div>
 
-                         
-                         <div class="w-content" id="tab-transfer">
+
+                        <div class="w-content" id="tab-transfer">
                             <div class="transfer-form centered-form">
                                 <label>Odbiorca</label>
                                 <div class="input-group">
@@ -742,8 +884,12 @@
 
                                 <label style="margin-bottom:8px; display:block;">Co chcesz wysłać?</label>
                                 <div class="transfer-toggle-row">
-                                    <div class="transfer-toggle active" id="toggleMoney" onclick="toggleTransferSection('Money')"><i class="fas fa-dollar-sign"></i> PRZELEW</div>
-                                    <div class="transfer-toggle" id="toggleItem" onclick="toggleTransferSection('Item')"><i class="fas fa-box"></i> PRZEDMIOT</div>
+                                    <div class="transfer-toggle active" id="toggleMoney"
+                                        onclick="toggleTransferSection('Money')"><i class="fas fa-dollar-sign"></i>
+                                        PRZELEW</div>
+                                    <div class="transfer-toggle" id="toggleItem"
+                                        onclick="toggleTransferSection('Item')"><i class="fas fa-box"></i> PRZEDMIOT
+                                    </div>
                                 </div>
 
                                 <div class="transfer-section active" id="secMoney">
@@ -756,28 +902,33 @@
                                 <div class="transfer-section" id="secItem">
                                     <label style="font-size:10px;">Wybierz przedmiot</label>
                                     <div class="input-group small">
-                                        <select id="transferItemSelect" style="width:100%; background:rgba(0,0,0,0.3); border:1px solid #444; color:white; padding:8px; border-radius:4px;">
+                                        <select id="transferItemSelect"
+                                            style="width:100%; background:rgba(0,0,0,0.3); border:1px solid #444; color:white; padding:8px; border-radius:4px;">
                                             <option value="">-- Wybierz przedmiot --</option>
                                         </select>
                                     </div>
                                 </div>
 
-                                <button class="action-btn-large full-width" style="background: var(--accent-blue); margin-top:10px;" onclick="handleWalletAction('transfer')">WYŚLIJ AKTYWA</button>
+                                <button class="action-btn-large full-width"
+                                    style="background: var(--accent-blue); margin-top:10px;"
+                                    onclick="handleWalletAction('transfer')">WYŚLIJ AKTYWA</button>
                             </div>
                         </div>
 
                     </div>
                 </div>
 
-                
+
                 <div class="wallet-footer-simple">
                     <div class="rg-stat centered">
                         <div class="rg-label">Czas Sesji</div>
                         <div class="rg-val timer">04:20:15</div>
                     </div>
                     <div class="rg-stat centered">
-                         <div class="rg-label">Limit Dzienny</div>
-                        <div class="rg-val"><a href="#" onclick="alert('Przekierowanie do ustawień limitów...')" style="font-size:10px; color:var(--text-muted); text-decoration:underline; opacity:0.7;">Ustal własne limity</a></div>
+                        <div class="rg-label">Limit Dzienny</div>
+                        <div class="rg-val"><a href="#" onclick="alert('Przekierowanie do ustawień limitów...')"
+                                style="font-size:10px; color:var(--text-muted); text-decoration:underline; opacity:0.7;">Ustal
+                                własne limity</a></div>
                     </div>
                 </div>
 
@@ -787,28 +938,35 @@
         <div class="view-container" id="viewProfile">
             <div id="profileStarsBg" class="profile-stars-container"></div>
             <div class="profile-bg-whale"></div>
-            <div style="margin-bottom: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;">
-                <div class="user-avatar" style="width: 120px; height: 120px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px; position: relative; background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'); background-size: cover;">
+            <div
+                style="margin-bottom: 4px; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 0;">
+                <div class="user-avatar"
+                    style="width: 120px; height: 120px; margin-bottom: 8px; border: 3px solid var(--accent-purple); box-shadow: 0 0 20px rgba(139, 92, 246, 0.3); border-radius: 35px; position: relative; background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false'); background-size: cover;">
                     <div class="profile-level-badge">LVL 14</div>
                 </div>
-                <div style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
+                <div
+                    style="text-align: center; display: flex; flex-direction: column; align-items: center; justify-content: center;">
                     <div style="position: relative; display: inline-block;">
-                        <div style="font-size: 28px; font-weight: 700; margin-bottom: 0; color: var(--text-main);">MrGambler</div>
-                        <div class="status-indicator-wrapper" style="position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 6px;">
+                        <div style="font-size: 28px; font-weight: 700; margin-bottom: 0; color: var(--text-main);">
+                            MrGambler</div>
+                        <div class="status-indicator-wrapper"
+                            style="position: absolute; left: 100%; top: 50%; transform: translateY(-50%); margin-left: 6px;">
                             <span class="online-dot"></span>
                             <span class="status-tooltip">Jest Online</span>
                         </div>
                     </div>
-                    <div style="font-size: 10px; color: #63cdd6; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: -2px; margin-bottom: 2px; text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);">THE COLLECTOR</div>
+                    <div
+                        style="font-size: 10px; color: #63cdd6; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; margin-top: -2px; margin-bottom: 2px; text-shadow: 0 0 10px rgba(59, 130, 246, 0.5);">
+                        THE COLLECTOR</div>
                 </div>
             </div>
-            
+
             <div class="top-stats-row" style="margin-bottom: 0px; gap: 15px;">
                 <div class="stats-spacer"></div>
 
                 <div class="stat-card">
                     <div class="stat-icon-top" style="color: var(--accent-green);"><i class="fas fa-wallet"></i></div>
-                    
+
                     <div class="net-worth-indicator" title="ostatnie 24h">
                         +12.5% <i class="fas fa-caret-up"></i>
                     </div>
@@ -842,7 +1000,7 @@
             </div>
 
             <div class="bottom-panels-grid" style="gap: 15px; margin-top: 0;">
-                
+
                 <div class="spacer-50"></div>
 
                 <div class="card">
@@ -851,8 +1009,9 @@
                         <i class="fas fa-filter filter-icon-abs"></i>
                     </div>
                     <div class="list-container" id="treasuresList">
-                        </div>
-                    <button class="load-more-btn" id="btnTreasures" onclick="showMoreTreasures()">Pokaż więcej (+5)</button>
+                    </div>
+                    <button class="load-more-btn" id="btnTreasures" onclick="showMoreTreasures()">Pokaż więcej
+                        (+5)</button>
                 </div>
 
                 <div class="card">
@@ -860,15 +1019,15 @@
                         <div class="card-title">Rozgrywki</div>
                         <i class="fas fa-filter filter-icon-abs"></i>
                     </div>
-                    
+
                     <div class="wld-compact-container">
                         <div class="wld-compact-donut" id="wldDonut">
                             <div class="wld-compact-percent" id="wldPercentText">0%</div>
                         </div>
                         <div class="wld-compact-info">
                             <div class="wld-compact-counts">
-                                <span class="wc-win" id="txtWin">0</span> / 
-                                <span class="wc-lose" id="txtLose">0</span> / 
+                                <span class="wc-win" id="txtWin">0</span> /
+                                <span class="wc-lose" id="txtLose">0</span> /
                                 <span class="wc-draw" id="txtDraw">0</span>
                             </div>
                             <div class="wld-compact-sub">Win / Lose / Draw</div>
@@ -879,7 +1038,7 @@
                     </div>
 
                     <div class="list-container" id="gamesList">
-                        </div>
+                    </div>
                     <button class="load-more-btn" id="btnGames" onclick="showMoreGames()">Pokaż więcej (+20)</button>
                 </div>
 
@@ -889,8 +1048,9 @@
                         <i class="fas fa-filter filter-icon-abs"></i>
                     </div>
                     <div class="list-container" id="trophiesList">
-                        </div>
-                    <button class="load-more-btn" id="btnTrophies" onclick="showMoreTrophies()">Pokaż więcej (+5)</button>
+                    </div>
+                    <button class="load-more-btn" id="btnTrophies" onclick="showMoreTrophies()">Pokaż więcej
+                        (+5)</button>
                 </div>
 
                 <div class="spacer-50"></div>
@@ -898,68 +1058,88 @@
             </div>
         </div>
 
-                <div class="view-container" id="viewAdminDash">
-             <div class="admin-row">
+        <div class="view-container" id="viewAdminDash">
+            <div class="admin-row">
                 <div class="admin-panels-wrapper">
-                    
+
                     <div class="ap-card ap-comm">
                         <div class="ap-header" style="color: var(--accent-purple);">
                             <i class="fas fa-bullhorn"></i> Komunikacja
                         </div>
 
-                        
-                        <div style="font-size: 10px; font-weight: 700; color: var(--accent-purple); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">1. Chatbot AI</div>
 
-                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 4px;">
+                        <div
+                            style="font-size: 10px; font-weight: 700; color: var(--accent-purple); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            1. Chatbot AI</div>
+
+                        <div class="ap-row"
+                            style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 4px;">
                             <div style="font-size:10px; color:#aaa;">Impersonate AI (Direct Message)</div>
                             <div class="ap-input-group">
                                 <input type="text" class="ap-input" placeholder="Szukaj gracza (ID/Login)...">
-                                <button class="ap-btn ap-btn-blue" title="Dodaj do sesji AI" onclick="alert('Gracz dodany do aktywnej sesji AI Chatbota.')"><i class="fas fa-robot"></i> +</button>
+                                <button class="ap-btn ap-btn-blue" title="Dodaj do sesji AI"
+                                    onclick="alert('Gracz dodany do aktywnej sesji AI Chatbota.')"><i
+                                        class="fas fa-robot"></i> +</button>
                             </div>
                         </div>
 
-                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 8px;">
+                        <div class="ap-row"
+                            style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 8px;">
                             <div style="font-size:10px; color:#aaa;">Global AI Chatbot Roast</div>
                             <div class="ap-input-group">
-                                <input type="text" class="ap-input" id="pushMsgInput" placeholder="np. Łał, masz niższe IQ niż temperatura mojego CPU...">
-                                <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i class="fas fa-paper-plane"></i></button>
+                                <input type="text" class="ap-input" id="pushMsgInput"
+                                    placeholder="np. Łał, masz niższe IQ niż temperatura mojego CPU...">
+                                <button class="ap-btn ap-btn-blue" onclick="sendAdminPush()"><i
+                                        class="fas fa-paper-plane"></i></button>
                             </div>
                         </div>
 
-                        
-                        <div style="font-size: 10px; font-weight: 700; color: var(--accent-purple); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">2. Dashboard</div>
 
-                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 4px;">
+                        <div
+                            style="font-size: 10px; font-weight: 700; color: var(--accent-purple); margin-bottom: 4px; text-transform: uppercase; letter-spacing: 0.5px;">
+                            2. Dashboard</div>
+
+                        <div class="ap-row"
+                            style="flex-direction: column; align-items: flex-start; gap: 5px; margin-bottom: 4px;">
                             <div style="font-size:10px; color:#aaa;">Edycja Paska Live</div>
                             <div class="ap-input-group">
                                 <input type="text" class="ap-input" id="tickerMsgInput" placeholder="Nowa wiadomość...">
-                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i class="fa-solid fa-pen-to-square"></i></button>
+                                <button class="ap-btn ap-btn-blue" onclick="updateTickerAdmin()"><i
+                                        class="fa-solid fa-pen-to-square"></i></button>
                             </div>
                             <label class="ms-check-row" style="padding: 0;">
-                                <input type="checkbox"> 
+                                <input type="checkbox">
                                 <span style="font-size:10px;">Zapętl</span>
                             </label>
                         </div>
 
-                        
-                        <div class="ap-row" style="flex-direction: column; align-items: flex-start; gap: 8px; margin-top: auto;">
-                             <div style="width:100%;">
+
+                        <div class="ap-row"
+                            style="flex-direction: column; align-items: flex-start; gap: 8px; margin-top: auto;">
+                            <div style="width:100%;">
                                 <div style="font-size:10px; color:#aaa; margin-bottom: 5px;">Edycja Banerów</div>
                             </div>
                             <div style="display: flex; gap: 6px; width: 100%; align-items: center;">
-                                <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;" title="Slide 1">
+                                <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;"
+                                    title="Slide 1">
                                     Slajd 1
-                                    <div style="position:absolute; top:-3px; right:-3px; background:var(--accent-red); color:white; width:10px; height:10px; border-radius:50%; font-size:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="alert('Usunięto slajd 1')">&times;</div>
+                                    <div style="position:absolute; top:-3px; right:-3px; background:var(--accent-red); color:white; width:10px; height:10px; border-radius:50%; font-size:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+                                        onclick="alert('Usunięto slajd 1')">&times;</div>
                                 </div>
-                                <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;" title="Slide 2">
-                                     Slajd 2
-                                     <div style="position:absolute; top:-3px; right:-3px; background:var(--accent-red); color:white; width:10px; height:10px; border-radius:50%; font-size:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="alert('Usunięto slajd 2')">&times;</div>
+                                <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;"
+                                    title="Slide 2">
+                                    Slajd 2
+                                    <div style="position:absolute; top:-3px; right:-3px; background:var(--accent-red); color:white; width:10px; height:10px; border-radius:50%; font-size:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+                                        onclick="alert('Usunięto slajd 2')">&times;</div>
                                 </div>
-                                <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;" title="Slide 3">
-                                     Slajd 3
-                                     <div style="position:absolute; top:-3px; right:-3px; background:var(--accent-red); color:white; width:10px; height:10px; border-radius:50%; font-size:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;" onclick="alert('Usunięto slajd 3')">&times;</div>
+                                <div style="flex:1; height: 25px; background: var(--accent-purple); border-radius: 3px; position: relative; border: 1px solid rgba(255,255,255,0.2); opacity: 0.8; display:flex; align-items:center; justify-content:center; color:white; font-size:9px;"
+                                    title="Slide 3">
+                                    Slajd 3
+                                    <div style="position:absolute; top:-3px; right:-3px; background:var(--accent-red); color:white; width:10px; height:10px; border-radius:50%; font-size:7px; display:flex; align-items:center; justify-content:center; cursor:pointer;"
+                                        onclick="alert('Usunięto slajd 3')">&times;</div>
                                 </div>
-                                <div style="width: 25px; height: 25px; border: 1px dashed #555; border-radius: 3px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:10px; color:#555;" onclick="alert('Dodawanie nowego slajdu...')">
+                                <div style="width: 25px; height: 25px; border: 1px dashed #555; border-radius: 3px; display:flex; align-items:center; justify-content:center; cursor:pointer; font-size:10px; color:#555;"
+                                    onclick="alert('Dodawanie nowego slajdu...')">
                                     <i class="fas fa-plus"></i>
                                 </div>
                             </div>
@@ -969,74 +1149,113 @@
                     <div class="ap-card ap-finance">
                         <div class="ap-header" style="justify-content: space-between; color: var(--accent-green);">
                             <span><i class="fas fa-money-bill-wave"></i> Finanse</span>
-                            <i class="fas fa-history" style="cursor: pointer; opacity: 0.7; font-size: 14px;" onclick="openAdminFinancialLogs()" title="Pełna historia systemu"></i>
+                            <i class="fas fa-history" style="cursor: pointer; opacity: 0.7; font-size: 14px;"
+                                onclick="openAdminFinancialLogs()" title="Pełna historia systemu"></i>
                         </div>
 
-                        <div style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 6px; margin-bottom: 20px; text-align: center;">
-                            <div style="font-size: 9px; color: var(--accent-green); letter-spacing: 1px; font-weight: 700; text-transform: uppercase;">Dostępne Środki Systemu</div>
-                            <div style="font-size: 18px; color: white; font-weight: 800; font-family: monospace; margin-top: 2px;">$ 42,069,420.00</div>
+                        <div
+                            style="background: rgba(16, 185, 129, 0.08); border: 1px solid rgba(16, 185, 129, 0.2); padding: 10px; border-radius: 6px; margin-bottom: 20px; text-align: center;">
+                            <div
+                                style="font-size: 9px; color: var(--accent-green); letter-spacing: 1px; font-weight: 700; text-transform: uppercase;">
+                                Dostępne Środki Systemu</div>
+                            <div
+                                style="font-size: 18px; color: white; font-weight: 800; font-family: monospace; margin-top: 2px;">
+                                $ 42,069,420.00</div>
                         </div>
-                        
-                        <div style="font-size:11px; color:#ccc; margin-bottom:10px; font-weight:700; display:flex; justify-content:space-between; align-items:center;">
+
+                        <div
+                            style="font-size:11px; color:#ccc; margin-bottom:10px; font-weight:700; display:flex; justify-content:space-between; align-items:center;">
                             <div style="display:flex; align-items:center; gap:8px;">
                                 <span>Oczekujące Wypłaty</span>
-                                <button class="ap-btn" style="padding:4px 10px; font-size:10px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked all!')"><i class="fas fa-hand-holding-usd"></i> Yoink!</button>
+                                <button class="ap-btn"
+                                    style="padding:4px 10px; font-size:10px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);"
+                                    onclick="alert('Yoinked all!')"><i class="fas fa-hand-holding-usd"></i>
+                                    Yoink!</button>
                             </div>
                             <span style="color:#666; font-weight:400;">Kolejka: 3</span>
                         </div>
                         <div class="finance-list" style="max-height: 130px; overflow-y: auto; padding-right: 2px;">
-                            
+
                             <div class="fin-item" style="border-left: 2px solid #3b82f6; margin-bottom: 5px;">
                                 <div>
                                     <div style="font-weight:700; color:#fff;">Whale_Junior</div>
-                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">500,000 $</b></div>
+                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">500,000
+                                            $</b></div>
                                     <div style="font-size:8px; color:#3b82f6;">Wymaga ręcznego potwierdzenia</div>
                                 </div>
                                 <div style="display:flex; gap:5px; align-items:center;">
-                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 500k from Whale_Junior!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i></button>
-                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
-                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-times"></i></button>
+                                    <button class="ap-btn"
+                                        style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);"
+                                        onclick="alert('Yoinked 500k from Whale_Junior!')" title="Yoink!"><i
+                                            class="fas fa-hand-holding-usd"></i></button>
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;"
+                                        onclick="this.parentElement.parentElement.remove()"><i
+                                            class="fas fa-check"></i></button>
+                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;"
+                                        onclick="this.parentElement.parentElement.remove()"><i
+                                            class="fas fa-times"></i></button>
                                 </div>
                             </div>
-                            
-                            <div class="fin-item" style="border-left: 2px solid var(--accent-orange); margin-bottom: 5px;">
+
+                            <div class="fin-item"
+                                style="border-left: 2px solid var(--accent-orange); margin-bottom: 5px;">
                                 <div>
                                     <div style="font-weight:700; color:#fff;">Russian_Bot_99</div>
-                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">25,000 USDT</b></div>
-                                    <div style="font-size:8px; color:var(--accent-red);">Nietypowa lokalizacja (CN)</div>
+                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">25,000
+                                            USDT</b></div>
+                                    <div style="font-size:8px; color:var(--accent-red);">Nietypowa lokalizacja (CN)
+                                    </div>
                                 </div>
                                 <div style="display:flex; gap:5px; align-items:center;">
-                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 25k USDT from Bot!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i></button>
-                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Force Approve"><i class="fas fa-check"></i></button>
-                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()" title="Ban & Freeze"><i class="fas fa-gavel"></i></button>
+                                    <button class="ap-btn"
+                                        style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);"
+                                        onclick="alert('Yoinked 25k USDT from Bot!')" title="Yoink!"><i
+                                            class="fas fa-hand-holding-usd"></i></button>
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;"
+                                        onclick="this.parentElement.parentElement.remove()" title="Force Approve"><i
+                                            class="fas fa-check"></i></button>
+                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;"
+                                        onclick="this.parentElement.parentElement.remove()" title="Ban & Freeze"><i
+                                            class="fas fa-gavel"></i></button>
                                 </div>
                             </div>
-                            
+
                             <div class="fin-item" style="border-left: 2px solid var(--accent-red); margin-bottom: 5px;">
                                 <div>
                                     <div style="font-weight:700; color:#fff;">Scam_Master_PL</div>
-                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">4,200 USD</b></div>
+                                    <div style="font-size:9px; color:#aaa;">Wypłata: <b style="color:white;">4,200
+                                            USD</b></div>
                                     <div style="font-size:8px; color:var(--accent-red);">Multi-konto wykryte</div>
                                 </div>
                                 <div style="display:flex; gap:5px; align-items:center;">
-                                    <button class="ap-btn" style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);" onclick="alert('Yoinked 4.2k from Scam_Master!')" title="Yoink!"><i class="fas fa-hand-holding-usd"></i></button>
-                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-check"></i></button>
-                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;" onclick="this.parentElement.parentElement.remove()"><i class="fas fa-gavel"></i></button>
+                                    <button class="ap-btn"
+                                        style="padding:4px 8px; height:24px; background: rgba(16, 185, 129, 0.2); color: #6ee7b7; border: 1px solid rgba(16, 185, 129, 0.3);"
+                                        onclick="alert('Yoinked 4.2k from Scam_Master!')" title="Yoink!"><i
+                                            class="fas fa-hand-holding-usd"></i></button>
+                                    <button class="ap-btn ap-btn-green" style="padding:4px 8px; height:24px;"
+                                        onclick="this.parentElement.parentElement.remove()"><i
+                                            class="fas fa-check"></i></button>
+                                    <button class="ap-btn ap-btn-red" style="padding:4px 8px; height:24px;"
+                                        onclick="this.parentElement.parentElement.remove()"><i
+                                            class="fas fa-gavel"></i></button>
                                 </div>
                             </div>
                         </div>
 
-                        <div class="ap-row" style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top: auto; justify-content: space-between;">
+                        <div class="ap-row"
+                            style="border-top:1px solid rgba(255,255,255,0.05); padding-top:10px; margin-top: auto; justify-content: space-between;">
                             <div style="display:flex; align-items:center; gap:5px;">
                                 <span style="font-size:10px; color:#aaa;">Auto-Wypłaty</span>
                                 <label class="switch switch-green">
-                                    <input type="checkbox" checked onchange="alert('Zmiana statusu automatycznych wypłat')">
+                                    <input type="checkbox" checked
+                                        onchange="alert('Zmiana statusu automatycznych wypłat')">
                                     <span class="slider"></span>
                                 </label>
                             </div>
                             <div style="display:flex; align-items:center; gap:5px;">
                                 <span style="font-size:10px; color:#aaa;">Limit:</span>
-                                <input type="number" value="1000" style="width: 50px; background:rgba(0,0,0,0.3); border:1px solid #444; color:white; font-size:10px; padding:2px 5px; border-radius:4px;">
+                                <input type="number" value="1000"
+                                    style="width: 50px; background:rgba(0,0,0,0.3); border:1px solid #444; color:white; font-size:10px; padding:2px 5px; border-radius:4px;">
                                 <span style="font-size:10px;">$</span>
                             </div>
                         </div>
@@ -1046,12 +1265,16 @@
                         <div class="ap-header" style="color: #f59e0b;">
                             <i class="fas fa-eye"></i> God Mode
                         </div>
-                        <div style="padding: 15px; background: rgba(245, 158, 11, 0.05); border-radius: 6px; text-align: center;">
-                            <i class="fas fa-user-secret" style="font-size: 24px; color: #f59e0b; margin-bottom: 10px;"></i>
-                            <div style="font-size:11px; margin-bottom:10px; color:#ccc;">Zobacz świat oczami gracza (bez hasła).</div>
+                        <div
+                            style="padding: 15px; background: rgba(245, 158, 11, 0.05); border-radius: 6px; text-align: center;">
+                            <i class="fas fa-user-secret"
+                                style="font-size: 24px; color: #f59e0b; margin-bottom: 10px;"></i>
+                            <div style="font-size:11px; margin-bottom:10px; color:#ccc;">Zobacz świat oczami gracza (bez
+                                hasła).</div>
                             <div class="ap-input-group">
                                 <input type="text" class="ap-input" placeholder="ID Gracza lub Login" id="godModeInput">
-                                <button class="ap-btn" style="background:#f59e0b; color:black; font-weight:800;" onclick="adminImpersonate()">
+                                <button class="ap-btn" style="background:#f59e0b; color:black; font-weight:800;"
+                                    onclick="adminImpersonate()">
                                     IMPERSONATE
                                 </button>
                             </div>
@@ -1090,13 +1313,16 @@
                         <div style="display: flex; align-items: center; gap: 15px;">
                             <span><i class="fas fa-calendar-alt"></i> Mapa Aktywności</span>
                             <div style="display: flex; gap: 5px;">
-                                <button id="btnHmPlayers" class="hm-toggle blue active" onclick="toggleHeatmapSource('players')">Graczy</button>
-                                <button id="btnHmAdmins" class="hm-toggle red active" onclick="toggleHeatmapSource('admins')">Adminów</button>
+                                <button id="btnHmPlayers" class="hm-toggle blue active"
+                                    onclick="toggleHeatmapSource('players')">Graczy</button>
+                                <button id="btnHmAdmins" class="hm-toggle red active"
+                                    onclick="toggleHeatmapSource('admins')">Adminów</button>
                             </div>
                         </div>
 
                         <div style="display: flex; gap: 15px; align-items: center;">
-                            <div id="legendPlayers" style="display: flex; justify-content: center; align-items: center; gap: 3px;">
+                            <div id="legendPlayers"
+                                style="display: flex; justify-content: center; align-items: center; gap: 3px;">
                                 <span style="font-size:9px; color:#666; margin-right: 3px;">Less</span>
                                 <div class="gh-cell l0"></div>
                                 <div class="gh-cell l1"></div>
@@ -1105,7 +1331,8 @@
                                 <div class="gh-cell l4"></div>
                                 <span style="font-size:9px; color:#666; margin-left: 3px;">More</span>
                             </div>
-                            <div id="legendAdmins" style="display: flex; justify-content: center; align-items: center; gap: 3px;">
+                            <div id="legendAdmins"
+                                style="display: flex; justify-content: center; align-items: center; gap: 3px;">
                                 <span style="font-size:9px; color:#666; margin-right: 3px;">Less</span>
                                 <div class="gh-cell l0"></div>
                                 <div class="gh-cell al1"></div>
@@ -1116,12 +1343,12 @@
                             </div>
                         </div>
                     </div>
-                    
+
                     <div style="display: flex; align-items: center; justify-content: center; padding: 10px 0;">
                         <div style="overflow-x: auto;">
                             <div class="gh-grid-container" id="adminHeatmapGrid"></div>
                         </div>
-                        
+
                         <div class="hm-years-col">
                             <button class="hm-year-btn active">2025</button>
                             <button class="hm-year-btn">2024</button>
@@ -1137,7 +1364,9 @@
                 <div class="card-header" style="justify-content: space-between;">
                     <div class="card-title"><i class="fas fa-users-cog"></i> Baza Użytkowników</div>
                     <div class="user-list-toolbar">
-                        <select id="userFilterStatus" onchange="renderUsersView()" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px; border-radius: 6px; font-size: 11px; outline: none;">
+                        <i class="fas fa-filter filter-icon-abs" style="position: static; margin-right: 5px;" title="Filtruj" onclick="alert('Filtrowanie zaawansowane...')"></i>
+                        <select id="userFilterStatus" onchange="renderUsersView()"
+                            style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px; border-radius: 6px; font-size: 11px; outline: none;">
                             <option value="all">Wszyscy</option>
                             <option value="Online">Online</option>
                             <option value="Offline">Offline</option>
@@ -1145,23 +1374,24 @@
                             <option value="Suspicious">Podejrzani</option>
                         </select>
                         <div class="input-group small" style="margin-bottom: 0; width: 200px;">
-                            <input type="text" id="userSearchInput" placeholder="Szukaj ID / Nazwa..." onkeyup="renderUsersView()" style="border-radius: 6px;">
+                            <input type="text" id="userSearchInput" placeholder="Szukaj ID / Nazwa..."
+                                onkeyup="renderUsersView()" style="border-radius: 6px;">
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="ul-grid-header">
                     <span>ID</span>
                     <span>UŻYTKOWNIK</span>
                     <span>RANGA</span>
-                    <span>SALDO</span>
+                    <span>NET WORTH</span>
                     <span>AKTYWNOŚĆ</span>
                     <span>STATUS</span>
                     <span style="text-align: right;">AKCJE</span>
                 </div>
 
                 <div class="list-container users-list-scroll" id="usersContainer">
-                    </div>
+                </div>
 
                 <div class="market-pagination">
                     <button onclick="changeUserPage(-1)"><i class="fas fa-chevron-left"></i></button>
@@ -1171,23 +1401,27 @@
             </div>
         </div>
 
-                <div class="view-container" id="viewGamesControl">
-            <div class="card" style="height: calc(100vh - 140px); display: flex; flex-direction: column; border: 1px solid rgba(245, 158, 11, 0.2);">
+        <div class="view-container" id="viewGamesControl">
+            <div class="card"
+                style="height: calc(100vh - 140px); display: flex; flex-direction: column; border: 1px solid rgba(245, 158, 11, 0.2);">
                 <div class="card-header" style="justify-content: space-between;">
                     <div class="card-title" style="color: #fca5a5;"><i class="fas fa-gamepad"></i> Baza Gier</div>
                     <div class="user-list-toolbar">
-                        <select id="gameFilterStatus" onchange="renderGamesControlView()" style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px; border-radius: 6px; font-size: 11px; outline: none;">
+                        <i class="fas fa-filter filter-icon-abs" style="position: static; margin-right: 5px;" title="Filtruj" onclick="alert('Filtrowanie zaawansowane...')"></i>
+                        <select id="gameFilterStatus" onchange="renderGamesControlView()"
+                            style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 6px; border-radius: 6px; font-size: 11px; outline: none;">
                             <option value="all">Wszystkie</option>
                             <option value="Active">Aktywne</option>
                             <option value="Maintenance">Przerwa</option>
                             <option value="Disabled">Wyłączone</option>
                         </select>
                         <div class="input-group small" style="margin-bottom: 0; width: 200px;">
-                            <input type="text" id="gameSearchInput" placeholder="Nazwa gry / ID..." onkeyup="renderGamesControlView()" style="border-radius: 6px;">
+                            <input type="text" id="gameSearchInput" placeholder="Nazwa gry / ID..."
+                                onkeyup="renderGamesControlView()" style="border-radius: 6px;">
                         </div>
                     </div>
                 </div>
-                
+
                 <div class="ul-grid-header" style="grid-template-columns: 50px 2fr 1fr 1fr 1fr 1fr 100px 90px;">
                     <span>ID</span>
                     <span>TRYB / GRA</span>
@@ -1200,7 +1434,7 @@
                 </div>
 
                 <div class="list-container users-list-scroll" id="gamesControlContainer">
-                    </div>
+                </div>
 
                 <div class="market-pagination">
                     <button onclick="changeGameControlPage(-1)"><i class="fas fa-chevron-left"></i></button>
@@ -1214,13 +1448,14 @@
                 <div class="card-header" style="justify-content: space-between;">
                     <div class="card-title"><i class="fas fa-terminal"></i> Pełne Logi Serwera</div>
                     <div class="logs-controls" style="display: flex; gap: 10px;">
-                        <input type="text" placeholder="Szukaj ID / User..." style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; outline: none;">
+                        <input type="text" placeholder="Szukaj ID / User..."
+                            style="background: rgba(0,0,0,0.3); border: 1px solid rgba(255,255,255,0.1); color: white; padding: 4px 8px; border-radius: 4px; font-size: 11px; outline: none;">
                         <button class="gc-btn lobby" onclick="renderLogsView()"><i class="fas fa-sync-alt"></i></button>
                         <button class="gc-btn lobby"><i class="fas fa-download"></i> .LOG</button>
                     </div>
                 </div>
                 <div class="logs-terminal-window" id="logsContainer">
-                    </div>
+                </div>
             </div>
         </div>
 
@@ -1237,16 +1472,18 @@
                     <span id="modalEarnedText">0 OF 25 ACHIEVEMENTS EARNED</span>
                     <span id="modalEarnedPerc">(0%)</span>
                 </div>
-                <div class="sm-progress-bar"><div class="sm-progress-fill" id="modalProgressBar"></div></div>
+                <div class="sm-progress-bar">
+                    <div class="sm-progress-fill" id="modalProgressBar"></div>
+                </div>
             </div>
-            
+
             <div class="sm-tabs">
                 <div class="sm-tab active" onclick="switchTab('my')" id="tabMy">MY ACHIEVEMENTS</div>
                 <div class="sm-tab" onclick="switchTab('global')" id="tabGlobal">GLOBAL ACHIEVEMENTS</div>
             </div>
 
             <div class="sm-content" id="achContent">
-                </div>
+            </div>
         </div>
     </div>
 
@@ -1257,16 +1494,19 @@
                 <div class="sm-close" onclick="closeRankModal()"><i class="fas fa-times"></i></div>
             </div>
             <div class="sm-content" style="padding-top: 15px;">
-                
+
                 <div class="intro-box">
                     <strong style="color:var(--accent-blue);">System LP (Luck Points):</strong><br>
                     Zdobywaj LP wygrywając, aby schodzić głębiej w otchłań hazardu. <br>
-                    <span style="color: #ef4444;">Ważne:</span> Spełnienie wymagań rangi to jedynie bilet na kolejną loterie. Aby zmienić rangę (w górę lub w dół), musisz wygrać (dla awansu) lub przegrać (dla spadku) <strong>2/3</strong> kolejnych gier, podczas to których wymagania chwilowo przestają mnieć wpływ na zmiane rangi.
+                    <span style="color: #ef4444;">Ważne:</span> Spełnienie wymagań rangi to jedynie bilet na kolejną
+                    loterie. Aby zmienić rangę (w górę lub w dół), musisz wygrać (dla awansu) lub przegrać (dla spadku)
+                    <strong>2/3</strong> kolejnych gier, podczas to których wymagania chwilowo przestają mnieć wpływ na
+                    zmiane rangi.
                 </div>
 
                 <div class="ladder-container" id="ladderContainer">
                     <div class="ladder-spine" id="ladderSpine"></div>
-                    </div>
+                </div>
 
             </div>
         </div>
@@ -1274,20 +1514,25 @@
 
     <div class="modal-overlay" id="battlePassModal">
         <div class="steam-modal" style="width: 950px; max-width: 98vw; height: 600px; max-height: 90vh;">
-            <div class="sm-header" style="background: #0f111a; border-bottom: none; position: absolute; top: 0; left: 0; width: 100%; z-index: 10; background: transparent;">
+            <div class="sm-header"
+                style="background: #0f111a; border-bottom: none; position: absolute; top: 0; left: 0; width: 100%; z-index: 10; background: transparent;">
                 <div class="sm-title"></div>
-                <div class="sm-close" onclick="closeBattlePassModal()" style="background: rgba(0,0,0,0.5); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%;"><i class="fas fa-times"></i></div>
+                <div class="sm-close" onclick="closeBattlePassModal()"
+                    style="background: rgba(0,0,0,0.5); width: 30px; height: 30px; display: flex; align-items: center; justify-content: center; border-radius: 50%;">
+                    <i class="fas fa-times"></i>
+                </div>
             </div>
-            
+
             <div class="sm-content" style="padding: 0; display: flex; flex-direction: column; height: 100%;">
-                
+
                 <div class="bp-hero-section">
                     <div class="bp-hero-content">
                         <div>
                             <div class="bp-season-tag">Sezon 2: Cyber Shark</div>
                             <div class="bp-hero-title">BATTLE PASS</div>
                             <div style="color: #94a3b8; font-size: 12px; margin-top: 5px; max-width: 400px;">
-                                Odblokuj ekskluzywne nagrody, wykonuj misje i wspinaj się na szczyt. Kup Premium i ciesz się dobrą passą!
+                                Odblokuj ekskluzywne nagrody, wykonuj misje i wspinaj się na szczyt. Kup Premium i ciesz
+                                się dobrą passą!
                             </div>
                         </div>
                         <div class="bp-stats-bar">
@@ -1564,8 +1809,10 @@
 
                     <div class="bp-card-node">
                         <div class="bp-lvl-indicator" style="border-color: gold; color: gold;">25</div>
-                        <div class="bp-reward-card" style="border-color: rgba(255, 215, 0, 0.3); background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(0,0,0,0.5));">
-                            <i class="fas fa-crown bp-reward-icon" style="color: gold; font-size: 50px; filter: drop-shadow(0 0 10px gold);"></i>
+                        <div class="bp-reward-card"
+                            style="border-color: rgba(255, 215, 0, 0.3); background: linear-gradient(145deg, rgba(255, 215, 0, 0.1), rgba(0,0,0,0.5));">
+                            <i class="fas fa-crown bp-reward-icon"
+                                style="color: gold; font-size: 50px; filter: drop-shadow(0 0 10px gold);"></i>
                             <div class="bp-reward-name" style="color: gold;">The King's Frame</div>
                             <div class="bp-reward-type">Avatar Frame</div>
                         </div>
@@ -1574,11 +1821,13 @@
 
                 </div>
 
-                <div style="background: #0f111a; padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
+                <div
+                    style="background: #0f111a; padding: 15px; border-top: 1px solid rgba(255,255,255,0.05); display: flex; justify-content: space-between; align-items: center;">
                     <div style="font-size: 11px; color: #666;">
                         <i class="fas fa-info-circle"></i> Wykonuj dzienne misje aby zdobywać XP.
                     </div>
-                    <button class="action-btn-large" style="background: linear-gradient(90deg, #f59e0b, #d97706); padding: 10px 25px; font-size: 12px; box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);">
+                    <button class="action-btn-large"
+                        style="background: linear-gradient(90deg, #f59e0b, #d97706); padding: 10px 25px; font-size: 12px; box-shadow: 0 0 20px rgba(245, 158, 11, 0.3);">
                         KUP PREMIUM PASS (10$)
                     </button>
                 </div>
@@ -1592,25 +1841,30 @@
                 <div class="sm-title"><i class="fas fa-cog"></i> USTAWIENIA KONTA</div>
                 <div class="sm-close" onclick="closeAccountModal()"><i class="fas fa-times"></i></div>
             </div>
-            
+
             <div class="sm-content" style="padding: 0; display: flex; flex-direction: column;">
-                
+
                 <div class="acc-header-profile">
-                    <div class="acc-avatar-large" style="background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');"></div>
+                    <div class="acc-avatar-large"
+                        style="background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');">
+                    </div>
                     <div class="acc-user-details">
                         <h2>MrGambler</h2>
                         <div style="display: flex; gap: 10px;">
                             <span class="acc-user-badge"><i class="fas fa-hashtag"></i> ID: 9942</span>
-                            <span class="acc-user-badge" style="color:var(--accent-green);"><i class="fas fa-calendar-alt"></i> 10 Dec 2025</span>
+                            <span class="acc-user-badge" style="color:var(--accent-green);"><i
+                                    class="fas fa-calendar-alt"></i> 10 Dec 2025</span>
                         </div>
                     </div>
                     <div style="margin-left: auto;">
-                        <button class="action-btn-large outline" style="padding: 8px 20px; font-size: 11px;" onclick="alert('Otwieranie edytora profilu...')"><i class="fas fa-camera"></i> Zmień Avatar</button>
+                        <button class="action-btn-large outline" style="padding: 8px 20px; font-size: 11px;"
+                            onclick="alert('Przełączanie konta...')"><i class="fas fa-exchange-alt"></i> Przełącz
+                            konto</button>
                     </div>
                 </div>
 
                 <div class="acc-settings-grid">
-                    
+
                     <div class="acc-card">
                         <div class="acc-card-title"><i class="fas fa-user-shield"></i> Dane Osobowe</div>
                         <div class="acc-field">
@@ -1629,19 +1883,23 @@
                         </div>
                         <div class="acc-field">
                             <div class="acc-label">Weryfikacja KYC</div>
-                            <div class="acc-input-box" style="border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05);">
-                                <span style="color: var(--accent-green); font-weight: 700;"><i class="fas fa-check-circle"></i> ZWERYFIKOWANO</span>
+                            <div class="acc-input-box"
+                                style="border-color: rgba(16, 185, 129, 0.3); background: rgba(16, 185, 129, 0.05);">
+                                <span style="color: var(--accent-green); font-weight: 700;"><i
+                                        class="fas fa-check-circle"></i> ZWERYFIKOWANO</span>
                             </div>
                         </div>
                     </div>
 
                     <div class="acc-card">
-                        <div class="acc-card-title"><i class="fas fa-lock" style="color: var(--accent-purple);"></i> Bezpieczeństwo</div>
+                        <div class="acc-card-title"><i class="fas fa-lock" style="color: var(--accent-purple);"></i>
+                            Bezpieczeństwo</div>
                         <div class="acc-field">
                             <div class="acc-label">Hasło</div>
                             <div class="acc-input-box">
                                 <span>•••••••••••••</span>
-                                <button class="acc-action-btn" style="width: auto; flex:0; white-space:nowrap;">Zmień</button>
+                                <button class="acc-action-btn"
+                                    style="width: auto; flex:0; white-space:nowrap;">Zmień</button>
                             </div>
                         </div>
                         <div class="acc-field">
@@ -1661,7 +1919,8 @@
                     </div>
 
                     <div class="acc-card">
-                        <div class="acc-card-title"><i class="fas fa-wallet" style="color: var(--accent-green);"></i> Metody Płatności</div>
+                        <div class="acc-card-title"><i class="fas fa-wallet" style="color: var(--accent-green);"></i>
+                            Metody Płatności</div>
                         <div class="acc-field">
                             <div class="acc-label">Aktywna Karta</div>
                             <div class="acc-input-box">
@@ -1676,11 +1935,13 @@
                                 <i class="fas fa-copy acc-edit-icon"></i>
                             </div>
                         </div>
-                        <button class="acc-action-btn" style="margin-top: auto;"><i class="fas fa-plus"></i> Dodaj nową metodę</button>
+                        <button class="acc-action-btn" style="margin-top: auto;"><i class="fas fa-plus"></i> Dodaj nową
+                            metodę</button>
                     </div>
 
                     <div class="acc-card">
-                        <div class="acc-card-title"><i class="fas fa-sliders-h" style="color: var(--accent-orange);"></i> Preferencje</div>
+                        <div class="acc-card-title"><i class="fas fa-sliders-h"
+                                style="color: var(--accent-orange);"></i> Preferencje</div>
                         <div class="acc-field">
                             <div class="acc-label">Język / Region</div>
                             <select class="eu-select" style="background: rgba(0,0,0,0.3);">
@@ -1688,14 +1949,16 @@
                                 <option>English (US)</option>
                             </select>
                         </div>
-                        <div class="acc-field" style="flex-direction: row; justify-content: space-between; align-items: center; margin-top: 5px;">
+                        <div class="acc-field"
+                            style="flex-direction: row; justify-content: space-between; align-items: center; margin-top: 5px;">
                             <div class="acc-label" style="color:white;">Powiadomienia Email</div>
                             <label class="switch switch-green" style="transform: scale(0.8);">
                                 <input type="checkbox" checked>
                                 <span class="slider"></span>
                             </label>
                         </div>
-                        <div class="acc-field" style="flex-direction: row; justify-content: space-between; align-items: center;">
+                        <div class="acc-field"
+                            style="flex-direction: row; justify-content: space-between; align-items: center;">
                             <div class="acc-label" style="color:white;">Dźwięki Gry</div>
                             <label class="switch switch-green" style="transform: scale(0.8);">
                                 <input type="checkbox" checked>
@@ -1711,7 +1974,9 @@
                         <h4>Strefa Niebezpieczna</h4>
                         <p>Usunięcie konta jest nieodwracalne. Utracisz dostęp do wszystkich środków i przedmiotów.</p>
                     </div>
-                    <button class="action-btn-large outline" style="border-color: var(--accent-red); color: var(--accent-red); font-size: 11px; padding: 10px 20px;" onclick="alert('Niedostępne w wersji demo.')">
+                    <button class="action-btn-large outline"
+                        style="border-color: var(--accent-red); color: var(--accent-red); font-size: 11px; padding: 10px 20px;"
+                        onclick="alert('Niedostępne w wersji demo.')">
                         <i class="fas fa-trash"></i> USUŃ KONTO
                     </button>
                 </div>
@@ -1723,20 +1988,24 @@
     <div class="modal-overlay" id="playerStatsModal">
         <div class="steam-modal" style="width: 700px; max-width: 95vw;">
             <div class="sm-header" style="background: linear-gradient(90deg, #1e293b, #0f172a);">
-                <div class="sm-title"><i class="fas fa-chart-pie" style="color:var(--accent-purple); margin-right:8px;"></i> STATYSTYKI GRACZA</div>
+                <div class="sm-title"><i class="fas fa-chart-pie"
+                        style="color:var(--accent-purple); margin-right:8px;"></i> STATYSTYKI GRACZA</div>
                 <div class="sm-close" onclick="closePlayerStatsModal()"><i class="fas fa-times"></i></div>
             </div>
             <div class="sm-content" style="padding: 0;">
                 <div class="ps-layout">
                     <div class="ps-hero">
-                        <div class="ps-avatar" style="background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');"></div>
+                        <div class="ps-avatar"
+                            style="background-image: url('https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false');">
+                        </div>
                         <div class="ps-user-info">
                             <h2>MrGambler</h2>
                             <span><i class="fas fa-calendar-alt"></i> Dołączył: 10 Dec 2025</span>
                         </div>
                         <div style="margin-left: auto; text-align: right;">
                             <div class="ps-label">Total Playtime</div>
-                            <div class="ps-value" style="font-family: monospace; color: var(--accent-orange);">148h 20m</div>
+                            <div class="ps-value" style="font-family: monospace; color: var(--accent-orange);">148h 20m
+                            </div>
                         </div>
                     </div>
 
@@ -1772,14 +2041,17 @@
                                     <div style="font-size:13px; font-weight:700; color:white;">Megaways</div>
                                 </div>
                                 <div class="ps-g-bar-container">
-                                    <div class="ps-g-bar" style="width: 85%; background: #d946ef; box-shadow: 0 0 10px rgba(217, 70, 239, 0.4);"></div>
+                                    <div class="ps-g-bar"
+                                        style="width: 85%; background: #d946ef; box-shadow: 0 0 10px rgba(217, 70, 239, 0.4);">
+                                    </div>
                                 </div>
                                 <div style="font-size:12px; font-weight:700; color:#ddd;">142 gier</div>
                             </div>
 
                             <div class="ps-game-row">
                                 <div style="display: flex; align-items: center;">
-                                    <div class="ps-g-icon" style="color: #84cc16;"><i class="fas fa-skull-crossbones"></i></div>
+                                    <div class="ps-g-icon" style="color: #84cc16;"><i
+                                            class="fas fa-skull-crossbones"></i></div>
                                     <div style="font-size:13px; font-weight:700; color:white;">Degenerate Worms</div>
                                 </div>
                                 <div class="ps-g-bar-container">
@@ -1804,22 +2076,23 @@
             </div>
         </div>
     </div>
-    
+
     <div class="modal-overlay" id="financialLogsModal">
         <div class="steam-modal" style="width: 800px;">
             <div class="sm-header">
                 <div class="sm-title"><i class="fas fa-database"></i> Logi Finansowe</div>
                 <div class="sm-close" onclick="closeFinancialLogsModal()"><i class="fas fa-times"></i></div>
             </div>
-            
-            <div style="padding: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
+
+            <div
+                style="padding: 15px; background: rgba(0,0,0,0.2); border-bottom: 1px solid var(--border-color); display: flex; justify-content: space-between; align-items: center;">
                 <div style="display: flex; align-items: center; gap: 20px;">
                     <div>
                         <div style="font-size: 10px; color: var(--text-muted);">BILANS MIESIĘCZNY</div>
                         <div style="font-size: 16px; font-weight: 700; color: var(--accent-red);">-200.00 $</div>
                     </div>
-                    
-                    
+
+
                     <div class="switch-container">
                         <label class="switch">
                             <input type="checkbox" id="hideGamesSwitch" checked onchange="renderFinancialLogsList()">
@@ -1833,21 +2106,21 @@
 
             <div class="sm-content" style="padding-top: 0;">
                 <div class="history-list-container full-height-logs" id="financialLogsList">
-                    
+
                 </div>
             </div>
         </div>
     </div>
-    
+
     <div class="modal-overlay" id="marketModal">
         <div class="steam-modal market-modal-size">
             <div class="sm-header" id="marketModalHeader" style="border-bottom:none;">
                 <div class="sm-title" id="marketModalTitle">SZCZEGÓŁY OFERTY</div>
                 <div class="sm-close" onclick="closeMarketModal()"><i class="fas fa-times"></i></div>
             </div>
-            
+
             <div class="mm-layout">
-                
+
                 <div class="mm-visual-col">
                     <div class="mm-item-card-large" id="mmCard">
                         <div id="mmIcon" style="font-size: 100px; font-style: normal;"></div>
@@ -1861,7 +2134,7 @@
                     </div>
                 </div>
 
-                
+
                 <div class="mm-data-col">
                     <h2 id="mmItemName">Nazwa Przedmiotu</h2>
                     <div class="mm-tags" id="mmTags">
@@ -1896,7 +2169,8 @@
                     <div class="mm-desc-box">
                         <div class="mm-lbl">Opis / Bonusy</div>
                         <p id="mmDesc">Zatrzymuje czas długów. +15 do Prestiżu.</p>
-                        <div id="mmReqWarning" class="mm-warning hidden"><i class="fas fa-lock"></i> Wymagana ranga: Alpha Whale</div>
+                        <div id="mmReqWarning" class="mm-warning hidden"><i class="fas fa-lock"></i> Wymagana ranga:
+                            Alpha Whale</div>
                     </div>
 
                     <div class="mm-actions">
@@ -1916,15 +2190,17 @@
                 <div class="sm-title">SZCZEGÓŁY PRZEDMIOTU</div>
                 <div class="sm-close" onclick="closeInventoryItemModal()"><i class="fas fa-times"></i></div>
             </div>
-            
+
             <div class="mm-layout">
                 <div class="mm-visual-col">
                     <div class="mm-item-card-large" id="iiCard">
                         <div id="iiIcon" style="font-size: 100px; font-style: normal;"></div>
                     </div>
-                    
+
                     <div class="mm-seller-info" style="flex-direction: column; align-items: stretch; gap: 8px;">
-                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">Średnia Cena Rynkowa</div>
+                        <div
+                            style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
+                            Średnia Cena Rynkowa</div>
                         <div style="display: flex; justify-content: space-between; align-items: center;">
                             <div class="mm-price-large" id="iiMarketPrice" style="font-size: 20px;">0 $</div>
                             <div class="val-change-inline" id="iiMarketTrend">+0%</div>
@@ -1942,15 +2218,21 @@
                         <div id="iiReqWarning" class="mm-warning hidden"></div>
                     </div>
 
-                    <div style="flex: 1;"></div> <div class="mm-actions" style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; flex-direction: column; align-items: stretch; gap: 10px;">
-                        
-                        <button class="action-btn-large full-width" id="btnInvAction" style="margin-bottom: 5px;">AKCJA</button>
+                    <div style="flex: 1;"></div>
+                    <div class="mm-actions"
+                        style="border-top: 1px solid rgba(255,255,255,0.1); padding-top: 15px; flex-direction: column; align-items: stretch; gap: 10px;">
+
+                        <button class="action-btn-large full-width" id="btnInvAction"
+                            style="margin-bottom: 5px;">AKCJA</button>
 
                         <div class="mm-btn-row" style="width: 100%;">
-                            <button class="action-btn-large outline" style="flex: 1; font-size: 11px;" onclick="alert('Przedmiot wystawiony na rynek!')">
+                            <button class="action-btn-large outline" style="flex: 1; font-size: 11px;"
+                                onclick="alert('Przedmiot wystawiony na rynek!')">
                                 <i class="fas fa-gavel"></i> WYSTAW NA RYNEK
                             </button>
-                            <button class="action-btn-large outline" style="flex: 1; font-size: 11px; border-color: var(--accent-red); color: var(--accent-red);" id="btnInvSellSystem">
+                            <button class="action-btn-large outline"
+                                style="flex: 1; font-size: 11px; border-color: var(--accent-red); color: var(--accent-red);"
+                                id="btnInvSellSystem">
                                 <i class="fas fa-hand-holding-usd"></i> SPRZEDAJ (FLOOR)
                             </button>
                         </div>
@@ -1980,22 +2262,29 @@
             </div>
             <div class="cfp-list">
                 <div class="cfp-section-title">AI Chatboty</div>
-                <div class="cfp-item active" onclick="switchChatPartner('ai', 'AI Buddy', 'Pomocnik Gracza', 'fa-robot')">
+                <div class="cfp-item active"
+                    onclick="switchChatPartner('ai', 'AI Buddy', 'Pomocnik Gracza', 'fa-robot')">
                     <div class="cfp-avatar ai"><i class="fas fa-robot"></i></div>
                     <div class="cfp-name">AI Buddy</div>
                 </div>
-                
+
                 <div class="cfp-section-title" style="margin-top:10px;">Znajomi</div>
-                <div class="cfp-item" onclick="switchChatPartner('user', 'Whale_Killer', 'RNG God', 'https://i.pravatar.cc/150?u=Whale_Killer')">
-                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=Whale_Killer');"></div>
+                <div class="cfp-item"
+                    onclick="switchChatPartner('user', 'Whale_Killer', 'RNG God', 'https://i.pravatar.cc/150?u=Whale_Killer')">
+                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=Whale_Killer');">
+                    </div>
                     <div class="cfp-name">Whale_Killer</div>
                 </div>
-                <div class="cfp-item" onclick="switchChatPartner('user', 'LuckyLuke', 'Table Shark', 'https://i.pravatar.cc/150?u=LuckyLuke')">
-                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=LuckyLuke');"></div>
+                <div class="cfp-item"
+                    onclick="switchChatPartner('user', 'LuckyLuke', 'Table Shark', 'https://i.pravatar.cc/150?u=LuckyLuke')">
+                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=LuckyLuke');">
+                    </div>
                     <div class="cfp-name">LuckyLuke</div>
                 </div>
-                <div class="cfp-item" onclick="switchChatPartner('user', 'CryptoBro', 'Risk Taker', 'https://i.pravatar.cc/150?u=CryptoBro')">
-                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=CryptoBro');"></div>
+                <div class="cfp-item"
+                    onclick="switchChatPartner('user', 'CryptoBro', 'Risk Taker', 'https://i.pravatar.cc/150?u=CryptoBro')">
+                    <div class="cfp-avatar" style="background-image: url('https://i.pravatar.cc/150?u=CryptoBro');">
+                    </div>
                     <div class="cfp-name">CryptoBro</div>
                 </div>
             </div>
@@ -2006,10 +2295,12 @@
                 <div id="chatHeaderIcon" class="chat-header-avatar ai"><i class="fas fa-robot"></i></div>
                 <div>
                     <h3 id="chatHeaderName">AI Buddy</h3>
-                    <span id="chatHeaderStatus" style="font-size: 10px; color: var(--text-muted);">Pomocnik Gracza</span>
+                    <span id="chatHeaderStatus" style="font-size: 10px; color: var(--text-muted);">Pomocnik
+                        Gracza</span>
                 </div>
                 <div class="chat-header-actions" style="margin-left: auto; display: flex; gap: 10px;">
-                    <i class="fas fa-sort-up" onclick="toggleFriendPanel()" style="cursor: pointer; color: #fff; font-size: 16px; margin-top: 5px;"></i>
+                    <i class="fas fa-sort-up" onclick="toggleFriendPanel()"
+                        style="cursor: pointer; color: #fff; font-size: 16px; margin-top: 5px;"></i>
                 </div>
             </div>
             <div class="chat-messages" id="chatMessages">
@@ -2020,59 +2311,60 @@
                 <button class="ap-btn ap-btn-purple" onclick="sendMessage()"><i class="fas fa-paper-plane"></i></button>
             </div>
         </div>
-        
+
         <button class="chat-toggle" id="chatToggleBtn" onclick="toggleChat()">
             <div id="chatToggleContent"><i class="fas fa-robot"></i></div>
         </button>
     </div>
 
-    
+
     <div class="modal-overlay" id="gameDetailsModal">
         <div class="steam-modal" style="width: 850px; max-width: 95vw;">
             <div class="sm-header" style="background: linear-gradient(90deg, #1e293b, #0f172a);">
                 <div class="sm-title" id="gmTitle">GAME DETAILS</div>
                 <div class="sm-close" onclick="closeGameModal()"><i class="fas fa-times"></i></div>
             </div>
-            
+
             <div class="gm-layout">
-                
+
                 <div class="gm-sidebar">
                     <div class="gm-big-icon-box" id="gmIconBox">
                         <i class="fas fa-gamepad" id="gmIcon"></i>
                     </div>
-                    
+
                     <div class="gm-info-block">
                         <h2 id="gmName">Game Name</h2>
                         <p id="gmDesc">Game description goes here.</p>
                     </div>
 
                     <div class="gm-stats-row">
-                         <div class="gm-stat">
+                        <div class="gm-stat">
                             <span class="lbl">ONLINE</span>
                             <span class="val" id="gmOnline" style="color: var(--accent-green);">0</span>
-                         </div>
-                         <div class="gm-stat">
+                        </div>
+                        <div class="gm-stat">
                             <span class="lbl">VARIANTS</span>
                             <span class="val" id="gmVariants">1</span>
-                         </div>
+                        </div>
                     </div>
 
                     <div class="gm-loadout-section">
                         <div class="gm-section-label">ACTIVE LOADOUT</div>
                         <select class="gm-select" id="gmLoadoutSelect">
-                            
+
                         </select>
                     </div>
                 </div>
 
-                
+
                 <div class="gm-content">
-                    <div class="gm-section-label" style="margin-bottom: 10px; display: flex; justify-content: space-between;">
+                    <div class="gm-section-label"
+                        style="margin-bottom: 10px; display: flex; justify-content: space-between;">
                         <span>AVAILABLE MODES</span>
                         <span style="font-size: 10px; color: #666;">Kliknij gwiazdkę, aby dodać do Dashboardu</span>
                     </div>
                     <div class="gm-modes-grid" id="gmModesGrid">
-                        
+
                     </div>
                 </div>
             </div>
@@ -2085,13 +2377,14 @@
                 <div class="sm-close" onclick="closeLoadoutEffectsModal()"><i class="fas fa-times"></i></div>
             </div>
             <div class="sm-content" id="loadoutEffectsContent" style="padding: 20px;">
-                </div>
+            </div>
         </div>
     </div>
     <div class="modal-overlay" id="dailyPLModal">
         <div class="steam-modal" style="width: 550px;">
             <div class="sm-header" style="background: #0f172a; border-bottom: 1px solid rgba(255,255,255,0.05);">
-                <div class="sm-title"><i class="fas fa-chart-bar" style="color: var(--accent-blue); margin-right: 8px;"></i> HISTORIA WYNIKÓW (7 DNI)</div>
+                <div class="sm-title"><i class="fas fa-chart-bar"
+                        style="color: var(--accent-blue); margin-right: 8px;"></i> HISTORIA WYNIKÓW (7 DNI)</div>
                 <div class="sm-close" onclick="closeDailyPLModal()"><i class="fas fa-times"></i></div>
             </div>
             <div class="sm-content" style="padding: 20px;">
@@ -2103,10 +2396,11 @@
         <div class="steam-modal" style="width: 850px; max-width: 95vw; max-height: 90vh;">
             <div class="sm-header" style="background: linear-gradient(90deg, #3730a3, #1e1b4b);">
                 <div class="sm-title"><i class="fas fa-user-edit"></i> EDYCJA UŻYTKOWNIKA</div>
-                <div class="sm-close" onclick="document.getElementById('editUserModal').classList.remove('active')"><i class="fas fa-times"></i></div>
+                <div class="sm-close" onclick="document.getElementById('editUserModal').classList.remove('active')"><i
+                        class="fas fa-times"></i></div>
             </div>
             <div class="sm-content" style="padding: 0; display:flex; flex-direction:column; height:100%;">
-                
+
                 <div class="eu-layout">
                     <div class="eu-sidebar">
                         <div class="eu-avatar-preview" id="euAvatarPreview"></div>
@@ -2114,7 +2408,7 @@
                             <span class="curr-prefix"><i class="fas fa-image"></i></span>
                             <input type="text" id="euInputPfp" placeholder="URL Avatara...">
                         </div>
-                        
+
                         <div class="eu-id-badge" id="euIdDisplay">ID: #0000</div>
 
                         <div class="eu-section-label">STATUS KONTA</div>
@@ -2127,17 +2421,17 @@
 
                         <div class="eu-section-label" style="margin-top:15px;">UPRAWNIENIA</div>
                         <label class="ms-check-row">
-                            <input type="checkbox" id="euCheckAdmin"> 
+                            <input type="checkbox" id="euCheckAdmin">
                             <span style="color:var(--accent-purple); font-weight:700;">Administrator</span>
                         </label>
                         <label class="ms-check-row">
-                            <input type="checkbox" id="euCheckShadowban"> 
+                            <input type="checkbox" id="euCheckShadowban">
                             <span>Shadowban (Ukryty)</span>
                         </label>
                     </div>
 
                     <div class="eu-main">
-                        
+
                         <div class="eu-grid-row">
                             <div class="eu-block">
                                 <div class="eu-label"><i class="fas fa-user"></i> Nazwa Użytkownika</div>
@@ -2176,11 +2470,13 @@
                             <div class="eu-block">
                                 <div class="eu-label"><i class="fas fa-trophy"></i> Ranga Systemowa</div>
                                 <select id="euSelectRank" class="eu-select">
-                                    </select>
+                                </select>
                             </div>
                             <div class="eu-block">
-                                <div class="eu-label" style="color:var(--accent-orange);">Custom Status (Priorytet)</div>
-                                <input type="text" id="euInputCustomRank" class="eu-input-std" placeholder="np. VIP, Bot, Cheater...">
+                                <div class="eu-label" style="color:var(--accent-orange);">Custom Status (Priorytet)
+                                </div>
+                                <input type="text" id="euInputCustomRank" class="eu-input-std"
+                                    placeholder="np. VIP, Bot, Cheater...">
                             </div>
                         </div>
 
@@ -2196,28 +2492,40 @@
                                 <input type="number" id="euInvQty" class="eu-input-std" value="1">
                             </div>
                             <div class="eu-block" style="flex-direction: row; gap: 5px;">
-                                <button class="ap-btn ap-btn-green" style="flex:1; height:32px;" onclick="modifyUserInv('add')" title="Dodaj przedmiot"><i class="fas fa-plus"></i> DODAJ</button>
-                                <button class="ap-btn ap-btn-red" style="flex:1; height:32px;" onclick="modifyUserInv('remove')" title="Usuń przedmiot"><i class="fas fa-minus"></i> USUŃ</button>
+                                <button class="ap-btn ap-btn-green" style="flex:1; height:32px;"
+                                    onclick="modifyUserInv('add')" title="Dodaj przedmiot"><i class="fas fa-plus"></i>
+                                    DODAJ</button>
+                                <button class="ap-btn ap-btn-red" style="flex:1; height:32px;"
+                                    onclick="modifyUserInv('remove')" title="Usuń przedmiot"><i
+                                        class="fas fa-minus"></i> USUŃ</button>
                             </div>
                         </div>
                         <div class="eu-divider">PROFIL & LOGI</div>
 
                         <div class="eu-block" style="flex-direction: row; gap: 10px;">
-                            <button class="ap-btn ap-btn-blue" style="flex:1; height:32px;" onclick="alert('Podgląd profilu gracza...')"><i class="fas fa-external-link-alt"></i> WYŚWIETL PROFIL</button>
-                            <button class="ap-btn" style="flex:1; height:32px; background: rgba(255,255,255,0.1);" onclick="alert('Pobieranie historii logów...')"><i class="fas fa-list-alt"></i> LOGI PROFILU</button>
+                            <button class="ap-btn ap-btn-blue" style="flex:1; height:32px;"
+                                onclick="alert('Podgląd profilu gracza...')"><i class="fas fa-external-link-alt"></i>
+                                WYŚWIETL PROFIL</button>
+                            <button class="ap-btn" style="flex:1; height:32px; background: rgba(255,255,255,0.1);"
+                                onclick="alert('Pobieranie historii logów...')"><i class="fas fa-list-alt"></i> LOGI
+                                PROFILU</button>
                         </div>
                         <div class="eu-divider">LOGI & NOTATKI</div>
 
                         <div class="eu-block" style="flex:1;">
                             <div class="eu-label">Notatka Admina (Widoczna tylko dla staffu)</div>
-                            <textarea id="euInputNote" class="eu-textarea" placeholder="Wpisz powód bana lub uwagi..."></textarea>
+                            <textarea id="euInputNote" class="eu-textarea"
+                                placeholder="Wpisz powód bana lub uwagi..."></textarea>
                         </div>
 
                         <div class="eu-actions-footer">
-                            <button class="ap-btn ap-btn-red" onclick="alert('Wyzerowano ekwipunek!')"><i class="fas fa-trash"></i> Wyczyść Ekwipunek</button>
+                            <button class="ap-btn ap-btn-red" onclick="alert('Wyzerowano ekwipunek!')"><i
+                                    class="fas fa-trash"></i> Wyczyść Ekwipunek</button>
                             <div style="flex:1;"></div>
-                            <button class="action-btn-large outline" style="padding: 8px 20px; font-size:12px;" onclick="document.getElementById('editUserModal').classList.remove('active')">ANULUJ</button>
-                            <button class="action-btn-large" style="padding: 8px 20px; font-size:12px;" onclick="saveUserEdit()">ZAPISZ ZMIANY</button>
+                            <button class="action-btn-large outline" style="padding: 8px 20px; font-size:12px;"
+                                onclick="document.getElementById('editUserModal').classList.remove('active')">ANULUJ</button>
+                            <button class="action-btn-large" style="padding: 8px 20px; font-size:12px;"
+                                onclick="saveUserEdit()">ZAPISZ ZMIANY</button>
                         </div>
 
                     </div>
@@ -2228,21 +2536,25 @@
     </div>
     <div class="modal-overlay" id="editGameModal">
         <div class="steam-modal" style="width: 850px; max-width: 95vw; max-height: 90vh;">
-            <div class="sm-header" style="background: linear-gradient(90deg, #0f172a, #1e293b); border-bottom: 1px solid var(--accent-blue);">
-                <div class="sm-title"><i class="fas fa-cogs" style="color:var(--accent-blue); margin-right:8px;"></i> KONTROLA GRY</div>
+            <div class="sm-header"
+                style="background: linear-gradient(90deg, #0f172a, #1e293b); border-bottom: 1px solid var(--accent-blue);">
+                <div class="sm-title"><i class="fas fa-cogs" style="color:var(--accent-blue); margin-right:8px;"></i>
+                    KONTROLA GRY</div>
                 <div class="sm-close" onclick="closeEditGameModal()"><i class="fas fa-times"></i></div>
             </div>
             <div class="sm-content" style="padding: 0; display:flex; flex-direction:column; height:100%;">
-                
+
                 <div class="eu-layout">
                     <div class="eu-sidebar" style="width: 220px; background: rgba(0,0,0,0.3);">
-                        <div class="gm-big-icon-box" id="egIconBox" style="width: 80px; height: 80px; font-size: 32px; align-self: center; margin-bottom: 10px;">
+                        <div class="gm-big-icon-box" id="egIconBox"
+                            style="width: 80px; height: 80px; font-size: 32px; align-self: center; margin-bottom: 10px;">
                             <i class="fas fa-gamepad" id="egIcon"></i>
                         </div>
                         <div class="eu-id-badge" id="egIdDisplay" style="margin-bottom: 10px;">ID: #000</div>
-                        
+
                         <div class="eu-label" style="text-align: center;">Nazwa Kodowa</div>
-                        <div style="text-align: center; color: white; font-weight: 700; margin-bottom: 20px;" id="egNameDisplay">Game Name</div>
+                        <div style="text-align: center; color: white; font-weight: 700; margin-bottom: 20px;"
+                            id="egNameDisplay">Game Name</div>
 
                         <div class="eu-section-label">STATUS SERWERA</div>
                         <select id="egSelectStatus" class="eu-select">
@@ -2252,18 +2564,21 @@
                         </select>
 
                         <div class="eu-section-label" style="margin-top:15px;">DANE LIVE</div>
-                        <div class="stat-group-vertical" style="align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px;">
+                        <div class="stat-group-vertical"
+                            style="align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px;">
                             <span style="font-size: 10px; color: #aaa;">Aktywni Gracze</span>
-                            <span style="font-size: 16px; color: var(--accent-blue); font-weight: 800;" id="egLivePlayers">0</span>
+                            <span style="font-size: 16px; color: var(--accent-blue); font-weight: 800;"
+                                id="egLivePlayers">0</span>
                         </div>
-                        <div class="stat-group-vertical" style="align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px; margin-top: 5px;">
+                        <div class="stat-group-vertical"
+                            style="align-items: center; background: rgba(255,255,255,0.05); padding: 10px; border-radius: 6px; margin-top: 5px;">
                             <span style="font-size: 10px; color: #aaa;">Otwarte Sesje</span>
                             <span style="font-size: 16px; color: white; font-weight: 800;" id="egLiveSessions">0</span>
                         </div>
                     </div>
 
                     <div class="eu-main">
-                        
+
                         <div class="eu-divider"><i class="fas fa-balance-scale"></i> EKONOMIA & ZASADY</div>
                         <div class="eu-grid-row three-col">
                             <div class="eu-block">
@@ -2281,31 +2596,39 @@
                             </div>
                             <div class="eu-block">
                                 <div class="eu-label">RNG Override</div>
-                                <input type="range" min="0" max="200" value="100" class="eu-slider" id="egSliderRNG" oninput="document.getElementById('egRngGlobalVal').textContent = this.value + '%'">
-                                <div style="text-align:right; font-size:10px; color:#aaa;">Value: <span id="egRngGlobalVal" style="color:white;">100%</span></div>
+                                <input type="range" min="0" max="200" value="100" class="eu-slider" id="egSliderRNG"
+                                    oninput="document.getElementById('egRngGlobalVal').textContent = this.value + '%'">
+                                <div style="text-align:right; font-size:10px; color:#aaa;">Value: <span
+                                        id="egRngGlobalVal" style="color:white;">100%</span></div>
                             </div>
                         </div>
                         <div class="eu-block" style="flex-direction: row; justify-content: flex-end; margin-top: 10px;">
-                            <button class="action-btn-large outline" style="padding: 6px 12px; font-size: 10px; border-color: #666; color: #ccc;" onclick="alert('Przywrócono globalne ustawienia domyślne.')">RESET DOMYŚLNE</button>
+                            <button class="action-btn-large outline"
+                                style="padding: 6px 12px; font-size: 10px; border-color: #666; color: #ccc;"
+                                onclick="alert('Przywrócono globalne ustawienia domyślne.')">RESET DOMYŚLNE</button>
                         </div>
 
                         <div class="eu-divider" style="color: var(--accent-red); border-color: rgba(239,68,68,0.3);">
                             <i class="fas fa-crosshairs"></i> EKONOMIA & ZASADY DLA GRACZA (TARGETING)
                         </div>
-                        <div style="background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 6px;">
+                        <div
+                            style="background: rgba(239, 68, 68, 0.05); border: 1px dashed rgba(239, 68, 68, 0.3); padding: 10px; border-radius: 6px;">
                             <div class="eu-grid-row" style="align-items: end; margin-bottom: 15px;">
                                 <div class="eu-block" style="flex: 2;">
                                     <div class="eu-label" style="color: #fca5a5;">Cel (ID Gracza lub Login)</div>
                                     <div class="input-group small" style="margin:0;">
-                                        <span class="curr-prefix" style="color: var(--accent-red);"><i class="fas fa-user-secret"></i></span>
-                                        <input type="text" id="egTargetInput" placeholder="Szukaj ofiary..." style="background: rgba(0,0,0,0.4);">
+                                        <span class="curr-prefix" style="color: var(--accent-red);"><i
+                                                class="fas fa-user-secret"></i></span>
+                                        <input type="text" id="egTargetInput" placeholder="Szukaj ofiary..."
+                                            style="background: rgba(0,0,0,0.4);">
                                     </div>
                                 </div>
                                 <div class="eu-block" style="flex: 1;">
-                                    <button class="ap-btn ap-btn-red" style="height: 32px;" onclick="alert('Załadowano profil gracza. Wyświetlam specyficzne ustawienia.')">SZUKAJ</button>
+                                    <button class="ap-btn ap-btn-red" style="height: 32px;"
+                                        onclick="alert('Załadowano profil gracza. Wyświetlam specyficzne ustawienia.')">SZUKAJ</button>
                                 </div>
                             </div>
-                            
+
                             <div class="eu-grid-row three-col" style="margin-bottom: 10px;">
                                 <div class="eu-block">
                                     <div class="eu-label" style="color:#fca5a5;">Player RTP (%)</div>
@@ -2323,16 +2646,26 @@
                                 </div>
                                 <div class="eu-block">
                                     <div class="eu-label" style="color:#fca5a5;">Player RNG Override</div>
-                                    <input type="range" min="0" max="200" value="100" class="eu-slider" oninput="document.getElementById('egPlayerRngVal').textContent = this.value + '%'">
-                                    <div style="text-align:right; font-size:10px; color:#aaa;">Value: <span id="egPlayerRngVal" style="color:#fca5a5;">100%</span></div>
+                                    <input type="range" min="0" max="200" value="100" class="eu-slider"
+                                        oninput="document.getElementById('egPlayerRngVal').textContent = this.value + '%'">
+                                    <div style="text-align:right; font-size:10px; color:#aaa;">Value: <span
+                                            id="egPlayerRngVal" style="color:#fca5a5;">100%</span></div>
                                 </div>
                             </div>
 
-                            <div class="eu-block" style="flex-direction: row; align-items: center; gap: 10px; margin-top: 10px;">
-                                <button class="ap-btn" style="background: rgba(255,255,255,0.1);" onclick="alert('Otwieranie listy targetowanych graczy...')"><i class="fas fa-list-ul"></i> Lista Celów</button>
+                            <div class="eu-block"
+                                style="flex-direction: row; align-items: center; gap: 10px; margin-top: 10px;">
+                                <button class="ap-btn" style="background: rgba(255,255,255,0.1);"
+                                    onclick="alert('Otwieranie listy targetowanych graczy...')"><i
+                                        class="fas fa-list-ul"></i> Lista Celów</button>
                                 <div style="flex:1;"></div>
-                                <button class="action-btn-large outline" style="padding: 6px 12px; font-size: 10px; border-color: #666; color: #ccc;" onclick="alert('Zresetowano ustawienia gracza do wartości globalnych.')">RESET DOMYŚLNE</button>
-                                <button class="ap-btn ap-btn-red" onclick="alert('Zastosowano nadpisanie zasad dla wybranego gracza. Priorytet: HIGH.')">APLIKUJ ZMIANY</button>
+                                <button class="action-btn-large outline"
+                                    style="padding: 6px 12px; font-size: 10px; border-color: #666; color: #ccc;"
+                                    onclick="alert('Zresetowano ustawienia gracza do wartości globalnych.')">RESET
+                                    DOMYŚLNE</button>
+                                <button class="ap-btn ap-btn-red"
+                                    onclick="alert('Zastosowano nadpisanie zasad dla wybranego gracza. Priorytet: HIGH.')">APLIKUJ
+                                    ZMIANY</button>
                             </div>
                         </div>
 
@@ -2346,21 +2679,31 @@
                                 </div>
                             </div>
                             <div class="eu-block" style="flex: 1;">
-                                <button class="ap-btn ap-btn-blue" style="height: 32px;" onclick="alert('Otwieranie podglądu sesji na żywo...')"><i class="fas fa-eye"></i> OBSERWUJ</button>
+                                <button class="ap-btn ap-btn-blue" style="height: 32px;"
+                                    onclick="alert('Otwieranie podglądu sesji na żywo...')"><i class="fas fa-eye"></i>
+                                    OBSERWUJ</button>
                             </div>
                             <div class="eu-block" style="flex: 1.5; align-items: flex-end;">
                                 <div style="display:flex; gap: 5px;">
-                                    <button class="ap-btn" style="background: rgba(255,255,255,0.1);" onclick="alert('Lista 428 aktywnych sesji...')"><i class="fas fa-list"></i> AKTYWNE SESJE</button>
-                                    <button class="ap-btn" style="background: rgba(255,255,255,0.1);" onclick="alert('Pobieranie pełnej historii rozdań...')"><i class="fas fa-history"></i> HISTORIA</button>
+                                    <button class="ap-btn" style="background: rgba(255,255,255,0.1);"
+                                        onclick="alert('Lista 428 aktywnych sesji...')"><i class="fas fa-list"></i>
+                                        AKTYWNE SESJE</button>
+                                    <button class="ap-btn" style="background: rgba(255,255,255,0.1);"
+                                        onclick="alert('Pobieranie pełnej historii rozdań...')"><i
+                                            class="fas fa-history"></i> HISTORIA</button>
                                 </div>
                             </div>
                         </div>
 
                         <div class="eu-actions-footer">
-                            <button class="ap-btn ap-btn-red" onclick="alert('Wyczyszczono ustawienia i zresetowano silnik gry do stanu fabrycznego.')"><i class="fas fa-trash"></i> CAŁKOWITY RESET DOMYŚLNE</button>
+                            <button class="ap-btn ap-btn-red"
+                                onclick="alert('Wyczyszczono ustawienia i zresetowano silnik gry do stanu fabrycznego.')"><i
+                                    class="fas fa-trash"></i> CAŁKOWITY RESET DOMYŚLNE</button>
                             <div style="flex:1;"></div>
-                            <button class="action-btn-large outline" style="padding: 8px 20px; font-size:12px;" onclick="closeEditGameModal()">ANULUJ</button>
-                            <button class="action-btn-large" style="padding: 8px 20px; font-size:12px;" onclick="alert('Zapisano globalne ustawienia gry.')">ZAPISZ ZMIANY</button>
+                            <button class="action-btn-large outline" style="padding: 8px 20px; font-size:12px;"
+                                onclick="closeEditGameModal()">ANULUJ</button>
+                            <button class="action-btn-large" style="padding: 8px 20px; font-size:12px;"
+                                onclick="alert('Zapisano globalne ustawienia gry.')">ZAPISZ ZMIANY</button>
                         </div>
 
                     </div>
@@ -2372,20 +2715,29 @@
     <div class="modal-overlay" id="matchDetailsModal">
         <div class="steam-modal" style="width: 700px; max-width: 95vw;">
             <div class="sm-header" style="background: linear-gradient(90deg, #1e293b, #0f172a);">
-                <div class="sm-title"><i class="fas fa-clipboard-list" style="margin-right:8px; color:var(--accent-blue);"></i> RAPORT ROZGRYWKI</div>
+                <div class="sm-title"><i class="fas fa-clipboard-list"
+                        style="margin-right:8px; color:var(--accent-blue);"></i> RAPORT ROZGRYWKI</div>
                 <div class="sm-close" onclick="closeMatchDetailsModal()"><i class="fas fa-times"></i></div>
             </div>
             <div class="sm-content" style="padding: 0; display: flex; flex-direction: column;">
-                <div style="padding: 20px; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
+                <div
+                    style="padding: 20px; background: rgba(255,255,255,0.02); border-bottom: 1px solid rgba(255,255,255,0.05); display: flex; align-items: center; justify-content: space-between;">
                     <div style="display: flex; align-items: center; gap: 15px;">
-                        <div id="mdGameIcon" style="width: 50px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; border: 1px solid rgba(255,255,255,0.1);"></div>
+                        <div id="mdGameIcon"
+                            style="width: 50px; height: 50px; background: rgba(255,255,255,0.05); border-radius: 10px; display: flex; align-items: center; justify-content: center; font-size: 24px; color: white; border: 1px solid rgba(255,255,255,0.1);">
+                        </div>
                         <div>
-                            <h2 id="mdGameName" style="font-size: 18px; font-weight: 700; color: white; margin-bottom: 4px;">Nazwa Gry</h2>
-                            <div id="mdGameTime" style="font-size: 11px; color: var(--text-muted);">Czas: 12 min temu</div>
+                            <h2 id="mdGameName"
+                                style="font-size: 18px; font-weight: 700; color: white; margin-bottom: 4px;">Nazwa Gry
+                            </h2>
+                            <div id="mdGameTime" style="font-size: 11px; color: var(--text-muted);">Czas: 12 min temu
+                            </div>
                         </div>
                     </div>
                     <div style="text-align: right;">
-                        <div style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">WYNIK</div>
+                        <div
+                            style="font-size: 10px; color: var(--text-muted); text-transform: uppercase; font-weight: 700;">
+                            WYNIK</div>
                         <div id="mdGameResult" style="font-size: 20px; font-weight: 800;">+0 $</div>
                     </div>
                 </div>
@@ -2394,16 +2746,21 @@
                     <div style="display: flex; justify-content: space-between; margin-bottom: 10px; padding: 0 10px;">
                         <span style="font-size: 10px; color: var(--text-muted); font-weight: 700;">GRACZ</span>
                         <div style="display: flex; gap: 40px;">
-                            <span style="font-size: 10px; color: var(--text-muted); font-weight: 700; width: 200px;">LOADOUT / GEAR</span>
-                            <span style="font-size: 10px; color: var(--text-muted); font-weight: 700; width: 80px; text-align: right;">PROFIT</span>
+                            <span
+                                style="font-size: 10px; color: var(--text-muted); font-weight: 700; width: 200px;">LOADOUT
+                                / GEAR</span>
+                            <span
+                                style="font-size: 10px; color: var(--text-muted); font-weight: 700; width: 80px; text-align: right;">PROFIT</span>
                         </div>
                     </div>
                     <div id="mdPlayerList" style="display: flex; flex-direction: column; gap: 8px;">
-                        </div>
+                    </div>
                 </div>
 
-                <div style="padding: 15px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
-                    <button class="action-btn-large outline" style="padding: 8px 20px; font-size: 11px;" onclick="closeMatchDetailsModal()">ZAMKNIJ</button>
+                <div
+                    style="padding: 15px 20px; background: rgba(0,0,0,0.2); border-top: 1px solid rgba(255,255,255,0.05); text-align: center;">
+                    <button class="action-btn-large outline" style="padding: 8px 20px; font-size: 11px;"
+                        onclick="closeMatchDetailsModal()">ZAMKNIJ</button>
                 </div>
             </div>
         </div>
@@ -2411,4 +2768,5 @@
     <script src="data.js"></script>
     <script src="app.js"></script>
 </body>
+
 </html>

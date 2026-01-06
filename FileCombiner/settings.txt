@@ -2,7 +2,10 @@
 /path/here/
 
 === Include ===
-*
+app.js
+data.js
+index.html
+style.css
 
 === exclude ===
 .

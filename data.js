@@ -6,32 +6,32 @@ const gamesHubStructure = [
         desc: 'Elegancja, strategia, ryzyko.',
         color: '#10b981',
         games: [
-            { 
+            {
                 id: 'g_poker', name: 'Poker', variants: 4, onlineCount: 4520, players: '2–10', icon: 'fa-heart', color: '#10b981', tag: 'Card Game',
                 desc: 'Blefuj, licytuj i czytaj rywali. Król gier karcianych.',
                 modes: ['No Limit Hold\'em', 'Pot Limit Omaha', 'Cash Games', 'Turnieje SIT&GO']
             },
-            { 
+            {
                 id: 'g_blackjack', name: 'Blackjack', variants: 5, onlineCount: 3105, players: '1–7', icon: 'fa-layer-group', color: '#4f46e5', tag: 'Card Game',
                 desc: 'Wyścig do 21. Matematyka przeciwko krupierowi.',
                 modes: ['Classic', 'European', 'Single Deck', 'Switch', 'Pontoon']
             },
-            { 
+            {
                 id: 'g_baccarat', name: 'Baccarat', variants: 4, onlineCount: 1240, players: '1–14', icon: 'fa-dragon', color: '#e11d48', tag: 'Card Game',
                 desc: 'Gracz czy Bankier? Czysta intuicja w królewskim stylu.',
                 modes: ['Punto Banco', 'Speed Baccarat', 'No Commission', 'Dragon Tiger']
             },
-            { 
+            {
                 id: 'g_casino_poker', name: 'Casino Poker', variants: 4, onlineCount: 890, players: '1–5', icon: 'fa-crown', color: '#7c3aed', tag: 'Card Game',
                 desc: 'Pokerowe układy w pojedynku 1 na 1 z kasynem.',
                 modes: ['Caribbean Stud', 'Three Card Poker', 'Casino Hold\'em', 'Ultimate Texas Hold\'em']
             },
-            { 
+            {
                 id: 'g_roulette', name: 'Ruletka', variants: 5, onlineCount: 5600, players: '2+', icon: 'fa-circle-notch', color: '#f59e0b', tag: 'Table Game',
                 desc: 'Obstaw liczbę i zaufaj fizyce. Symbol hazardu.',
                 modes: ['European', 'American', 'French', 'Lightning', 'Immersive']
             },
-            { 
+            {
                 id: 'g_dice', name: 'Kości', variants: 3, onlineCount: 950, players: '1+', icon: 'fa-dice', color: '#06b6d4', tag: 'Table Game',
                 desc: 'Rzuć kośćmi. Emocje tłumu i złożone zakłady.',
                 modes: ['Craps', 'Sic Bo', 'Lightning Dice']
@@ -45,32 +45,32 @@ const gamesHubStructure = [
         desc: 'Refleks, algorytm, dopamina.',
         color: '#d946ef',
         games: [
-            { 
+            {
                 id: 'g_slots', name: 'Automaty', variants: 6, onlineCount: 12400, players: '1', icon: 'fa-star', color: '#d946ef', tag: 'Slots',
                 desc: 'Pociągnij wajchę. Jackpoty, Megaways i czysty los.',
                 modes: ['Classic 3-Reel', 'Video Slots', 'Megaways', 'Jackpot Progressive', 'Bonus Buy', 'Cluster Pays']
             },
-            { 
+            {
                 id: 'g_slotwars', name: 'Slot Wars', variants: 2, onlineCount: 320, players: '2+', icon: 'fa-trophy', color: '#f97316', tag: 'Slots',
                 desc: 'Turniej spinów. Kto wykręci więcej w 5 minut?',
                 modes: ['Slot Tournaments', 'Reel Races']
             },
-            { 
+            {
                 id: 'g_crash', name: 'Crash', variants: 5, onlineCount: 8500, players: '1+', icon: 'fa-chart-line', color: '#ef4444', tag: 'Fast Paced',
                 desc: 'Chciwość vs strach. Wypłać zanim rakieta wybuchnie.',
                 modes: ['Aviator', 'JetX', 'Spaceman', 'Zeppelin', 'Cash or Crash']
             },
-            { 
+            {
                 id: 'g_plinko', name: 'Plinko', variants: 2, onlineCount: 4100, players: '1', icon: 'fa-bowling-ball', color: '#38bdf8', tag: 'Fast Paced',
                 desc: 'Grawitacja decyduje. Kulka spada prosto do mnożnika.',
                 modes: ['BGaming Plinko', 'Spribe Plinko']
             },
-            { 
+            {
                 id: 'g_mines', name: 'Mines', variants: 2, onlineCount: 2200, players: '1', icon: 'fa-bomb', color: '#8b5cf6', tag: 'Fast Paced',
                 desc: 'Saper na sterydach. Każdy krok to zysk lub koniec.',
                 modes: ['Minesweeper', 'Turbo Mines']
             },
-            { 
+            {
                 id: 'g_hilo', name: 'Hi-Lo', variants: 1, onlineCount: 1800, players: '1', icon: 'fa-arrows-alt-v', color: '#22c55e', tag: 'Fast Paced',
                 desc: 'Wyższa czy niższa? Prosta matematyka kart.',
                 modes: ['Higher vs Lower']
@@ -84,33 +84,33 @@ const gamesHubStructure = [
         desc: 'Ekskluzywne gry PvP & Skill.',
         color: '#f59e0b',
         games: [
-            { 
+            {
                 id: 'g_chess', name: 'Gambling Chess', variants: 1, onlineCount: 140, players: '2', icon: 'fa-chess', color: '#94a3b8', tag: 'Exclusive',
                 desc: 'Szachy, ale możesz licytować każdy ruch i obstawiać życie pionków.',
                 modes: ['Gambling Chess']
             },
-            { 
-                id: 'g_war', name: 'Age of Gambling', variants: 1, onlineCount: 85, players: '2', icon: 'fa-shield-alt', color: '#b91c1c', tag: 'Exclusive', 
+            {
+                id: 'g_war', name: 'Age of Gambling', variants: 1, onlineCount: 85, players: '2', icon: 'fa-shield-alt', color: '#b91c1c', tag: 'Exclusive',
                 desc: 'Age of War, ale na pieniądze i z chaotycznymi katastrofami.',
                 modes: ['Age of Gambling']
             },
-            { 
-                id: 'g_mystery', name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4-15', icon: 'fa-user-secret', color: '#6d28d9', tag: 'Exclusive', 
+            {
+                id: 'g_mystery', name: 'Gambling Mystery', variants: 1, onlineCount: 210, players: '4-15', icon: 'fa-user-secret', color: '#6d28d9', tag: 'Exclusive',
                 desc: 'Murder Mystery, ale na pieniądze. Kłam, manipuluj, zgarnij pulę.',
                 modes: ['Gambling Mystery']
             },
-            { 
-                id: 'g_worms', name: 'Degenerate Worms', variants: 1, onlineCount: 450, players: '2-8', icon: 'fa-skull-crossbones', color: '#84cc16', tag: 'Exclusive', 
+            {
+                id: 'g_worms', name: 'Degenerate Worms', variants: 1, onlineCount: 450, players: '2-8', icon: 'fa-skull-crossbones', color: '#84cc16', tag: 'Exclusive',
                 desc: 'Worms 2D, ale na pieniadze. Można się ratować portfelem, lecz zmniejsza to twoją pulę.',
                 modes: ['Degenerate Worms']
             },
-            { 
-                id: 'g_logic', name: 'Logic Race Bet', variants: 1, onlineCount: 60, players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', tag: 'Exclusive', 
+            {
+                id: 'g_logic', name: 'Logic Race Bet', variants: 1, onlineCount: 60, players: '2+', icon: 'fa-puzzle-piece', color: '#3b82f6', tag: 'Exclusive',
                 desc: 'Wyścig mózgów. Kto pierwszy rozwiąże zagadkę zgarnia pulę.',
                 modes: ['Logic Race Bet']
             },
-            { 
-                id: 'g_aim', name: 'Aim Duel Bet', variants: 1, onlineCount: 320, players: '2', icon: 'fa-crosshairs', color: '#f43f5e', tag: 'Exclusive', 
+            {
+                id: 'g_aim', name: 'Aim Duel Bet', variants: 1, onlineCount: 320, players: '2', icon: 'fa-crosshairs', color: '#f43f5e', tag: 'Exclusive',
                 desc: 'Czysty refleks. Kto trafi jak największą ilość tarcz zgarnia pulę.',
                 modes: ['Aim Duel Bet']
             }
@@ -175,39 +175,39 @@ const playersDB = [
         username: "MrGambler",
         rank: "Alpha Whale",
         activeTitle: "The Collector",
-        pfp: "https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false", 
+        pfp: "https://images.steamusercontent.com/ugc/1844796405260207307/7F82106D323071BE2E1E016868F95F494EE2C56E/?imw=512&&ima=fit&impolicy=Letterbox&imcolor=%23000000&letterbox=false",
         inventory: [
-            { id: 7 }, { id: 10 }, { id: 12 }, { id: 15 }, { id: 18 }, 
+            { id: 7 }, { id: 10 }, { id: 12 }, { id: 15 }, { id: 18 },
             { id: 20 }, { id: 22 }, { id: 23 }, { id: 26 }, { id: 31 },
-            { id: 5 }, 
-            { id: 16 }, 
-            { id: 28 }, { id: 9 }, { id: 33, usesLeft: 1 }, { id: 21 }, 
-            { id: 1 }, { id: 1 }, { id: 2 } 
+            { id: 5 },
+            { id: 16 },
+            { id: 28 }, { id: 9 }, { id: 33, usesLeft: 1 }, { id: 21 },
+            { id: 1 }, { id: 1 }, { id: 2 }
         ]
     },
     {
         username: "Whale_Killer",
         rank: "RNG God",
         pfp: "https://i.pravatar.cc/150?u=Whale_Killer",
-        inventory: [{id: 27}, {id: 31}, {id: 13}, {id: 16}, {id: 5}, {id: 5}, {id: 4}] 
+        inventory: [{ id: 27 }, { id: 31 }, { id: 13 }, { id: 16 }, { id: 5 }, { id: 5 }, { id: 4 }]
     },
     {
         username: "LuckyLuke",
         rank: "Table Shark",
         pfp: "https://i.pravatar.cc/150?u=LuckyLuke",
-        inventory: [{id: 7}, {id: 11}, {id: 21}, {id: 2}, {id: 3}, {id: 33, usesLeft: 1}] 
+        inventory: [{ id: 7 }, { id: 11 }, { id: 21 }, { id: 2 }, { id: 3 }, { id: 33, usesLeft: 1 }]
     },
     {
         username: "CryptoBro",
         rank: "Risk Taker",
         pfp: "https://i.pravatar.cc/150?u=CryptoBro",
-        inventory: [{id: 30}, {id: 8}, {id: 26}, {id: 2}, {id: 32, usesLeft: 3}] 
+        inventory: [{ id: 30 }, { id: 8 }, { id: 26 }, { id: 2 }, { id: 32, usesLeft: 3 }]
     },
     {
         username: "Bot_Network_01",
         rank: "Small Fry",
         pfp: "https://i.pravatar.cc/150?u=Bot_Network_01",
-        inventory: [{id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 1}, {id: 25}, {id: 25}] 
+        inventory: [{ id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }, { id: 1 }, { id: 25 }, { id: 25 }]
     }
 ];
 const staticGamesList = [
@@ -291,101 +291,101 @@ const achievementsDB = [
     { id: 25, title: "Glitch w Matrixie", desc: "Kliknij 10 razy szybko w logo Totally Not Scam.", rarity: "0.01%", hidden: true, acquired: true, date: "19 Dec 2025", icon: "fa-bug", rewardClaimed: true }
 ];
 const ranksDB = [
-    { 
-        id: 8, 
-        name: "Bankrupt", 
-        desc: "Dno jest po to, żeby się od niego odbić... prawda?", 
-        req: "< -100 LP • Saldo < 0", 
-        icon: "fa-dizzy", 
-        color: "#777", 
-        cardClass: "card-degenerate", 
-        align: "center", 
-        margin: "" 
+    {
+        id: 8,
+        name: "Bankrupt",
+        desc: "Dno jest po to, żeby się od niego odbić... prawda?",
+        req: "< -100 LP • Saldo < 0",
+        icon: "fa-dizzy",
+        color: "#777",
+        cardClass: "card-degenerate",
+        align: "center",
+        margin: ""
     },
-    { 
-        id: 7, 
-        name: "Small Fry", 
-        desc: "Wkrótce dowiesz się, czy popłyniesz dalej, czy zostaniesz zjedzony.", 
-        req: "-100 - 100 LP", 
-        icon: "fa-fish", 
-        color: "#fff", 
-        cardClass: "card-smallfry", 
-        align: "center", 
-        margin: "margin-top: -10px;" 
+    {
+        id: 7,
+        name: "Small Fry",
+        desc: "Wkrótce dowiesz się, czy popłyniesz dalej, czy zostaniesz zjedzony.",
+        req: "-100 - 100 LP",
+        icon: "fa-fish",
+        color: "#fff",
+        cardClass: "card-smallfry",
+        align: "center",
+        margin: "margin-top: -10px;"
     },
-    { 
-        id: 6, 
-        name: "Risk Taker", 
-        desc: "Stawiasz wszystko na jedną kartę.", 
-        req: "100 - 300 LP • ≥ 4h w grach<br><span style='color:#3b82f6; font-size:9px;'>Noszenie RARE przedmiotów</span>", 
-        icon: "fa-fire", 
-        color: "#f59e0b", 
-        cardClass: "", 
-        align: "left", 
-        margin: "" 
+    {
+        id: 6,
+        name: "Risk Taker",
+        desc: "Stawiasz wszystko na jedną kartę.",
+        req: "100 - 300 LP • ≥ 4h w grach<br><span style='color:#3b82f6; font-size:9px;'>Noszenie RARE przedmiotów</span>",
+        icon: "fa-fire",
+        color: "#f59e0b",
+        cardClass: "",
+        align: "left",
+        margin: ""
     },
-    { 
-        id: 5, 
-        name: "Table Shark", 
-        desc: "Może i matematyka nie jest po twojej stronie, ale czujesz krew.", 
-        req: "300 - 600 LP • Win Rate ≥ 55%<br><span style='color:#8b5cf6; font-size:9px;'>Noszenie EPIC przedmiotów</span>", 
-        icon: "fa-skull-crossbones", 
-        color: "#ef4444", 
-        cardClass: "", 
-        align: "right", 
-        margin: "" 
+    {
+        id: 5,
+        name: "Table Shark",
+        desc: "Może i matematyka nie jest po twojej stronie, ale czujesz krew.",
+        req: "300 - 600 LP • Win Rate ≥ 55%<br><span style='color:#8b5cf6; font-size:9px;'>Noszenie EPIC przedmiotów</span>",
+        icon: "fa-skull-crossbones",
+        color: "#ef4444",
+        cardClass: "",
+        align: "right",
+        margin: ""
     },
-    { 
-        id: 4, 
-        name: "Casino Legend", 
-        desc: "Krupierzy szepczą twoje imię, gdy wchodzisz na salę.", 
-        req: "600 - 1000 LP • Net Worth ≥ 1M<br><span style='color:#ef4444; font-size:9px;'>Noszenie RELIC przedmiotów</span>", 
-        icon: "fa-gem", 
-        color: "#3b82f6", 
-        cardClass: "", 
-        align: "left", 
-        margin: "margin-top: -60px;" 
+    {
+        id: 4,
+        name: "Casino Legend",
+        desc: "Krupierzy szepczą twoje imię, gdy wchodzisz na salę.",
+        req: "600 - 1000 LP • Net Worth ≥ 1M<br><span style='color:#ef4444; font-size:9px;'>Noszenie RELIC przedmiotów</span>",
+        icon: "fa-gem",
+        color: "#3b82f6",
+        cardClass: "",
+        align: "left",
+        margin: "margin-top: -60px;"
     },
-    { 
-        id: 3, 
-        name: "Alpha Whale", 
-        desc: "Twój portfel jest tak ciężki, że zaginasz czasoprzestrzeń.", 
-        req: "1000 - 2000 LP • Net Worth ≥ 5M", 
-        icon: "fa-whale", 
-        color: "#3b82f6", 
-        emoji: "🐋", 
-        cardClass: "card-active", 
-        align: "right", 
-        margin: "" 
+    {
+        id: 3,
+        name: "Alpha Whale",
+        desc: "Twój portfel jest tak ciężki, że zaginasz czasoprzestrzeń.",
+        req: "1000 - 2000 LP • Net Worth ≥ 5M",
+        icon: "fa-whale",
+        color: "#3b82f6",
+        emoji: "🐋",
+        cardClass: "card-active",
+        align: "right",
+        margin: ""
     },
-    { 
-        id: 2, 
-        name: "RNG God", 
-        desc: "Nie grasz w kości. Ty mówisz kościom, jak mają upaść.", 
-        req: "2000 - 5000 LP • Streak ≥ 5<br><span style='color:#ffd700; font-size:9px;'>Noszenie DIVINE przedmiotów</span>", 
-        icon: "fa-bahai", 
-        color: "#00e5ff", 
-        cardClass: "card-god future-rank", 
-        align: "center", 
-        margin: "margin-top: 20px;" 
+    {
+        id: 2,
+        name: "RNG God",
+        desc: "Nie grasz w kości. Ty mówisz kościom, jak mają upaść.",
+        req: "2000 - 5000 LP • Streak ≥ 5<br><span style='color:#ffd700; font-size:9px;'>Noszenie DIVINE przedmiotów</span>",
+        icon: "fa-bahai",
+        color: "#00e5ff",
+        cardClass: "card-god future-rank",
+        align: "center",
+        margin: "margin-top: 20px;"
     },
-    { 
-        id: 1, 
-        name: "King of The Gamblers", 
-        desc: "Wealth, fame, power… The man who acquired everything this world has to offer. There can only be one king.", 
-        req: "RNG God • #1 Net Worth • 100% Trofeów", 
-        icon: "fa-crown", 
-        color: "#FFD700", 
-        cardClass: "card-king future-rank", 
-        align: "center", 
-        margin: "margin-top: -10px;" 
+    {
+        id: 1,
+        name: "King of The Gamblers",
+        desc: "Wealth, fame, power… The man who acquired everything this world has to offer. There can only be one king.",
+        req: "RNG God • #1 Net Worth • 100% Trofeów",
+        icon: "fa-crown",
+        color: "#FFD700",
+        cardClass: "card-king future-rank",
+        align: "center",
+        margin: "margin-top: -10px;"
     }
 ];
 const availableGamesDB = [
     { id: 1, name: "Neon Blackjack", type: "Karciane", players: 1240, imgColor: "#10b981", isHot: true, icon: "fa-dice" },
     { id: 2, name: "Cyber Roulette", type: "Live", players: 890, imgColor: "#ef4444", isHot: true, icon: "fa-circle-notch" },
-    { id: 3, name: "Quantum Slots", type: "Sloty", players: 3400, imgColor: "#8b5cf6", isHot: true, icon: "fa-gem" }, 
-    { id: 4, name: "Space Poker", type: "Karciane", players: 560, imgColor: "#3b82f6", isHot: false, icon: "fa-playing-card" }, 
+    { id: 3, name: "Quantum Slots", type: "Sloty", players: 3400, imgColor: "#8b5cf6", isHot: true, icon: "fa-gem" },
+    { id: 4, name: "Space Poker", type: "Karciane", players: 560, imgColor: "#3b82f6", isHot: false, icon: "fa-playing-card" },
     { id: 5, name: "Binary Baccarat", type: "Karciane", players: 230, imgColor: "#64748b", isHot: false, icon: "fa-hand-paper" },
     { id: 6, name: "Crash Protocol", type: "Live", players: 1500, imgColor: "#f59e0b", isHot: true, icon: "fa-chart-line" },
     { id: 7, name: "Dice Mines", type: "Sloty", players: 120, imgColor: "#64748b", isHot: false, icon: "fa-bomb" },
@@ -396,7 +396,7 @@ const globalLeaderboardDB = [
     { rankVal: 2, rankName: "RNG God", title: "Dice Master", name: "LuckyLuke", lp: 4200, netWorth: 25000000 },
     { rankVal: 2, rankName: "RNG God", title: "Bot Network Admin", name: "Casino_AI", lp: 3800, netWorth: 18500000 },
     { rankVal: 3, rankName: "Alpha Whale", title: "Legendary Finder", name: "DiamondH", lp: 1950, netWorth: 8500000 },
-    { rankVal: 3, rankName: "Alpha Whale", title: "The Collector", name: "MrGambler", lp: 1469, netWorth: 5240000, isMe: true }, 
+    { rankVal: 3, rankName: "Alpha Whale", title: "The Collector", name: "MrGambler", lp: 1469, netWorth: 5240000, isMe: true },
     { rankVal: 3, rankName: "Alpha Whale", title: "Crypto Whale", name: "CryptoBro", lp: 1200, netWorth: 5200000 },
     { rankVal: 4, rankName: "Casino Legend", title: "Casino Legend", name: "ZeroCool", lp: 980, netWorth: 2100000 },
     { rankVal: 4, rankName: "Casino Legend", title: "Glitch Hunter", name: "MatrixNeo", lp: 850, netWorth: 1500000 },

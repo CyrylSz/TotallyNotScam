@@ -1,5 +1,5 @@
 let shownTreasures = 5;
-let shownGames = 20; 
+let shownGames = 20;
 let shownTrophies = 5;
 let notificationCount = 5;
 let notificationsDB = [
@@ -13,32 +13,32 @@ let prevWinPerc = 0;
 let prevWins = 0;
 let prevLosses = 0;
 let prevDraws = 0;
-const currentRankId = 3; 
-let favoriteModes = []; 
-let myInventory = []; 
-let myLoadout = {};   
+const currentRankId = 3;
+let favoriteModes = [];
+let myInventory = [];
+let myLoadout = {};
 let invFilterState = { item: true, case: true };
 let marketState = {
-    mode: 'auction', 
-    searchItem: '',  
-    searchPlayer: '', 
-    onlyMine: false, 
-    types: { item: true, case: true }, 
+    mode: 'auction',
+    searchItem: '',
+    searchPlayer: '',
+    onlyMine: false,
+    types: { item: true, case: true },
     durability: { consumable: true, durable: true },
-    slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'], 
+    slots: ['head', 'neck', 'suit', 'watch', 'gadget', 'belt', 'pants', 'shoes', 'ring', 'vehicle'],
     priceMin: null,
     priceMax: null,
     rarities: ['Peasant', 'Rare', 'Epic', 'Relic', 'Divine'],
     sort: 'best_deal',
     listings: [],
     currentPage: 1,
-    itemsPerPage: 32 
+    itemsPerPage: 32
 };
 function initMarketData() {
     marketState.listings = [];
     const addListing = (itemTemplateId, sellerName, overridePrice = null, isMine = false, forceType = null) => {
         const template = allTreasures.find(t => t.id === itemTemplateId);
-        if(!template) return;
+        if (!template) return;
         let finalUid = `mkt_${Date.now()}_${Math.random()}`;
         let specificUses = null;
         if (isMine) {
@@ -46,35 +46,35 @@ function initMarketData() {
             if (myItem) {
                 finalUid = myItem.uid;
                 specificUses = myItem.usesLeft;
-                myItem.isOnSale = true; 
+                myItem.isOnSale = true;
             } else return;
         }
         let sellerImg = `https://i.pravatar.cc/150?u=${sellerName}`;
         const dbPlayer = typeof playersDB !== 'undefined' ? playersDB.find(p => p.username === sellerName) : null;
-        if(dbPlayer && dbPlayer.pfp) sellerImg = dbPlayer.pfp;
+        if (dbPlayer && dbPlayer.pfp) sellerImg = dbPlayer.pfp;
         const listingType = forceType ? forceType : (Math.random() > 0.5 ? 'auction' : 'instant');
         let rawVal = template.rawPrice > 0 ? template.rawPrice : 100;
-        let baseValue = overridePrice || rawVal * (0.8 + Math.random() * 0.4); 
+        let baseValue = overridePrice || rawVal * (0.8 + Math.random() * 0.4);
         let price = 0;
         let currentBid = 0;
         let bidCount = 0;
         let endTime = 0;
         if (listingType === 'auction') {
-            price = Math.max(10, Math.floor(baseValue * (0.4 + Math.random() * 0.2))); 
-            if(Math.random() > 0.3) {
-                bidCount = Math.floor(Math.random() * 25) + 1; 
+            price = Math.max(10, Math.floor(baseValue * (0.4 + Math.random() * 0.2)));
+            if (Math.random() > 0.3) {
+                bidCount = Math.floor(Math.random() * 25) + 1;
                 currentBid = Math.floor(price * (1 + (bidCount * 0.05)));
             } else {
                 bidCount = 0;
-                currentBid = 0; 
+                currentBid = 0;
             }
-            endTime = Date.now() + Math.floor(Math.random() * 86400000 * 2); 
+            endTime = Date.now() + Math.floor(Math.random() * 86400000 * 2);
         } else {
             price = Math.max(10, Math.floor(baseValue));
         }
         const history = [];
         let cur = baseValue;
-        for(let j=0; j<10; j++) {
+        for (let j = 0; j < 10; j++) {
             cur = cur * (1 + ((Math.random() * 0.1) - 0.05));
             history.push(cur);
         }
@@ -83,9 +83,9 @@ function initMarketData() {
             templateId: template.id,
             seller: sellerName,
             sellerImg: sellerImg,
-            listingType: listingType, 
-            price: price, 
-            currentBid: currentBid, 
+            listingType: listingType,
+            price: price,
+            currentBid: currentBid,
             bidCount: bidCount,
             endTime: endTime,
             change: ((Math.random() * 20) - 10).toFixed(1),
@@ -103,12 +103,12 @@ function initMarketData() {
             isChest: template.type === 'chest'
         });
     };
-    addListing(5, "MrGambler", 1250000, true, 'auction'); 
-    addListing(16, "MrGambler", 2400000, true, 'instant'); 
-    addListing(15, "MrGambler", 45000, true, 'instant'); 
+    addListing(5, "MrGambler", 1250000, true, 'auction');
+    addListing(16, "MrGambler", 2400000, true, 'instant');
+    addListing(15, "MrGambler", 45000, true, 'instant');
     const players = ["Whale_Killer", "LuckyLuke", "CryptoBro", "Bot_Network_01", "Anon_99", "WatchMaster", "HighRoller", "PokerFace"];
     const itemIds = allTreasures.map(t => t.id);
-    for(let i=0; i<300; i++) {
+    for (let i = 0; i < 300; i++) {
         const rndPlayer = players[Math.floor(Math.random() * players.length)];
         const rndItem = itemIds[Math.floor(Math.random() * itemIds.length)];
         const type = i % 2 === 0 ? 'auction' : 'instant';
@@ -116,25 +116,25 @@ function initMarketData() {
     }
 }
 function renderMarketView() {
-    if(marketState.listings.length === 0) initMarketData();
+    if (marketState.listings.length === 0) initMarketData();
     filterMarket();
 }
 function switchMarketMode(mode) {
     marketState.mode = mode;
-    marketState.currentPage = 1; 
+    marketState.currentPage = 1;
     document.getElementById('tabAuctionMode').classList.toggle('active', mode === 'auction');
     document.getElementById('tabInstantBuy').classList.toggle('active', mode === 'instant');
     filterMarket();
 }
 function changePage(delta) {
     marketState.currentPage += delta;
-    filterMarket(); 
+    filterMarket();
 }
 function toggleMarketType(type, btnElement) {
     marketState.types[type] = !marketState.types[type];
     btnElement.classList.toggle('active', marketState.types[type]);
     const slotSection = document.getElementById('slotFilterSection');
-    if(marketState.types['item']) slotSection.classList.remove('hidden');
+    if (marketState.types['item']) slotSection.classList.remove('hidden');
     else slotSection.classList.add('hidden');
     filterMarket();
 }
@@ -145,7 +145,7 @@ function toggleDurabilityFilter(type, btnElement) {
 }
 function toggleSlotFilter(slot, btnElement) {
     const idx = marketState.slots.indexOf(slot);
-    if(idx === -1) {
+    if (idx === -1) {
         marketState.slots.push(slot);
         btnElement.classList.add('active');
     } else {
@@ -156,7 +156,7 @@ function toggleSlotFilter(slot, btnElement) {
 }
 function filterMarket() {
     const grid = document.getElementById('marketGrid');
-    if(!grid) return;
+    if (!grid) return;
     grid.innerHTML = '';
     marketState.searchItem = document.getElementById('marketSearchInput').value.toLowerCase();
     marketState.searchPlayer = document.getElementById('marketSearchPlayer').value.toLowerCase();
@@ -170,30 +170,30 @@ function filterMarket() {
         if (marketState.onlyMine && !item.isMine) return false;
         if (marketState.searchPlayer && !item.seller.toLowerCase().includes(marketState.searchPlayer)) return false;
         if (marketState.searchItem && !item.name.toLowerCase().includes(marketState.searchItem)) return false;
-        if(item.isChest && !marketState.types.case) return false;
-        if(!item.isChest && !marketState.types.item) return false;
-        if(item.isConsumable && !marketState.durability.consumable) return false;
-        if(!item.isConsumable && !marketState.durability.durable) return false;
+        if (item.isChest && !marketState.types.case) return false;
+        if (!item.isChest && !marketState.types.item) return false;
+        if (item.isConsumable && !marketState.durability.consumable) return false;
+        if (!item.isConsumable && !marketState.durability.durable) return false;
         const priceCheck = item.listingType === 'auction' ? (item.currentBid > 0 ? item.currentBid : item.price) : item.price;
-        if(marketState.priceMin && priceCheck < marketState.priceMin) return false;
-        if(marketState.priceMax && priceCheck > marketState.priceMax) return false;
-        if(!item.isChest && !marketState.slots.includes(item.type)) return false;
-        if(!checkedRarities.includes(item.rarity)) return false;
+        if (marketState.priceMin && priceCheck < marketState.priceMin) return false;
+        if (marketState.priceMax && priceCheck > marketState.priceMax) return false;
+        if (!item.isChest && !marketState.slots.includes(item.type)) return false;
+        if (!checkedRarities.includes(item.rarity)) return false;
         return true;
     });
     results.sort((a, b) => {
         const pA = a.listingType === 'auction' ? (a.currentBid || a.price) : a.price;
         const pB = b.listingType === 'auction' ? (b.currentBid || b.price) : b.price;
-        switch(marketState.sort) {
+        switch (marketState.sort) {
             case 'price_asc': return pA - pB;
             case 'price_desc': return pB - pA;
             case 'newest': return b.date - a.date;
-            case 'time_left': 
-                if(a.listingType === 'auction') return (a.endTime || 0) - (b.endTime || 0);
-                return 0; 
-            case 'best_deal': 
-                const ratioA = (allTreasures.find(t=>t.id===a.templateId).rawPrice) / pA;
-                const ratioB = (allTreasures.find(t=>t.id===b.templateId).rawPrice) / pB;
+            case 'time_left':
+                if (a.listingType === 'auction') return (a.endTime || 0) - (b.endTime || 0);
+                return 0;
+            case 'best_deal':
+                const ratioA = (allTreasures.find(t => t.id === a.templateId).rawPrice) / pA;
+                const ratioB = (allTreasures.find(t => t.id === b.templateId).rawPrice) / pB;
                 return ratioB - ratioA;
             default: return 0;
         }
@@ -209,7 +209,7 @@ function filterMarket() {
         const card = createMarketCard(item);
         grid.appendChild(card);
     });
-    if(results.length === 0) {
+    if (results.length === 0) {
         grid.innerHTML = '<div style="grid-column: 1/-1; text-align:center; padding:40px; color:#666;">Brak ofert spełniających kryteria.</div>';
     }
     document.getElementById('pageIndicator').textContent = `Strona ${marketState.currentPage} z ${totalPages} (${totalItems} ofert)`;
@@ -224,7 +224,7 @@ function createMarketCard(item) {
     el.style.borderColor = `rgba(${hexToRgb(item.color)}, 0.5)`;
     el.onclick = () => openMarketItemModal(item);
     let isLocked = false;
-    if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
+    if (item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
     const lockHtml = isLocked ? `<div class="mc-lock-overlay"><i class="fas fa-lock"></i></div>` : '';
     let conditionHtml = '';
     if (!isLocked && item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
@@ -276,21 +276,21 @@ function createMarketCard(item) {
 }
 function calculateTimeLeft(endTime) {
     const diff = endTime - Date.now();
-    if(diff <= 0) return "Zakończona";
+    if (diff <= 0) return "Zakończona";
     const hrs = Math.floor(diff / (1000 * 60 * 60));
     const mins = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
-    if(hrs > 24) return Math.floor(hrs/24) + " dni";
+    if (hrs > 24) return Math.floor(hrs / 24) + " dni";
     return `${hrs}h ${mins}m`;
 }
 function openMarketItemModal(item) {
     const modal = document.getElementById('marketModal');
-    if(!modal) return;
+    if (!modal) return;
     document.getElementById('mmIcon').innerHTML = item.icon;
-    document.getElementById('mmIcon').className = ''; 
+    document.getElementById('mmIcon').className = '';
     const mmCard = document.getElementById('mmCard');
     mmCard.style.color = item.color;
     const oldPie = mmCard.querySelector('.mc-condition-pie');
-    if(oldPie) oldPie.remove();
+    if (oldPie) oldPie.remove();
     if (item.isConsumable && item.maxUses && (item.templateId < 1 || item.templateId > 5)) {
         const pct = Math.round((item.usesLeft / item.maxUses) * 100);
         const pie = document.createElement('div');
@@ -311,18 +311,18 @@ function openMarketItemModal(item) {
     const tags = document.getElementById('mmTags');
     const badgeClass = `badge-${item.rarity.toLowerCase()}`;
     tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
-    if(item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
+    if (item.isChest) tags.innerHTML += `<span class="badge-slot">CASE</span>`;
     else tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
     if (item.isConsumable && item.maxUses) {
-         tags.innerHTML += `<span class="badge-slot" style="color:var(--accent-green); border:1px solid var(--accent-green);">STAN: ${item.usesLeft}/${item.maxUses}</span>`;
+        tags.innerHTML += `<span class="badge-slot" style="color:var(--accent-green); border:1px solid var(--accent-green);">STAN: ${item.usesLeft}/${item.maxUses}</span>`;
     } else {
-         tags.innerHTML += `<span class="badge-slot" style="opacity:0.7;">TRWAŁY</span>`;
+        tags.innerHTML += `<span class="badge-slot" style="opacity:0.7;">TRWAŁY</span>`;
     }
     const template = allTreasures.find(t => t.id === item.templateId);
     let descHtml = '';
-    if(template) {
+    if (template) {
         descHtml = `<div class="item-desc-text">"${template.desc}"</div>`;
-        if(template.bonus && template.bonus !== "Brak") {
+        if (template.bonus && template.bonus !== "Brak") {
             descHtml += `<div class="item-bonus-text"><i class="fas fa-magic"></i> ${template.bonus}</div>`;
         }
     }
@@ -330,8 +330,8 @@ function openMarketItemModal(item) {
     const warning = document.getElementById('mmReqWarning');
     let reqRankName = '';
     let isLocked = false;
-    if(item.rarity === 'Divine' && currentRankId > 2) { isLocked = true; reqRankName = "RNG God"; }
-    if(isLocked) {
+    if (item.rarity === 'Divine' && currentRankId > 2) { isLocked = true; reqRankName = "RNG God"; }
+    if (isLocked) {
         const actionSuffix = item.isChest ? "(do otworzenia)" : "(do założenia)";
         warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: ${reqRankName} ${actionSuffix}`;
         warning.classList.remove('hidden');
@@ -342,13 +342,13 @@ function openMarketItemModal(item) {
     const btnRow = document.querySelector('.mm-btn-row');
     const lastPriceEl = document.getElementById('mmLastPrice');
     const changeEl = document.getElementById('mmChange');
-    btnRow.innerHTML = ''; 
+    btnRow.innerHTML = '';
     if (item.listingType === 'instant') {
         document.getElementById('marketModalTitle').textContent = "KUP TERAZ";
         priceEl.textContent = item.price.toLocaleString() + ' $';
         priceEl.style.color = "var(--accent-green)";
         lastPriceEl.parentElement.querySelector('.mm-lbl').textContent = "Ostatnia cena";
-        lastPriceEl.textContent = (item.price * 1.1).toFixed(0) + ' $'; 
+        lastPriceEl.textContent = (item.price * 1.1).toFixed(0) + ' $';
         changeEl.parentElement.querySelector('.mm-lbl').textContent = "Zmienna 24h";
         changeEl.textContent = item.change + '%';
         changeEl.className = 'mm-v ' + (parseFloat(item.change) >= 0 ? 'val-up' : 'val-down');
@@ -376,7 +376,7 @@ function openMarketItemModal(item) {
         lastPriceEl.style.color = "#fff";
         changeEl.parentElement.querySelector('.mm-lbl').textContent = "Liczba ofert";
         changeEl.textContent = item.bidCount;
-        changeEl.className = "mm-v"; 
+        changeEl.className = "mm-v";
         if (item.isMine) {
             const btnManage = document.createElement('button');
             btnManage.className = 'action-btn-large outline';
@@ -394,9 +394,9 @@ function openMarketItemModal(item) {
             btnBid.className = 'action-btn-large';
             btnBid.style.background = 'var(--accent-orange)';
             btnBid.textContent = 'PODBIJ';
-            btnBid.onclick = () => { 
-                if(bidInput.value >= minBid) {
-                    alert(`Twoja oferta ${bidInput.value}$ została przyjęta!`); 
+            btnBid.onclick = () => {
+                if (bidInput.value >= minBid) {
+                    alert(`Twoja oferta ${bidInput.value}$ została przyjęta!`);
                     closeMarketModal();
                 } else {
                     alert(`Minimalne przebicie to ${minBid}$`);
@@ -418,12 +418,12 @@ function closeMarketModal() {
 }
 function openMatchDetailsModal(game) {
     const modal = document.getElementById('matchDetailsModal');
-    if(!modal) return;
+    if (!modal) return;
     const iconBox = document.getElementById('mdGameIcon');
     iconBox.innerHTML = `<i class="fas ${game.icon}"></i>`;
     let resultColor = '#fff';
-    if(game.type === 'win') { resultColor = 'var(--accent-green)'; iconBox.style.background = 'rgba(16, 185, 129, 0.1)'; iconBox.style.borderColor = 'rgba(16, 185, 129, 0.3)'; }
-    else if(game.type === 'lose') { resultColor = 'var(--accent-red)'; iconBox.style.background = 'rgba(239, 68, 68, 0.1)'; iconBox.style.borderColor = 'rgba(239, 68, 68, 0.3)'; }
+    if (game.type === 'win') { resultColor = 'var(--accent-green)'; iconBox.style.background = 'rgba(16, 185, 129, 0.1)'; iconBox.style.borderColor = 'rgba(16, 185, 129, 0.3)'; }
+    else if (game.type === 'lose') { resultColor = 'var(--accent-red)'; iconBox.style.background = 'rgba(239, 68, 68, 0.1)'; iconBox.style.borderColor = 'rgba(239, 68, 68, 0.3)'; }
     iconBox.style.color = resultColor;
     document.getElementById('mdGameName').textContent = game.name;
     document.getElementById('mdGameTime').textContent = `Zakończono: ${game.time}`;
@@ -446,20 +446,20 @@ function openMatchDetailsModal(game) {
         const count = Math.floor(Math.random() * 4) + 1;
         const botNames = ['Whale_Killer', 'LuckyLuke', 'CryptoBro', 'Bot_Network_01', 'Anon_99', 'HighRoller', 'NoobMaster'];
         const loadouts = ['Default Set', 'High Roller Suit', 'Speed Run Config', 'Lucky Charm', 'Troll Build'];
-        for(let i=0; i<count; i++) {
+        for (let i = 0; i < count; i++) {
             const name = botNames[Math.floor(Math.random() * botNames.length)];
-            if(participants.find(p => p.name === name)) continue;
+            if (participants.find(p => p.name === name)) continue;
             let prof = 0;
-            if(game.type === 'win') prof = -1 * Math.floor(Math.random() * 5000);
+            if (game.type === 'win') prof = -1 * Math.floor(Math.random() * 5000);
             else prof = Math.floor(Math.random() * 10000);
             const profStr = (prof >= 0 ? '+' : '') + prof.toLocaleString() + ' $';
             participants.push({
                 name: name,
                 pfp: `https://i.pravatar.cc/150?u=${name}`,
-                rank: ['Small Fry', 'Risk Taker', 'Table Shark', 'Casino Legend'][Math.floor(Math.random()*4)],
+                rank: ['Small Fry', 'Risk Taker', 'Table Shark', 'Casino Legend'][Math.floor(Math.random() * 4)],
                 profit: profStr,
                 loadout: loadouts[Math.floor(Math.random() * loadouts.length)],
-                gearPower: Math.floor(Math.random() * 401), 
+                gearPower: Math.floor(Math.random() * 401),
                 isMe: false
             });
         }
@@ -470,24 +470,24 @@ function openMatchDetailsModal(game) {
         const row = document.createElement('div');
         row.className = `match-p-row ${p.isMe ? 'is-me' : ''}`;
         let gpColor = '#aaa';
-        if(p.gearPower > 300) gpColor = '#ffd700'; 
-        else if(p.gearPower > 200) gpColor = '#8b5cf6'; 
-        else if(p.gearPower > 100) gpColor = '#3b82f6'; 
+        if (p.gearPower > 300) gpColor = '#ffd700';
+        else if (p.gearPower > 200) gpColor = '#8b5cf6';
+        else if (p.gearPower > 100) gpColor = '#3b82f6';
         let profitColor = 'white';
-        if(p.profit.includes('+')) profitColor = 'var(--accent-green)';
-        if(p.profit.includes('-')) profitColor = 'var(--accent-red)';
+        if (p.profit.includes('+')) profitColor = 'var(--accent-green)';
+        if (p.profit.includes('-')) profitColor = 'var(--accent-red)';
         let lpVal = 0;
-        if(p.isMe && game.lp) {
-             lpVal = parseInt(game.lp.replace(' LP', '').replace('+', ''));
+        if (p.isMe && game.lp) {
+            lpVal = parseInt(game.lp.replace(' LP', '').replace('+', ''));
         } else {
-             const rawProfit = parseInt(p.profit.replace(/[^0-9-]/g, ''));
-             if(rawProfit > 0) {
-                 lpVal = Math.floor(Math.random() * 30) + 10;
-             } else if (rawProfit < 0) {
-                 lpVal = -1 * (Math.floor(Math.random() * 20) + 5);
-             } else {
-                 lpVal = 0;
-             }
+            const rawProfit = parseInt(p.profit.replace(/[^0-9-]/g, ''));
+            if (rawProfit > 0) {
+                lpVal = Math.floor(Math.random() * 30) + 10;
+            } else if (rawProfit < 0) {
+                lpVal = -1 * (Math.floor(Math.random() * 20) + 5);
+            } else {
+                lpVal = 0;
+            }
         }
         let lpStr = (lpVal > 0 ? '+' : '') + lpVal + ' LP';
         let lpColor = lpVal >= 0 ? 'var(--accent-purple)' : '#9ca3af';
@@ -529,14 +529,14 @@ function closeMatchDetailsModal() {
 }
 function initDashboard() {
     initInventorySystem();
-    initGameModePersistence(); 
+    initGameModePersistence();
     initMarketData();
     initWalletBg();
     initGamesBg();
-    initProfileStars();      
-    renderDashInventory(); 
-    renderTreasures();    
-    renderGames(); 
+    initProfileStars();
+    renderDashInventory();
+    renderTreasures();
+    renderGames();
     renderTrophies();
     updateStats();
     renderLadder();
@@ -544,15 +544,15 @@ function initDashboard() {
 }
 function initProfileStars() {
     const container = document.getElementById('profileStarsBg');
-    if(!container || container.children.length > 0) return;
+    if (!container || container.children.length > 0) return;
     const starCount = 70;
-    for(let i=0; i<starCount; i++) {
+    for (let i = 0; i < starCount; i++) {
         const star = document.createElement('div');
         star.className = 'star-real';
         const x = Math.random() * 100;
         const y = Math.random() * 100;
         const size = Math.random() * 2 + 1;
-        const opacity = Math.random() * 0.4 + 0.1; 
+        const opacity = Math.random() * 0.4 + 0.1;
         star.style.left = `${x}%`;
         star.style.top = `${y}%`;
         star.style.width = `${size}px`;
@@ -565,42 +565,42 @@ function initProfileStars() {
 }
 function initWalletBg() {
     const container = document.getElementById('walletBgAnim');
-    if(!container || container.children.length > 0) return;
+    if (!container || container.children.length > 0) return;
     const moneyChars = ['💵', '💸', '💰', '$'];
     const count = 30;
-    for(let i=0; i<count; i++) {
+    for (let i = 0; i < count; i++) {
         const el = document.createElement('div');
         el.className = 'falling-item';
         el.textContent = moneyChars[Math.floor(Math.random() * moneyChars.length)];
         const x = Math.random() * 100;
-        const size = Math.random() * 20 + 15; 
-        const duration = Math.random() * 10 + 5; 
+        const size = Math.random() * 20 + 15;
+        const duration = Math.random() * 10 + 5;
         const delay = Math.random() * 10;
         el.style.left = `${x}%`;
         el.style.fontSize = `${size}px`;
         el.style.opacity = Math.random() * 0.3 + 0.1;
         el.style.animationDuration = `${duration}s`;
-        el.style.animationDelay = `-${delay}s`; 
+        el.style.animationDelay = `-${delay}s`;
         container.appendChild(el);
     }
 }
 function initGamesBg() {
     const container = document.getElementById('gamesBgAnim');
-    if(!container || container.children.length > 0) return;
+    if (!container || container.children.length > 0) return;
     const colors = ['#ef4444', '#3b82f6', '#10b981', '#000'];
     const count = 12;
-    for(let i=0; i<count; i++) {
+    for (let i = 0; i < count; i++) {
         const el = document.createElement('div');
         el.className = 'falling-item chip-visual';
         const color = colors[Math.floor(Math.random() * colors.length)];
         el.style.backgroundColor = color;
         let x;
         if (Math.random() > 0.5) {
-            x = Math.random() * 15; 
+            x = Math.random() * 15;
         } else {
-            x = 85 + Math.random() * 15; 
+            x = 85 + Math.random() * 15;
         }
-        const duration = Math.random() * 20 + 15; 
+        const duration = Math.random() * 20 + 15;
         const delay = Math.random() * 20;
         el.style.left = `${x}%`;
         el.style.animationDuration = `${duration}s`;
@@ -643,32 +643,32 @@ function updateStats() {
     document.getElementById('modalProgressBar').style.width = `${perc}%`;
 }
 function updateWLDCompact(visibleGames) {
-        let wins = 0, losses = 0, draws = 0;
-        visibleGames.forEach(g => {
+    let wins = 0, losses = 0, draws = 0;
+    visibleGames.forEach(g => {
         if (g.type === 'win' || g.type === 'epic') wins++;
         else if (g.type === 'lose') losses++;
         else draws++;
-        });
-        animateValue("txtWin", prevWins, wins, 500);
-        animateValue("txtLose", prevLosses, losses, 500);
-        animateValue("txtDraw", prevDraws, draws, 500);
-        prevWins = wins;
-        prevLosses = losses;
-        prevDraws = draws;
-        let ratioVal = 0;
-        if (losses > 0) {
-            ratioVal = ((wins + draws) / losses).toFixed(2);
-        } else {
-            ratioVal = (wins + draws).toFixed(2);
-        }
-        document.getElementById('txtRatio').textContent = ratioVal;
-        const totalDecisive = wins + losses;
-        let winPerc = 0;
-        if(totalDecisive > 0) {
-            winPerc = Math.round((wins / totalDecisive) * 100);
-        }
-        animateDonut(prevWinPerc, winPerc, 800);
-        prevWinPerc = winPerc;
+    });
+    animateValue("txtWin", prevWins, wins, 500);
+    animateValue("txtLose", prevLosses, losses, 500);
+    animateValue("txtDraw", prevDraws, draws, 500);
+    prevWins = wins;
+    prevLosses = losses;
+    prevDraws = draws;
+    let ratioVal = 0;
+    if (losses > 0) {
+        ratioVal = ((wins + draws) / losses).toFixed(2);
+    } else {
+        ratioVal = (wins + draws).toFixed(2);
+    }
+    document.getElementById('txtRatio').textContent = ratioVal;
+    const totalDecisive = wins + losses;
+    let winPerc = 0;
+    if (totalDecisive > 0) {
+        winPerc = Math.round((wins / totalDecisive) * 100);
+    }
+    animateDonut(prevWinPerc, winPerc, 800);
+    prevWinPerc = winPerc;
 }
 function animateValue(id, start, end, duration) {
     if (start === end) return;
@@ -689,7 +689,7 @@ function animateValue(id, start, end, duration) {
 function animateDonut(startPerc, endPerc, duration) {
     const donut = document.getElementById('wldDonut');
     const text = document.getElementById('wldPercentText');
-    const greenColor = "#10b981"; 
+    const greenColor = "#10b981";
     const redColor = "#ef4444";
     let startTimestamp = null;
     const step = (timestamp) => {
@@ -721,12 +721,12 @@ const navMap = {
 };
 function showView(viewName) {
     const config = navMap[viewName];
-    if(!config) return;
+    if (!config) return;
     document.querySelectorAll('.view-container').forEach(v => v.classList.remove('active'));
     document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
     document.getElementById(config.viewId).classList.add('active');
     const navEl = document.getElementById(config.navId);
-    if(navEl) navEl.classList.add('active');
+    if (navEl) navEl.classList.add('active');
     document.getElementById('pageHeaderTitle').textContent = config.title;
     const profileActions = document.getElementById('profileActionWrapper');
     if (profileActions) {
@@ -745,7 +745,7 @@ function sortTreasures(items) {
 function renderTreasures() {
     const list = document.getElementById('treasuresList');
     const btn = document.getElementById('btnTreasures');
-    if(!list) return;
+    if (!list) return;
     list.innerHTML = '';
     const sortedProfileInv = [...myInventory].sort((a, b) => b.rawPrice - a.rawPrice);
     const currentItems = sortedProfileInv.slice(0, shownTreasures);
@@ -753,7 +753,7 @@ function renderTreasures() {
         const div = document.createElement('div');
         div.className = 'item-row';
         div.style.cursor = 'pointer';
-        div.onclick = () => openInventoryItemModal(item); 
+        div.onclick = () => openInventoryItemModal(item);
         let priceClass = 'price-neutral';
         let icon = '';
         let colorClass = '';
@@ -763,7 +763,7 @@ function renderTreasures() {
         const dynamicPrice = Math.floor((item.rawPrice || 0) * (1 + (trendVal / 100)));
         const displayPrice = dynamicPrice.toLocaleString() + ' $';
         let changeHtml = '';
-        if(item.change && item.change !== "0%") {
+        if (item.change && item.change !== "0%") {
             changeHtml = `<div class="val-change-inline ${colorClass}" title="ostatnie 24h">${item.change} <i class="fas ${icon}"></i></div>`;
         }
         const isEquipped = Object.values(myLoadout).includes(item.uid);
@@ -789,9 +789,9 @@ function renderTreasures() {
         list.appendChild(div);
     });
     if (shownTreasures >= myInventory.length) {
-        if(btn) btn.classList.add('hidden');
+        if (btn) btn.classList.add('hidden');
     } else {
-        if(btn) btn.classList.remove('hidden');
+        if (btn) btn.classList.remove('hidden');
     }
 }
 function showMoreTreasures() {
@@ -815,21 +815,21 @@ function renderGames() {
     currentGames.forEach(g => {
         let tagClass = 'tag-lose';
         let tagText = 'Przegrana';
-        let iconColor = 'var(--accent-red)'; 
-        if(g.type === 'win') { 
-            tagClass = 'tag-win'; 
-            tagText = 'Wygrana'; 
+        let iconColor = 'var(--accent-red)';
+        if (g.type === 'win') {
+            tagClass = 'tag-win';
+            tagText = 'Wygrana';
             iconColor = 'var(--accent-green)';
         }
-        else if(g.type === 'draw') { 
-            tagClass = ''; 
-            tagText = 'Remis'; 
+        else if (g.type === 'draw') {
+            tagClass = 'tag-draw';
+            tagText = 'Remis';
             iconColor = '#fff';
         }
         let moneyColor = '#fff';
         if (g.money && g.money.includes('+')) moneyColor = 'var(--accent-green)';
         else if (g.money && g.money.includes('-')) moneyColor = 'var(--accent-red)';
-        let lpColor = '#9ca3af'; 
+        let lpColor = '#9ca3af';
         if (g.lp && g.lp.includes('+')) lpColor = 'var(--accent-purple)';
         const div = document.createElement('div');
         div.className = `game-entry ${g.type}`;
@@ -863,7 +863,7 @@ function showMoreGames() {
 function claimReward(id) {
     const ach = achievementsDB.find(a => a.id === id);
     if (ach) {
-        if (ach.rewardClaimed) return; 
+        if (ach.rewardClaimed) return;
         ach.rewardClaimed = true;
         updateStats();
         renderTrophies();
@@ -876,7 +876,7 @@ function claimReward(id) {
 function renderTrophies() {
     const list = document.getElementById('trophiesList');
     const btn = document.getElementById('btnTrophies');
-    if(btn) btn.classList.remove('hidden');
+    if (btn) btn.classList.remove('hidden');
     list.innerHTML = '';
     const myTrophies = achievementsDB.filter(a => a.acquired);
     myTrophies.sort((a, b) => {
@@ -889,15 +889,15 @@ function renderTrophies() {
     const currentTrophies = myTrophies.slice(0, shownTrophies);
     if (myTrophies.length === 0) {
         list.innerHTML = '<div style="padding:10px; color:#8b92a5; text-align:center; font-size:12px;">Brak zdobytych trofeów</div>';
-        if(btn) btn.classList.add('hidden');
+        if (btn) btn.classList.add('hidden');
         return;
     }
     currentTrophies.forEach(t => {
         const div = document.createElement('div');
         div.className = 'trophy-row';
-        let iconColor = "silver"; 
-        if(parseFloat(t.rarity) < 5) iconColor = "gold";
-        else if(parseFloat(t.rarity) > 50) iconColor = "#cd7f32";
+        let iconColor = "silver";
+        if (parseFloat(t.rarity) < 5) iconColor = "gold";
+        else if (parseFloat(t.rarity) > 50) iconColor = "#cd7f32";
         let actionContent = '';
         if (!t.rewardClaimed) {
             actionContent = `<button class="claim-btn" onclick="claimReward(${t.id})">Claim Reward!</button>`;
@@ -916,7 +916,7 @@ function renderTrophies() {
         list.appendChild(div);
     });
     if (shownTrophies >= myTrophies.length) {
-        if(btn) btn.classList.add('hidden');
+        if (btn) btn.classList.add('hidden');
     }
 }
 function showMoreTrophies() {
@@ -935,9 +935,9 @@ function toggleAdminView() {
         viewLabel.textContent = "Widok Użytkownika";
         viewLabel.style.color = "var(--text-muted)";
         adminNav.classList.add('hidden');
-        if(document.getElementById('viewAdminDash').classList.contains('active') ||
-           document.getElementById('viewUsers').classList.contains('active') ||
-           document.getElementById('viewLogs').classList.contains('active')) {
+        if (document.getElementById('viewAdminDash').classList.contains('active') ||
+            document.getElementById('viewUsers').classList.contains('active') ||
+            document.getElementById('viewLogs').classList.contains('active')) {
             showView('dashboard');
         }
     }
@@ -1042,8 +1042,8 @@ function renderLadder() {
             if (rank.margin.includes('-60px')) extraZ = 'step-z-2';
         } else if (rank.align === 'right') {
             stepClass = 'right-step';
-            if (rank.margin.includes('-60px')) extraZ = 'step-z-1'; 
-            if (index > 0 && ranksDB[index-1].align === 'left') extraZ = 'step-z-1';
+            if (rank.margin.includes('-60px')) extraZ = 'step-z-1';
+            if (index > 0 && ranksDB[index - 1].align === 'left') extraZ = 'step-z-1';
         }
         const isUnlocked = rank.id >= currentRankId;
         const unlockedClass = isUnlocked ? 'rank-unlocked' : '';
@@ -1075,7 +1075,7 @@ function updateLadderVisuals() {
         const relativeY = cardCenterY - spineRect.top;
         let percentage = (relativeY / spineRect.height) * 100;
         percentage = Math.max(0, Math.min(100, percentage));
-        if (currentRankId > 7) { 
+        if (currentRankId > 7) {
             percentage = 0;
             spine.style.boxShadow = `none`;
         } else {
@@ -1092,7 +1092,7 @@ function updateLadderVisuals() {
 }
 function openRankModal() {
     document.getElementById('rankModal').classList.add('active');
-    setTimeout(updateLadderVisuals, 50); 
+    setTimeout(updateLadderVisuals, 50);
 }
 function closeRankModal() {
     document.getElementById('rankModal').classList.remove('active');
@@ -1104,7 +1104,7 @@ function openBattlePassModal() {
     setTimeout(() => {
         const track = document.getElementById('bpTrackContainer');
         const activeNode = document.getElementById('bpActiveNode');
-        if(track && activeNode) {
+        if (track && activeNode) {
             const trackWidth = track.clientWidth;
             const nodeLeft = activeNode.offsetLeft;
             const nodeWidth = activeNode.clientWidth;
@@ -1112,7 +1112,7 @@ function openBattlePassModal() {
             const startScroll = track.scrollLeft;
             const distance = targetScroll - startScroll;
             let startTime = null;
-            const duration = 1200; 
+            const duration = 1200;
             function animation(currentTime) {
                 if (startTime === null) startTime = currentTime;
                 const timeElapsed = currentTime - startTime;
@@ -1149,14 +1149,14 @@ const chatMessages = document.getElementById('chatMessages');
 const chatRoastBubble = document.getElementById('chatRoastBubble');
 let activeChatPartner = { type: 'ai', name: 'AI Buddy', status: 'Pomocnik Gracza', icon: 'fa-robot', img: null };
 function toggleChat() {
-    if(chatRoastBubble.classList.contains('visible')) {
+    if (chatRoastBubble.classList.contains('visible')) {
         chatRoastBubble.classList.remove('visible');
         return;
     }
     const isOpen = chatWindow.classList.contains('open');
     if (isOpen) {
         chatWindow.classList.remove('open');
-        chatFriendPanel.classList.remove('open'); 
+        chatFriendPanel.classList.remove('open');
         updateToggleIcon(false);
     } else {
         chatWindow.classList.add('open');
@@ -1186,12 +1186,12 @@ function toggleFriendPanel() {
 }
 function switchChatPartner(type, name, status, visual) {
     activeChatPartner = { type, name, status };
-    if(type === 'ai') activeChatPartner.icon = visual;
+    if (type === 'ai') activeChatPartner.icon = visual;
     else activeChatPartner.img = visual;
     document.getElementById('chatHeaderName').textContent = name;
     document.getElementById('chatHeaderStatus').textContent = status;
     const headerIcon = document.getElementById('chatHeaderIcon');
-    if(type === 'ai') {
+    if (type === 'ai') {
         headerIcon.className = 'chat-header-avatar ai';
         headerIcon.innerHTML = `<i class="fas ${visual}"></i>`;
         headerIcon.style.backgroundImage = 'none';
@@ -1201,7 +1201,7 @@ function switchChatPartner(type, name, status, visual) {
         headerIcon.style.backgroundImage = `url('${visual}')`;
     }
     chatMessages.innerHTML = '';
-    if(type === 'ai') addMessage("Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?", 'bot');
+    if (type === 'ai') addMessage("Cześć! Widzę, że masz dobrą passę. W czym mogę pomóc?", 'bot');
     else addMessage(`[Historia rozmowy z ${name} wczytana...]`, 'bot');
     chatFriendPanel.classList.remove('open');
     const btn = document.getElementById('chatToggleBtn');
@@ -1216,7 +1216,7 @@ function sendMessage() {
     if (!text) return;
     addMessage(text, 'user');
     chatInput.value = '';
-    if(activeChatPartner.type === 'ai') {
+    if (activeChatPartner.type === 'ai') {
         setTimeout(() => addMessage("Jestem tylko demem UI, ale dziękuję za wiadomość!", 'bot'), 1000);
     }
 }
@@ -1237,11 +1237,11 @@ function triggerRoastAnimation(message) {
     const btn = document.getElementById('chatToggleBtn');
     btn.style.transition = "transform 0.3s";
     btn.style.transform = "rotate(360deg) scale(1.2)";
-    updateToggleIcon(false); 
+    updateToggleIcon(false);
     setTimeout(() => {
         btn.style.transform = "scale(1)";
         chatRoastBubble.style.display = 'flex';
-        void chatRoastBubble.offsetWidth; 
+        void chatRoastBubble.offsetWidth;
         chatRoastBubble.classList.add('visible');
         const dots = chatRoastBubble.querySelector('.bubble-dots');
         const txt = chatRoastBubble.querySelector('.bubble-text');
@@ -1262,30 +1262,30 @@ function triggerRoastAnimation(message) {
 function toggleInvFilter(type) {
     invFilterState[type] = !invFilterState[type];
     const btn = document.getElementById(type === 'item' ? 'btnInvItem' : 'btnInvCase');
-    if(btn) btn.classList.toggle('active', invFilterState[type]);
+    if (btn) btn.classList.toggle('active', invFilterState[type]);
     renderInventoryView();
 }
 function renderInventoryView() {
     const container = document.getElementById('inventoryContainer');
-    if(!container) return; 
+    if (!container) return;
     container.innerHTML = '';
     setupLoadoutSlots();
     let filteredInv = myInventory.filter(item => {
-        const isCase = item.type === 'chest'; 
-        if(isCase && !invFilterState.case) return false;
-        if(!isCase && !invFilterState.item) return false;
+        const isCase = item.type === 'chest';
+        if (isCase && !invFilterState.case) return false;
+        if (!isCase && !invFilterState.item) return false;
         return true;
     });
     let displayList = [];
-    let stackMap = {}; 
+    let stackMap = {};
     filteredInv.forEach(item => {
         const isEquipped = Object.values(myLoadout).includes(item.uid);
         const isOnSale = item.isOnSale === true;
         if (isEquipped || isOnSale) {
-            displayList.push({ 
-                ...item, 
-                stackCount: 1, 
-                forceUnique: true 
+            displayList.push({
+                ...item,
+                stackCount: 1,
+                forceUnique: true
             });
         } else {
             if (stackMap[item.id]) {
@@ -1314,9 +1314,6 @@ function renderInventoryView() {
         let rarityColor = getRarityColor(item.rarity);
         slot.style.borderColor = `rgba(${hexToRgb(rarityColor)}, 0.5)`;
         slot.style.backgroundColor = `rgba(${hexToRgb(rarityColor)}, 0.05)`;
-        if (isOnSale) {
-            slot.style.borderColor = 'var(--accent-orange)';
-        }
         let badgeHtml = '';
         if (item.stackCount > 1) {
             badgeHtml += `<div class="item-stack-count">x${item.stackCount}</div>`;
@@ -1340,12 +1337,12 @@ function renderInventoryView() {
         `;
         slot.onclick = () => openInventoryItemModal(item);
         let tooltipText = `${item.name} (${item.rarity})\nTyp: ${item.type}\nBonus: ${item.bonus}\nCena: ${item.price}`;
-        if(item.stackCount > 1) tooltipText += `\nIlość w magazynie: ${item.stackCount}`;
+        if (item.stackCount > 1) tooltipText += `\nIlość w magazynie: ${item.stackCount}`;
         slot.title = tooltipText;
         container.appendChild(slot);
     });
     const minSlots = 63;
-    for(let i = sortedInv.length; i < minSlots; i++) {
+    for (let i = sortedInv.length; i < minSlots; i++) {
         const emptySlot = document.createElement('div');
         emptySlot.className = 'inv-grid-slot empty';
         container.appendChild(emptySlot);
@@ -1358,7 +1355,7 @@ function setupLoadoutSlots() {
         slot.parentNode.replaceChild(newSlot, slot);
         newSlot.addEventListener('dragover', handleDragOver);
         newSlot.addEventListener('drop', handleDrop);
-        const slotType = newSlot.dataset.type; 
+        const slotType = newSlot.dataset.type;
         const slotClass = Array.from(newSlot.classList).find(c => c.startsWith('slot-'));
         if (slotClass && myLoadout[slotClass]) {
             const itemUid = myLoadout[slotClass];
@@ -1394,14 +1391,14 @@ function handleDrop(e) {
     if (!item || !slot) return;
     if (item.type !== slot.dataset.type) {
         alert(`Nie możesz włożyć ${item.name} (${item.type}) do slotu ${slot.dataset.type}!`);
-        renderInventoryView(); 
+        renderInventoryView();
         return;
     }
     const slotClass = Array.from(slot.classList).find(c => c.startsWith('slot-'));
     if (slotClass) {
         myLoadout[slotClass] = uid;
-        renderInventoryView(); 
-        setupLoadoutSlots();   
+        renderInventoryView();
+        setupLoadoutSlots();
     }
 }
 function handleUnequip(e) {
@@ -1434,36 +1431,36 @@ function renderItemInSlot(slotElement, item) {
     slotElement.style.boxShadow = `0 0 15px rgba(${hexToRgb(item.color)}, 0.4)`;
     slotElement.title = `${item.name}`;
     slotElement.onclick = (e) => {
-        e.stopPropagation(); 
+        e.stopPropagation();
         openInventoryItemModal(item);
     };
 }
 function resetSlotVisuals(slotElement) {
-    slotElement.style = ""; 
+    slotElement.style = "";
     const type = slotElement.dataset.type;
     let icon = "fa-plus";
-    if(type === 'head') icon = "fa-hat-cowboy";
-    if(type === 'neck') icon = "fa-link";
-    if(type === 'suit') icon = "fa-user-tie";
-    if(type === 'watch') icon = "fa-clock";
-    if(type === 'gadget') icon = "fa-microchip";
-    if(type === 'ring') icon = "fa-ring";
-    if(type === 'belt') icon = "fa-grip-lines";
-    if(type === 'pants') icon = "fa-columns";
-    if(type === 'vehicle') icon = "fa-car";
-    if(type === 'shoes') icon = "fa-shoe-prints";
+    if (type === 'head') icon = "fa-hat-cowboy";
+    if (type === 'neck') icon = "fa-link";
+    if (type === 'suit') icon = "fa-user-tie";
+    if (type === 'watch') icon = "fa-clock";
+    if (type === 'gadget') icon = "fa-microchip";
+    if (type === 'ring') icon = "fa-ring";
+    if (type === 'belt') icon = "fa-grip-lines";
+    if (type === 'pants') icon = "fa-columns";
+    if (type === 'vehicle') icon = "fa-car";
+    if (type === 'shoes') icon = "fa-shoe-prints";
     slotElement.innerHTML = `<i class="fas ${icon} placeholder"></i>`;
 }
 function getRarityColor(rarity) {
-    if(rarity === 'Rare') return '#3b82f6';
-    if(rarity === 'Epic') return '#8b5cf6';
-    if(rarity === 'Relic') return '#ef4444';
-    if(rarity === 'Divine') return '#ffd700';
-    return '#9ca3af'; 
+    if (rarity === 'Rare') return '#3b82f6';
+    if (rarity === 'Epic') return '#8b5cf6';
+    if (rarity === 'Relic') return '#ef4444';
+    if (rarity === 'Divine') return '#ffd700';
+    return '#9ca3af';
 }
 function renderDashInventory() {
     const container = document.getElementById('dashInventoryList');
-    if(!container) return;
+    if (!container) return;
     container.innerHTML = '';
     const dashItems = myInventory.slice(0, 4);
     dashItems.forEach(item => {
@@ -1489,13 +1486,13 @@ function renderDashInventory() {
         `;
         container.appendChild(div);
     });
-    if(dashItems.length === 0) {
+    if (dashItems.length === 0) {
         container.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:20px;">Ekwipunek pusty</div>';
     }
 }
 function hexToRgb(hex) {
     var shorthandRegex = /^#?([a-f\d])([a-f\d])([a-f\d])$/i;
-    hex = hex.replace(shorthandRegex, function(m, r, g, b) {
+    hex = hex.replace(shorthandRegex, function (m, r, g, b) {
         return r + r + g + g + b + b;
     });
     var result = /^#?([a-f\d]{2})([a-f\d]{2})([a-f\d]{2})$/i.exec(hex);
@@ -1507,9 +1504,9 @@ function distributePlayers(total, count) {
     let distribution = [];
     let remaining = total;
     let weights = [];
-    for(let i=0; i<count; i++) weights.push(Math.random());
-    let sumWeights = weights.reduce((a,b) => a+b, 0);
-    for(let i=0; i<count; i++) {
+    for (let i = 0; i < count; i++) weights.push(Math.random());
+    let sumWeights = weights.reduce((a, b) => a + b, 0);
+    for (let i = 0; i < count; i++) {
         if (i === count - 1) {
             distribution.push(remaining);
         } else {
@@ -1518,11 +1515,11 @@ function distributePlayers(total, count) {
             remaining -= val;
         }
     }
-    return distribution.sort((a,b) => b-a);
+    return distribution.sort((a, b) => b - a);
 }
 function initGameModePersistence() {
     gamesHubStructure.forEach(category => {
-        if(category.games) {
+        if (category.games) {
             category.games.forEach(game => {
                 game.modeCounts = distributePlayers(game.onlineCount, game.modes.length);
             });
@@ -1532,15 +1529,15 @@ function initGameModePersistence() {
 let currentDepositMethod = 'visa';
 let currentWithdrawMethod = 'visa';
 function renderWalletView() {
-    const realMoney = 2450000; 
+    const realMoney = 2450000;
     const targetNetWorth = 5240000;
-    const itemsValue = targetNetWorth - realMoney; 
+    const itemsValue = targetNetWorth - realMoney;
     const nwTotal = document.getElementById('nwTotalDisplay');
     const nwReal = document.getElementById('nwRealDisplay');
     const nwItems = document.getElementById('nwItemsDisplay');
-    if (nwTotal) nwTotal.textContent = targetNetWorth.toLocaleString('en-US', {minimumFractionDigits: 2});
-    if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
-    if (nwItems) nwItems.textContent = itemsValue.toLocaleString('en-US', {minimumFractionDigits: 2}) + ' $';
+    if (nwTotal) nwTotal.textContent = targetNetWorth.toLocaleString('en-US', { minimumFractionDigits: 2 });
+    if (nwReal) nwReal.textContent = realMoney.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' $';
+    if (nwItems) nwItems.textContent = itemsValue.toLocaleString('en-US', { minimumFractionDigits: 2 }) + ' $';
     selectDepositMethod(currentDepositMethod);
     selectWithdrawMethod(currentWithdrawMethod);
     const transferSelect = document.getElementById('transferItemSelect');
@@ -1558,7 +1555,7 @@ function selectDepositMethod(method) {
     currentDepositMethod = method;
     const container = document.getElementById('depositMethodsGrid');
     const dynamicContent = document.getElementById('depositDynamicContainer');
-    if(!container || !dynamicContent) return;
+    if (!container || !dynamicContent) return;
     const methods = [
         { id: 'visa', icon: 'fab fa-cc-visa', name: 'Visa' },
         { id: 'blik', icon: 'fas fa-mobile-alt', name: 'BLIK' },
@@ -1627,7 +1624,7 @@ function selectWithdrawMethod(method) {
     currentWithdrawMethod = method;
     const container = document.getElementById('withdrawMethodsGrid');
     const dynamicContent = document.getElementById('withdrawDynamicContainer');
-    if(!container || !dynamicContent) return;
+    if (!container || !dynamicContent) return;
     const methods = [
         { id: 'visa', icon: 'fab fa-cc-visa', name: 'Visa' },
         { id: 'crypto', icon: 'fab fa-bitcoin', name: 'Crypto' }
@@ -1667,12 +1664,12 @@ function toggleTransferSection(type) {
 function handleWalletAction(type) {
     if (type === 'deposit') {
         const amount = document.getElementById('depositAmount').value;
-        if(amount > 0) {
+        if (amount > 0) {
             alert(`[SYSTEM] Przetwarzanie wpłaty metodą: ${currentDepositMethod.toUpperCase()}.\nKwota: ${amount} $.\n\nŚrodki dodane (symulacja).`);
         } else alert("Wprowadź poprawną kwotę wpłaty.");
     } else if (type === 'withdraw') {
         const amount = document.getElementById('withdrawAmount').value;
-        if(amount > 0) alert(`Zlecono wypłatę: ${amount} $. Środki dotrą w ciągu 24h.`);
+        if (amount > 0) alert(`Zlecono wypłatę: ${amount} $. Środki dotrą w ciągu 24h.`);
         else alert("Wprowadź poprawną kwotę wypłaty.");
     } else if (type === 'transfer') {
         const recipient = document.getElementById('transferRecipient').value;
@@ -1689,12 +1686,12 @@ function handleWalletAction(type) {
         let msg = `Wysłano do ${recipient}:`;
         if (sendMoney) {
             const amount = document.getElementById('transferAmount').value;
-            if(amount <= 0) { alert("Podaj poprawną kwotę przelewu."); return; }
+            if (amount <= 0) { alert("Podaj poprawną kwotę przelewu."); return; }
             msg += `\n- Gotówka: ${amount} $`;
         }
         if (sendItem) {
             const itemVal = document.getElementById('transferItemSelect').value;
-            if(!itemVal) { alert("Wybierz przedmiot z listy."); return; }
+            if (!itemVal) { alert("Wybierz przedmiot z listy."); return; }
             const itemName = allTreasures.find(i => i.id == itemVal)?.name || "Przedmiot";
             msg += `\n- Przedmiot: ${itemName}`;
         }
@@ -1717,10 +1714,10 @@ function renderFinancialLogsList() {
         if (hideGames) {
             const lowerType = t.type.toLowerCase();
             const lowerDetail = t.detail.toLowerCase();
-            if (lowerType.includes('wygrana') || lowerType.includes('przegrana') || 
+            if (lowerType.includes('wygrana') || lowerType.includes('przegrana') ||
                 lowerType.includes('korekta') || lowerType.includes('bonus') ||
                 lowerDetail.includes('game') || lowerDetail.includes('session')) {
-                return; 
+                return;
             }
         }
         const div = document.createElement('div');
@@ -1757,9 +1754,9 @@ function switchWalletTab(tabName) {
     document.querySelectorAll('.w-tab').forEach(b => b.classList.remove('active'));
     document.querySelectorAll('.w-content').forEach(c => c.classList.remove('active'));
     const btn = document.querySelector(`.w-tab[onclick="switchWalletTab('${tabName}')"]`);
-    if(btn) btn.classList.add('active');
+    if (btn) btn.classList.add('active');
     const content = document.getElementById(`tab-${tabName}`);
-    if(content) content.classList.add('active');
+    if (content) content.classList.add('active');
 }
 function copyCrypto() {
     const input = document.getElementById('cryptoAddr');
@@ -1776,30 +1773,30 @@ function copyCrypto() {
 let heatmapState = { players: true, admins: true };
 function renderAdminHeatmap() {
     const grid = document.getElementById('adminHeatmapGrid');
-    if(!grid) return; 
+    if (!grid) return;
     grid.innerHTML = '';
     const totalCells = 53 * 7;
-    for(let i = 0; i < totalCells; i++) {
+    for (let i = 0; i < totalCells; i++) {
         const div = document.createElement('div');
         const rand = Math.random();
         let type = 'player';
-        if(Math.random() > 0.9) type = 'admin';
+        if (Math.random() > 0.9) type = 'admin';
         let level = '0';
-        let cellClass = 'l0'; 
+        let cellClass = 'l0';
         if (rand > 0.70) {
             if (rand > 0.75) level = '1';
             if (rand > 0.88) level = '2';
             if (rand > 0.95) level = '3';
             if (rand > 0.98) level = '4';
-            if(type === 'admin') cellClass = `al${level}`;
+            if (type === 'admin') cellClass = `al${level}`;
             else cellClass = `l${level}`;
         } else {
-            type = 'none'; 
+            type = 'none';
         }
         div.className = `gh-cell ${cellClass}`;
         div.dataset.type = type;
-        if(type === 'player' && !heatmapState.players) div.style.opacity = '0.1';
-        if(type === 'admin' && !heatmapState.admins) div.style.opacity = '0.1';
+        if (type === 'player' && !heatmapState.players) div.style.opacity = '0.1';
+        if (type === 'admin' && !heatmapState.admins) div.style.opacity = '0.1';
         div.title = type !== 'none' ? `Aktywność: ${type.toUpperCase()} (Lvl ${level})` : 'Brak aktywności';
         grid.appendChild(div);
     }
@@ -1808,14 +1805,14 @@ function renderAdminHeatmap() {
 function toggleHeatmapSource(source) {
     heatmapState[source] = !heatmapState[source];
     const btn = document.getElementById(source === 'players' ? 'btnHmPlayers' : 'btnHmAdmins');
-    if(btn) btn.classList.toggle('active', heatmapState[source]);
+    if (btn) btn.classList.toggle('active', heatmapState[source]);
     const cells = document.querySelectorAll('.gh-cell');
     cells.forEach(cell => {
         const type = cell.dataset.type;
-        if(type === 'none') return; 
-        if(type === 'player') {
+        if (type === 'none') return;
+        if (type === 'player') {
             cell.style.opacity = heatmapState.players ? '1' : '0.1';
-        } else if(type === 'admin') {
+        } else if (type === 'admin') {
             cell.style.opacity = heatmapState.admins ? '1' : '0.1';
         }
     });
@@ -1824,14 +1821,14 @@ function toggleHeatmapSource(source) {
 function updateHeatmapLegend() {
     const legP = document.getElementById('legendPlayers');
     const legA = document.getElementById('legendAdmins');
-    if(legP) legP.style.display = heatmapState.players ? 'flex' : 'none';
-    if(legA) legA.style.display = heatmapState.admins ? 'flex' : 'none';
+    if (legP) legP.style.display = heatmapState.players ? 'flex' : 'none';
+    if (legA) legA.style.display = heatmapState.admins ? 'flex' : 'none';
 }
 let adminUsersDB = [];
 let adminUsersPage = 1;
 const adminUsersPerPage = 15;
 function initAdminUsers() {
-    if(adminUsersDB.length > 0) return;
+    if (adminUsersDB.length > 0) return;
     const ranks = ["Bankrupt", "Small Fry", "Risk Taker", "Table Shark", "Casino Legend", "Alpha Whale", "RNG God"];
     const statuses = ["Online", "Offline", "Offline", "Banned", "Suspicious"];
     const prefixes = ["Crypto", "Super", "Mega", "Iron", "Lazy", "Lucky", "Sad", "Rich", "Poor", "Bot"];
@@ -1839,9 +1836,9 @@ function initAdminUsers() {
     adminUsersDB.push({ id: 1, name: "MrGambler", rank: "Alpha Whale", balance: 5240000, lastActive: "Now", status: "Online", isAdmin: true });
     adminUsersDB.push({ id: 994, name: "Whale_Killer", rank: "RNG God", balance: 12500000, lastActive: "2 min temu", status: "Online" });
     adminUsersDB.push({ id: 552, name: "Janusz_Hazardu", rank: "Bankrupt", balance: 0, lastActive: "5 dni temu", status: "Banned" });
-    for(let i=0; i<150; i++) {
+    for (let i = 0; i < 150; i++) {
         const id = 1000 + i;
-        const name = prefixes[Math.floor(Math.random()*prefixes.length)] + "_" + suffixes[Math.floor(Math.random()*suffixes.length)] + "_" + Math.floor(Math.random()*99);
+        const name = prefixes[Math.floor(Math.random() * prefixes.length)] + "_" + suffixes[Math.floor(Math.random() * suffixes.length)] + "_" + Math.floor(Math.random() * 99);
         const rank = ranks[Math.floor(Math.random() * ranks.length)];
         const balance = Math.floor(Math.random() * 500000);
         const status = statuses[Math.floor(Math.random() * statuses.length)];
@@ -1852,32 +1849,32 @@ function initAdminUsers() {
 function renderUsersView() {
     initAdminUsers();
     const container = document.getElementById('usersContainer');
-    if(!container) return;
+    if (!container) return;
     container.innerHTML = '';
     const filterStatus = document.getElementById('userFilterStatus').value;
     const searchVal = document.getElementById('userSearchInput').value.toLowerCase();
     let filtered = adminUsersDB.filter(u => {
-        if(filterStatus !== 'all' && u.status !== filterStatus) return false;
-        if(searchVal && !u.name.toLowerCase().includes(searchVal) && !u.id.toString().includes(searchVal)) return false;
+        if (filterStatus !== 'all' && u.status !== filterStatus) return false;
+        if (searchVal && !u.name.toLowerCase().includes(searchVal) && !u.id.toString().includes(searchVal)) return false;
         return true;
     });
     const totalPages = Math.ceil(filtered.length / adminUsersPerPage) || 1;
-    if(adminUsersPage < 1) adminUsersPage = 1;
-    if(adminUsersPage > totalPages) adminUsersPage = totalPages;
+    if (adminUsersPage < 1) adminUsersPage = 1;
+    if (adminUsersPage > totalPages) adminUsersPage = totalPages;
     const start = (adminUsersPage - 1) * adminUsersPerPage;
     const pageItems = filtered.slice(start, start + adminUsersPerPage);
     pageItems.forEach(u => {
         const div = document.createElement('div');
         div.className = 'ul-row';
         let badgeClass = 'ul-b-offline';
-        if(u.status === 'Online') badgeClass = 'ul-b-online';
-        if(u.status === 'Banned') badgeClass = 'ul-b-banned';
-        if(u.status === 'Suspicious') badgeClass = 'ul-b-suspicious';
+        if (u.status === 'Online') badgeClass = 'ul-b-online';
+        if (u.status === 'Banned') badgeClass = 'ul-b-banned';
+        if (u.status === 'Suspicious') badgeClass = 'ul-b-suspicious';
         let rankColor = '#aaa';
-        if(u.rank.includes('Whale') || u.rank.includes('God')) rankColor = 'var(--accent-purple)';
-        if(u.rank.includes('Bankrupt')) rankColor = 'var(--text-muted)';
+        if (u.rank.includes('Whale') || u.rank.includes('God')) rankColor = 'var(--accent-purple)';
+        if (u.rank.includes('Bankrupt')) rankColor = 'var(--text-muted)';
         let nameHtml = u.name;
-        if(u.isAdmin) nameHtml += ' <span style="background:var(--accent-purple); color:white; font-size:9px; padding:2px 5px; border-radius:3px; margin-left:5px;">ADMIN</span>';
+        if (u.isAdmin) nameHtml += ' <span style="background:var(--accent-purple); color:white; font-size:9px; padding:2px 5px; border-radius:3px; margin-left:5px;">ADMIN</span>';
         div.innerHTML = `
             <div style="font-family:monospace; color:#666;">#${u.id}</div>
             <div style="font-weight:600; color:white;">${nameHtml}</div>
@@ -1901,37 +1898,37 @@ function changeUserPage(delta) {
 }
 function toggleAdminAction(action) {
     let msg = "";
-    switch(action) {
+    switch (action) {
         case 'maintenance': msg = "Tryb konserwacji został zmieniony."; break;
         case 'block_withdrawals': msg = "Blokada wypłat została zmieniona."; break;
         case 'gate_blik': msg = "Status bramki BLIK został zmieniony."; break;
         case 'gate_crypto': msg = "Status bramki Crypto został zmieniony."; break;
     }
     console.log(`[ADMIN] Action: ${action}`);
-    alert(`[SYSTEM] ${msg}`); 
+    alert(`[SYSTEM] ${msg}`);
 }
 function adminLogoutAll() {
-    if(confirm("Czy na pewno chcesz wylogować WSZYSTKICH użytkowników? To przerwie aktywne gry.")) {
+    if (confirm("Czy na pewno chcesz wylogować WSZYSTKICH użytkowników? To przerwie aktywne gry.")) {
         alert("[SYSTEM] Wysłano polecenie: Force Logout All Sessions.");
     }
 }
 function sendAdminPush() {
     const msg = document.getElementById('pushMsgInput').value;
-    if(msg) {
+    if (msg) {
         triggerRoastAnimation(msg);
         document.getElementById('pushMsgInput').value = '';
     }
 }
 function updateTickerAdmin() {
     const msg = document.getElementById('tickerMsgInput').value;
-    if(msg) {
+    if (msg) {
         alert(`[TICKER UPDATED] Nowa treść: "${msg}"`);
         document.getElementById('tickerMsgInput').value = '';
     }
 }
 function adminImpersonate() {
     const target = document.getElementById('godModeInput').value;
-    if(target) {
+    if (target) {
         alert(`[GOD MODE] Przełączanie widoku na gracza: ${target}...\n\n(To tylko demo UI - nic się nie zmieni, ale w produkcji przeładowałoby to kontekst aplikacji).`);
     } else {
         alert("Podaj ID lub Login gracza.");
@@ -1939,10 +1936,10 @@ function adminImpersonate() {
 }
 function openAdminFinancialLogs() {
     const modal = document.getElementById('financialLogsModal');
-    if(!modal) return;
+    if (!modal) return;
     modal.classList.add('active');
     const title = modal.querySelector('.sm-title');
-    if(title) title.innerHTML = '<i class="fas fa-university"></i> System: Globalne Finanse';
+    if (title) title.innerHTML = '<i class="fas fa-university"></i> System: Globalne Finanse';
     const container = document.getElementById('financialLogsList');
     if (!container) return;
     container.innerHTML = '';
@@ -1983,16 +1980,16 @@ function openAdminFinancialLogs() {
 }
 function openEditUserModal(userId) {
     const user = adminUsersDB.find(u => u.id === userId);
-    if(!user) return;
+    if (!user) return;
     document.getElementById('euIdDisplay').textContent = `ID: #${user.id}`;
     document.getElementById('euInputName').value = user.name;
-    document.getElementById('euInputCustomRank').value = ""; 
+    document.getElementById('euInputCustomRank').value = "";
     document.getElementById('euInputBalance').value = user.balance;
     document.getElementById('euSelectStatus').value = user.status;
     document.getElementById('euCheckAdmin').checked = user.isAdmin || false;
     document.getElementById('euInputLP').value = Math.floor(Math.random() * 5000);
     document.getElementById('euInputStreak').value = Math.floor(Math.random() * 10);
-    document.getElementById('euInputPfp').value = ""; 
+    document.getElementById('euInputPfp').value = "";
     document.getElementById('euAvatarPreview').style.backgroundImage = "none";
     document.getElementById('euAvatarPreview').style.backgroundColor = "#333";
     const pfpUrl = `https://i.pravatar.cc/150?u=${user.name}`;
@@ -2004,7 +2001,7 @@ function openEditUserModal(userId) {
         const opt = document.createElement('option');
         opt.value = r;
         opt.textContent = r;
-        if(user.rank === r) opt.selected = true;
+        if (user.rank === r) opt.selected = true;
         rankSelect.appendChild(opt);
     });
     document.getElementById('editUserModal').classList.add('active');
@@ -2021,18 +2018,18 @@ function saveUserEdit() {
 function modifyUserInv(action) {
     const itemId = document.getElementById('euInvItemId').value;
     const qty = document.getElementById('euInvQty').value;
-    if(!itemId || itemId <= 0) {
+    if (!itemId || itemId <= 0) {
         alert("BŁĄD: Podaj poprawne ID przedmiotu.");
         return;
     }
-    if(!qty || qty <= 0) {
+    if (!qty || qty <= 0) {
         alert("BŁĄD: Ilość musi być większa od 0.");
         return;
     }
-    const itemName = typeof allTreasures !== 'undefined' 
-        ? (allTreasures.find(t => t.id == itemId)?.name || "Nieznany Przedmiot") 
+    const itemName = typeof allTreasures !== 'undefined'
+        ? (allTreasures.find(t => t.id == itemId)?.name || "Nieznany Przedmiot")
         : "Przedmiot";
-    if(action === 'add') {
+    if (action === 'add') {
         alert(`[SYSTEM] Pomyślnie dodano do ekwipunku:\n\nPrzedmiot: ${itemName} (ID: ${itemId})\nIlość: ${qty}x`);
     } else {
         alert(`[SYSTEM] Pomyślnie usunięto z ekwipunku:\n\nPrzedmiot: ${itemName} (ID: ${itemId})\nIlość: ${qty}x`);
@@ -2040,7 +2037,7 @@ function modifyUserInv(action) {
 }
 function renderLogsView() {
     const container = document.getElementById('logsContainer');
-    if(!container) return;
+    if (!container) return;
     container.innerHTML = '';
     const logTypes = ['INFO', 'WARN', 'ERR', 'AUTH', 'SUCCESS', 'CRIT'];
     const sources = ['SYSTEM', 'GAME_ENG', 'PAYMENT', 'USER_DB', 'RISK_AI', 'NETWORK'];
@@ -2066,7 +2063,7 @@ function renderLogsView() {
         "Backup process completed (2.4GB)",
         "User_Banned banned for 'Scripting'"
     ];
-    for(let i=0; i<200; i++) {
+    for (let i = 0; i < 200; i++) {
         const date = new Date();
         date.setSeconds(date.getSeconds() - i * (Math.random() * 10));
         const timeStr = date.toTimeString().split(' ')[0];
@@ -2078,10 +2075,10 @@ function renderLogsView() {
         else if (rand > 0.70) type = 'AUTH';
         else if (rand > 0.60) type = 'SUCCESS';
         const source = sources[Math.floor(Math.random() * sources.length)];
-        const msg = messages[Math.floor(Math.random() * messages.length)] + (Math.random() > 0.5 ? ` [ID:${Math.floor(Math.random()*9999)}]` : '');
+        const msg = messages[Math.floor(Math.random() * messages.length)] + (Math.random() > 0.5 ? ` [ID:${Math.floor(Math.random() * 9999)}]` : '');
         const div = document.createElement('div');
         div.className = `log-line`;
-        if(type === 'ERR' || type === 'CRIT') div.style.background = 'rgba(239, 68, 68, 0.05)';
+        if (type === 'ERR' || type === 'CRIT') div.style.background = 'rgba(239, 68, 68, 0.05)';
         div.innerHTML = `
             <span class="ll-time">${timeStr}</span>
             <span class="ll-level lvl-${type.toLowerCase()}">${type}</span>
@@ -2095,31 +2092,31 @@ let adminGamesDB = [];
 let adminGamesPage = 1;
 const adminGamesPerPage = 15;
 function initAdminGames() {
-    if(adminGamesDB.length > 0) return;
+    if (adminGamesDB.length > 0) return;
     let globalId = 1;
     gamesHubStructure.forEach(category => {
-        if(category.games) {
+        if (category.games) {
             category.games.forEach(game => {
                 const totalPlayers = game.onlineCount;
                 const dist = game.modeCounts || distributePlayers(totalPlayers, game.modes.length);
                 game.modes.forEach((modeName, idx) => {
                     const modePlayers = dist[idx] || 0;
                     let avgPerSession = 1;
-                    if(game.tag === 'Card Game' || game.tag === 'Table Game') avgPerSession = Math.random() * 3 + 1; 
-                    else if(game.tag === 'Exclusive') avgPerSession = 2; 
+                    if (game.tag === 'Card Game' || game.tag === 'Table Game') avgPerSession = Math.random() * 3 + 1;
+                    else if (game.tag === 'Exclusive') avgPerSession = 2;
                     let sessions = Math.ceil(modePlayers / avgPerSession);
-                    if(sessions > modePlayers) sessions = modePlayers; 
-                    if(modePlayers > 0 && sessions === 0) sessions = 1;
+                    if (sessions > modePlayers) sessions = modePlayers;
+                    if (modePlayers > 0 && sessions === 0) sessions = 1;
                     let status = "Active";
                     const r = Math.random();
-                    if(r > 0.96) status = "Maintenance";
-                    else if(r > 0.99) status = "Disabled";
+                    if (r > 0.96) status = "Maintenance";
+                    else if (r > 0.99) status = "Disabled";
                     adminGamesDB.push({
                         id: globalId++,
-                        name: modeName,       
+                        name: modeName,
                         parentGame: game.name,
-                        cat: category.label,  
-                        type: game.tag,       
+                        cat: category.label,
+                        type: game.tag,
                         online: modePlayers,
                         sessions: sessions,
                         status: status,
@@ -2134,33 +2131,33 @@ function initAdminGames() {
 function renderGamesControlView() {
     initAdminGames();
     const container = document.getElementById('gamesControlContainer');
-    if(!container) return;
+    if (!container) return;
     container.innerHTML = '';
     const filterStatus = document.getElementById('gameFilterStatus').value;
     const searchVal = document.getElementById('gameSearchInput').value.toLowerCase();
     let filtered = adminGamesDB.filter(g => {
-        if(filterStatus !== 'all' && g.status !== filterStatus) return false;
+        if (filterStatus !== 'all' && g.status !== filterStatus) return false;
         const searchStr = (g.name + " " + g.parentGame + " " + g.type).toLowerCase();
-        if(searchVal && !searchStr.includes(searchVal) && !g.id.toString().includes(searchVal)) return false;
+        if (searchVal && !searchStr.includes(searchVal) && !g.id.toString().includes(searchVal)) return false;
         return true;
     });
     const totalPages = Math.ceil(filtered.length / adminGamesPerPage) || 1;
-    if(adminGamesPage < 1) adminGamesPage = 1;
-    if(adminGamesPage > totalPages) adminGamesPage = totalPages;
+    if (adminGamesPage < 1) adminGamesPage = 1;
+    if (adminGamesPage > totalPages) adminGamesPage = totalPages;
     const start = (adminGamesPage - 1) * adminGamesPerPage;
     const pageItems = filtered.slice(start, start + adminGamesPerPage);
     pageItems.forEach(g => {
         const div = document.createElement('div');
         div.className = 'ul-row';
-        div.style.gridTemplateColumns = '50px 2fr 1fr 1fr 1fr 1fr 100px 90px'; 
-        let statusClass = 'ul-b-offline'; 
-        if(g.status === 'Active') statusClass = 'ul-b-online'; 
-        if(g.status === 'Maintenance') statusClass = 'ul-b-suspicious'; 
-        if(g.status === 'Disabled') statusClass = 'ul-b-banned'; 
+        div.style.gridTemplateColumns = '50px 2fr 1fr 1fr 1fr 1fr 100px 90px';
+        let statusClass = 'ul-b-offline';
+        if (g.status === 'Active') statusClass = 'ul-b-online';
+        if (g.status === 'Maintenance') statusClass = 'ul-b-suspicious';
+        if (g.status === 'Disabled') statusClass = 'ul-b-banned';
         let catColor = '#aaa';
-        if(g.cat === 'Kasyno') catColor = '#10b981';
-        if(g.cat === 'Arcade') catColor = '#d946ef';
-        if(g.cat === 'Oryginały') catColor = '#f59e0b';
+        if (g.cat === 'Kasyno') catColor = '#10b981';
+        if (g.cat === 'Arcade') catColor = '#d946ef';
+        if (g.cat === 'Oryginały') catColor = '#f59e0b';
         div.innerHTML = `
             <div style="font-family:monospace; color:#666;">#${g.id}</div>
             <div style="display:flex; flex-direction:column;">
@@ -2192,7 +2189,7 @@ function changeGameControlPage(delta) {
 }
 function openEditGameModal(id) {
     const game = adminGamesDB.find(g => g.id === id);
-    if(!game) return;
+    if (!game) return;
     document.getElementById('egIdDisplay').textContent = `ID: #${game.id}`;
     document.getElementById('egNameDisplay').textContent = game.name;
     document.getElementById('egIcon').className = `fas ${game.icon}`;
@@ -2269,44 +2266,44 @@ function decreaseNotifCount() {
         notificationCount--;
         const badge = document.getElementById('headerBellBadge');
         badge.textContent = notificationCount;
-        if(notificationCount === 0) badge.classList.add('hidden');
+        if (notificationCount === 0) badge.classList.add('hidden');
     }
 }
 function removeNotifFromDB(nId) {
     const idx = notificationsDB.findIndex(x => x.id === nId);
-    if(idx !== -1) {
+    if (idx !== -1) {
         notificationsDB.splice(idx, 1);
         const el = document.getElementById(`notif-${nId}`);
-        if(el) {
+        if (el) {
             el.style.opacity = '0';
             setTimeout(() => el.remove(), 300);
         }
         decreaseNotifCount();
-        if(notificationsDB.length === 0) {
+        if (notificationsDB.length === 0) {
             setTimeout(() => {
                 const list = document.getElementById('notificationList');
-                if(list) list.innerHTML = '<div style="padding:20px; text-align:center; color:#666; font-size:11px;">Brak nowych powiadomień</div>';
+                if (list) list.innerHTML = '<div style="padding:20px; text-align:center; color:#666; font-size:11px;">Brak nowych powiadomień</div>';
             }, 300);
         }
     }
 }
 function handleNotifClaimAch(achId, nId) {
     const ach = achievementsDB.find(a => a.id === achId);
-    if(ach) {
-        if(!ach.acquired) ach.acquired = true; 
+    if (ach) {
+        if (!ach.acquired) ach.acquired = true;
         claimReward(achId);
     }
 }
 function handleNotifClaimQuest(domId, nId) {
     const btn = document.getElementById(domId);
-    if(btn && !btn.disabled) {
+    if (btn && !btn.disabled) {
         claimQuest(btn);
     }
     removeNotifFromDB(nId);
 }
 function handleNotifFriend(nId, accepted) {
     const notif = notificationsDB.find(n => n.id === nId);
-    if(accepted && notif && notif.metaId) {
+    if (accepted && notif && notif.metaId) {
         const friend = notif.metaId;
         const list = document.querySelector('.cfp-list');
         const el = document.createElement('div');
@@ -2325,10 +2322,10 @@ let activeGamesTabId = 'casino';
 function renderGamesHub() {
     renderGamesTabs();
     renderGamesContent();
-    renderGlobalLeaderboard(); 
+    renderGlobalLeaderboard();
 }
 function renderGamesTabs() {
-    const container = document.getElementById('gamesHubHeader'); 
+    const container = document.getElementById('gamesHubHeader');
     if (!container) return;
     container.innerHTML = '';
     const tabContainer = document.createElement('div');
@@ -2351,13 +2348,13 @@ function renderGamesTabs() {
 }
 function switchGameHubTab(id) {
     activeGamesTabId = id;
-    renderGamesTabs(); 
-    renderGamesContent(); 
+    renderGamesTabs();
+    renderGamesContent();
 }
 function renderGamesContent() {
     const container = document.getElementById('availableGamesContainer');
     if (!container) return;
-    container.innerHTML = ''; 
+    container.innerHTML = '';
     const currentTab = gamesHubStructure.find(t => t.id === activeGamesTabId);
     if (!currentTab) return;
     const wrapper = document.createElement('div');
@@ -2371,8 +2368,8 @@ function renderGamesContent() {
             card.onclick = () => openGameDetailsModal(game);
             const glowColor = game.color;
             const variantsText = game.variants > 1 ? `${game.variants} MODES` : '';
-            const tagHtml = game.tag 
-                ? `<div class="gh-game-tag" style="position:absolute; top:12px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,0.15); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:2px; pointer-events:none;">${game.tag}</div>` 
+            const tagHtml = game.tag
+                ? `<div class="gh-game-tag" style="position:absolute; top:12px; left:50%; transform:translateX(-50%); color:rgba(255,255,255,0.15); font-size:10px; font-weight:800; text-transform:uppercase; letter-spacing:2px; pointer-events:none;">${game.tag}</div>`
                 : '';
             card.innerHTML = `
                 <div class="gh-card-bg-glow" style="background: ${glowColor};"></div>
@@ -2412,7 +2409,7 @@ function renderGamesContent() {
 let lbShownCount = 15;
 function renderGlobalLeaderboard() {
     const list = document.getElementById('globalLeaderboardList');
-    if(!list) return;
+    if (!list) return;
     list.innerHTML = '';
     const sortedPlayers = [...globalLeaderboardDB].sort((a, b) => b.netWorth - a.netWorth);
     const visiblePlayers = sortedPlayers.slice(0, lbShownCount);
@@ -2420,7 +2417,7 @@ function renderGlobalLeaderboard() {
         const div = document.createElement('div');
         if (p.isMe) div.id = 'lb-my-row';
         div.className = p.isMe ? 'lb-row active-user-row' : 'lb-row';
-        if(p.isMe) {
+        if (p.isMe) {
             div.style.background = "rgba(59, 130, 246, 0.2)";
             div.style.border = "1px solid rgba(59, 130, 246, 0.4)";
         }
@@ -2434,9 +2431,9 @@ function renderGlobalLeaderboard() {
         const rankData = ranksDB.find(r => r.id === p.rankVal);
         let rankIconHtml = '';
         let rColor = '#888';
-        if(rankData) {
+        if (rankData) {
             rColor = rankData.color;
-            if(rankData.emoji) {
+            if (rankData.emoji) {
                 rankIconHtml = `<span style="margin-left:6px; font-size:14px; line-height:1;">${rankData.emoji}</span>`;
             } else {
                 rankIconHtml = `<i class="fas ${rankData.icon}" style="margin-left:6px; color:${rColor}; font-size:12px;"></i>`;
@@ -2446,8 +2443,8 @@ function renderGlobalLeaderboard() {
         if (p.rankName === 'King of The Gamblers') {
             titleStyle = 'font-size:10px; color:#FFD700; font-weight:700; text-shadow: 0 0 5px rgba(255,215,0,0.3); margin-top:2px;';
         }
-        let nwDisplay = p.netWorth >= 1000000 
-            ? (p.netWorth / 1000000).toFixed(1) + 'M $' 
+        let nwDisplay = p.netWorth >= 1000000
+            ? (p.netWorth / 1000000).toFixed(1) + 'M $'
             : (p.netWorth / 1000).toFixed(0) + 'k $';
         div.innerHTML = `
             <div class="lb-rank ${rankClass}" style="display:flex; justify-content:center; align-items:center;">
@@ -2490,7 +2487,7 @@ function scrollToMyPosition() {
     if (myRow && container) {
         const topPos = myRow.offsetTop - container.offsetTop;
         container.scrollTo({
-            top: topPos - 50, 
+            top: topPos - 50,
             behavior: 'smooth'
         });
         myRow.style.transition = "background 0.3s";
@@ -2512,21 +2509,21 @@ function initDashboardExtras() {
 }
 function claimQuest(btn) {
     const item = btn.closest('.quest-item');
-    if(!item) return;
-    if(btn.id) {
+    if (!item) return;
+    if (btn.id) {
         const notifIndex = notificationsDB.findIndex(n => n.type === 'quest' && n.metaId === btn.id);
-        if(notifIndex !== -1) {
+        if (notifIndex !== -1) {
             removeNotifFromDB(notificationsDB[notifIndex].id);
         }
     }
     item.style.transition = 'all 0.3s ease';
     item.style.opacity = '0.5';
     item.style.background = 'rgba(255,255,255,0.02)';
-    item.style.filter = 'grayscale(100%)'; 
+    item.style.filter = 'grayscale(100%)';
     item.style.borderColor = 'transparent';
     const checkIcon = document.createElement('div');
     checkIcon.innerHTML = '<i class="fas fa-check"></i>';
-    checkIcon.style.color = '#fff'; 
+    checkIcon.style.color = '#fff';
     checkIcon.style.fontSize = '16px';
     checkIcon.style.fontWeight = '800';
     checkIcon.style.padding = '0 15px';
@@ -2537,10 +2534,10 @@ function claimQuest(btn) {
 }
 function renderDashActiveListings() {
     const container = document.getElementById('dashActiveListings');
-    if(!container) return;
+    if (!container) return;
     container.innerHTML = '';
     const myListings = marketState.listings.filter(l => l.isMine);
-    if(myListings.length === 0) {
+    if (myListings.length === 0) {
         container.innerHTML = '<div style="padding:20px; color:#666; font-size:11px; text-align:center;">Brak aktywnych ofert na rynku.</div>';
         return;
     }
@@ -2552,7 +2549,7 @@ function renderDashActiveListings() {
         el.onclick = () => openMarketItemModal(item);
         const priceDisplay = (item.listingType === 'auction' ? (item.currentBid || item.price) : item.price).toLocaleString();
         let statusHtml = '';
-        if(item.listingType === 'instant') {
+        if (item.listingType === 'instant') {
             statusHtml = `<span style="color:var(--accent-green); font-size:9px; font-weight:700;">INSTANT</span>`;
         } else {
             statusHtml = `<span style="color:var(--accent-orange); font-size:9px; font-weight:700;">${item.bidCount} OFERT</span>`;
@@ -2581,7 +2578,7 @@ function renderPopularModes() {
     grid.innerHTML = '';
     let allModes = [];
     gamesHubStructure.forEach(category => {
-        if(category.games) {
+        if (category.games) {
             category.games.forEach(game => {
                 const distrib = game.modeCounts || distributePlayers(game.onlineCount, game.modes.length);
                 game.modes.forEach((modeName, idx) => {
@@ -2625,7 +2622,7 @@ function renderPopularModes() {
 }
 function renderDashInventory() {
     const container = document.getElementById('dashInventoryList');
-    if(!container) return;
+    if (!container) return;
     container.innerHTML = '';
     sortTreasures(allTreasures);
     const dashItems = allTreasures.slice(0, 4);
@@ -2640,14 +2637,14 @@ function renderDashInventory() {
         `;
         container.appendChild(div);
     });
-    if(dashItems.length === 0) {
+    if (dashItems.length === 0) {
         container.innerHTML = '<div style="text-align:center; color:var(--text-muted); font-size:11px; padding:20px;">Ekwipunek pusty</div>';
     }
 }
 function initBannerCarousel() {
     const slides = document.querySelectorAll('.carousel-slide');
     const dots = document.querySelectorAll('.carousel-dots .dot');
-    if(slides.length === 0) return;
+    if (slides.length === 0) return;
     let currentSlide = 0;
     function showSlide(index) {
         slides.forEach((slide, i) => slide.classList.toggle('active', i === index));
@@ -2666,7 +2663,7 @@ function initBannerCarousel() {
 initDashboardExtras();
 function openGameDetailsModal(game) {
     const modal = document.getElementById('gameDetailsModal');
-    if(!modal) return;
+    if (!modal) return;
     document.getElementById('gmIcon').className = `fas ${game.icon}`;
     document.getElementById('gmIcon').style.color = game.color;
     document.getElementById('gmIconBox').style.borderColor = game.color;
@@ -2735,15 +2732,15 @@ function toggleFavoriteMode(modeId, gameId, modeName, icon, color, players, star
 function openLoadoutEffectsModal() {
     const modal = document.getElementById('loadoutEffectsModal');
     const container = document.getElementById('loadoutEffectsContent');
-    if(!modal || !container) return;
+    if (!modal || !container) return;
     container.innerHTML = '';
     const equippedUids = Object.values(myLoadout);
-    if(equippedUids.length === 0) {
+    if (equippedUids.length === 0) {
         container.innerHTML = '<div class="le-empty">Brak założonych przedmiotów.</div>';
     } else {
         equippedUids.forEach(uid => {
             const item = myInventory.find(i => i.uid === uid);
-            if(item) {
+            if (item) {
                 const row = document.createElement('div');
                 row.className = 'le-row';
                 let bonusText = item.bonus;
@@ -2768,7 +2765,7 @@ function closeLoadoutEffectsModal() {
 }
 function openInventoryItemModal(item) {
     const modal = document.getElementById('inventoryItemModal');
-    if(!modal) return;
+    if (!modal) return;
     const iiCard = document.getElementById('iiCard');
     const iiIcon = document.getElementById('iiIcon');
     iiIcon.innerHTML = item.icon;
@@ -2781,18 +2778,18 @@ function openInventoryItemModal(item) {
     const badgeClass = `badge-${item.rarity.toLowerCase()}`;
     tags.innerHTML = `<span class="rarity-tag-badge ${badgeClass}">${item.rarity}</span>`;
     tags.innerHTML += `<span class="badge-slot">${item.type.toUpperCase()}</span>`;
-    if(item.isConsumable && item.maxUses) {
+    if (item.isConsumable && item.maxUses) {
         tags.innerHTML += `<span class="badge-slot" style="color:var(--accent-green); border:1px solid var(--accent-green);">STAN: ${item.usesLeft}/${item.maxUses}</span>`;
     }
     let descHtml = `<div class="item-desc-text">"${item.desc}"</div>`;
-    if(item.bonus && item.bonus !== "Brak") {
+    if (item.bonus && item.bonus !== "Brak") {
         descHtml += `<div class="item-bonus-text"><i class="fas fa-magic"></i> ${item.bonus}</div>`;
     }
     document.getElementById('iiDesc').innerHTML = descHtml;
     const warning = document.getElementById('iiReqWarning');
     let isLocked = false;
-    if(item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
-    if(isLocked) {
+    if (item.rarity === 'Divine' && currentRankId > 2) isLocked = true;
+    if (isLocked) {
         const actionSuffix = (item.type === 'chest' || (item.id >= 1 && item.id <= 5)) ? "(do otworzenia)" : "(do założenia)";
         warning.innerHTML = `<i class="fas fa-lock"></i> Wymagana ranga: RNG God ${actionSuffix}`;
         warning.classList.remove('hidden');
@@ -2801,18 +2798,18 @@ function openInventoryItemModal(item) {
     }
     const rawPrice = item.rawPrice || 100;
     let trendVal = 0;
-    if(item.change) {
+    if (item.change) {
         trendVal = parseFloat(item.change.replace('%', ''));
     }
     const avgPrice = Math.floor(rawPrice * (1 + (trendVal / 100)));
     const trendEl = document.getElementById('iiMarketTrend');
     const priceEl = document.getElementById('iiMarketPrice');
     priceEl.textContent = avgPrice.toLocaleString() + ' $';
-    trendEl.textContent = item.change; 
-    if(trendVal > 0) {
+    trendEl.textContent = item.change;
+    if (trendVal > 0) {
         trendEl.className = 'val-change-inline val-up';
         priceEl.style.color = 'var(--accent-green)';
-    } else if(trendVal < -0.5) {
+    } else if (trendVal < -0.5) {
         trendEl.className = 'val-change-inline val-down';
         priceEl.style.color = 'var(--accent-red)';
     } else {
@@ -2823,10 +2820,10 @@ function openInventoryItemModal(item) {
     }
     const btnAction = document.getElementById('btnInvAction');
     const btnSell = document.getElementById('btnInvSellSystem');
-    const floorPrice = Math.floor(avgPrice * 0.8); 
+    const floorPrice = Math.floor(avgPrice * 0.8);
     btnSell.innerHTML = `<i class="fas fa-hand-holding-usd"></i> SPRZEDAJ (FLOOR: ${floorPrice.toLocaleString()}$)`;
     btnSell.onclick = () => {
-        if(confirm(`Czy na pewno chcesz sprzedać ${item.name} za ${floorPrice}$? (Natychmiastowa gotówka)`)) {
+        if (confirm(`Czy na pewno chcesz sprzedać ${item.name} za ${floorPrice}$? (Natychmiastowa gotówka)`)) {
             alert(`Sprzedano przedmit za ${floorPrice}$!`);
             closeInventoryItemModal();
         }
@@ -2837,7 +2834,7 @@ function openInventoryItemModal(item) {
     btnAction.style.background = '';
     btnAction.style.color = '';
     if (isCase) {
-        btnAction.textContent = "OTWÓRZ SKRZYNKĘ (OPEN CASE)";
+        btnAction.textContent = "OTWÓRZ SKRZYNKĘ";
         btnAction.style.background = "linear-gradient(135deg, #f59e0b, #d97706)";
         btnAction.onclick = () => {
             alert("Otwieranie skrzynki... (Efekt wizualny)");
@@ -2849,21 +2846,21 @@ function openInventoryItemModal(item) {
             btnAction.className = 'action-btn-large outline full-width';
             btnAction.onclick = () => {
                 const slotKey = Object.keys(myLoadout).find(key => myLoadout[key] === item.uid);
-                if(slotKey) {
+                if (slotKey) {
                     delete myLoadout[slotKey];
-                    renderInventoryView(); 
+                    renderInventoryView();
                     closeInventoryItemModal();
                 }
             };
-                    } else {
-                btnAction.textContent = "ZAŁÓŻ (EQUIP)";
-                if (isLocked) {
-                    btnAction.textContent = "ZABLOKOWANE (RANGA)";
-                    btnAction.style.background = "var(--accent-red)";
-                    btnAction.style.opacity = "0.5";
-                    btnAction.style.cursor = "not-allowed";
-                    btnAction.onclick = null;
-                } else {
+        } else {
+            btnAction.textContent = "ZAŁÓŻ (EQUIP)";
+            if (isLocked) {
+                btnAction.textContent = "ZABLOKOWANE (RANGA)";
+                btnAction.style.background = "var(--accent-red)";
+                btnAction.style.opacity = "0.5";
+                btnAction.style.cursor = "not-allowed";
+                btnAction.onclick = null;
+            } else {
                 btnAction.style.opacity = "1";
                 btnAction.style.cursor = "pointer";
                 btnAction.style.background = "var(--accent-blue)";
@@ -2873,7 +2870,7 @@ function openInventoryItemModal(item) {
                         'neck': 'slot-neck',
                         'suit': 'slot-suit',
                         'watch': 'slot-watch',
-                        'gadget': 'slot-earpiece', 
+                        'gadget': 'slot-earpiece',
                         'belt': 'slot-belt',
                         'pants': 'slot-pants',
                         'shoes': 'slot-shoes',
@@ -2881,9 +2878,9 @@ function openInventoryItemModal(item) {
                         'vehicle': 'slot-vehicle'
                     };
                     const targetSlot = slotMapping[item.type];
-                    if(targetSlot) {
+                    if (targetSlot) {
                         myLoadout[targetSlot] = item.uid;
-                        renderInventoryView(); 
+                        renderInventoryView();
                         closeInventoryItemModal();
                     } else {
                         alert("Nie znaleziono pasującego slotu w obecnym Loadoucie.");
@@ -2909,13 +2906,13 @@ const dailyHistoryDB = [
 function openDailyPLModal() {
     const modal = document.getElementById('dailyPLModal');
     const container = document.getElementById('dailyPLContent');
-    if(!modal || !container) return;
+    if (!modal || !container) return;
     container.innerHTML = '';
     let totalPL = 0;
     let maxAbsVal = 0;
     const parsedData = dailyHistoryDB.map(d => {
         const cleanVal = parseInt(d.val.replace(/[^0-9-]/g, ''));
-        if(Math.abs(cleanVal) > maxAbsVal) maxAbsVal = Math.abs(cleanVal);
+        if (Math.abs(cleanVal) > maxAbsVal) maxAbsVal = Math.abs(cleanVal);
         totalPL += cleanVal;
         return { ...d, rawVal: cleanVal };
     });
@@ -2981,7 +2978,7 @@ function renderFavoritesPanel() {
             const card = document.createElement('div');
             card.className = 'mode-card';
             card.onclick = (e) => {
-                if(e.target.classList.contains('mc-star')) return;
+                if (e.target.classList.contains('mc-star')) return;
                 alert(`Szybki start: ${modeName}`);
             };
             card.innerHTML = `

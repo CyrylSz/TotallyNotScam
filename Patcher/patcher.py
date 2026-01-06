@@ -2,8 +2,12 @@ import os
 import re
 
 script_dir = os.path.dirname(os.path.abspath(__file__))
-TARGET_FOLDER_NAME = "App"
-app_dir = os.path.join(os.path.dirname(script_dir), TARGET_FOLDER_NAME)
+TARGET_FOLDER_NAME = ""
+app_dir = (
+    os.path.dirname(script_dir)
+    if TARGET_FOLDER_NAME == ""
+    else os.path.join(os.path.dirname(script_dir), TARGET_FOLDER_NAME)
+)
 INSTRUCTIONS_FILE = os.path.join(script_dir, "instrukcje.txt")
 
 def make_smart_fuzzy_regex(text):

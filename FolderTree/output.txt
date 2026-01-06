@@ -1,0 +1,31 @@
+TotallyNotScam
+├── app.js
+├── Cleaner
+│   ├── cleaner.py
+│   └── sciezka.txt
+├── data.js
+├── FileCombiner
+│   ├── FileCombinder.jar
+│   └── settings.txt
+├── FolderTree
+│   ├── FolderTree.py
+│   ├── output.txt
+│   └── settings.txt
+├── gifs
+│   ├── Dashboard.gif
+│   ├── DashboardAdmina.gif
+│   ├── Ekwipunek.gif
+│   ├── Gry.gif
+│   ├── KontrolaGier.gif
+│   ├── Logi.gif
+│   ├── Portfel.gif
+│   ├── Profil.gif
+│   ├── Rynek.gif
+│   └── Uzytkownicy.gif
+├── index.html
+├── Patcher
+│   ├── instrukcje.txt
+│   ├── patcher.py
+│   └── WebAIPrompt.txt
+├── README.md
+└── style.css
