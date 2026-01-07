@@ -12,8 +12,76 @@
 </head>
 
 <body>
+    <div id="viewLanding" class="landing-wrapper">
+        <div class="landing-bg-fx"></div>
+        <div class="landing-orb"></div>
+        
+        <div class="landing-card">
+            <div class="landing-header">
+                <div class="landing-icon-box">
+                    <i class="fas fa-money-bill-wave-alt landing-main-icon"></i>
+                </div>
+                <h1 class="landing-title">TOTALLY NOT <span class="landing-accent">SCAM</span></h1>
+                <p class="landing-slogan">"Jedyne kasyno, gdzie Twoja wygrana jest teoretyczna, a długi prawdziwe."</p>
+            </div>
 
-    <nav class="sidebar">
+            <div class="landing-auth-container">
+                <div class="auth-inputs">
+                    <input type="text" class="auth-input" placeholder="Login / Email (np. ofiara@gmail.com)" value="MrGambler">
+                    <input type="password" class="auth-input" placeholder="Hasło (*******)" value="password123">
+                </div>
+
+                <button class="landing-btn primary" onclick="handleLogin()">
+                    <div class="btn-content">
+                        <i class="fas fa-sign-in-alt"></i>
+                        <span>ZALOGUJ SIĘ</span>
+                    </div>
+                    <div class="btn-shine"></div>
+                </button>
+
+                <div class="section-divider"><span>LUB UŻYJ</span></div>
+
+                <div class="social-grid">
+                    <button class="landing-btn google" onclick="handleLogin()">
+                        <div class="btn-content">
+                            <i class="fab fa-google"></i> Google
+                        </div>
+                    </button>
+                    <button class="landing-btn apple" onclick="handleLogin()">
+                        <div class="btn-content">
+                            <i class="fab fa-apple"></i> Apple ID
+                        </div>
+                    </button>
+                    <button class="landing-btn facebook" onclick="handleLogin()">
+                        <div class="btn-content">
+                            <i class="fab fa-facebook-f"></i> Facebook
+                        </div>
+                    </button>
+                    <button class="landing-btn phone" onclick="handleLogin()">
+                        <div class="btn-content">
+                            <i class="fas fa-mobile-alt"></i> Telefon
+                        </div>
+                    </button>
+                </div>
+            </div>
+
+            <div class="landing-footer">
+                <div class="register-footer">
+                    Nie masz konta? <span class="register-link" onclick="alert('Błąd 404: Twoje szanse na wygraną nie zostały znalezione.\n\n(Rejestracja wyłączona z powodu trwającego dochodzenia podatkowego. Użyj logowania.)')">Zarejestruj się tutaj</span>
+                </div>
+                <div class="landing-checkbox-row" style="margin-top:15px;">
+                    <label class="custom-checkbox">
+                        <input type="checkbox" checked disabled>
+                        <span class="checkmark"></span>
+                    </label>
+                    <span class="term-text">Akceptuję <span style="color:var(--accent-purple); cursor:pointer;">Regulamin Przekazania Duszy</span> oraz zrzekam się praw do własnego portfela.</span>
+                </div>
+                <div class="landing-version">v1.0.6 (RNG: Rigged) • Security: TrustMeBro™</div>
+            </div>
+        </div>
+    </div>
+
+    <nav class="sidebar" style="display: none;">
         <div class="brand"><i class="fas fa-money-bill-wave-alt"></i> Totally Not Scam</div>
         <div class="brand-sub">(This is a joke project btw)</div>
 
@@ -65,7 +133,7 @@
         </div>
     </nav>
 
-    <main class="main-content">
+    <main class="main-content" style="display: none;">
         <div class="header">
             <div style="display: flex; align-items: center;">
                 <h2 id="pageHeaderTitle">Dashboard</h2>

@@ -2317,7 +2317,7 @@ function handleNotifFriend(nId, accepted) {
     }
     removeNotifFromDB(nId);
 }
-initDashboard();
+// initDashboard(); // Wyłączone automatyczne ładowanie
 let activeGamesTabId = 'casino';
 function renderGamesHub() {
     renderGamesTabs();
@@ -2660,7 +2660,48 @@ function initBannerCarousel() {
         dot.addEventListener('click', () => showSlide(index));
     });
 }
-initDashboardExtras();
+// initDashboardExtras(); // Wyłączone automatyczne ładowanie
+
+function handleLogin() {
+    const landing = document.getElementById('viewLanding');
+    const btns = document.querySelectorAll('.landing-btn');
+    
+    // Wizualny efekt ładowania na przyciskach
+    btns.forEach(btn => {
+        btn.style.opacity = '0.7';
+        btn.style.pointerEvents = 'none';
+        btn.querySelector('.btn-content').innerHTML = '<i class="fas fa-circle-notch fa-spin"></i> PRZETWARZANIE...';
+    });
+
+    setTimeout(() => {
+        landing.classList.add('fade-out');
+        
+        setTimeout(() => {
+            landing.style.display = 'none';
+            
+            // Pokaż główne kontenery
+            const sidebar = document.querySelector('.sidebar');
+            const mainContent = document.querySelector('.main-content');
+            
+            sidebar.style.display = 'flex';
+            mainContent.style.display = 'flex';
+            
+            sidebar.classList.add('fade-in');
+            mainContent.classList.add('fade-in');
+            
+            // Inicjalizacja logiki aplikacji dopiero teraz
+            initDashboard();
+            initDashboardExtras();
+            
+            // Powitanie Roast
+            setTimeout(() => {
+                triggerRoastAnimation("Zalogowano pomyślnie. Powodzenia... będziesz go potrzebować.");
+            }, 800);
+            
+        }, 800); // Czas trwania fade-out
+    }, 1200); // Symulowany czas ładowania
+}
+
 function openGameDetailsModal(game) {
     const modal = document.getElementById('gameDetailsModal');
     if (!modal) return;
